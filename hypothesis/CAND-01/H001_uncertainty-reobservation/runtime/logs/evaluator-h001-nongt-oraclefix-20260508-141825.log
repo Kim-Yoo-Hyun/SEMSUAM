@@ -1,0 +1,70 @@
+[05:18:26:487878]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/minival/00800-TEEsavR23oF/TEEsavR23oF.basis.scn` exists but failed to load.
+{
+  "aggregate": {
+    "GTTargetOracle": {
+      "episodes": 4,
+      "mean_num_reobservations": 0.0,
+      "mean_spl": 1.0,
+      "mean_wasted_path_reobserve": 0.0,
+      "mean_wasted_path_total": 0.0,
+      "mean_wasted_path_wrong_goal": 0.0,
+      "success_rate": 1.0,
+      "wrong_goal_visit_rate": 0.0
+    },
+    "NoReobserve": {
+      "episodes": 4,
+      "mean_num_reobservations": 0.0,
+      "mean_spl": 0.0,
+      "mean_wasted_path_reobserve": 0.0,
+      "mean_wasted_path_total": null,
+      "mean_wasted_path_wrong_goal": 0.0,
+      "success_rate": 0.0,
+      "wrong_goal_visit_rate": 0.0
+    },
+    "RandomReobserve": {
+      "episodes": 4,
+      "mean_num_reobservations": 1.0,
+      "mean_spl": 0.0,
+      "mean_wasted_path_reobserve": 5.019574522972107,
+      "mean_wasted_path_total": null,
+      "mean_wasted_path_wrong_goal": 0.0,
+      "success_rate": 0.0,
+      "wrong_goal_visit_rate": 0.0
+    }
+  },
+  "candidate_artifact": "/runs/h001_non_gt_smoke/hm3d_vlmaps_aligned.jsonl",
+  "candidate_backend": "artifact_jsonl",
+  "candidate_backend_uses_gt_for_action": false,
+  "candidate_decision_rows": 16,
+  "dataset": "hm3d_objectnav_v2",
+  "episode_rows": 12,
+  "episodes_loaded": 4,
+  "episodes_requested": 4,
+  "loaded_datasets": [
+    "hm3d_objectnav_v2"
+  ],
+  "loaded_manifest_splits": [
+    "smoke"
+  ],
+  "loaded_source_splits": [
+    "val_mini"
+  ],
+  "manifest": "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_splits_v1.json",
+  "manifest_split": "smoke",
+  "notes": [
+    "diagnostic GT-assisted backend is for smoke only; artifact_jsonl is the non-GT adapter boundary",
+    "not a paper result",
+    "used to validate log schema, GT references, and baseline comparability"
+  ],
+  "policies": [
+    "GTTargetOracle",
+    "NoReobserve",
+    "RandomReobserve"
+  ],
+  "requested_dataset": "hm3d_objectnav_v2",
+  "requested_split": "val",
+  "run_id": "h001_nongt_manifest_smoke_oraclefix_20260508",
+  "schema_version": "h001.navlog.v1",
+  "split": "val_mini",
+  "viewpoint_decision_rows": 4
+}

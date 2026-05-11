@@ -1,0 +1,47 @@
+FROM pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime
+
+ARG VLMAPS_BRANCH=demo
+ARG VLMAPS_COMMIT=bc79b26a577e5a9408f86e45e5c16530ca80f867
+ARG CLIP_COMMIT=d05afc436d78f1c48dc0dbf8e5980a9d471f35f6
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    TORCH_HOME=/models/torch \
+    VLMAPS_REPO=/opt/vlmaps \
+    VLMAPS_CHECKPOINT=/models/vlmaps/lseg/checkpoints/demo_e200.ckpt
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      git \
+      libgl1 \
+      libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN python -m pip install --no-cache-dir --upgrade pip \
+    && python -m pip install --no-cache-dir \
+      ftfy==6.2.3 \
+      gdown==5.2.0 \
+      h5py==3.11.0 \
+      matplotlib==3.8.4 \
+      numpy==1.26.4 \
+      opencv-python-headless==4.10.0.84 \
+      pandas==2.2.3 \
+      pillow==10.4.0 \
+      pytorch-lightning==1.9.5 \
+      regex==2024.11.6 \
+      scipy==1.13.1 \
+      timm==0.9.16 \
+      tqdm==4.67.1 \
+    && python -m pip install --no-cache-dir \
+      git+https://github.com/openai/CLIP.git@${CLIP_COMMIT}
+
+RUN git clone --branch ${VLMAPS_BRANCH} --depth 1 https://github.com/vlmaps/vlmaps.git ${VLMAPS_REPO} \
+    && cd ${VLMAPS_REPO} \
+    && test "$(git rev-parse HEAD)" = "${VLMAPS_COMMIT}"
+
+COPY run_vlmaps_map.py /opt/research3/run_vlmaps_map.py
+COPY verify_vlmaps_map.py /opt/research3/verify_vlmaps_map.py
+
+WORKDIR /opt/vlmaps
+
+CMD ["python", "/opt/research3/verify_vlmaps_map.py", "--scene-dir", "/work/scene"]

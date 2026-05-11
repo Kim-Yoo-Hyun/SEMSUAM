@@ -1,0 +1,201 @@
+{
+  "AUPRC": 0.9530149537962038,
+  "AUPRC_delta_vs_baseline": 0.15301495379620378,
+  "AUROC": 0.828125,
+  "all_gate_pass": true,
+  "by_query": [
+    {
+      "failure_rate": 1.0,
+      "mean_U_sem": 0.7019028735160828,
+      "n": 5,
+      "query": "bed",
+      "selected_rank_failure": [
+        {
+          "U_sem": 0.7010694217681884,
+          "failure": true,
+          "rank": 1
+        },
+        {
+          "U_sem": 0.7019714188575744,
+          "failure": true,
+          "rank": 2
+        },
+        {
+          "U_sem": 0.7020359706878662,
+          "failure": true,
+          "rank": 3
+        },
+        {
+          "U_sem": 0.7021328679720561,
+          "failure": true,
+          "rank": 4
+        },
+        {
+          "U_sem": 0.7023046882947286,
+          "failure": true,
+          "rank": 5
+        }
+      ]
+    },
+    {
+      "failure_rate": 0.4,
+      "mean_U_sem": 0.6579064400990804,
+      "n": 5,
+      "query": "chair",
+      "selected_rank_failure": [
+        {
+          "U_sem": 0.6559080751736959,
+          "failure": true,
+          "rank": 1
+        },
+        {
+          "U_sem": 0.6568842204411824,
+          "failure": false,
+          "rank": 2
+        },
+        {
+          "U_sem": 0.6583506337801616,
+          "failure": false,
+          "rank": 3
+        },
+        {
+          "U_sem": 0.6590653133392333,
+          "failure": false,
+          "rank": 4
+        },
+        {
+          "U_sem": 0.6593239577611287,
+          "failure": true,
+          "rank": 5
+        }
+      ]
+    },
+    {
+      "failure_rate": 0.8,
+      "mean_U_sem": 0.6971200631459553,
+      "n": 5,
+      "query": "plant",
+      "selected_rank_failure": [
+        {
+          "U_sem": 0.695550627708435,
+          "failure": false,
+          "rank": 1
+        },
+        {
+          "U_sem": 0.6833281660079956,
+          "failure": true,
+          "rank": 2
+        },
+        {
+          "U_sem": 0.700706528822581,
+          "failure": true,
+          "rank": 3
+        },
+        {
+          "U_sem": 0.7023983669281005,
+          "failure": true,
+          "rank": 4
+        },
+        {
+          "U_sem": 0.7036166262626647,
+          "failure": true,
+          "rank": 5
+        }
+      ]
+    },
+    {
+      "failure_rate": 1.0,
+      "mean_U_sem": 0.6788607668876648,
+      "n": 5,
+      "query": "sofa",
+      "selected_rank_failure": [
+        {
+          "U_sem": 0.6721111806233724,
+          "failure": true,
+          "rank": 1
+        },
+        {
+          "U_sem": 0.6763195466995239,
+          "failure": true,
+          "rank": 2
+        },
+        {
+          "U_sem": 0.680610028107961,
+          "failure": true,
+          "rank": 3
+        },
+        {
+          "U_sem": 0.6815836302439372,
+          "failure": true,
+          "rank": 4
+        },
+        {
+          "U_sem": 0.6836794487635295,
+          "failure": true,
+          "rank": 5
+        }
+      ]
+    }
+  ],
+  "candidate_log": "/runs/h001_semanticpolicy_anchor_smoke/candidate_decisions.jsonl",
+  "gate_pass": {
+    "AUPRC_delta_vs_baseline": true,
+    "AUROC": true,
+    "high_minus_low_failure_rate": true,
+    "spearman_U_sem_vs_failure": true
+  },
+  "gate_thresholds": {
+    "AUPRC_delta_vs_baseline": 0.05,
+    "AUROC": 0.6,
+    "high_minus_low_failure_rate": 0.1,
+    "spearman_U_sem_vs_failure": 0.15
+  },
+  "high_bucket_failure_rate": 1.0,
+  "high_bucket_n": 6,
+  "high_minus_low_failure_rate": 0.5,
+  "low_bucket_failure_rate": 0.5,
+  "low_bucket_n": 6,
+  "n": 20,
+  "negatives_correct": 4,
+  "p30_U_sem": 0.6750570368766784,
+  "p70_U_sem": 0.7013400208950042,
+  "policy": "NoReobserve",
+  "positive_rate_baseline": 0.8,
+  "positives_failure": 16,
+  "selected_candidates": {
+    "failure_rate": 0.75,
+    "mean_U_sem": 0.6811598263184229,
+    "n": 4,
+    "rows": [
+      {
+        "U_sem": 0.7010694217681884,
+        "episode_key": "HM3D ObjectNav v2:val_mini:TEEsavR23oF:0:7:bed",
+        "failure": true,
+        "query": "bed",
+        "rank": 1
+      },
+      {
+        "U_sem": 0.6559080751736959,
+        "episode_key": "HM3D ObjectNav v2:val_mini:TEEsavR23oF:8:14:chair",
+        "failure": true,
+        "query": "chair",
+        "rank": 1
+      },
+      {
+        "U_sem": 0.695550627708435,
+        "episode_key": "HM3D ObjectNav v2:val_mini:TEEsavR23oF:4:28:plant",
+        "failure": false,
+        "query": "plant",
+        "rank": 1
+      },
+      {
+        "U_sem": 0.6721111806233724,
+        "episode_key": "HM3D ObjectNav v2:val_mini:TEEsavR23oF:11:24:sofa",
+        "failure": true,
+        "query": "sofa",
+        "rank": 1
+      }
+    ]
+  },
+  "spearman_U_sem_vs_failure": 0.455232734000163
+}

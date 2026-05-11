@@ -1,0 +1,228 @@
+# TODO.md
+
+## Rules
+
+- 작업을 시작할 때 이 파일을 먼저 확인한다.
+- 작업 중 새 task가 생기면 이 파일에 추가한다.
+- 완료한 task는 체크하고, 필요한 상세 내용은 해당 workflow 문서에 기록한다.
+- 이 파일은 긴 설명을 담지 않는다. 계획, 상태, 다음 행동만 관리한다.
+
+## Now
+
+- [ ] policy objective revision implementation contract 작성: `SemanticVerifyTop`, `EvidenceGatedSemanticOnly`
+
+## Next
+
+- [ ] real-world deploy용 hardware-specific plan은 사용자 장비 정보가 확정되면 작성
+
+## Recently Completed
+
+- [x] calibration policy comparison 결과 해석: current `SemanticOnly` worsens wrong-goal on recovered substrate
+- [x] coverage gate 통과 후 calibration split에서 `NoReobserve` / `RandomReobserve` / `SemanticOnly` Docker run 실행
+- [x] coverage gate 통과 여부 확인: `random256_k10_sr1_v1` overall pass, reachable correct-and-wrong rate `0.66`
+- [x] scene replacement recovery artifact completion verification: `random256_k10_sr1_v1`, 300 candidates
+- [x] policy objective revision design note 작성: `SemanticVerifyTop`, `EvidenceGatedSemanticOnly`
+- [x] scene replacement recovery artifact generation job launch: `h001-calib-artifacts-random256-k10-sr1-20260511-115330`
+- [x] scene replacement recovery run contract 작성: `random256_k10_sr1_v1`
+- [x] `random256_k10_v1` second recovery decision note 작성: scene replacement first
+- [x] `random256_k10_v1` diagnostic policy comparison 실행: hard gate borderline, `SemanticOnly` did not reduce wrong-goal
+- [x] `random256_k10_v1` structural / coverage sanity check: hard ambiguity gate failed, borderline diagnostic allowed
+- [x] `random256_k10_v1` artifact generation completion verification: completed, 300 candidates
+- [x] Step 4-5 promotion gate 정리
+- [x] calibration policy comparison interpretation template 작성
+- [x] `random256_k10_v1` coverage recovery decision tree 작성
+- [x] `random256_k10_v1` candidate-budget recovery job launch: `h001-calib-artifacts-random256-k10-20260510-165427`
+- [x] `random256_k10_v1` candidate-budget recovery run contract 작성
+- [x] `random256_v1` coverage failure decision note 작성: candidate budget / scene replacement / backend revision 비교
+- [x] `random256_v1` calibration artifact structural / coverage sanity check: hard ambiguity coverage failed
+- [x] `random256_v1` calibration artifact generation completion verification: `h001-calib-artifacts-random256-20260509-233124`
+- [x] H001 hypothesis markdown 문서 병합 정리: 기존 numbered filename 유지
+- [x] `random256_v1` calibration artifact generation job launch
+- [x] `random256_v1` calibration coverage recovery run contract 작성
+- [x] calibration artifact structural / coverage sanity check: `random128_v1` ambiguity coverage failed
+- [x] calibration artifact generation completion verification: `h001-calib-artifacts-20260508-163501`
+- [x] calibration split용 multi-scene non-GT semantic artifact generation job launch
+- [x] calibration split에서 `NoReobserve` / `RandomReobserve` / `SemanticOnly` Docker run contract 작성
+- [x] calibration split용 multi-scene non-GT semantic artifact 생성 / 선택 계획 작성
+- [x] `SemanticOnly` sensitivity 결과를 `04_first_experiment.md`에 정리
+- [x] `SemanticOnly` threshold / tie-band sensitivity Docker smoke 실행
+- [x] `SemanticOnly` threshold / tie-band sensitivity Docker smoke 설계
+- [x] Anchor32 smoke에서 `U_sem` vs candidate failure sanity report 작성
+- [x] Anchor32 artifact에서 uncertainty-aware policy vs `NoReobserve` / `RandomReobserve` Docker smoke 실행
+- [x] uncertainty-aware active re-observation policy 구현
+- [x] longer / multi-floor HM3D pre-exploration export로 non-GT candidate reachability 개선
+- [x] Anchor32 `VLMaps` map generation과 evaluator reachability smoke 실행
+- [x] manifest start anchored 32-frame HM3D RGB-D/pose export 생성
+- [x] non-GT `VLMaps` candidate coverage/reachability sanity report 작성
+- [x] fixed manifest rows + non-GT semantic artifact로 evaluator smoke 실행
+- [x] `GTTargetOracle`을 non-GT candidate backend와 분리하고 provenance log 추가
+- [x] one-scene full HM3D `VLMaps` map generation과 map file verification
+- [x] `vlmaps-hm3d` checkpoint load/import compatibility smoke
+- [x] `vlmaps-hm3d` Python/timm/h5py import compatibility fix
+- [x] manifest-driven evaluator loading을 `run_smoke.py`에 연결
+- [x] split manifest generator와 Docker episode loader verification 구현
+- [x] calibration/evaluation split과 fixed episode-id plan 작성
+- [x] HM3D pre-exploration RGB-D/pose exporter와 `alignment.json` smoke 구현
+- [x] HM3D scene-specific `VLMaps` map generation / `alignment.json` 생성 경로 결정
+- [x] 6개월-1년 연구 일정에서 first probe, SLAM extension, real-world validation 순서 작성
+- [x] `AGENT.md` long-running/background task policy 추가 및 H001 verification gap 점검
+- [x] real-world deploy 가능 sensor / robot / ground truth setup 확인
+- [x] `VLMaps` alignment adapter 구현 및 Habitat navigability Docker smoke
+- [x] `VLMaps` embedding + artifact exporter를 실제 demo map에서 end-to-end 연결 smoke
+- [x] `VLMaps` grid-to-Habitat coordinate alignment 방법 결정
+- [x] `VLMaps` query/text embedding exporter image 설계 및 Docker smoke test
+- [x] Full `VLMaps` runtime image 필요 여부 결정: 지금은 보류, artifact exporter 우선
+- [x] non-GT semantic artifact generator 선택 및 구현: `VLMaps`-derived exporter
+- [x] 연구 목표 rule 추가: AI, ML, CV, Robotics top-tier journal/conference 타겟
+- [x] Git repo 연결 수정: `origin` -> `https://github.com/Kim-Yoo-Hyun/SSLAM.git`
+- [x] diagnostic GT-assisted candidate backend에서 non-GT semantic candidate backend adapter 설계
+- [x] first probe success/failure threshold 수치화
+- [x] `habitat-h001` evaluation harness smoke 구현: `wrong_goal_visit`, `wasted_path`, GT reference, baseline logs
+- [x] `habitat-h001` runtime image 생성 및 Docker smoke test 통과
+- [x] fallback용 Replica / ScanNet one-scene replay 후보 선정
+- [x] Git repo 연결: `origin` -> `https://github.com/Kim-Yoo-Hyun/SSLAM.git`
+- [x] HM3D/HM3D-OVON runtime integration plan 작성
+- [x] 루트 정리: AGENT.md, README.md, TODO.md만 남기고 runtime/workflow 파일을 H001 내부로 이동
+- [x] top-tier evaluation contract 작성: commit-based wrong-goal metric, GT oracle references, benchmark/baseline/ablation/reporting
+- [x] wrong-goal visit과 wasted path logging format 정의
+- [x] HM3D-OVON episode tarball Docker 확보 및 mount smoke test 통과
+- [x] HM3D Docker mount smoke test 통과: train/val/minival scene assets, semantic files, ObjectNav HM3D v2 episodes 확인
+- [x] HM3D v0.2 scene assets와 ObjectNav HM3DSem-v0.2 episode를 Docker로 확보
+- [x] semantic candidate uncertainty feature 정의: `score_uncertainty`, `margin_uncertainty`, support feature, trigger threshold
+- [x] 연구 중심 주장 확정: semantic uncertainty를 active SLAM/navigation utility로 사용해 ObjectNav 등 navigation 성능 개선을 검증
+- [x] MP3D / HM3D scene data Docker mount 확인: local scene asset 없음, benchmark gate blocked
+- [x] Stage 1 Docker smoke test 실행: `VLMaps` demo scene map output 확인
+- [x] Docker daemon 접근 권한 확인: 현재 shell은 `sg docker`로 실행 가능
+- [x] Docker 환경에 SLAM tooling을 같은 image로 넣을지 별도 image로 둘지 결정: 별도 image
+- [x] Stage 1 Docker smoke test workflow 작성: `VLMaps` demo, Habitat dataset mount path
+- [x] Step 4 first proxy 선택: pose graph connectivity
+- [x] Stage 1 smoke test 환경 결정: Docker 기반, `VLMaps` demo 우선, Habitat dataset path는 별도 gate
+- [x] `CAND-01` Step 4-5 SLAM uncertainty proxy와 metric 측정 계획 작성
+- [x] `CAND-01` Stage 1 baseline 실행 가능성 확인: `CARe`, `VLMaps`, Habitat ObjectNav
+- [x] contribution candidate를 `literature/README.md` Open Questions와 연결
+- [x] Priority A P30 paper folder full read 보강
+- [x] Priority A P28 paper folder full read 보강
+- [x] Priority A P01 paper folder full read 보강
+- [x] dataset / metric table을 각 `03_evaluation.md`에 정밀 보강
+- [x] Priority A P27 paper folder full read 보강
+- [x] Priority A P24 paper folder full read 보강
+- [x] Priority A P21 paper folder full read 보강
+- [x] Priority A P15 paper folder full read 보강
+- [x] Priority A P13 paper folder full read 보강
+- [x] Priority A P12 paper folder full read 보강
+- [x] Priority A P11 paper folder full read 보강
+- [x] Priority A P09 paper folder full read 보강
+- [x] Priority A P06 paper folder full read 보강
+- [x] Priority A P05 paper folder full read 보강
+- [x] Priority A P03 paper folder full read 보강
+- [x] `docs/index.md` 작성
+- [x] Priority A P02 paper folder full read 보강
+- [x] `H001`을 Step 5 최종 방향의 umbrella hypothesis로 업데이트
+- [x] hypothesis workflow 기간 기준을 6개월-1년으로 수정
+- [x] contribution candidate 기간 기준을 6개월-1년으로 수정
+- [x] `literature/Contribution Candidates.md`의 `CAND-01`을 Step 5 최종 방향으로 업데이트
+- [x] `docs/hypothesis.md` 작성
+- [x] `hypothesis/` index와 `CAND-01` hypothesis 묶음 생성
+- [x] `H001` first experiment TODO 작성
+- [x] `CAND-01.md`를 Step 1-5 목표로 업데이트
+- [x] `CAND-02` 이전 범위로 복구
+- [x] `CAND-02` 연구 범위 축소
+- [x] `docs/literature.md`에 contribution candidate Quality Gate 추가
+- [x] `literature/Contribution Candidates.md` 작성
+- [x] primary candidate 세부 feasibility 문서 작성
+- [x] `literature/PAPER.md` registry 전체 paper folder 생성
+- [x] 중복 folder 여부 검증
+- [x] `literature/PAPER.md` folder status 갱신
+- [x] 가능한 PDF를 각 paper folder의 `paper.pdf`로 저장
+- [x] 수정 문서 검증
+- [x] top-tier venue 중심 literature survey 업데이트
+- [x] `docs/literature.md`에 literature workflow rule 정리
+- [x] P01 `3D Active Metric-Semantic SLAM` paper folder 작성
+- [x] 최근 2-3년 environmental perception intelligence, SLAM, navigation 문헌 조사
+- [x] `literature/README.md` Field Map / Trend Synthesis 갱신
+- [x] `literature/PAPER.md` Paper Registry / Reading Queue 갱신
+- [x] `TODO.md` 생성
+- [x] `AGENT.md`에 `TODO.md` 갱신 규칙 추가
+
+## Done
+
+- [x] HM3D pre-exploration RGB-D/pose exporter와 `alignment.json` smoke 구현
+- [x] HM3D scene-specific `VLMaps` map generation / `alignment.json` 생성 경로 결정
+- [x] 6개월-1년 연구 일정에서 first probe, SLAM extension, real-world validation 순서 작성
+- [x] `AGENT.md` long-running/background task policy 추가 및 H001 verification gap 점검
+- [x] real-world deploy 가능 sensor / robot / ground truth setup 확인
+- [x] `VLMaps` alignment adapter 구현 및 Habitat navigability Docker smoke
+- [x] `VLMaps` embedding + artifact exporter를 실제 demo map에서 end-to-end 연결 smoke
+- [x] `VLMaps` grid-to-Habitat coordinate alignment 방법 결정
+- [x] `VLMaps` query/text embedding exporter image 설계 및 Docker smoke test
+- [x] Full `VLMaps` runtime image 필요 여부 결정: 지금은 보류, artifact exporter 우선
+- [x] non-GT semantic artifact generator 선택 및 구현: `VLMaps`-derived exporter
+- [x] 연구 목표 rule 추가: AI, ML, CV, Robotics top-tier journal/conference 타겟
+- [x] Git repo 연결 수정: `origin` -> `https://github.com/Kim-Yoo-Hyun/SSLAM.git`
+- [x] diagnostic GT-assisted candidate backend에서 non-GT semantic candidate backend adapter 설계
+- [x] first probe success/failure threshold 수치화
+- [x] `habitat-h001` evaluation harness smoke 구현: `wrong_goal_visit`, `wasted_path`, GT reference, baseline logs
+- [x] `habitat-h001` runtime image 생성 및 Docker smoke test 통과
+- [x] fallback용 Replica / ScanNet one-scene replay 후보 선정
+- [x] Git repo 연결: `origin` -> `https://github.com/Kim-Yoo-Hyun/SSLAM.git`
+- [x] HM3D/HM3D-OVON runtime integration plan 작성
+- [x] 루트 정리: AGENT.md, README.md, TODO.md만 남기고 runtime/workflow 파일을 H001 내부로 이동
+- [x] top-tier evaluation contract 작성: commit-based wrong-goal metric, GT oracle references, benchmark/baseline/ablation/reporting
+- [x] wrong-goal visit과 wasted path logging format 정의
+- [x] HM3D-OVON episode tarball Docker 확보 및 mount smoke test 통과
+- [x] HM3D Docker mount smoke test 통과: train/val/minival scene assets, semantic files, ObjectNav HM3D v2 episodes 확인
+- [x] HM3D v0.2 scene assets와 ObjectNav HM3DSem-v0.2 episode를 Docker로 확보
+- [x] semantic candidate uncertainty feature 정의: `score_uncertainty`, `margin_uncertainty`, support feature, trigger threshold
+- [x] MP3D / HM3D scene data Docker mount 확인: local scene asset 없음, benchmark gate blocked
+- [x] Stage 1 Docker smoke test 실행: `VLMaps` demo scene map output 확인
+- [x] Docker daemon 접근 권한 확인: 현재 shell은 `sg docker`로 실행 가능
+- [x] Docker 환경에 SLAM tooling을 같은 image로 넣을지 별도 image로 둘지 결정: 별도 image
+- [x] Stage 1 Docker smoke test workflow 작성: `VLMaps` demo, Habitat dataset mount path
+- [x] Step 4 first proxy 선택: pose graph connectivity
+- [x] Stage 1 smoke test 환경 결정: Docker 기반, `VLMaps` demo 우선, Habitat dataset path는 별도 gate
+- [x] `CAND-01` Step 4-5 SLAM uncertainty proxy와 metric 측정 계획 작성
+- [x] `CAND-01` Stage 1 baseline 실행 가능성 확인: `CARe`, `VLMaps`, Habitat ObjectNav
+- [x] contribution candidate를 `literature/README.md` Open Questions와 연결
+- [x] Priority A P30 paper folder full read 보강
+- [x] Priority A P28 paper folder full read 보강
+- [x] Priority A P01 paper folder full read 보강
+- [x] dataset / metric table을 각 `03_evaluation.md`에 정밀 보강
+- [x] Priority A P27 paper folder full read 보강
+- [x] Priority A P24 paper folder full read 보강
+- [x] Priority A P21 paper folder full read 보강
+- [x] Priority A P15 paper folder full read 보강
+- [x] Priority A P13 paper folder full read 보강
+- [x] Priority A P12 paper folder full read 보강
+- [x] Priority A P11 paper folder full read 보강
+- [x] Priority A P09 paper folder full read 보강
+- [x] Priority A P06 paper folder full read 보강
+- [x] Priority A P05 paper folder full read 보강
+- [x] Priority A P03 paper folder full read 보강
+- [x] `docs/index.md` 작성
+- [x] Priority A P02 paper folder full read 보강
+- [x] `H001`을 Step 5 최종 방향의 umbrella hypothesis로 업데이트
+- [x] hypothesis workflow 기간 기준을 6개월-1년으로 수정
+- [x] contribution candidate 기간 기준을 6개월-1년으로 수정
+- [x] `literature/Contribution Candidates.md`의 `CAND-01`을 Step 5 최종 방향으로 업데이트
+- [x] `docs/hypothesis.md` 작성
+- [x] `hypothesis/` index와 `CAND-01` hypothesis 묶음 생성
+- [x] `H001` first experiment TODO 작성
+- [x] `CAND-01.md`를 Step 1-5 목표로 업데이트
+- [x] `CAND-02` 이전 범위로 복구
+- [x] `CAND-02` 연구 범위 축소
+- [x] `docs/literature.md`에 contribution candidate Quality Gate 추가
+- [x] `literature/Contribution Candidates.md` 작성
+- [x] primary candidate 세부 feasibility 문서 작성
+- [x] `literature/PAPER.md` registry 전체 paper folder 생성
+- [x] 중복 folder 여부 검증
+- [x] `literature/PAPER.md` folder status 갱신
+- [x] 가능한 PDF를 각 paper folder의 `paper.pdf`로 저장
+- [x] 수정 문서 검증
+- [x] top-tier venue 중심 literature survey 업데이트
+- [x] `docs/literature.md`에 literature workflow rule 정리
+- [x] P01 `3D Active Metric-Semantic SLAM` paper folder 작성
+- [x] 최근 2-3년 environmental perception intelligence, SLAM, navigation 문헌 조사
+- [x] `literature/README.md` Field Map / Trend Synthesis 갱신
+- [x] `literature/PAPER.md` Paper Registry / Reading Queue 갱신
+- [x] `TODO.md` 생성
+- [x] `AGENT.md`에 `TODO.md` 갱신 규칙 추가

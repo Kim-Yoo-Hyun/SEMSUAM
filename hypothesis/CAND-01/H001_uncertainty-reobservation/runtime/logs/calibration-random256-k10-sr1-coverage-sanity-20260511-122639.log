@@ -1,0 +1,66 @@
+[03:26:43:658468]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/train/00744-1S7LAXRdDqK/1S7LAXRdDqK.basis.scn` exists but failed to load.
+[03:26:43:812257]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/train/00009-vLpv2VX547B/vLpv2VX547B.basis.scn` exists but failed to load.
+[03:26:43:928530]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/train/00057-1UnKg1rAb8A/1UnKg1rAb8A.basis.scn` exists but failed to load.
+[03:26:44:013601]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/train/00017-oEPjPNSPmzL/oEPjPNSPmzL.basis.scn` exists but failed to load.
+[03:26:44:043808]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/train/00020-XYyR54sxe6b/XYyR54sxe6b.basis.scn` exists but failed to load.
+{
+  "aggregate": {
+    "GTTargetOracle": {
+      "episodes": 50,
+      "mean_num_reobservations": 0.0,
+      "mean_spl": 1.0,
+      "mean_wasted_path_reobserve": 0.0,
+      "mean_wasted_path_total": 0.0,
+      "mean_wasted_path_wrong_goal": 0.0,
+      "success_rate": 1.0,
+      "wrong_goal_visit_rate": 0.0
+    },
+    "NoReobserve": {
+      "episodes": 50,
+      "mean_num_reobservations": 0.0,
+      "mean_spl": 0.15305568448969034,
+      "mean_wasted_path_reobserve": 0.0,
+      "mean_wasted_path_total": 6.3570137688529496,
+      "mean_wasted_path_wrong_goal": 3.0613418936729433,
+      "success_rate": 0.24,
+      "wrong_goal_visit_rate": 0.38
+    }
+  },
+  "candidate_artifact": "/runs/h001_calibration_artifacts_random256_k10_sr1_v1/all_scenes_aligned.jsonl",
+  "candidate_backend": "artifact_jsonl",
+  "candidate_backend_uses_gt_for_action": false,
+  "candidate_decision_rows": 600,
+  "dataset": "hm3d_objectnav_v2",
+  "episode_rows": 100,
+  "episodes_loaded": 50,
+  "episodes_requested": 50,
+  "loaded_datasets": [
+    "hm3d_objectnav_v2"
+  ],
+  "loaded_manifest_splits": [
+    "calibration"
+  ],
+  "loaded_source_splits": [
+    "train"
+  ],
+  "manifest": "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_splits_sr1.json",
+  "manifest_split": "calibration",
+  "notes": [
+    "diagnostic GT-assisted backend is for smoke only; artifact_jsonl is the non-GT adapter boundary",
+    "not a paper result",
+    "used to validate log schema, GT references, and baseline comparability"
+  ],
+  "policies": [
+    "GTTargetOracle",
+    "NoReobserve"
+  ],
+  "requested_dataset": "hm3d_objectnav_v2",
+  "requested_split": "val",
+  "run_id": "h001_calibration_random256_k10_sr1_coverage_sanity_20260511",
+  "schema_version": "h001.navlog.v1",
+  "semantic_reobs_view_bonus": 1,
+  "semantic_tie_band": 0.01,
+  "semantic_uncertainty_trigger": 0.6,
+  "split": "train",
+  "viewpoint_decision_rows": 0
+}

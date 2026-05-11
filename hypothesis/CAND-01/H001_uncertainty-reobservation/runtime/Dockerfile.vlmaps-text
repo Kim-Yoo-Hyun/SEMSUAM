@@ -1,0 +1,28 @@
+FROM python:3.9-slim
+
+ARG CLIP_COMMIT=d05afc436d78f1c48dc0dbf8e5980a9d471f35f6
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    OPENAI_CLIP_COMMIT=${CLIP_COMMIT} \
+    TORCH_HOME=/models/torch
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN python -m pip install --no-cache-dir --upgrade pip \
+    && python -m pip install --no-cache-dir \
+      --index-url https://download.pytorch.org/whl/cpu \
+      torch==2.2.2+cpu \
+      torchvision==0.17.2+cpu \
+    && python -m pip install --no-cache-dir \
+      numpy==1.26.4 \
+      git+https://github.com/openai/CLIP.git@${CLIP_COMMIT}
+
+COPY export_text_embeddings.py /opt/research3/export_text_embeddings.py
+
+WORKDIR /workspace
+
+CMD ["python", "/opt/research3/export_text_embeddings.py", "--queries", "bed", "chair", "--out-dir", "/embeddings"]

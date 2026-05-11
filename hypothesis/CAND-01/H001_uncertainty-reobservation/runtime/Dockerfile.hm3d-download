@@ -1,0 +1,32 @@
+FROM python:3.11-slim
+
+ARG HABITAT_SIM_COMMIT=3da90e2d08313dc24670ce85d8adefdeceda0b69
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV DATA_ROOT=/data
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    git \
+    git-lfs \
+    unzip \
+    wget \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN python -m pip install --no-cache-dir --upgrade pip \
+  && python -m pip install --no-cache-dir GitPython==3.1.43
+
+RUN curl -fsSL \
+    "https://raw.githubusercontent.com/facebookresearch/habitat-sim/${HABITAT_SIM_COMMIT}/src_python/habitat_sim/utils/datasets_download.py" \
+    -o /opt/datasets_download.py
+
+COPY download_hm3d.sh /opt/download_hm3d.sh
+COPY check_hm3d.py /opt/check_hm3d.py
+
+RUN chmod +x /opt/download_hm3d.sh
+
+WORKDIR /data
+
+CMD ["/opt/download_hm3d.sh"]

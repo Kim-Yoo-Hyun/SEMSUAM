@@ -1,0 +1,72 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environments
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+env/
+
+# Secrets / credentials
+*token*
+*secret*
+*credential*
+*.pem
+*.key
+*.netrc
+
+# Research data / generated artifacts
+data/
+datasets/
+runs/
+results/
+experiments/
+outputs/
+artifacts/
+checkpoints/
+models/
+wandb/
+mlruns/
+
+# Large archives and arrays
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.glb
+*.navmesh
+*.habitat
+
+# Paper PDFs are kept local; metadata/cards stay tracked.
+literature/**/paper.pdf
+*.pdf
+
+# Runtime scratch
+hypothesis/**/runtime/.cache/
+hypothesis/**/runtime/runs/
+hypothesis/**/runtime/data/

@@ -1,0 +1,56 @@
+FROM mambaorg/micromamba:1.5.10-jammy
+
+USER root
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    MAGNUM_LOG=quiet \
+    HABITAT_SIM_LOG=quiet \
+    PYTHONPATH=/opt/h001
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      bash \
+      ca-certificates \
+      git \
+      libegl1 \
+      libgl1 \
+      libglib2.0-0 \
+      libopengl0 \
+      libsm6 \
+      libxext6 \
+      libxrender1 \
+      tini \
+      wget \
+    && rm -rf /var/lib/apt/lists/*
+
+USER $MAMBA_USER
+
+RUN micromamba install -y -n base \
+      -c conda-forge \
+      -c aihabitat \
+      python=3.9 \
+      cmake=3.14.0 \
+      habitat-sim=0.3.3 \
+      withbullet \
+      headless \
+      git \
+      pip \
+    && micromamba clean -a -y
+
+WORKDIR /home/mambauser
+
+RUN git clone --depth 1 --branch v0.3.3 \
+      https://github.com/facebookresearch/habitat-lab.git \
+      /home/mambauser/habitat-lab \
+    && micromamba run -n base pip install --no-cache-dir \
+      -e /home/mambauser/habitat-lab/habitat-lab \
+    && micromamba run -n base pip install --no-cache-dir \
+      pillow==10.4.0
+
+COPY smoke_habitat_h001.py /opt/h001/smoke_habitat_h001.py
+COPY h001_runtime /opt/h001/h001_runtime
+
+WORKDIR /workspace
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["micromamba", "run", "-n", "base", "python", "/opt/h001/smoke_habitat_h001.py", "--data-root", "/data"]

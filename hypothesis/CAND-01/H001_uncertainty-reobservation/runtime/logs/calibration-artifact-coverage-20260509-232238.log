@@ -1,0 +1,90 @@
+[2026-05-09T23:22:38+09:00] calibration artifact coverage analysis start
+[14:22:42:737174]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/train/00006-HkseAnWCgqk/HkseAnWCgqk.basis.scn` exists but failed to load.
+[14:22:42:938122]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/train/00009-vLpv2VX547B/vLpv2VX547B.basis.scn` exists but failed to load.
+[14:22:43:167336]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/train/00016-qk9eeNeR4vw/qk9eeNeR4vw.basis.scn` exists but failed to load.
+[14:22:43:297948]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/train/00017-oEPjPNSPmzL/oEPjPNSPmzL.basis.scn` exists but failed to load.
+[14:22:43:329767]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/train/00020-XYyR54sxe6b/XYyR54sxe6b.basis.scn` exists but failed to load.
+{
+  "by_scene": {
+    "HkseAnWCgqk": {
+      "candidate_count_mean": 5.0,
+      "episodes": 10,
+      "reachable_correct_and_wrong_rate": 0.0,
+      "top_candidate_reachable_rate": 0.6
+    },
+    "XYyR54sxe6b": {
+      "candidate_count_mean": 5.0,
+      "episodes": 10,
+      "reachable_correct_and_wrong_rate": 0.3,
+      "top_candidate_reachable_rate": 1.0
+    },
+    "oEPjPNSPmzL": {
+      "candidate_count_mean": 5.0,
+      "episodes": 10,
+      "reachable_correct_and_wrong_rate": 0.6,
+      "top_candidate_reachable_rate": 0.6
+    },
+    "qk9eeNeR4vw": {
+      "candidate_count_mean": 5.0,
+      "episodes": 10,
+      "reachable_correct_and_wrong_rate": 0.3,
+      "top_candidate_reachable_rate": 0.6
+    },
+    "vLpv2VX547B": {
+      "candidate_count_mean": 5.0,
+      "episodes": 10,
+      "reachable_correct_and_wrong_rate": 0.4,
+      "top_candidate_reachable_rate": 0.8
+    }
+  },
+  "candidate_artifact": "/runs/h001_calibration_artifacts_v1/all_scenes_aligned.jsonl",
+  "candidate_backend": "artifact_jsonl",
+  "candidate_backend_uses_gt_for_action": false,
+  "candidate_count_per_episode": {
+    "max": 5,
+    "mean": 5.0,
+    "min": 5
+  },
+  "candidate_label_coverage": 1.0,
+  "candidate_reachable_rate": 0.664,
+  "candidate_rows": 250,
+  "checks": {
+    "all_episodes_have_candidates": true,
+    "backend_uses_gt_for_action": false,
+    "candidate_label_coverage_pass": true,
+    "no_reobserve_wrong_goal_pass": true,
+    "overall_pass": false,
+    "reachable_correct_and_wrong_pass": false
+  },
+  "episodes": 50,
+  "episodes_with_correct_candidate_rate": 0.6,
+  "episodes_with_reachable_correct_and_wrong_rate": 0.32,
+  "episodes_with_reachable_correct_rate": 0.38,
+  "episodes_with_reachable_wrong_rate": 0.8,
+  "episodes_with_wrong_candidate_rate": 0.88,
+  "manifest": "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_splits_v1.json",
+  "manifest_split": "calibration",
+  "no_reobserve_summary": {
+    "episodes": 50,
+    "mean_num_reobservations": 0.0,
+    "mean_spl": 0.12668811236178285,
+    "mean_wasted_path_reobserve": 0.0,
+    "mean_wasted_path_total": 7.071450138600666,
+    "mean_wasted_path_wrong_goal": 4.099151239395142,
+    "success_rate": 0.22,
+    "wrong_goal_visit_rate": 0.46
+  },
+  "query_counts": {
+    "bed": 8,
+    "chair": 9,
+    "plant": 8,
+    "sofa": 11,
+    "toilet": 7,
+    "tv_monitor": 7
+  },
+  "schema_version": "h001.artifact_coverage.v1",
+  "summary": "/runs/h001_calibration_policy_v1/coverage_sanity/summary.json",
+  "top_candidate_correct_rate": 0.36,
+  "top_candidate_reachable_rate": 0.72
+}
+[2026-05-09T23:22:43+09:00] calibration artifact coverage analysis exit status: 1

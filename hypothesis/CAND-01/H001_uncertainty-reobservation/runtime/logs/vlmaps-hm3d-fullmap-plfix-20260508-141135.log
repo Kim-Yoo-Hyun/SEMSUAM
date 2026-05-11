@@ -1,0 +1,77 @@
++ cd /home/yoohyun/research3
++ sg docker -c 'docker run --rm --gpus all --ipc=host -e TORCH_HOME=/models/torch -e VLMAPS_CHECKPOINT=/models/vlmaps/lseg/checkpoints/demo_e200.ckpt -v /tmp/research3-runs/hm3d_vlmaps_export_smoke:/work/scene -v /tmp/research3-models:/models research3/vlmaps-hm3d:20260508-timmfix python /opt/research3/run_vlmaps_map.py --data-dir /work/scene --camera-height 1.5 --depth-sample-rate 500 --checkpoint /models/vlmaps/lseg/checkpoints/demo_e200.ckpt --download-checkpoint'
+__file__:  /opt/vlmaps/examples/context.py
+imported path: /opt/vlmaps
+cuda
+Loading CLIP model...
+  0%|                                               | 0.00/338M [00:00<?, ?iB/s]  3%|█▏                                     | 9.88M/338M [00:00<00:03, 102MiB/s]  6%|██▍                                    | 21.3M/338M [00:00<00:02, 112MiB/s] 10%|███▊                                   | 32.5M/338M [00:00<00:02, 114MiB/s] 13%|█████                                  | 43.7M/338M [00:00<00:02, 116MiB/s] 16%|██████▎                                | 54.9M/338M [00:00<00:02, 116MiB/s] 20%|███████▋                               | 66.1M/338M [00:00<00:02, 117MiB/s] 23%|████████▉                              | 77.3M/338M [00:00<00:02, 111MiB/s] 26%|██████████▎                            | 89.2M/338M [00:00<00:02, 115MiB/s] 30%|███████████▉                            | 100M/338M [00:00<00:02, 113MiB/s] 33%|█████████████▎                          | 112M/338M [00:01<00:02, 117MiB/s] 37%|██████████████▌                         | 123M/338M [00:01<00:01, 117MiB/s] 40%|███████████████▉                        | 135M/338M [00:01<00:01, 117MiB/s] 43%|█████████████████▎                      | 146M/338M [00:01<00:01, 117MiB/s] 46%|██████████████████▌                     | 157M/338M [00:01<00:01, 117MiB/s] 50%|███████████████████▉                    | 168M/338M [00:01<00:01, 117MiB/s] 53%|█████████████████████▏                  | 179M/338M [00:01<00:01, 117MiB/s] 56%|██████████████████████▌                 | 190M/338M [00:01<00:01, 116MiB/s] 60%|███████████████████████▉                | 202M/338M [00:01<00:01, 117MiB/s] 63%|█████████████████████████▏              | 213M/338M [00:01<00:01, 117MiB/s] 66%|██████████████████████████▌             | 224M/338M [00:02<00:01, 117MiB/s] 70%|███████████████████████████▉            | 236M/338M [00:02<00:00, 117MiB/s] 73%|█████████████████████████████▏          | 247M/338M [00:02<00:00, 117MiB/s] 76%|██████████████████████████████▌         | 258M/338M [00:02<00:00, 116MiB/s] 80%|███████████████████████████████▉        | 269M/338M [00:02<00:00, 115MiB/s] 83%|█████████████████████████████████▏      | 280M/338M [00:02<00:00, 116MiB/s] 86%|██████████████████████████████████▌     | 291M/338M [00:02<00:00, 115MiB/s] 90%|███████████████████████████████████▊    | 303M/338M [00:02<00:00, 116MiB/s] 93%|█████████████████████████████████████▏  | 314M/338M [00:02<00:00, 117MiB/s] 96%|██████████████████████████████████████▌ | 325M/338M [00:02<00:00, 116MiB/s]100%|███████████████████████████████████████▊| 336M/338M [00:03<00:00, 116MiB/s]100%|████████████████████████████████████████| 338M/338M [00:03<00:00, 116MiB/s]
+loading scene /work/scene
+/work/scene/map/color_top_down_1.npy is saved.
+/work/scene/map/grid_1_gt.npy is saved.
+/work/scene/map/grid_lseg_1.npy is saved.
+/work/scene/map/weight_lseg_1.npy is saved.
+/work/scene/map/obstacles.npy is saved.
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:00<00:02,  1.47it/s] 50%|█████     | 2/4 [00:01<00:01,  1.90it/s] 75%|███████▌  | 3/4 [00:01<00:00,  1.91it/s]100%|██████████| 4/4 [00:02<00:00,  2.05it/s]/work/scene/map/color_top_down_1.npy is saved.
+/work/scene/map/grid_1_gt.npy is saved.
+/work/scene/map/grid_lseg_1.npy is saved.
+/work/scene/map/weight_lseg_1.npy is saved.
+/work/scene/map/obstacles.npy is saved.
+100%|██████████| 4/4 [00:03<00:00,  1.10it/s]
+{
+  "checkpoint": "/models/vlmaps/lseg/checkpoints/demo_e200.ckpt",
+  "cuda_device": "NVIDIA GeForce RTX 5090",
+  "data_dir": "/work/scene",
+  "expected_files": [
+    "map/grid_lseg_1.npy",
+    "map/weight_lseg_1.npy",
+    "map/obstacles.npy"
+  ],
+  "map_dir": "/work/scene/map",
+  "status": "completed"
+}
++ sg docker -c 'docker run --rm --gpus all --ipc=host -v /tmp/research3-runs/hm3d_vlmaps_export_smoke:/work/scene:ro -v /tmp/research3-models:/models:ro research3/vlmaps-hm3d:20260508-timmfix python /opt/research3/verify_vlmaps_map.py --scene-dir /work/scene'
+{
+  "alignment_source": "hm3d_habitat_preexploration",
+  "coordinate_frame": "habitat_world",
+  "counts": {
+    "depth": 4,
+    "pose": 4,
+    "rgb": 4,
+    "semantic": 4
+  },
+  "map_summaries": {
+    "grid": {
+      "dtype": "float32",
+      "finite_sample": true,
+      "path": "/work/scene/map/grid_lseg_1.npy",
+      "shape": [
+        1000,
+        1000,
+        512
+      ]
+    },
+    "obstacles": {
+      "dtype": "uint8",
+      "finite_sample": true,
+      "path": "/work/scene/map/obstacles.npy",
+      "shape": [
+        1000,
+        1000
+      ]
+    },
+    "weight": {
+      "dtype": "float64",
+      "finite_sample": true,
+      "path": "/work/scene/map/weight_lseg_1.npy",
+      "shape": [
+        1000,
+        1000
+      ]
+    }
+  },
+  "obstacle_free_cells": 86,
+  "ok": true,
+  "scene_dir": "/work/scene",
+  "uses_gt_for_action": false,
+  "weight_nonzero": 92
+}

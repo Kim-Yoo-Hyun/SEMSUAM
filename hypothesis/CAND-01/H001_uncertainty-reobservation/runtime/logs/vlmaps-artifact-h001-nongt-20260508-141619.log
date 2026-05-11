@@ -1,0 +1,18 @@
++ rm -f /out/hm3d_vlmaps_raw.jsonl /out/hm3d_vlmaps_aligned.jsonl
++ mkdir -p /out/raw
++ for query in bed chair plant sofa
++ python -m h001_runtime.export_vlmaps_artifact --scene-dir /scene --scene-id hm3d_v0.2/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb --query bed --query-embedding /out/embeddings/bed.npy --out /out/raw/bed.jsonl --grid /scene/map/grid_lseg_1.npy --weight /scene/map/weight_lseg_1.npy --obstacles /scene/map/obstacles.npy --row-start 440 --row-end 670 --col-start 270 --col-end 630 --top-percentile 99.0 --min-component-cells 1 --max-candidates 5 --use-obstacle-mask
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/opt/conda/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/opt/h001/h001_runtime/export_vlmaps_artifact.py", line 261, in <module>
+    main()
+  File "/opt/h001/h001_runtime/export_vlmaps_artifact.py", line 255, in main
+    with out.open("w", encoding="utf-8") as handle:
+  File "/opt/conda/lib/python3.9/pathlib.py", line 1252, in open
+    return io.open(self, mode, buffering, encoding, errors, newline,
+  File "/opt/conda/lib/python3.9/pathlib.py", line 1120, in _opener
+    return self._accessor.open(self, flags, mode)
+PermissionError: [Errno 13] Permission denied: '/out/raw/bed.jsonl'

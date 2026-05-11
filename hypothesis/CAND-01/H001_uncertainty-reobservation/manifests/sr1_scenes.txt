@@ -1,0 +1,5 @@
+1S7LAXRdDqK|hm3d_v0.2/train/00744-1S7LAXRdDqK/1S7LAXRdDqK.basis.glb|train/00744-1S7LAXRdDqK/1S7LAXRdDqK.basis.glb|3101
+vLpv2VX547B|hm3d_v0.2/train/00009-vLpv2VX547B/vLpv2VX547B.basis.glb|train/00009-vLpv2VX547B/vLpv2VX547B.basis.glb|2102
+1UnKg1rAb8A|hm3d_v0.2/train/00057-1UnKg1rAb8A/1UnKg1rAb8A.basis.glb|train/00057-1UnKg1rAb8A/1UnKg1rAb8A.basis.glb|3103
+oEPjPNSPmzL|hm3d_v0.2/train/00017-oEPjPNSPmzL/oEPjPNSPmzL.basis.glb|train/00017-oEPjPNSPmzL/oEPjPNSPmzL.basis.glb|2104
+XYyR54sxe6b|hm3d_v0.2/train/00020-XYyR54sxe6b/XYyR54sxe6b.basis.glb|train/00020-XYyR54sxe6b/XYyR54sxe6b.basis.glb|2105

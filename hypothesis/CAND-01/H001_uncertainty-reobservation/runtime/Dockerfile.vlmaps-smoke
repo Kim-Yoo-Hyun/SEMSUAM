@@ -1,0 +1,30 @@
+FROM python:3.8-slim
+
+ARG VLMAPS_BRANCH=demo
+ARG VLMAPS_COMMIT=bc79b26a577e5a9408f86e45e5c16530ca80f867
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV VLMAPS_DATA_DIR=/datasets/vlmaps
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    git \
+    unzip \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN python -m pip install --no-cache-dir --upgrade pip \
+  && python -m pip install --no-cache-dir \
+    gdown==4.6.0 \
+    numpy==1.24.4 \
+    pillow==10.4.0
+
+RUN git clone --branch ${VLMAPS_BRANCH} --depth 1 https://github.com/vlmaps/vlmaps.git /opt/vlmaps \
+  && cd /opt/vlmaps \
+  && test "$(git rev-parse HEAD)" = "${VLMAPS_COMMIT}"
+
+COPY smoke_vlmaps.py /opt/research3/smoke_vlmaps.py
+
+WORKDIR /opt/vlmaps
+
+CMD ["python", "/opt/research3/smoke_vlmaps.py"]
