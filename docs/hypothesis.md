@@ -20,7 +20,7 @@ Hypothesis 관련 산출물은 루트의 `hypothesis/` 폴더에 저장한다.
 
 Hypothesis 작업을 시작하는 에이전트는 아래 순서로 읽는다. 없는 파일은 건너뛰고, 있는 파일의 최신 내용을 우선한다.
 
-1. `AGENT.md`
+1. `AGENTS.md`
 2. `TODO.md`
 3. `docs/index.md`
 4. `docs/literature.md`

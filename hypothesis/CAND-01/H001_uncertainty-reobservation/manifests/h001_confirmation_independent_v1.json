@@ -1,0 +1,607 @@
+{
+  "created_at": "2026-05-15T07:03:43.599894+00:00",
+  "creation_command": "filter h001_replacement_probe_v1 excluding scenes used by h001_first_eval_replacement_v1",
+  "exclusion_manifest": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_first_eval_replacement_v1.json",
+  "manifest_schema_version": "h001.split_manifest.v1",
+  "query_counts": {
+    "bed": 4,
+    "chair": 4,
+    "plant": 4,
+    "sofa": 4,
+    "toilet": 2,
+    "tv_monitor": 2
+  },
+  "rows": [
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "74f891771ca876a4920241b3d64350960f242ca2b6946407e6f2852ed79db6b9",
+      "episode_key": "HM3D ObjectNav v2:val:6s7QHgap2fW:13:0:bed",
+      "geodesic_distance": 1.17592,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 13,
+      "scene_id": "hm3d_v0.2/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb",
+      "scene_key": "6s7QHgap2fW",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 0,
+      "selection_seed": 20260508,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/6s7QHgap2fW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        4.1776,
+        2.84944,
+        -0.74142
+      ],
+      "start_rotation": [
+        0,
+        0.98969,
+        0,
+        -0.1432
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "7029e35bd232d306f1f306aab848c8e1c9fc6bcd66e63530c741b6375f79420f",
+      "episode_key": "HM3D ObjectNav v2:val:6s7QHgap2fW:1:0:chair",
+      "geodesic_distance": 5.29849,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 1,
+      "scene_id": "hm3d_v0.2/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb",
+      "scene_key": "6s7QHgap2fW",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 1,
+      "selection_seed": 20260508,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/6s7QHgap2fW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        6.25356,
+        2.84944,
+        -3.22954
+      ],
+      "start_rotation": [
+        0,
+        0.61451,
+        0,
+        -0.78891
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "3f6f7529df870c224d676f4fffc2f81ca98b65b4d78b275364dc11a75715ea7a",
+      "episode_key": "HM3D ObjectNav v2:val:6s7QHgap2fW:19:2:plant",
+      "geodesic_distance": 6.48042,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 19,
+      "scene_id": "hm3d_v0.2/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb",
+      "scene_key": "6s7QHgap2fW",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 2,
+      "selection_seed": 20260508,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/6s7QHgap2fW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        2.53037,
+        2.84944,
+        -3.81293
+      ],
+      "start_rotation": [
+        0,
+        0.98681,
+        0,
+        -0.16189
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "14636977070a04dd062b8091294f8418c13db82c293a7181936d6528ddf16293",
+      "episode_key": "HM3D ObjectNav v2:val:6s7QHgap2fW:0:0:sofa",
+      "geodesic_distance": 5.98677,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 0,
+      "scene_id": "hm3d_v0.2/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb",
+      "scene_key": "6s7QHgap2fW",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 3,
+      "selection_seed": 20260508,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/6s7QHgap2fW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        12.6672,
+        -0.00056,
+        0.2282
+      ],
+      "start_rotation": [
+        0,
+        0.99913,
+        0,
+        -0.04181
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "28bbe6738d4bccc29a02a2597058e38929a326c31cafea916d63d7e196877326",
+      "episode_key": "HM3D ObjectNav v2:val:6s7QHgap2fW:3:3:toilet",
+      "geodesic_distance": 18.0573,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 3,
+      "scene_id": "hm3d_v0.2/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb",
+      "scene_key": "6s7QHgap2fW",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 4,
+      "selection_seed": 20260508,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/6s7QHgap2fW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        7.05762,
+        0.04944,
+        -0.6609
+      ],
+      "start_rotation": [
+        0,
+        0.99996,
+        0,
+        0.00845
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "835a8ba536a3f35b07130559b49d5bc3ac6f53dbb2b7fd8db0167c3eedf68e18",
+      "episode_key": "HM3D ObjectNav v2:val:6s7QHgap2fW:10:0:tv_monitor",
+      "geodesic_distance": 10.43937,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 10,
+      "scene_id": "hm3d_v0.2/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb",
+      "scene_key": "6s7QHgap2fW",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 5,
+      "selection_seed": 20260508,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/6s7QHgap2fW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        1.24805,
+        0.01379,
+        -0.7318
+      ],
+      "start_rotation": [
+        0,
+        0.96593,
+        0,
+        -0.25882
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "c7cd11683bb72a76d56c8761fa4bdee82eb1fac873b7b10bf6e40a3dac650c81",
+      "episode_key": "HM3D ObjectNav v2:val:6s7QHgap2fW:11:4:bed",
+      "geodesic_distance": 2.01939,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 11,
+      "scene_id": "hm3d_v0.2/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb",
+      "scene_key": "6s7QHgap2fW",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 6,
+      "selection_seed": 20260508,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/6s7QHgap2fW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        5.16566,
+        2.84944,
+        -0.72306
+      ],
+      "start_rotation": [
+        0,
+        0.10297,
+        0,
+        0.99468
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "6fd3908f350115cb75a9545b1490817094d461eddee8c56bda1e7b79ac7d34a6",
+      "episode_key": "HM3D ObjectNav v2:val:6s7QHgap2fW:21:2:chair",
+      "geodesic_distance": 4.14387,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 21,
+      "scene_id": "hm3d_v0.2/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb",
+      "scene_key": "6s7QHgap2fW",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 7,
+      "selection_seed": 20260508,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/6s7QHgap2fW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        5.74629,
+        2.84944,
+        -1.7144
+      ],
+      "start_rotation": [
+        0,
+        0.90326,
+        0,
+        -0.42909
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "f39c4b16f783a7a6ac5752cb39e1fab75ca9f1ba216c5efb5947dc51a50df361",
+      "episode_key": "HM3D ObjectNav v2:val:6s7QHgap2fW:18:0:plant",
+      "geodesic_distance": 2.30683,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 18,
+      "scene_id": "hm3d_v0.2/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb",
+      "scene_key": "6s7QHgap2fW",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 8,
+      "selection_seed": 20260508,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/6s7QHgap2fW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        10.20776,
+        -0.00056,
+        0.38988
+      ],
+      "start_rotation": [
+        0,
+        0.9372,
+        0,
+        0.3488
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "2067381b1fb86f64b6faa140c0489cd213467a9383f1c77edd548963243ed0a0",
+      "episode_key": "HM3D ObjectNav v2:val:6s7QHgap2fW:5:1:sofa",
+      "geodesic_distance": 5.03892,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 5,
+      "scene_id": "hm3d_v0.2/val/00890-6s7QHgap2fW/6s7QHgap2fW.basis.glb",
+      "scene_key": "6s7QHgap2fW",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 9,
+      "selection_seed": 20260508,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/6s7QHgap2fW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        4.83154,
+        0.04944,
+        -0.34982
+      ],
+      "start_rotation": [
+        0,
+        0.84389,
+        0,
+        -0.53652
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "2ca81af1dbf5fec5248ed63204ca7dead78fd7c438e9fd4ed3ed1317d50bca51",
+      "episode_key": "HM3D ObjectNav v2:val:GLAQ4DNUx5U:2:2:bed",
+      "geodesic_distance": 3.17073,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 2,
+      "scene_id": "hm3d_v0.2/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb",
+      "scene_key": "GLAQ4DNUx5U",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 10,
+      "selection_seed": 20260508,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/GLAQ4DNUx5U.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -3.27051,
+        1.20711,
+        7.39412
+      ],
+      "start_rotation": [
+        0,
+        0.85086,
+        0,
+        0.52539
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "3585eef147498d31b675a35dcb1fbe8caf5a4e9377b068dcc21692625f7ff771",
+      "episode_key": "HM3D ObjectNav v2:val:GLAQ4DNUx5U:24:2:chair",
+      "geodesic_distance": 7.2962,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 24,
+      "scene_id": "hm3d_v0.2/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb",
+      "scene_key": "GLAQ4DNUx5U",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 11,
+      "selection_seed": 20260508,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/GLAQ4DNUx5U.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -10.79671,
+        1.20511,
+        6.78705
+      ],
+      "start_rotation": [
+        0,
+        0.94915,
+        0,
+        0.31481
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "9dcfeb60556f9bf65e767acf0e6c801b2f45b0c74794e6283af5689bc8c1eeb7",
+      "episode_key": "HM3D ObjectNav v2:val:GLAQ4DNUx5U:20:2:plant",
+      "geodesic_distance": 10.49146,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 20,
+      "scene_id": "hm3d_v0.2/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb",
+      "scene_key": "GLAQ4DNUx5U",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 12,
+      "selection_seed": 20260508,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/GLAQ4DNUx5U.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -1.43336,
+        1.20711,
+        1.1278
+      ],
+      "start_rotation": [
+        0,
+        0.88178,
+        0,
+        0.47166
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "818cfa98f89991e57e314a678eac4807ca7df2ff5bd30f918cd1359ec944ec7a",
+      "episode_key": "HM3D ObjectNav v2:val:GLAQ4DNUx5U:10:4:sofa",
+      "geodesic_distance": 4.25808,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 10,
+      "scene_id": "hm3d_v0.2/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb",
+      "scene_key": "GLAQ4DNUx5U",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 13,
+      "selection_seed": 20260508,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/GLAQ4DNUx5U.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -10.93231,
+        -1.59289,
+        0.24515
+      ],
+      "start_rotation": [
+        0,
+        0.72169,
+        0,
+        0.69222
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "d0f7ae8b96904411a873ebc7714675a18a7db60e0a2f6a93b125dc67327ff5e2",
+      "episode_key": "HM3D ObjectNav v2:val:GLAQ4DNUx5U:0:3:toilet",
+      "geodesic_distance": 14.84909,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 0,
+      "scene_id": "hm3d_v0.2/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb",
+      "scene_key": "GLAQ4DNUx5U",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 14,
+      "selection_seed": 20260508,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/GLAQ4DNUx5U.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -10.50171,
+        -1.59289,
+        6.25211
+      ],
+      "start_rotation": [
+        0,
+        0.40903,
+        0,
+        -0.91252
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "8235992f31428a9a94786ad028264103aea842ad6fb89d8fa19d3823cd149212",
+      "episode_key": "HM3D ObjectNav v2:val:GLAQ4DNUx5U:23:1:tv_monitor",
+      "geodesic_distance": 9.44008,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 23,
+      "scene_id": "hm3d_v0.2/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb",
+      "scene_key": "GLAQ4DNUx5U",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 15,
+      "selection_seed": 20260508,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/GLAQ4DNUx5U.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -3.03491,
+        -1.59289,
+        2.23419
+      ],
+      "start_rotation": [
+        0,
+        0.40325,
+        0,
+        0.91509
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "a6d58c250d02da2c058bcbeca50e52c7aee34ed034fb70b83fda434337e21c0e",
+      "episode_key": "HM3D ObjectNav v2:val:GLAQ4DNUx5U:8:3:bed",
+      "geodesic_distance": 13.97026,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 8,
+      "scene_id": "hm3d_v0.2/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb",
+      "scene_key": "GLAQ4DNUx5U",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 16,
+      "selection_seed": 20260508,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/GLAQ4DNUx5U.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -9.45152,
+        -1.59289,
+        6.38308
+      ],
+      "start_rotation": [
+        0,
+        0.05355,
+        0,
+        -0.99857
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "11dc2170a1c398357495d1ee183cb62264aa6ffb486211c56ad6f02333da9be4",
+      "episode_key": "HM3D ObjectNav v2:val:GLAQ4DNUx5U:18:1:chair",
+      "geodesic_distance": 6.2235,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 18,
+      "scene_id": "hm3d_v0.2/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb",
+      "scene_key": "GLAQ4DNUx5U",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 17,
+      "selection_seed": 20260508,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/GLAQ4DNUx5U.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -1.64161,
+        1.20711,
+        -0.42938
+      ],
+      "start_rotation": [
+        0,
+        0.96083,
+        0,
+        -0.27712
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "4d31a2d86e8dffed25c816db44446e0415fb3a5c6ba2920f4c7872bc482a6b36",
+      "episode_key": "HM3D ObjectNav v2:val:GLAQ4DNUx5U:27:3:plant",
+      "geodesic_distance": 9.61627,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 27,
+      "scene_id": "hm3d_v0.2/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb",
+      "scene_key": "GLAQ4DNUx5U",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 18,
+      "selection_seed": 20260508,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/GLAQ4DNUx5U.json.gz",
+      "source_split": "val",
+      "start_position": [
+        0.36112,
+        1.20711,
+        7.03399
+      ],
+      "start_rotation": [
+        0,
+        0.9795,
+        0,
+        -0.20145
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "1ed6ea9cd1301bb034359b0c1a83033de36c0dbe4b96cc98fb2658a990c06ad1",
+      "episode_key": "HM3D ObjectNav v2:val:GLAQ4DNUx5U:26:2:sofa",
+      "geodesic_distance": 9.06065,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 26,
+      "scene_id": "hm3d_v0.2/val/00861-GLAQ4DNUx5U/GLAQ4DNUx5U.basis.glb",
+      "scene_key": "GLAQ4DNUx5U",
+      "selected_split": "confirmation_independent_v1",
+      "selection_rank": 19,
+      "selection_seed": 20260508,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/GLAQ4DNUx5U.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -1.13248,
+        -1.59289,
+        4.40946
+      ],
+      "start_rotation": [
+        0,
+        0.55084,
+        0,
+        -0.83461
+      ],
+      "target_or_query": "sofa"
+    }
+  ],
+  "scene_counts": {
+    "6s7QHgap2fW": 10,
+    "GLAQ4DNUx5U": 10
+  },
+  "selected_split": "confirmation_independent_v1",
+  "selection_rule": "scene-disjoint replacement_probe rows; exclude any scene_key present in first_eval_replacement_v1",
+  "selection_seed": 20260508,
+  "source_manifest": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_replacement_probe_v1.json",
+  "split_counts": {
+    "confirmation_independent_v1": 20
+  }
+}

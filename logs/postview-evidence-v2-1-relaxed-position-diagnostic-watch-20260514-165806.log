@@ -1,0 +1,5 @@
+watcher_started_at=2026-05-14T16:58:06+09:00
+score_root=/tmp/research3-runs/h001_postview_scores_v2_1_relaxed_position_random256_k10_sr1_v1
+diagnostic_root=/tmp/research3-runs/h001_postview_score_calibration_v2_1_relaxed_position_random256_k10_sr1_v1
+log=/home/yoohyun/research3/logs/postview-evidence-v2-1-relaxed-position-diagnostic-watch-20260514-165806.log
+zsh:14: read-only variable: status

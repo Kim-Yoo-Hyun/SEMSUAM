@@ -145,6 +145,56 @@ def components_to_candidates(
     return candidates[:max_candidates]
 
 
+def spatial_nms_candidates(
+    scores: np.ndarray,
+    valid: np.ndarray,
+    scene_name: str,
+    query: str,
+    row_start: int,
+    col_start: int,
+    grid_scale: float,
+    scene_floor_y: float,
+    top_percentile: float,
+    max_candidates: int,
+    min_distance_cells: float,
+) -> List[Dict[str, Any]]:
+    threshold = float(np.percentile(scores[valid], top_percentile))
+    candidate_mask = valid & (scores >= threshold)
+    if not np.any(candidate_mask):
+        candidate_mask = valid
+
+    flat_indices = np.argsort(np.where(candidate_mask, scores, -math.inf).ravel())[::-1]
+    height, width = scores.shape
+    selected: List[Tuple[int, int]] = []
+    candidates: List[Dict[str, Any]] = []
+    min_distance_sq = float(min_distance_cells) ** 2
+    for flat_idx in flat_indices:
+        row = int(flat_idx // width)
+        col = int(flat_idx % width)
+        score = float(scores[row, col])
+        if not math.isfinite(score):
+            break
+        if selected and any((row - sr) ** 2 + (col - sc) ** 2 < min_distance_sq for sr, sc in selected):
+            continue
+        selected.append((row, col))
+        candidates.append(
+            {
+                "candidate_id": f"vlmaps:{scene_name}:{query}:spatial_nms:{len(candidates)}",
+                "category": query,
+                "position": candidate_position(row, col, row_start, col_start, grid_scale, scene_floor_y),
+                "visit_position": candidate_position(row, col, row_start, col_start, grid_scale, scene_floor_y),
+                "score": score,
+                "mean_score": score,
+                "view_count": 1,
+                "component_cells": 1,
+                "backend_source": "vlmaps_feature_grid_spatial_nms",
+            }
+        )
+        if len(candidates) >= max_candidates:
+            break
+    return candidates
+
+
 def export_candidates(args: argparse.Namespace) -> Dict[str, Any]:
     scene_dir = Path(args.scene_dir)
     grid_path = Path(args.grid) if args.grid else scene_dir / "map_correct" / "grid_lseg_1.npy"
@@ -168,21 +218,38 @@ def export_candidates(args: argparse.Namespace) -> Dict[str, Any]:
     if not np.any(valid):
         raise ValueError("no valid cells after applying masks")
 
-    threshold = float(np.percentile(scores[valid], args.top_percentile))
-    mask = valid & (scores >= threshold)
     scene_name = scene_dir.name
-    candidates = components_to_candidates(
-        scores,
-        mask,
-        scene_name,
-        args.query,
-        args.row_start,
-        args.col_start,
-        args.grid_scale,
-        args.scene_floor_y,
-        args.min_component_cells,
-        args.max_candidates,
-    )
+    if args.selection_mode == "components":
+        threshold = float(np.percentile(scores[valid], args.top_percentile))
+        mask = valid & (scores >= threshold)
+        candidates = components_to_candidates(
+            scores,
+            mask,
+            scene_name,
+            args.query,
+            args.row_start,
+            args.col_start,
+            args.grid_scale,
+            args.scene_floor_y,
+            args.min_component_cells,
+            args.max_candidates,
+        )
+    elif args.selection_mode == "spatial_nms":
+        candidates = spatial_nms_candidates(
+            scores,
+            valid,
+            scene_name,
+            args.query,
+            args.row_start,
+            args.col_start,
+            args.grid_scale,
+            args.scene_floor_y,
+            args.top_percentile,
+            args.max_candidates,
+            args.spatial_nms_min_distance_cells,
+        )
+    else:
+        raise ValueError(f"unsupported selection mode: {args.selection_mode}")
     if not candidates:
         valid_scores = np.where(valid, scores, -math.inf)
         flat_indices = np.argsort(valid_scores.ravel())[::-1][: args.max_candidates]
@@ -219,6 +286,8 @@ def export_candidates(args: argparse.Namespace) -> Dict[str, Any]:
             "crop": [args.row_start, args.row_end, args.col_start, args.col_end],
             "uses_gt_for_action": False,
             "coordinate_frame": "vlmaps_grid",
+            "selection_mode": args.selection_mode,
+            "spatial_nms_min_distance_cells": args.spatial_nms_min_distance_cells,
         },
     }
 
@@ -240,6 +309,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--top-percentile", type=float, default=99.5)
     parser.add_argument("--min-component-cells", type=int, default=10)
     parser.add_argument("--max-candidates", type=int, default=10)
+    parser.add_argument("--selection-mode", default="components", choices=["components", "spatial_nms"])
+    parser.add_argument("--spatial-nms-min-distance-cells", type=float, default=20.0)
     parser.add_argument("--grid-scale", type=float, default=1.0)
     parser.add_argument("--scene-floor-y", type=float, default=0.0)
     parser.add_argument("--use-obstacle-mask", action="store_true")

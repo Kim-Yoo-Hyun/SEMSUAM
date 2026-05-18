@@ -1,0 +1,10 @@
+watcher_started_at=2026-05-14T16:49:50+09:00
+container=brave_sinoussi
+output_root=/tmp/research3-runs/h001_postview_scores_v2_random256_k10_sr1_v1
+log=/home/yoohyun/research3/logs/postview-evidence-v2-fullcalib-watch-20260514-164950.log
+docker_wait_status=1
+docker_exit_code=missing
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+  File "<frozen os>", line 685, in __getitem__
+KeyError: 'OUT'

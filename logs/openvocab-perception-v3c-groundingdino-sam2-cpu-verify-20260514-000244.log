@@ -1,0 +1,5 @@
+working_directory=/home/yoohyun/research3
+verification=cpu_offline_load
+/opt/conda/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+{'status': 'v3c_cpu_offline_load_ok', 'cuda_available': False, 'groundingdino_processor': 'GroundingDinoProcessor', 'groundingdino_model': 'GroundingDinoForObjectDetection', 'sam2_predictor': 'SAM2ImagePredictor', 'sam2_checkpoint_size': 156008466}

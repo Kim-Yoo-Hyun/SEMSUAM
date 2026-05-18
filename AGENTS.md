@@ -1,4 +1,15 @@
-# AGENT.md
+# AGENTS.md
+
+이 파일은 agent entrypoint이자 연구 운영 규칙의 단일 source of truth다. Paper novelty 판단 기준은 `docs/paper.md`를 함께 따른다.
+
+## Entry Order
+
+에이전트는 이 파일을 먼저 읽은 뒤 아래 순서로 현재 작업 맥락을 확인한다.
+
+1. `TODO.md`
+2. `docs/index.md`
+3. `docs/paper.md`
+4. Current hypothesis or workflow document
 
 ## Working Language
 
@@ -24,7 +35,7 @@
 ## Minimal Structure Policy
 
 - `experiments/`, `paper/`, `decisions/`, `data/`, `figures/`, `results/` 같은 빈 디렉터리를 미리 만들지 않는다.
-- 루트에는 `AGENT.md`, `.gitignore`, `README.md`, `TODO.md`, `summary.md`만 둔다.
+- 루트에는 `AGENTS.md`, `.gitignore`, `README.md`, `TODO.md`, `summary.md`만 둔다.
 - 새 연구 단계가 실제로 필요해지면 관련 workflow 또는 hypothesis 폴더 안에 짧은 workflow 문서를 만든다. 예: `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-YYYYMMDD-eval.md`.
 - Dockerfile, `.py`, `.sh`, runtime workflow 문서는 루트에 두지 않고 관련 hypothesis 내부에 둔다.
 - workflow 문서는 다음을 포함한다.
@@ -116,3 +127,18 @@ tmux new-session -d -s <job-name> 'cd <workdir> && <resumable-command> > logs/<j
 - 논문 주장은 실험 증거, 문헌 근거, 또는 명시적 reasoning note로 추적 가능해야 한다.
 - limitation은 결과 해석과 분리해서 기록한다.
 - paper용 문서와 실험용 문서는 역할을 섞지 않는다.
+
+## Paper Novelty Rules
+
+- Motivation과 novelty를 구분한다. "기존 방법이 안 된다" 또는 "새 모듈을 붙였다"는 motivation일 수 있지만, 그 자체를 contribution으로 쓰지 않는다.
+- Contribution은 원인 진단과 해법의 원리가 함께 있어야 한다. 실패 원인을 설명하는 한 문장과 그 원인에서 method 형태가 왜 도출되는지 연결한다.
+- Challenge는 단순히 "기존 방식이 안 된다"가 아니라 naive baseline을 실제로 돌린 뒤 case-level failure taxonomy로 정의한다.
+- Naive baseline을 먼저 정의하고, 어디서 왜 실패하는지 case-level failure taxonomy를 만든다.
+- Method component는 swap 가능한 module list가 아니라 failure taxonomy에서 강제된 design choice여야 한다.
+- 각 design choice는 ablation으로 검증 가능해야 한다. Ablation은 "전체 시스템 vs baseline"에서 멈추지 않고 component removal, simpler alternative, threshold/utility variant를 포함한다.
+- "왜 더 단순한 방법으로는 안 되는가?"에 답할 수 있어야 한다. 최소 3개 simpler alternative를 정의하고 실패 조건을 적는다.
+- 논문 contribution one-liner는 "원인 진단 + 해법의 원리 + 검증 대상"을 포함한다.
+- 실험은 motivation을 반복하지 않고 novelty를 검증해야 한다. 단순 성능 향상보다 어떤 failure mode가 어떤 component 때문에 줄었는지 보여준다.
+- Top-tier pattern을 목표로 할 때, 같은 데이터셋에서 점수가 좋아졌다는 주장보다 새로운 비교 축, failure mechanism, method derivation, ablation, generality, limitation analysis를 먼저 갖춘다.
+- H001의 novelty 후보는 "semantic uncertainty를 confidence score가 아니라 active SLAM/navigation utility로 변환한다"는 방향이지만, `VLMaps`, detector, segmenter, confidence replanning을 조합했다는 식으로 쓰면 novelty가 약하다.
+- Top-tier target 판단은 `docs/paper.md`의 novelty gate를 따른다.

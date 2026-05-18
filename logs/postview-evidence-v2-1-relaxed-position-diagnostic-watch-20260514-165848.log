@@ -1,0 +1,197 @@
+watcher_started_at=2026-05-14T16:58:48+09:00
+score_root=/tmp/research3-runs/h001_postview_scores_v2_1_relaxed_position_random256_k10_sr1_v1
+diagnostic_root=/tmp/research3-runs/h001_postview_score_calibration_v2_1_relaxed_position_random256_k10_sr1_v1
+log=/home/yoohyun/research3/logs/postview-evidence-v2-1-relaxed-position-diagnostic-watch-20260514-165848.log
+waiting_for_relaxed_scores iteration=1 status=running time=2026-05-14T16:58:48+09:00
+waiting_for_relaxed_scores iteration=2 status=running time=2026-05-14T16:59:48+09:00
+waiting_for_relaxed_scores iteration=3 status=running time=2026-05-14T17:00:48+09:00
+waiting_for_relaxed_scores iteration=4 status=running time=2026-05-14T17:01:48+09:00
+waiting_for_relaxed_scores iteration=5 status=running time=2026-05-14T17:02:48+09:00
+waiting_for_relaxed_scores iteration=6 status=running time=2026-05-14T17:03:48+09:00
+waiting_for_relaxed_scores iteration=7 status=running time=2026-05-14T17:04:48+09:00
+waiting_for_relaxed_scores iteration=8 status=running time=2026-05-14T17:05:49+09:00
+waiting_for_relaxed_scores iteration=9 status=running time=2026-05-14T17:06:49+09:00
+waiting_for_relaxed_scores iteration=10 status=running time=2026-05-14T17:07:49+09:00
+waiting_for_relaxed_scores iteration=11 status=running time=2026-05-14T17:08:49+09:00
+waiting_for_relaxed_scores iteration=12 status=running time=2026-05-14T17:09:49+09:00
+waiting_for_relaxed_scores iteration=13 status=running time=2026-05-14T17:10:49+09:00
+waiting_for_relaxed_scores iteration=14 status=running time=2026-05-14T17:11:49+09:00
+waiting_for_relaxed_scores iteration=15 status=running time=2026-05-14T17:12:49+09:00
+waiting_for_relaxed_scores iteration=16 status=running time=2026-05-14T17:13:49+09:00
+waiting_for_relaxed_scores iteration=17 status=running time=2026-05-14T17:14:49+09:00
+waiting_for_relaxed_scores iteration=18 status=running time=2026-05-14T17:15:49+09:00
+waiting_for_relaxed_scores iteration=19 status=running time=2026-05-14T17:16:49+09:00
+waiting_for_relaxed_scores iteration=20 status=running time=2026-05-14T17:17:49+09:00
+waiting_for_relaxed_scores iteration=21 status=running time=2026-05-14T17:18:49+09:00
+waiting_for_relaxed_scores iteration=22 status=running time=2026-05-14T17:19:49+09:00
+waiting_for_relaxed_scores iteration=23 status=running time=2026-05-14T17:20:49+09:00
+waiting_for_relaxed_scores iteration=24 status=running time=2026-05-14T17:21:49+09:00
+waiting_for_relaxed_scores iteration=25 status=running time=2026-05-14T17:22:49+09:00
+waiting_for_relaxed_scores iteration=26 status=running time=2026-05-14T17:23:49+09:00
+waiting_for_relaxed_scores iteration=27 status=running time=2026-05-14T17:24:49+09:00
+waiting_for_relaxed_scores iteration=28 status=running time=2026-05-14T17:25:49+09:00
+waiting_for_relaxed_scores iteration=29 status=running time=2026-05-14T17:26:49+09:00
+waiting_for_relaxed_scores iteration=30 status=running time=2026-05-14T17:27:49+09:00
+waiting_for_relaxed_scores iteration=31 status=running time=2026-05-14T17:28:49+09:00
+waiting_for_relaxed_scores iteration=32 status=running time=2026-05-14T17:29:49+09:00
+waiting_for_relaxed_scores iteration=33 status=running time=2026-05-14T17:30:49+09:00
+waiting_for_relaxed_scores iteration=34 status=running time=2026-05-14T17:31:49+09:00
+waiting_for_relaxed_scores iteration=35 status=running time=2026-05-14T17:32:49+09:00
+waiting_for_relaxed_scores iteration=36 status=running time=2026-05-14T17:33:49+09:00
+waiting_for_relaxed_scores iteration=37 status=running time=2026-05-14T17:34:49+09:00
+waiting_for_relaxed_scores iteration=38 status=running time=2026-05-14T17:35:49+09:00
+waiting_for_relaxed_scores iteration=39 status=running time=2026-05-14T17:36:49+09:00
+waiting_for_relaxed_scores iteration=40 status=running time=2026-05-14T17:37:49+09:00
+waiting_for_relaxed_scores iteration=41 status=running time=2026-05-14T17:38:49+09:00
+waiting_for_relaxed_scores iteration=42 status=running time=2026-05-14T17:39:49+09:00
+waiting_for_relaxed_scores iteration=43 status=running time=2026-05-14T17:40:49+09:00
+waiting_for_relaxed_scores iteration=44 status=running time=2026-05-14T17:41:49+09:00
+waiting_for_relaxed_scores iteration=45 status=running time=2026-05-14T17:42:49+09:00
+waiting_for_relaxed_scores iteration=46 status=running time=2026-05-14T17:43:49+09:00
+waiting_for_relaxed_scores iteration=47 status=running time=2026-05-14T17:44:49+09:00
+waiting_for_relaxed_scores iteration=48 status=running time=2026-05-14T17:45:49+09:00
+waiting_for_relaxed_scores iteration=49 status=running time=2026-05-14T17:46:49+09:00
+waiting_for_relaxed_scores iteration=50 status=running time=2026-05-14T17:47:49+09:00
+waiting_for_relaxed_scores iteration=51 status=running time=2026-05-14T17:48:49+09:00
+waiting_for_relaxed_scores iteration=52 status=running time=2026-05-14T17:49:49+09:00
+waiting_for_relaxed_scores iteration=53 status=running time=2026-05-14T17:50:49+09:00
+waiting_for_relaxed_scores iteration=54 status=running time=2026-05-14T17:51:49+09:00
+waiting_for_relaxed_scores iteration=55 status=running time=2026-05-14T17:52:49+09:00
+waiting_for_relaxed_scores iteration=56 status=running time=2026-05-14T17:53:49+09:00
+waiting_for_relaxed_scores iteration=57 status=running time=2026-05-14T17:54:49+09:00
+waiting_for_relaxed_scores iteration=58 status=running time=2026-05-14T17:55:50+09:00
+waiting_for_relaxed_scores iteration=59 status=running time=2026-05-14T17:56:50+09:00
+waiting_for_relaxed_scores iteration=60 status=running time=2026-05-14T17:57:50+09:00
+waiting_for_relaxed_scores iteration=61 status=running time=2026-05-14T17:58:50+09:00
+waiting_for_relaxed_scores iteration=62 status=running time=2026-05-14T17:59:50+09:00
+waiting_for_relaxed_scores iteration=63 status=running time=2026-05-14T18:00:50+09:00
+waiting_for_relaxed_scores iteration=64 status=running time=2026-05-14T18:01:50+09:00
+waiting_for_relaxed_scores iteration=65 status=running time=2026-05-14T18:02:50+09:00
+waiting_for_relaxed_scores iteration=66 status=running time=2026-05-14T18:03:50+09:00
+waiting_for_relaxed_scores iteration=67 status=running time=2026-05-14T18:04:50+09:00
+waiting_for_relaxed_scores iteration=68 status=running time=2026-05-14T18:05:50+09:00
+waiting_for_relaxed_scores iteration=69 status=running time=2026-05-14T18:06:50+09:00
+waiting_for_relaxed_scores iteration=70 status=running time=2026-05-14T18:07:50+09:00
+waiting_for_relaxed_scores iteration=71 status=running time=2026-05-14T18:08:50+09:00
+waiting_for_relaxed_scores iteration=72 status=running time=2026-05-14T18:09:50+09:00
+waiting_for_relaxed_scores iteration=73 status=running time=2026-05-14T18:10:50+09:00
+waiting_for_relaxed_scores iteration=74 status=running time=2026-05-14T18:11:50+09:00
+waiting_for_relaxed_scores iteration=75 status=running time=2026-05-14T18:12:50+09:00
+waiting_for_relaxed_scores iteration=76 status=running time=2026-05-14T18:13:50+09:00
+waiting_for_relaxed_scores iteration=77 status=running time=2026-05-14T18:14:50+09:00
+waiting_for_relaxed_scores iteration=78 status=running time=2026-05-14T18:15:50+09:00
+waiting_for_relaxed_scores iteration=79 status=running time=2026-05-14T18:16:50+09:00
+waiting_for_relaxed_scores iteration=80 status=running time=2026-05-14T18:17:50+09:00
+waiting_for_relaxed_scores iteration=81 status=running time=2026-05-14T18:18:50+09:00
+waiting_for_relaxed_scores iteration=82 status=running time=2026-05-14T18:19:50+09:00
+waiting_for_relaxed_scores iteration=83 status=running time=2026-05-14T18:20:50+09:00
+waiting_for_relaxed_scores iteration=84 status=running time=2026-05-14T18:21:50+09:00
+waiting_for_relaxed_scores iteration=85 status=running time=2026-05-14T18:22:50+09:00
+relaxed_scores_completed_at=2026-05-14T18:23:50+09:00
+{
+  "action_eligible_candidate_scores": 120,
+  "action_eligible_candidate_scores_with_labels": 120,
+  "action_eligible_correct_candidates": 38,
+  "action_eligible_row_rate": 0.8,
+  "action_eligible_wrong_candidates": 82,
+  "aggregated_top_correct_on_wrong_goal_rows": 3,
+  "aggregated_top_correct_rows": 13,
+  "baseline_policy": "NoReobserve",
+  "baseline_wrong_goal_rows": 19,
+  "baseline_wrong_goal_visible_correct": 6,
+  "best_threshold_sweep_row": {
+    "beneficial_switch_count": 5,
+    "correct_rate_delta_vs_top_before": 0.1,
+    "harmful_switch_count": 0,
+    "neutral_switch_count": 12,
+    "rows": 50,
+    "rule": "agg_local_delta",
+    "schema_version": "h001.postview_score_calibration.v2",
+    "selected_correct_rate": 0.32,
+    "switch_count": 17,
+    "switch_eligible_rows": 29,
+    "switch_rate": 0.5862068965517241,
+    "threshold": 0.0,
+    "top_before_correct_rate": 0.22,
+    "top_not_action_eligible_rows": 21,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "wrong_goal_proxy_rate": 0.6799999999999999
+  },
+  "candidate_decisions": "/runs/h001_calibration_policy_random256_k10_sr1_v1/policy_revision/candidate_decisions.jsonl",
+  "candidate_score_rows": 172,
+  "center_fallback_used_for_action_count": 0,
+  "correct_mean_aggregate_raw_clip_cosine": 0.24077678275735756,
+  "correct_vs_wrong_auc": 0.5921052631578947,
+  "decision_gate": "fails_v2_calibration_diagnostic_gate",
+  "episodes": "/runs/h001_calibration_policy_random256_k10_sr1_v1/policy_revision/episodes.jsonl",
+  "expected_rows": 50,
+  "max_heading_visible_count": 7,
+  "max_valid_crop_count": 21,
+  "no_reobserve_wrong_goal_rows": 26,
+  "out_root": "/runs/h001_postview_score_calibration_v2_1_relaxed_position_random256_k10_sr1_v1",
+  "output_files": {
+    "candidate_score_table": "candidate_score_table.jsonl",
+    "query_breakdown": "query_breakdown.json",
+    "row_summary": "row_summary.jsonl",
+    "summary": "summary.json",
+    "threshold_sweep": "threshold_sweep.jsonl"
+  },
+  "policy": "EvidenceGatedSemanticOnly",
+  "postview_scores": "/runs/h001_postview_scores_v2_1_relaxed_position_random256_k10_sr1_v1/postview_scores.jsonl",
+  "projection_status_counts": {
+    "behind_camera": 8,
+    "out_of_fov": 44,
+    "visible": 120
+  },
+  "rank_improvement_over_top_before": 5,
+  "rows_with_action_eligible_candidate": 40,
+  "rows_with_action_eligible_correct_candidate": 19,
+  "schema_version": "h001.postview_score_calibration.v2",
+  "score_rows": 50,
+  "score_source_counts": {
+    "not_used": 52,
+    "openai_clip_multiview_local_crop": 120
+  },
+  "split_role": "calibration",
+  "top_before_action_eligible_correct_rows": 8,
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": true,
+  "wrong_goal_rows_with_action_eligible_correct_candidate": 3,
+  "wrong_goal_rows_without_action_eligible_correct_candidate": 23,
+  "wrong_mean_aggregate_raw_clip_cosine": 0.237104054449535
+}
+{
+  "action_eligible_row_rate": 0.8,
+  "aggregated_top_correct_on_wrong_goal_rows": 3,
+  "best_threshold_sweep_row": {
+    "beneficial_switch_count": 5,
+    "correct_rate_delta_vs_top_before": 0.1,
+    "harmful_switch_count": 0,
+    "neutral_switch_count": 12,
+    "rows": 50,
+    "rule": "agg_local_delta",
+    "schema_version": "h001.postview_score_calibration.v2",
+    "selected_correct_rate": 0.32,
+    "switch_count": 17,
+    "switch_eligible_rows": 29,
+    "switch_rate": 0.5862068965517241,
+    "threshold": 0.0,
+    "top_before_correct_rate": 0.22,
+    "top_not_action_eligible_rows": 21,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "wrong_goal_proxy_rate": 0.6799999999999999
+  },
+  "candidate_score_rows": 172,
+  "correct_vs_wrong_auc": 0.5921052631578947,
+  "decision_gate": "fails_v2_calibration_diagnostic_gate",
+  "log": "/home/yoohyun/research3/logs/postview-evidence-v2-1-relaxed-position-diagnostic-watch-20260514-165848.log",
+  "output_root": "/tmp/research3-runs/h001_postview_score_calibration_v2_1_relaxed_position_random256_k10_sr1_v1",
+  "score_rows": 50,
+  "stage": "verified",
+  "status": "completed",
+  "updated_at": "2026-05-14T09:23:51.479074+00:00",
+  "wrong_goal_rows_with_action_eligible_correct_candidate": 3
+}
+watcher_completed_at=2026-05-14T18:23:51+09:00

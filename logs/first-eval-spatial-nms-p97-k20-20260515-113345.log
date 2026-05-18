@@ -1,0 +1,394 @@
+started_at=2026-05-15T11:33:45+09:00
+output_root=/tmp/research3-runs/h001_first_eval_artifacts_spatial_nms_p97_k20_v1
+
+[2026-05-15T11:33:45+09:00] verify habitat image
+
+[2026-05-15T11:33:45+09:00] re-export spatial NMS candidates for TEEsavR23oF
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/TEEsavR23oF/raw/bed.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/TEEsavR23oF/raw/chair.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/TEEsavR23oF/raw/plant.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/TEEsavR23oF/raw/sofa.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/TEEsavR23oF/raw/toilet.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/TEEsavR23oF/raw/tv_monitor.jsonl"
+}
+
+[2026-05-15T11:33:52+09:00] combine and align candidates for TEEsavR23oF
+[02:33:53:519857]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00800-TEEsavR23oF/TEEsavR23oF.basis.scn` exists but failed to load.
+{
+  "candidates": 120,
+  "coordinate_frame": "habitat_world",
+  "out": "/out/scenes/TEEsavR23oF/aligned.jsonl",
+  "rows": 6
+}
+
+[2026-05-15T11:33:53+09:00] re-export spatial NMS candidates for wcojb4TFT35
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/wcojb4TFT35/raw/bed.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/wcojb4TFT35/raw/chair.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/wcojb4TFT35/raw/plant.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/wcojb4TFT35/raw/sofa.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/wcojb4TFT35/raw/toilet.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/wcojb4TFT35/raw/tv_monitor.jsonl"
+}
+
+[2026-05-15T11:34:01+09:00] combine and align candidates for wcojb4TFT35
+[02:34:02:254919]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00802-wcojb4TFT35/wcojb4TFT35.basis.scn` exists but failed to load.
+{
+  "candidates": 120,
+  "coordinate_frame": "habitat_world",
+  "out": "/out/scenes/wcojb4TFT35/aligned.jsonl",
+  "rows": 6
+}
+
+[2026-05-15T11:34:02+09:00] re-export spatial NMS candidates for k1cupFYWXJ6
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/k1cupFYWXJ6/raw/bed.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/k1cupFYWXJ6/raw/chair.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/k1cupFYWXJ6/raw/plant.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/k1cupFYWXJ6/raw/sofa.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/k1cupFYWXJ6/raw/toilet.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/k1cupFYWXJ6/raw/tv_monitor.jsonl"
+}
+
+[2026-05-15T11:34:11+09:00] combine and align candidates for k1cupFYWXJ6
+[02:34:11:781407]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00803-k1cupFYWXJ6/k1cupFYWXJ6.basis.scn` exists but failed to load.
+{
+  "candidates": 120,
+  "coordinate_frame": "habitat_world",
+  "out": "/out/scenes/k1cupFYWXJ6/aligned.jsonl",
+  "rows": 6
+}
+
+[2026-05-15T11:34:12+09:00] re-export spatial NMS candidates for y9hTuugGdiq
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/y9hTuugGdiq/raw/bed.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/y9hTuugGdiq/raw/chair.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/y9hTuugGdiq/raw/plant.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/y9hTuugGdiq/raw/sofa.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/y9hTuugGdiq/raw/toilet.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/y9hTuugGdiq/raw/tv_monitor.jsonl"
+}
+
+[2026-05-15T11:34:20+09:00] combine and align candidates for y9hTuugGdiq
+[02:34:21:286478]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.scn` exists but failed to load.
+{
+  "candidates": 120,
+  "coordinate_frame": "habitat_world",
+  "out": "/out/scenes/y9hTuugGdiq/aligned.jsonl",
+  "rows": 6
+}
+
+[2026-05-15T11:34:21+09:00] re-export spatial NMS candidates for CrMo8WxCyVb
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/CrMo8WxCyVb/raw/bed.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/CrMo8WxCyVb/raw/chair.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/CrMo8WxCyVb/raw/plant.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/CrMo8WxCyVb/raw/sofa.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/CrMo8WxCyVb/raw/toilet.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/CrMo8WxCyVb/raw/tv_monitor.jsonl"
+}
+
+[2026-05-15T11:34:30+09:00] combine and align candidates for CrMo8WxCyVb
+[02:34:30:917090]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00810-CrMo8WxCyVb/CrMo8WxCyVb.basis.scn` exists but failed to load.
+{
+  "candidates": 120,
+  "coordinate_frame": "habitat_world",
+  "out": "/out/scenes/CrMo8WxCyVb/aligned.jsonl",
+  "rows": 6
+}
+
+[2026-05-15T11:34:31+09:00] re-export spatial NMS candidates for svBbv1Pavdk
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/svBbv1Pavdk/raw/bed.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/svBbv1Pavdk/raw/chair.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/svBbv1Pavdk/raw/plant.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/svBbv1Pavdk/raw/sofa.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/svBbv1Pavdk/raw/toilet.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/svBbv1Pavdk/raw/tv_monitor.jsonl"
+}
+
+[2026-05-15T11:34:40+09:00] combine and align candidates for svBbv1Pavdk
+[02:34:40:722635]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00813-svBbv1Pavdk/svBbv1Pavdk.basis.scn` exists but failed to load.
+{
+  "candidates": 120,
+  "coordinate_frame": "habitat_world",
+  "out": "/out/scenes/svBbv1Pavdk/aligned.jsonl",
+  "rows": 6
+}
+
+[2026-05-15T11:34:40+09:00] re-export spatial NMS candidates for p53SfW6mjZe
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/p53SfW6mjZe/raw/bed.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/p53SfW6mjZe/raw/chair.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/p53SfW6mjZe/raw/plant.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/p53SfW6mjZe/raw/sofa.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/p53SfW6mjZe/raw/toilet.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/p53SfW6mjZe/raw/tv_monitor.jsonl"
+}
+
+[2026-05-15T11:34:50+09:00] combine and align candidates for p53SfW6mjZe
+[02:34:51:278508]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00814-p53SfW6mjZe/p53SfW6mjZe.basis.scn` exists but failed to load.
+{
+  "candidates": 120,
+  "coordinate_frame": "habitat_world",
+  "out": "/out/scenes/p53SfW6mjZe/aligned.jsonl",
+  "rows": 6
+}
+
+[2026-05-15T11:34:51+09:00] re-export spatial NMS candidates for h1zeeAwLh9Z
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/h1zeeAwLh9Z/raw/bed.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/h1zeeAwLh9Z/raw/chair.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/h1zeeAwLh9Z/raw/plant.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/h1zeeAwLh9Z/raw/sofa.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/h1zeeAwLh9Z/raw/toilet.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/h1zeeAwLh9Z/raw/tv_monitor.jsonl"
+}
+
+[2026-05-15T11:35:00+09:00] combine and align candidates for h1zeeAwLh9Z
+[02:35:01:500934]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00815-h1zeeAwLh9Z/h1zeeAwLh9Z.basis.scn` exists but failed to load.
+{
+  "candidates": 120,
+  "coordinate_frame": "habitat_world",
+  "out": "/out/scenes/h1zeeAwLh9Z/aligned.jsonl",
+  "rows": 6
+}
+
+[2026-05-15T11:35:01+09:00] re-export spatial NMS candidates for mL8ThkuaVTM
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/mL8ThkuaVTM/raw/bed.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/mL8ThkuaVTM/raw/chair.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/mL8ThkuaVTM/raw/plant.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/mL8ThkuaVTM/raw/sofa.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/mL8ThkuaVTM/raw/toilet.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/mL8ThkuaVTM/raw/tv_monitor.jsonl"
+}
+
+[2026-05-15T11:35:11+09:00] combine and align candidates for mL8ThkuaVTM
+[02:35:12:040895]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00820-mL8ThkuaVTM/mL8ThkuaVTM.basis.scn` exists but failed to load.
+{
+  "candidates": 120,
+  "coordinate_frame": "habitat_world",
+  "out": "/out/scenes/mL8ThkuaVTM/aligned.jsonl",
+  "rows": 6
+}
+
+[2026-05-15T11:35:12+09:00] re-export spatial NMS candidates for eF36g7L6Z9M
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/eF36g7L6Z9M/raw/bed.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/eF36g7L6Z9M/raw/chair.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/eF36g7L6Z9M/raw/plant.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/eF36g7L6Z9M/raw/sofa.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/eF36g7L6Z9M/raw/toilet.jsonl"
+}
+{
+  "num_candidates": 20,
+  "out": "/out/scenes/eF36g7L6Z9M/raw/tv_monitor.jsonl"
+}
+
+[2026-05-15T11:35:21+09:00] combine and align candidates for eF36g7L6Z9M
+[02:35:21:816130]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00821-eF36g7L6Z9M/eF36g7L6Z9M.basis.scn` exists but failed to load.
+{
+  "candidates": 120,
+  "coordinate_frame": "habitat_world",
+  "out": "/out/scenes/eF36g7L6Z9M/aligned.jsonl",
+  "rows": 6
+}
+
+[2026-05-15T11:35:22+09:00] combine all scene artifacts
+{
+  "aligned_artifact": "/tmp/research3-runs/h001_first_eval_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "candidate_count": 1200,
+  "expected_query_rows": 60,
+  "expected_scene_count": 10,
+  "finite_position_candidates": 1087,
+  "max_candidates": 20,
+  "ok": true,
+  "queries": [
+    "bed",
+    "chair",
+    "plant",
+    "sofa",
+    "toilet",
+    "tv_monitor"
+  ],
+  "raw_artifact": "/tmp/research3-runs/h001_first_eval_artifacts_spatial_nms_p97_k20_v1/all_scenes_raw.jsonl",
+  "rows": 60,
+  "scenes": [
+    "CrMo8WxCyVb",
+    "TEEsavR23oF",
+    "eF36g7L6Z9M",
+    "h1zeeAwLh9Z",
+    "k1cupFYWXJ6",
+    "mL8ThkuaVTM",
+    "p53SfW6mjZe",
+    "svBbv1Pavdk",
+    "wcojb4TFT35",
+    "y9hTuugGdiq"
+  ],
+  "selection_mode": "spatial_nms",
+  "source_root": "/tmp/research3-runs/h001_first_eval_artifacts_spatial_nms_k20_v1",
+  "spatial_nms_min_distance_cells": 20.0,
+  "top_percentile": 97.0
+}
+
+[2026-05-15T11:35:22+09:00] completed first_eval spatial NMS re-export
+[2026-05-15T11:35:22+09:00] job_exit_status=0

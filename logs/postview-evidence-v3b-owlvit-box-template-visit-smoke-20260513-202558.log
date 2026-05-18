@@ -1,0 +1,43 @@
+working_directory=/home/yoohyun/research3
+output_path=/tmp/research3-runs/h001_postview_detector_v3b_owlvit_box_template_visit_smoke
+/opt/conda/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+/opt/conda/lib/python3.11/site-packages/transformers/models/owlvit/processing_owlvit.py:233: FutureWarning: `post_process_object_detection` method is deprecated for OwlVitProcessor and will be removed in v5. Use `post_process_grounded_object_detection` instead.
+  warnings.warn(
+{
+  "associated_candidate_heading_count": 0,
+  "association_rows": 105,
+  "box_threshold": 0.01,
+  "candidate_artifact": "/runs/h001_calibration_artifacts_random256_k10_sr1_v1/all_scenes_aligned.jsonl",
+  "debug_images_written": 20,
+  "detector_box_count_per_heading": {
+    "max": 30,
+    "mean": 4.238095238095238,
+    "min": 0
+  },
+  "detector_box_rows": 89,
+  "device": "cpu",
+  "frames": "/runs/h001_postview_scores_v2_1_relaxed_position_random256_k10_sr1_v1/postview_frames_v2.jsonl",
+  "model_dir": "/models/openvocab/owlvit/google_owlvit-base-patch32",
+  "out_root": "/runs/h001_postview_detector_v3b_owlvit_box_template_visit_smoke",
+  "output_files": {
+    "detector_boxes": "detector_boxes.jsonl",
+    "detector_candidate_associations": "detector_candidate_associations.jsonl",
+    "frame_summary": "frame_summary.jsonl",
+    "summary": "summary.json"
+  },
+  "projected_pixel_inside_box_count": 1,
+  "projection_status_counts": {
+    "behind_camera": 32,
+    "out_of_fov": 49,
+    "visible": 24
+  },
+  "query_template": "a photo of a {query}",
+  "rows": 2,
+  "rows_with_candidate_association": 0,
+  "rows_with_candidate_association_rate": 0.0,
+  "rows_with_detector_box": 2,
+  "rows_with_detector_box_rate": 1.0,
+  "schema_version": "h001.postview_detector.v3b_owlvit_box",
+  "uses_gt_for_action": false
+}

@@ -1,0 +1,491 @@
+started_at=2026-05-18T10:05:45+09:00
+working_directory=/home/yoohyun/research3
+manifest=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_v3_fresh_validation_v1.json
+manifest_split=v3_fresh_validation_v1
+candidate_artifact=/tmp/research3-runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl
+policy_out=/tmp/research3-runs/h001_v3_fresh_validation_policy_spatial_nms_p97_k20_v1/policy_revision
+frames_out=/tmp/research3-runs/h001_v3_fresh_validation_postview_frames_v2_spatial_nms_p97_k20_v1
+detector_out=/tmp/research3-runs/h001_v3_fresh_validation_detector_v3c_a4_all_headings_spatial_nms_p97_k20_v1
+log=/home/yoohyun/research3/logs/v3-fresh-validation-v3c-detector-20260518-100545.log
+expected_files=/tmp/research3-runs/h001_v3_fresh_validation_policy_spatial_nms_p97_k20_v1/policy_revision/viewpoint_decisions.jsonl /tmp/research3-runs/h001_v3_fresh_validation_postview_frames_v2_spatial_nms_p97_k20_v1/postview_frames_v2.jsonl /tmp/research3-runs/h001_v3_fresh_validation_detector_v3c_a4_all_headings_spatial_nms_p97_k20_v1/summary.json
+verification_command=cat /tmp/research3-runs/h001_v3_fresh_validation_detector_v3c_a4_all_headings_spatial_nms_p97_k20_v1/job_status.json && cat /tmp/research3-runs/h001_v3_fresh_validation_detector_v3c_a4_all_headings_spatial_nms_p97_k20_v1/summary.json
+{'stage': 'prerequisite_check_passed', 'paths': {'manifest': '/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_v3_fresh_validation_v1.json', 'candidate_artifact': '/tmp/research3-runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl', 'groundingdino_config': '/tmp/research3-models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/config.json', 'groundingdino_weights': '/tmp/research3-models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/model.safetensors', 'sam2_checkpoint': '/tmp/research3-models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt'}}
+[01:05:47:652963]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:05:47:743873]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:05:47:794754]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:05:47:854454]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.scn` exists but failed to load.
+[01:05:47:898313]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:05:48:174845]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:05:48:211256]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:05:48:264237]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:05:48:369585]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:05:48:465094]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.scn` exists but failed to load.
+[01:05:48:566930]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.scn` exists but failed to load.
+[01:05:48:708797]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.scn` exists but failed to load.
+[01:05:48:778638]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:05:48:888792]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.scn` exists but failed to load.
+[01:05:48:950568]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:05:49:009404]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:05:49:086138]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:05:49:358142]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:05:49:649941]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:05:50:243236]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:05:50:285458]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:05:50:323720]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:05:50:380621]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:05:50:512923]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:05:50:559693]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:05:50:652104]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:05:50:772264]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:05:50:818262]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:05:50:847678]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:05:50:889274]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:05:50:954026]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:05:50:998992]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.scn` exists but failed to load.
+[01:05:51:059473]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:05:51:107659]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:05:51:187162]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:05:51:301878]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:05:51:544821]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.scn` exists but failed to load.
+[01:05:51:588490]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.scn` exists but failed to load.
+[01:05:51:631622]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:05:51:811841]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.scn` exists but failed to load.
+[01:05:51:948772]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:05:52:062458]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:05:52:419289]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.scn` exists but failed to load.
+[01:05:52:568370]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:05:52:944787]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.scn` exists but failed to load.
+[01:05:53:036851]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.scn` exists but failed to load.
+[01:05:53:098850]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.scn` exists but failed to load.
+[01:05:53:243281]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.scn` exists but failed to load.
+[01:05:53:360346]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:05:53:718080]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:05:53:784983]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:05:53:832052]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:05:53:860369]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:05:53:924368]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:05:53:972293]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:05:54:016707]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:05:54:053446]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:05:54:115301]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:05:54:237966]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:05:54:288697]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:05:54:334949]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:05:54:399849]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:05:54:440827]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:05:54:475956]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.scn` exists but failed to load.
+[01:05:54:535188]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:05:54:604215]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:05:54:730674]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:05:54:779016]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.scn` exists but failed to load.
+[01:05:54:824829]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:05:54:879758]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.scn` exists but failed to load.
+[01:05:54:919222]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:05:54:952115]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:05:55:334389]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:05:55:513118]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:05:55:565663]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:05:55:684156]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:05:55:790477]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:05:55:962983]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:05:56:033199]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:05:56:470286]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:05:56:533523]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:05:56:715275]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:05:56:832245]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.scn` exists but failed to load.
+[01:05:56:950613]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:05:57:137605]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:05:57:261241]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:05:57:353582]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:05:57:441406]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:05:57:560422]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:05:57:655920]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:05:57:701060]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:05:57:745342]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:05:57:817407]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:05:57:847974]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:05:57:894145]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:05:57:984264]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:05:58:070568]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:05:58:101618]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+{
+  "aggregate": {
+    "EvidenceGatedSemanticOnly": {
+      "episodes": 100,
+      "final_candidate_changed_rate": 0.0,
+      "mean_R_after": null,
+      "mean_R_ambiguity": null,
+      "mean_R_before": null,
+      "mean_R_contradiction": null,
+      "mean_R_no_evidence": null,
+      "mean_R_property_weakness": null,
+      "mean_R_total": null,
+      "mean_U_sem_delta_after_reobserve": -0.013333333333333326,
+      "mean_num_reobservations": 1.0,
+      "mean_risk_delta_after_reobserve": null,
+      "mean_score_delta_after_reobserve": 0.0,
+      "mean_spl": 0.19585655545096117,
+      "mean_travel_cost_to_reobserve": 9.639291012883186,
+      "mean_wasted_path_reobserve": 0.0,
+      "mean_wasted_path_total": 8.270480203368757,
+      "mean_wasted_path_wrong_goal": 6.951032885313034,
+      "risk_resolution_commit_rate": null,
+      "risk_resolved_after_reobserve_rate": null,
+      "risk_triggered_reobserve_rate": null,
+      "risk_unresolved_no_commit_rate": null,
+      "success_lost_by_defer_rate": null,
+      "success_rate": 0.31,
+      "switch_gate_pass_rate": 0.0,
+      "wrong_goal_avoided_by_defer_rate": null,
+      "wrong_goal_visit_rate": 0.61
+    },
+    "GTTargetOracle": {
+      "episodes": 100,
+      "final_candidate_changed_rate": null,
+      "mean_R_after": null,
+      "mean_R_ambiguity": null,
+      "mean_R_before": null,
+      "mean_R_contradiction": null,
+      "mean_R_no_evidence": null,
+      "mean_R_property_weakness": null,
+      "mean_R_total": null,
+      "mean_U_sem_delta_after_reobserve": null,
+      "mean_num_reobservations": 0.0,
+      "mean_risk_delta_after_reobserve": null,
+      "mean_score_delta_after_reobserve": null,
+      "mean_spl": 1.0,
+      "mean_travel_cost_to_reobserve": null,
+      "mean_wasted_path_reobserve": 0.0,
+      "mean_wasted_path_total": 0.0,
+      "mean_wasted_path_wrong_goal": 0.0,
+      "risk_resolution_commit_rate": null,
+      "risk_resolved_after_reobserve_rate": null,
+      "risk_triggered_reobserve_rate": null,
+      "risk_unresolved_no_commit_rate": null,
+      "success_lost_by_defer_rate": null,
+      "success_rate": 1.0,
+      "switch_gate_pass_rate": null,
+      "wrong_goal_avoided_by_defer_rate": null,
+      "wrong_goal_visit_rate": 0.0
+    },
+    "NoReobserve": {
+      "episodes": 100,
+      "final_candidate_changed_rate": null,
+      "mean_R_after": null,
+      "mean_R_ambiguity": null,
+      "mean_R_before": null,
+      "mean_R_contradiction": null,
+      "mean_R_no_evidence": null,
+      "mean_R_property_weakness": null,
+      "mean_R_total": null,
+      "mean_U_sem_delta_after_reobserve": null,
+      "mean_num_reobservations": 0.0,
+      "mean_risk_delta_after_reobserve": null,
+      "mean_score_delta_after_reobserve": null,
+      "mean_spl": 0.14585655545096113,
+      "mean_travel_cost_to_reobserve": null,
+      "mean_wasted_path_reobserve": 0.0,
+      "mean_wasted_path_total": 9.398272958373589,
+      "mean_wasted_path_wrong_goal": 6.951032885313034,
+      "risk_resolution_commit_rate": null,
+      "risk_resolved_after_reobserve_rate": null,
+      "risk_triggered_reobserve_rate": null,
+      "risk_unresolved_no_commit_rate": null,
+      "success_lost_by_defer_rate": null,
+      "success_rate": 0.26,
+      "switch_gate_pass_rate": null,
+      "wrong_goal_avoided_by_defer_rate": null,
+      "wrong_goal_visit_rate": 0.61
+    }
+  },
+  "candidate_artifact": "/runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "candidate_backend": "artifact_jsonl",
+  "candidate_backend_uses_gt_for_action": false,
+  "candidate_decision_rows": 4200,
+  "dataset": "hm3d_objectnav_v2",
+  "episode_rows": 300,
+  "episodes_loaded": 100,
+  "episodes_requested": 100,
+  "loaded_datasets": [
+    "hm3d_objectnav_v2"
+  ],
+  "loaded_manifest_splits": [
+    "v3_fresh_validation_v1"
+  ],
+  "loaded_source_splits": [
+    "val"
+  ],
+  "manifest": "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_v3_fresh_validation_v1.json",
+  "manifest_split": "v3_fresh_validation_v1",
+  "notes": [
+    "diagnostic GT-assisted backend is for smoke only; artifact_jsonl is the non-GT adapter boundary",
+    "not a paper result",
+    "used to validate log schema, GT references, and baseline comparability"
+  ],
+  "policies": [
+    "GTTargetOracle",
+    "NoReobserve",
+    "EvidenceGatedSemanticOnly"
+  ],
+  "requested_dataset": "hm3d_objectnav_v2",
+  "requested_split": "val",
+  "risk_contradiction_scale": 0.25,
+  "risk_object_node_feature_artifact": null,
+  "risk_object_node_feature_rows": null,
+  "risk_object_node_uses_gt_for_action": null,
+  "risk_resolution_delta_trigger": 0.05,
+  "risk_resolution_max_contradiction": 0.25,
+  "risk_resolution_max_risk": 0.95,
+  "risk_resolution_require_positive_support": true,
+  "risk_total_trigger": 0.6,
+  "run_id": "h001_v3_fresh_validation_v1_policy_revision_20260518-100545",
+  "schema_version": "h001.navlog.v1",
+  "semantic_delta_switch_score": 0.03,
+  "semantic_delta_switch_uncertainty": 0.05,
+  "semantic_evidence_mode": "support_proxy",
+  "semantic_image_score_rule": "raw_delta",
+  "semantic_max_reobservations": 1,
+  "semantic_postview_score_artifact": null,
+  "semantic_postview_score_rows": null,
+  "semantic_postview_uses_gt_for_action": null,
+  "semantic_reobs_view_bonus": 1,
+  "semantic_tie_band": 0.01,
+  "semantic_uncertainty_trigger": 0.6,
+  "semantic_use_postview_uncertainty_gate": true,
+  "split": "val",
+  "viewpoint_decision_rows": 100
+}
+{'stage': 'policy_revision_verified', 'viewpoint_rows': 100}
+[01:06:00:089700]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:06:00:678831]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:06:01:122990]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:06:01:688955]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.scn` exists but failed to load.
+[01:06:02:285311]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:06:03:723414]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:06:04:093598]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:06:04:640717]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:06:05:366701]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:06:05:917691]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.scn` exists but failed to load.
+[01:06:06:356472]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.scn` exists but failed to load.
+[01:06:06:871411]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.scn` exists but failed to load.
+[01:06:07:553007]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:06:08:397704]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.scn` exists but failed to load.
+[01:06:08:868960]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:06:09:224960]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:06:09:733943]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:06:10:765293]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:06:11:982236]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:06:14:056482]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:06:14:497836]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:06:14:932331]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:06:15:474543]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:06:16:912194]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:06:17:365417]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:06:18:282652]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:06:19:783065]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:06:20:224928]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:06:20:563995]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:06:21:082043]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:06:21:813520]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:06:22:469128]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.scn` exists but failed to load.
+[01:06:22:948246]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:06:23:387098]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:06:23:932478]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:06:25:117319]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:06:26:559476]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.scn` exists but failed to load.
+[01:06:27:084627]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.scn` exists but failed to load.
+[01:06:27:665310]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:06:28:569545]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.scn` exists but failed to load.
+[01:06:29:016491]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:06:29:565404]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:06:31:214308]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.scn` exists but failed to load.
+[01:06:31:646484]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:06:32:958038]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.scn` exists but failed to load.
+[01:06:33:611556]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.scn` exists but failed to load.
+[01:06:34:151635]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.scn` exists but failed to load.
+[01:06:34:581070]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.scn` exists but failed to load.
+[01:06:35:081516]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:06:36:710629]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:06:37:192452]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:06:37:680530]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:06:38:101532]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:06:38:627410]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:06:39:269491]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:06:39:701017]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:06:40:065041]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:06:40:590186]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:06:42:113052]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:06:42:547914]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:06:42:952342]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:06:43:366143]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:06:43:739235]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:06:44:128865]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.scn` exists but failed to load.
+[01:06:44:529308]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:06:44:961475]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:06:45:953987]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:06:46:349727]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00873-bxsVRursffK/bxsVRursffK.basis.scn` exists but failed to load.
+[01:06:46:750938]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:06:47:121555]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.scn` exists but failed to load.
+[01:06:47:575911]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:06:47:894691]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:06:49:077930]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:06:49:499485]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:06:49:925200]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:06:50:319837]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.scn` exists but failed to load.
+[01:06:50:733890]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:06:51:102940]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:06:51:423526]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.scn` exists but failed to load.
+[01:06:52:583175]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:06:52:952704]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:06:53:369806]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.scn` exists but failed to load.
+[01:06:53:741309]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00843-DYehNKdT76V/DYehNKdT76V.basis.scn` exists but failed to load.
+[01:06:54:124048]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:06:54:978323]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:06:56:299471]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:06:57:357482]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:06:57:860737]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+[01:06:59:243857]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:07:00:217983]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.scn` exists but failed to load.
+[01:07:00:631913]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00877-4ok3usBNeis/4ok3usBNeis.basis.scn` exists but failed to load.
+[01:07:01:044837]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:07:01:604538]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:07:02:030915]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.scn` exists but failed to load.
+[01:07:02:731149]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.scn` exists but failed to load.
+[01:07:03:594890]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.scn` exists but failed to load.
+[01:07:04:231536]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.scn` exists but failed to load.
+[01:07:04:768983]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.scn` exists but failed to load.
+{
+  "camera_height": 1.5,
+  "candidate_artifact": "/runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "errors": [],
+  "height": 120,
+  "hfov": 90.0,
+  "max_headings_per_row": 15,
+  "min_headings_per_row": 1,
+  "next_expected_file": "postview_scores.jsonl",
+  "ok": true,
+  "out_root": "/runs/h001_v3_fresh_validation_postview_frames_v2_spatial_nms_p97_k20_v1",
+  "policy": "EvidenceGatedSemanticOnly",
+  "rendered_heading_count": 756,
+  "rows_exported": 100,
+  "rows_requested": 100,
+  "schema_version": "h001.postview.v2",
+  "unique_scenes": [
+    "hm3d_v0.2/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb",
+    "hm3d_v0.2/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb",
+    "hm3d_v0.2/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb",
+    "hm3d_v0.2/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb",
+    "hm3d_v0.2/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb",
+    "hm3d_v0.2/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb",
+    "hm3d_v0.2/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb",
+    "hm3d_v0.2/val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb",
+    "hm3d_v0.2/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.glb",
+    "hm3d_v0.2/val/00873-bxsVRursffK/bxsVRursffK.basis.glb",
+    "hm3d_v0.2/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb",
+    "hm3d_v0.2/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb",
+    "hm3d_v0.2/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb"
+  ],
+  "uses_gt_for_action": false,
+  "viewpoint_decisions": "/runs/h001_v3_fresh_validation_policy_spatial_nms_p97_k20_v1/policy_revision/viewpoint_decisions.jsonl",
+  "width": 160,
+  "yaw_offsets_deg": [
+    -30.0,
+    0.0,
+    30.0
+  ]
+}
+{'stage': 'frame_export_verified', 'rows': 100, 'heading_count': 756}
+/opt/conda/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+/opt/conda/lib/python3.11/site-packages/torchvision/transforms/functional.py:154: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_numpy.cpp:203.)
+  img = torch.from_numpy(pic.transpose((2, 0, 1))).contiguous()
+{
+  "associated_candidate_heading_count": 182,
+  "association_rows": 2694,
+  "box_threshold": 0.1,
+  "candidate_artifact": "/runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "debug_images_written": 120,
+  "detector_box_count_per_heading": {
+    "max": 3,
+    "mean": 2.4034391534391535,
+    "min": 0
+  },
+  "detector_box_rows": 1817,
+  "detector_mask_rows": 1817,
+  "device": "cuda",
+  "frames": "/runs/h001_v3_fresh_validation_postview_frames_v2_spatial_nms_p97_k20_v1/postview_frames_v2.jsonl",
+  "groundingdino_dir": "/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny",
+  "max_detector_boxes_per_heading": 3,
+  "max_headings_per_frame": 0,
+  "max_masks_per_heading": 3,
+  "out_root": "/runs/h001_v3_fresh_validation_detector_v3c_a4_all_headings_spatial_nms_p97_k20_v1",
+  "output_files": {
+    "detector_boxes": "detector_boxes.jsonl",
+    "detector_candidate_associations": "detector_candidate_associations.jsonl",
+    "detector_masks": "detector_masks.jsonl",
+    "frame_summary": "frame_summary.jsonl",
+    "summary": "summary.json"
+  },
+  "projected_pixel_inside_mask_count": 662,
+  "projection_status_counts": {
+    "behind_camera": 1034,
+    "out_of_fov": 702,
+    "visible": 958
+  },
+  "query_template": "{query}",
+  "rows": 100,
+  "rows_with_candidate_association": 53,
+  "rows_with_candidate_association_rate": 0.53,
+  "rows_with_detector_box": 97,
+  "rows_with_detector_box_rate": 0.97,
+  "rows_with_sam2_mask": 97,
+  "rows_with_sam2_mask_rate": 0.97,
+  "sam2_checkpoint": "/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt",
+  "schema_version": "h001.postview_detector.v3c_groundingdino_sam2",
+  "text_threshold": 0.1,
+  "uses_gt_for_action": false
+}
+{
+  "associated_candidate_heading_count": 182,
+  "promotion_association_rate": 0.0,
+  "promotion_pass": true,
+  "query_rows": {
+    "bed": {
+      "associated_heading_count": 72,
+      "association_rows": 16,
+      "rows": 17
+    },
+    "chair": {
+      "associated_heading_count": 32,
+      "association_rows": 9,
+      "rows": 17
+    },
+    "plant": {
+      "associated_heading_count": 15,
+      "association_rows": 7,
+      "rows": 16
+    },
+    "sofa": {
+      "associated_heading_count": 10,
+      "association_rows": 2,
+      "rows": 17
+    },
+    "toilet": {
+      "associated_heading_count": 16,
+      "association_rows": 8,
+      "rows": 17
+    },
+    "tv_monitor": {
+      "associated_heading_count": 37,
+      "association_rows": 11,
+      "rows": 16
+    }
+  },
+  "rows": 100,
+  "rows_with_candidate_association": 53,
+  "rows_with_candidate_association_rate": 0.53,
+  "rows_with_detector_box_rate": 0.97,
+  "rows_with_sam2_mask_rate": 0.97,
+  "uses_gt_for_action": false
+}
+completed_at=2026-05-18T10:10:11+09:00

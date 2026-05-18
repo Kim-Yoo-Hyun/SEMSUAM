@@ -1,0 +1,34 @@
+{
+  "action_eligible_candidate_count": 9,
+  "action_eligible_row_rate": 1.0,
+  "candidate_artifact": "/runs/h001_calibration_artifacts_random256_k10_sr1_v1/all_scenes_aligned.jsonl",
+  "candidate_score_count": 10,
+  "center_fallback_used_for_action": false,
+  "debug_images_written": 20,
+  "device": "cpu",
+  "errors": [],
+  "frames": "/runs/h001_postview_scores_v2_1_relaxed_position_random256_k10_sr1_v1/postview_frames_v2.jsonl",
+  "model": "ViT-B/32",
+  "object_mask_valid_count": 31,
+  "object_mask_valid_row_rate": 1.0,
+  "ok": true,
+  "out": "/runs/h001_postview_scores_v3a_depth_mask_smoke/postview_scores.jsonl",
+  "projection_status_counts": {
+    "behind_camera": 1,
+    "visible": 9
+  },
+  "query_embeddings": "/runs/h001_calibration_artifacts_random256_k10_sr1_v1/embeddings",
+  "rows_requested": 2,
+  "rows_scored": 2,
+  "rows_with_action_eligible_candidate": 2,
+  "rows_with_object_mask_valid_candidate": 2,
+  "schema_version": "h001.postview_score.v3a_depth_mask",
+  "score_calibration": "object_mask_aggregate_raw_clip_cosine",
+  "score_source_counts": {
+    "not_used": 1,
+    "openai_clip_depth_mask_object_crop": 9
+  },
+  "uses_gt_for_action": false,
+  "valid_crop_count": 31,
+  "valid_mask_count": 31
+}

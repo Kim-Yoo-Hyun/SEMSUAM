@@ -6,7 +6,7 @@
 
 처음 들어오면 아래 순서로 읽는다.
 
-1. [AGENT.md](AGENT.md): 연구 운영 규칙과 에이전트 작업 규칙
+1. [AGENTS.md](AGENTS.md): 연구 운영 규칙과 에이전트 작업 규칙
 2. [TODO.md](TODO.md): 현재 작업 상태, 다음 행동, 완료 이력
 3. [docs/index.md](docs/index.md): 문헌 조사, hypothesis, workflow 문서로 이동하는 index
 
@@ -49,7 +49,7 @@ The repository root is kept as an entrypoint only.
 
 Root files should stay limited to:
 
-- `AGENT.md`
+- `AGENTS.md`
 - `.gitignore`
 - `README.md`
 - `summary.md`

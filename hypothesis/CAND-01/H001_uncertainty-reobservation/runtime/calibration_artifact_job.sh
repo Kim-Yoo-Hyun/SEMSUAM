@@ -22,6 +22,8 @@ CAMERA_HEIGHT=${CAMERA_HEIGHT:-1.5}
 HFOV=${HFOV:-90}
 TOP_PERCENTILE=${TOP_PERCENTILE:-98.0}
 MAX_CANDIDATES=${MAX_CANDIDATES:-5}
+CANDIDATE_SELECTION_MODE=${CANDIDATE_SELECTION_MODE:-components}
+SPATIAL_NMS_MIN_DISTANCE_CELLS=${SPATIAL_NMS_MIN_DISTANCE_CELLS:-20.0}
 MIN_COMPONENT_CELLS=${MIN_COMPONENT_CELLS:-1}
 DEPTH_SAMPLE_RATE=${DEPTH_SAMPLE_RATE:-500}
 HOST_UID=${HOST_UID:-$(id -u)}
@@ -48,6 +50,9 @@ if [[ -n "${SCENE_SPECS_FILE:-}" ]]; then
     exit 1
   fi
 fi
+
+EXPECTED_SCENE_COUNT=${EXPECTED_SCENE_COUNT:-${#SCENES[@]}}
+EXPECTED_QUERY_ROWS=${EXPECTED_QUERY_ROWS:-$((EXPECTED_SCENE_COUNT * ${#QUERIES[@]}))}
 
 log_step() {
   printf '\n[%s] %s\n' "$(date -Is)" "$*"
@@ -94,7 +99,7 @@ artifact_id = sys.argv[3]
 frames = int(sys.argv[4])
 path.parent.mkdir(parents=True, exist_ok=True)
 data = {}
-if path.exists():
+if path.exists() and path.stat().st_size > 0:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except Exception:
@@ -106,7 +111,9 @@ data.update({
     "artifact_id": artifact_id,
     "frames": frames,
 })
-path.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
+tmp = path.with_suffix(path.suffix + ".tmp")
+tmp.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
+tmp.replace(path)
 PY
 }
 
@@ -208,6 +215,8 @@ for scene_spec in "${SCENES[@]}"; do
       sg docker -c "docker run --rm --ipc=host \
         --user ${HOST_UID}:${HOST_GID} \
         -e HOME=/tmp \
+        -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+        -v ${ROOT}:/workspace:ro \
         -v ${OUT_ROOT}:/out \
         ${HABITAT_IMG} \
         micromamba run -n base python -m h001_runtime.export_vlmaps_artifact \
@@ -220,6 +229,8 @@ for scene_spec in "${SCENES[@]}"; do
           --weight /out/scenes/${scene_key}/export/map/weight_lseg_1.npy \
           --obstacles /out/scenes/${scene_key}/export/map/obstacles.npy \
           --top-percentile ${TOP_PERCENTILE} \
+          --selection-mode ${CANDIDATE_SELECTION_MODE} \
+          --spatial-nms-min-distance-cells ${SPATIAL_NMS_MIN_DISTANCE_CELLS} \
           --min-component-cells ${MIN_COMPONENT_CELLS} \
           --max-candidates ${MAX_CANDIDATES} \
           --use-obstacle-mask"
@@ -276,13 +287,15 @@ PY
 done
 
 log_step "combine all scene artifacts"
-python - "${OUT_ROOT}" <<'PY'
+python - "${OUT_ROOT}" "${EXPECTED_QUERY_ROWS}" "${EXPECTED_SCENE_COUNT}" <<'PY'
 import json
 import math
 import sys
 from pathlib import Path
 
 root = Path(sys.argv[1])
+expected_query_rows = int(sys.argv[2])
+expected_scene_count = int(sys.argv[3])
 aligned_out = root / "all_scenes_aligned.jsonl"
 raw_out = root / "all_scenes_raw.jsonl"
 
@@ -317,7 +330,9 @@ for row in rows:
 scenes = sorted({Path(str(row.get("scene_id") or row.get("scene"))).name.replace(".basis.glb", "") for row in rows})
 queries = sorted({str(row.get("query") or row.get("object_category")) for row in rows})
 summary = {
-    "ok": len(rows) == 30 and candidate_count >= 30 and len(scenes) == 5 and queries == ["bed", "chair", "plant", "sofa", "toilet", "tv_monitor"],
+    "ok": len(rows) == expected_query_rows and candidate_count >= expected_query_rows and len(scenes) == expected_scene_count and queries == ["bed", "chair", "plant", "sofa", "toilet", "tv_monitor"],
+    "expected_query_rows": expected_query_rows,
+    "expected_scene_count": expected_scene_count,
     "rows": len(rows),
     "candidate_count": candidate_count,
     "finite_position_candidates": finite_positions,

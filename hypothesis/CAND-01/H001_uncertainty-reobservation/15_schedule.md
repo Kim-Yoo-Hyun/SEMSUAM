@@ -15,7 +15,7 @@ H001을 6개월-1년 범위에서 first probe, Step 4-5 SLAM extension, real-wor
 - Current paper-facing blocker: real HM3D `VLMaps` map artifact must provide `alignment.json` generated from the same Habitat pre-exploration trajectory.
 - First-probe gate: `07_evaluation_contract.md`.
 - Real-world setup gate: `03_feasibility.md`.
-- Long-running I/O-heavy jobs must follow `AGENT.md` background-task policy.
+- Long-running I/O-heavy jobs must follow `AGENTS.md` background-task policy.
 
 ## Paper Claims
 

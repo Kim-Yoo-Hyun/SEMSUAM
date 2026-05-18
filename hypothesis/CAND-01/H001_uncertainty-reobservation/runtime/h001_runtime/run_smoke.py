@@ -13,6 +13,21 @@ SUCCESS_DISTANCE = 1.0
 SEMANTIC_UNCERTAINTY_TRIGGER = 0.60
 SEMANTIC_TIE_BAND = 0.01
 SEMANTIC_REOBS_VIEW_BONUS = 1
+SEMANTIC_DELTA_SWITCH_SCORE = 0.03
+SEMANTIC_DELTA_SWITCH_UNCERTAINTY = 0.05
+SEMANTIC_EVIDENCE_MODE = "support_proxy"
+SEMANTIC_MAX_REOBSERVATIONS = 1
+SEMANTIC_POSTVIEW_SCORE_ARTIFACT: Optional[Path] = None
+SEMANTIC_IMAGE_SCORE_RULE = "raw_delta"
+SEMANTIC_USE_POSTVIEW_UNCERTAINTY_GATE = True
+RISK_OBJECT_NODE_FEATURE_ARTIFACT: Optional[Path] = None
+RISK_TOTAL_TRIGGER = 0.60
+RISK_CONTRADICTION_SCALE = 0.25
+RISK_RESOLUTION_DELTA_TRIGGER = 0.05
+RISK_RESOLUTION_MAX_RISK = 0.95
+RISK_RESOLUTION_MAX_CONTRADICTION = 0.25
+RISK_RESOLUTION_REQUIRE_POSITIVE_SUPPORT = True
+RISK_POLICIES = {"RiskOnlyReobserve", "RiskResolutionReobserve"}
 
 
 @dataclass
@@ -66,6 +81,24 @@ def norm_float(value: Any) -> Optional[float]:
     if math.isinf(value) or math.isnan(value):
         return None
     return value
+
+
+def safe_float(value: Any) -> Optional[float]:
+    try:
+        return norm_float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def parse_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    text = str(value).strip().lower()
+    if text in {"1", "true", "t", "yes", "y", "on"}:
+        return True
+    if text in {"0", "false", "f", "no", "n", "off"}:
+        return False
+    raise argparse.ArgumentTypeError(f"expected boolean value, got {value!r}")
 
 
 def mean(values: Iterable[Optional[float]]) -> Optional[float]:
@@ -389,6 +422,101 @@ class ArtifactJSONLBackend(CandidateBackend):
         )
 
 
+class PostviewScoreIndex:
+    def __init__(self, artifact: Path) -> None:
+        self.artifact = artifact
+        self.rows: List[Dict[str, Any]] = []
+        self.by_episode_key: Dict[str, List[Dict[str, Any]]] = {}
+        self.by_episode_scene_query: Dict[Tuple[str, str, str], List[Dict[str, Any]]] = {}
+        self.uses_gt_for_action = False
+        self._load()
+
+    def _load(self) -> None:
+        if not self.artifact.exists():
+            raise FileNotFoundError(f"post-view score artifact not found: {self.artifact}")
+        with self.artifact.open("r", encoding="utf-8") as handle:
+            for line in handle:
+                line = line.strip()
+                if not line:
+                    continue
+                row = json.loads(line)
+                if row.get("uses_gt_for_action") is not False:
+                    raise ValueError(f"post-view score row must have uses_gt_for_action=false: {row.get('decision_id')}")
+                self.rows.append(row)
+                episode_key = row.get("episode_key")
+                if episode_key is not None:
+                    self.by_episode_key.setdefault(str(episode_key), []).append(row)
+                episode_id = str(row.get("episode_id"))
+                scene_key = scene_basename(str(row.get("scene_id") or ""))
+                query = str(row.get("query") or "")
+                if episode_id and scene_key and query:
+                    self.by_episode_scene_query.setdefault((episode_id, scene_key, query), []).append(row)
+
+    def find(self, loaded: LoadedEpisode, query: str, candidate_id: str) -> Optional[Dict[str, Any]]:
+        fields = manifest_fields(loaded)
+        rows: List[Dict[str, Any]] = []
+        episode_key = fields.get("episode_key")
+        if episode_key is not None:
+            rows.extend(self.by_episode_key.get(str(episode_key), []))
+        if not rows:
+            key = (
+                str(loaded.episode.get("episode_id")),
+                scene_basename(str(loaded.episode.get("scene_id") or "")),
+                query,
+            )
+            rows.extend(self.by_episode_scene_query.get(key, []))
+        if not rows:
+            return None
+
+        matching_query = [row for row in rows if str(row.get("query") or "") == query]
+        rows = matching_query or rows
+        for row in rows:
+            if candidate_id in postview_candidate_scores(row):
+                return row
+        return rows[0]
+
+
+class ObjectNodeFeatureIndex:
+    def __init__(self, artifact: Path) -> None:
+        self.artifact = artifact
+        self.by_episode_candidate: Dict[Tuple[str, str], Dict[str, Any]] = {}
+        self.by_scene_query_candidate: Dict[Tuple[str, str, str, str], Dict[str, Any]] = {}
+        self.rows = 0
+        self.uses_gt_for_action = False
+        self._load()
+
+    def _load(self) -> None:
+        if not self.artifact.exists():
+            raise FileNotFoundError(f"object-node feature artifact not found: {self.artifact}")
+        with self.artifact.open("r", encoding="utf-8") as handle:
+            for line in handle:
+                line = line.strip()
+                if not line:
+                    continue
+                row = json.loads(line)
+                if row.get("uses_gt_for_action") is not False:
+                    raise ValueError(f"object-node feature row must have uses_gt_for_action=false: {row.get('episode_key')}")
+                self.rows += 1
+                episode_key = row.get("episode_key")
+                candidate_id = row.get("candidate_id")
+                if episode_key is not None and candidate_id is not None:
+                    self.by_episode_candidate[(str(episode_key), str(candidate_id))] = row
+                scene_key = scene_basename(str(row.get("scene_id") or ""))
+                query = str(row.get("query") or "")
+                if scene_key and query and candidate_id is not None:
+                    self.by_scene_query_candidate[(scene_key, query, str(candidate_id))] = row
+
+    def find(self, loaded: LoadedEpisode, query: str, candidate_id: str) -> Optional[Dict[str, Any]]:
+        fields = manifest_fields(loaded)
+        episode_key = fields.get("episode_key")
+        if episode_key is not None:
+            row = self.by_episode_candidate.get((str(episode_key), candidate_id))
+            if row is not None:
+                return row
+        scene_key = scene_basename(str(loaded.episode.get("scene_id") or ""))
+        return self.by_scene_query_candidate.get((scene_key, query, candidate_id))
+
+
 def build_candidate_backend(name: str, artifact: Optional[str]) -> CandidateBackend:
     if name == "diagnostic_gt":
         return DiagnosticGTBackend()
@@ -397,6 +525,212 @@ def build_candidate_backend(name: str, artifact: Optional[str]) -> CandidateBack
             raise ValueError("--candidate-artifact is required for artifact_jsonl backend")
         return ArtifactJSONLBackend(Path(artifact))
     raise ValueError(f"unsupported candidate backend: {name}")
+
+
+def postview_candidate_scores(row: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    return {
+        str(score.get("candidate_id")): score
+        for score in row.get("candidate_scores", [])
+        if score.get("candidate_id") is not None
+    }
+
+
+def postview_score_value(score_row: Optional[Dict[str, Any]]) -> Optional[float]:
+    if not score_row:
+        return None
+    raw = safe_float(score_row.get("raw_image_text_score"))
+    if raw is not None:
+        return raw
+    return safe_float(score_row.get("score_after"))
+
+
+def postview_support_delta(score_row: Optional[Dict[str, Any]]) -> float:
+    value = safe_float(score_row.get("support_delta") if score_row else None)
+    return float(value) if value is not None else 0.0
+
+
+def postview_u_sem(score_row: Optional[Dict[str, Any]], fallback: float) -> float:
+    value = safe_float(score_row.get("U_sem_after") if score_row else None)
+    return float(value) if value is not None else float(fallback)
+
+
+def postview_projection_status(score_row: Optional[Dict[str, Any]]) -> str:
+    if not score_row:
+        return "missing_frame"
+    return str(score_row.get("projection_status") or "missing_frame")
+
+
+def postview_score_source(score_row: Optional[Dict[str, Any]]) -> str:
+    if not score_row:
+        return "not_used"
+    return str(score_row.get("score_source") or "not_used")
+
+
+def postview_score_calibration(score_row: Optional[Dict[str, Any]]) -> Optional[str]:
+    if not score_row:
+        return None
+    value = score_row.get("score_calibration")
+    return str(value) if value is not None else None
+
+
+def postview_action_eligible(score_row: Optional[Dict[str, Any]]) -> bool:
+    if not score_row:
+        return False
+    if SEMANTIC_IMAGE_SCORE_RULE == "agg_local_delta":
+        return (
+            score_row.get("action_eligible") is True
+            and score_row.get("center_fallback_used_for_action") is not True
+        )
+    return True
+
+
+def image_feature_score_value(candidate: Candidate, score_row: Optional[Dict[str, Any]]) -> Optional[float]:
+    if SEMANTIC_IMAGE_SCORE_RULE == "raw_delta":
+        return postview_score_value(score_row)
+    if SEMANTIC_IMAGE_SCORE_RULE == "agg_local_delta":
+        if not postview_action_eligible(score_row):
+            return None
+        return postview_score_value(score_row)
+    raise ValueError(f"unsupported semantic image score rule: {SEMANTIC_IMAGE_SCORE_RULE}")
+
+
+def object_node_support(feature_row: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    if not feature_row:
+        return {
+            "S_det": 0.0,
+            "S_proj": 0.0,
+            "S_depth": 0.0,
+            "S_prop": 0.0,
+            "R_amb": 0.0,
+            "property_group": None,
+            "object_node_aux_support": 0.0,
+            "object_node_supported_score": 0.0,
+            "object_node_positive_support": False,
+        }
+    s_det = safe_float(feature_row.get("S_det")) or safe_float(feature_row.get("N1_detector_score_only")) or 0.0
+    s_proj = safe_float(feature_row.get("S_proj")) or 0.0
+    s_depth = safe_float(feature_row.get("S_depth")) or 0.0
+    s_prop = safe_float(feature_row.get("S_prop")) or 0.0
+    r_amb = safe_float(feature_row.get("R_amb")) or 0.0
+    aux_support = max(0.0, s_proj, s_depth, s_prop)
+    supported_score = max(0.0, min(1.0, s_det * aux_support))
+    return {
+        "S_det": s_det,
+        "S_proj": s_proj,
+        "S_depth": s_depth,
+        "S_prop": s_prop,
+        "R_amb": r_amb,
+        "property_group": feature_row.get("property_group"),
+        "object_node_aux_support": aux_support,
+        "object_node_supported_score": supported_score,
+        "object_node_positive_support": bool(s_det > 0.0 and aux_support > 0.0 and supported_score > 0.0),
+    }
+
+
+def risk_dominant_term(terms: Dict[str, float]) -> str:
+    order = [
+        "R_before_no_evidence",
+        "R_before_contradiction",
+        "R_before_ambiguity",
+        "R_before_property_weakness",
+    ]
+    return max(order, key=lambda key: (float(terms.get(key, 0.0)), -order.index(key)))
+
+
+def compute_risk_context(
+    loaded: LoadedEpisode,
+    candidates: List[Candidate],
+    risk_features: Optional[ObjectNodeFeatureIndex],
+    policy: str = "RiskOnlyReobserve",
+) -> Tuple[Dict[str, Any], Dict[str, Dict[str, Any]]]:
+    top = candidates[0]
+    query = str(loaded.episode.get("object_category") or "")
+    feature_by_candidate: Dict[str, Dict[str, Any]] = {}
+    for cand in candidates:
+        feature = risk_features.find(loaded, query, cand.candidate_id) if risk_features is not None else None
+        feature_by_candidate[cand.candidate_id] = object_node_support(feature)
+
+    top_support = feature_by_candidate[top.candidate_id]
+    alternatives = candidates[1:]
+    best_alt = max(
+        alternatives,
+        key=lambda cand: (
+            feature_by_candidate[cand.candidate_id]["object_node_supported_score"],
+            -rank_of(cand, candidates),
+        ),
+    ) if alternatives else top
+    best_alt_support = feature_by_candidate[best_alt.candidate_id]
+    top_fields = uncertainty_fields(top, candidates)
+
+    r_before_no_evidence = max(0.0, min(1.0, top_fields["view_count_uncertainty"]))
+    r_before_contradiction = 0.0
+    r_before_ambiguity = max(0.0, min(1.0, top_fields["margin_uncertainty"]))
+    r_before_property = 0.0
+    r_before = max(
+        r_before_no_evidence,
+        r_before_contradiction,
+        r_before_ambiguity,
+        r_before_property,
+    )
+    before_terms = {
+        "R_before_no_evidence": r_before_no_evidence,
+        "R_before_contradiction": r_before_contradiction,
+        "R_before_ambiguity": r_before_ambiguity,
+        "R_before_property_weakness": r_before_property,
+    }
+
+    support_gap = (
+        best_alt_support["object_node_supported_score"]
+        - top_support["object_node_supported_score"]
+    )
+    r_after_no_evidence = 0.0 if top_support["object_node_positive_support"] else 1.0
+    r_after_contradiction = max(0.0, min(1.0, support_gap / max(RISK_CONTRADICTION_SCALE, 1e-6)))
+    r_after_ambiguity = max(0.0, min(1.0, top_support["R_amb"]))
+    group = str(top_support.get("property_group") or "unknown")
+    property_weight = 0.5 if group == "standard_furniture_or_fixture" else 1.0
+    r_after_property = max(0.0, min(1.0, property_weight * (1.0 - top_support["object_node_aux_support"])))
+    r_after = max(r_after_no_evidence, r_after_contradiction, r_after_ambiguity, r_after_property)
+    risk_triggered = bool(r_before >= RISK_TOTAL_TRIGGER)
+    context = {
+        "risk_feature_source": str(RISK_OBJECT_NODE_FEATURE_ARTIFACT) if risk_features is not None else None,
+        "risk_feature_available": risk_features is not None,
+        "risk_policy": policy,
+        "risk_top_candidate_id": top.candidate_id,
+        "risk_best_alt_candidate_id": best_alt.candidate_id if best_alt else None,
+        "risk_top_supported_score": top_support["object_node_supported_score"],
+        "risk_best_alt_supported_score": best_alt_support["object_node_supported_score"] if best_alt else 0.0,
+        "risk_support_gap_alt_minus_top": support_gap,
+        "R_no_evidence": r_after_no_evidence,
+        "R_contradiction": r_after_contradiction,
+        "R_ambiguity": r_after_ambiguity,
+        "R_property_weakness": r_after_property,
+        "R_total": r_after,
+        "R_before": r_before,
+        "R_before_no_evidence": r_before_no_evidence,
+        "R_before_contradiction": r_before_contradiction,
+        "R_before_ambiguity": r_before_ambiguity,
+        "R_before_property_weakness": r_before_property,
+        "R_after": r_after,
+        "R_after_no_evidence": r_after_no_evidence,
+        "R_after_contradiction": r_after_contradiction,
+        "R_after_ambiguity": r_after_ambiguity,
+        "R_after_property_weakness": r_after_property,
+        "risk_delta_after_reobserve": None,
+        "risk_resolved_after_reobserve": None,
+        "risk_unresolved_no_commit": False,
+        "dominant_risk_term": risk_dominant_term(before_terms),
+        "wrong_goal_avoided_by_defer": False,
+        "success_lost_by_defer": False,
+        "risk_total_trigger": RISK_TOTAL_TRIGGER,
+        "risk_contradiction_scale": RISK_CONTRADICTION_SCALE,
+        "risk_resolution_delta_trigger": RISK_RESOLUTION_DELTA_TRIGGER,
+        "risk_resolution_max_risk": RISK_RESOLUTION_MAX_RISK,
+        "risk_resolution_max_contradiction": RISK_RESOLUTION_MAX_CONTRADICTION,
+        "risk_resolution_require_positive_support": RISK_RESOLUTION_REQUIRE_POSITIVE_SUPPORT,
+        "risk_triggered_reobserve": risk_triggered,
+        "risk_direct_goal_switch_allowed": False,
+    }
+    return context, feature_by_candidate
 
 
 def euclidean(a: List[float], b: List[float]) -> float:
@@ -528,6 +862,7 @@ def candidate_log_row(
     explicit_commit: bool,
     path_to_candidate: Optional[float],
     wrong_goal_visit: bool,
+    extra_fields: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     episode = loaded.episode
     fields = uncertainty_fields(candidate, candidates)
@@ -570,6 +905,8 @@ def candidate_log_row(
         "path_after_candidate": None,
         "wasted_path_from_candidate": path_to_candidate if wrong_goal_visit else 0.0,
     }
+    if extra_fields:
+        row.update(extra_fields)
     row.update(manifest_fields(loaded))
     return row
 
@@ -604,6 +941,34 @@ def select_semantic_reobserve_candidate(
     return selected, selected_path, True, paths
 
 
+def select_risk_reobserve_candidate(
+    cache: SceneCache,
+    scene: Path,
+    start: List[float],
+    candidates: List[Candidate],
+    dominant_term: str,
+) -> Tuple[Candidate, Optional[float], List[Tuple[Candidate, Optional[float]]]]:
+    top = candidates[0]
+    paths = [(cand, cache.distance(scene, start, cand.visit_position)) for cand in candidates]
+    top_path = next(path for cand, path in paths if cand == top)
+
+    if dominant_term == "R_before_ambiguity":
+        min_score = top.score - SEMANTIC_TIE_BAND
+        eligible = [
+            (cand, path)
+            for cand, path in paths
+            if cand.score >= min_score and path is not None
+        ]
+        if eligible:
+            selected, selected_path = min(
+                eligible,
+                key=lambda item: (float(item[1]), -item[0].score, rank_of(item[0], candidates)),
+            )
+            return selected, selected_path, paths
+
+    return top, top_path, paths
+
+
 def episode_log_row(
     run_id: str,
     loaded: LoadedEpisode,
@@ -619,6 +984,7 @@ def episode_log_row(
     wasted_reobserve: Optional[float],
     final_candidate: Optional[Candidate],
     termination_reason: str,
+    extra_fields: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     episode = loaded.episode
     if path_length_total is None or p_star is None:
@@ -667,6 +1033,8 @@ def episode_log_row(
         "gt_shortest_path_to_target": p_star,
         "termination_reason": termination_reason,
     }
+    if extra_fields:
+        row.update(extra_fields)
     row.update(manifest_fields(loaded))
     return row
 
@@ -679,6 +1047,8 @@ def run_policy(
     run_id: str,
     seed: int,
     candidate_backend: CandidateBackend,
+    postview_scores: Optional[PostviewScoreIndex] = None,
+    risk_features: Optional[ObjectNodeFeatureIndex] = None,
 ) -> Tuple[Dict[str, Any], List[Dict[str, Any]], List[Dict[str, Any]]]:
     episode = loaded.episode
     start = [float(v) for v in episode["start_position"]]
@@ -695,6 +1065,10 @@ def run_policy(
 
     candidate_rows: List[Dict[str, Any]] = []
     viewpoint_rows: List[Dict[str, Any]] = []
+    risk_context: Dict[str, Any] = {}
+    risk_by_candidate: Dict[str, Dict[str, Any]] = {}
+    if policy in RISK_POLICIES:
+        risk_context, risk_by_candidate = compute_risk_context(loaded, candidates, risk_features, policy)
 
     if policy == "GTTargetOracle":
         correct = [cand for cand in candidates if cand.correct is True]
@@ -727,9 +1101,10 @@ def run_policy(
 
     selected = candidates[0]
     selected_path = cache.distance(scene, start, selected.visit_position)
-    reobserve_path = 0.0
+    reobserve_path: Optional[float] = 0.0
     path_after_reobserve = selected_path
     reobservations = 0
+    commit_allowed = True
     selected_for_reobserve: Optional[Candidate] = None
 
     if policy == "RandomReobserve":
@@ -767,6 +1142,270 @@ def run_policy(
         viewpoint_row.update(manifest_fields(loaded))
         viewpoint_rows.append(viewpoint_row)
         selected_for_reobserve = selected
+
+    if policy == "SemanticVerifyTop":
+        top = candidates[0]
+        before_fields = uncertainty_fields(top, candidates)
+        triggered = before_fields["U_sem"] >= SEMANTIC_UNCERTAINTY_TRIGGER
+        if triggered:
+            reobservations = 1
+            selected = top
+            selected_for_reobserve = top
+            selected_path = cache.distance(scene, start, top.visit_position)
+            reobserve_path = selected_path or 0.0
+            path_after_reobserve = 0.0 if selected_path is not None else None
+            after_fields = uncertainty_fields(top, candidates, extra_view_count=SEMANTIC_REOBS_VIEW_BONUS)
+            viewpoint_row = {
+                "schema_version": SCHEMA_VERSION,
+                "run_id": run_id,
+                "episode_id": str(episode.get("episode_id")),
+                "policy": policy,
+                "decision_step": 0,
+                "scene_id": episode.get("scene_id"),
+                "query": episode.get("object_category"),
+                "candidate_id": top.candidate_id,
+                "viewpoint_id": f"semantic_verify_top:{loaded.index}:1",
+                "viewpoint_position": top.visit_position,
+                "viewpoint_rotation": top.visit_rotation,
+                "viewpoint_policy": "SemanticVerifyTop",
+                "semantic_gain_pred": before_fields["U_sem"] - after_fields["U_sem"],
+                "slam_gain_pred": None,
+                "travel_cost_pred": selected_path,
+                "travel_cost_actual": reobserve_path,
+                "observation_success": selected_path is not None,
+                "candidate_score_before": top.score,
+                "candidate_score_after": top.score,
+                "U_sem_before": before_fields["U_sem"],
+                "U_sem_after": after_fields["U_sem"],
+                "candidate_rank_before": 1,
+                "candidate_rank_after": 1,
+                "commit_after_reobserve": selected_path is not None,
+                "final_candidate_changed": False,
+                "semantic_uncertainty_trigger": SEMANTIC_UNCERTAINTY_TRIGGER,
+                "semantic_tie_band": SEMANTIC_TIE_BAND,
+                "evidence_update_mode": "support_proxy",
+                "final_candidate_id_before": top.candidate_id,
+                "final_candidate_id_after": top.candidate_id,
+                "switch_gate_pass": False,
+                "switch_gate_reason": "no_switch_allowed",
+                "score_delta_after_reobserve": 0.0,
+                "U_sem_delta_after_reobserve": after_fields["U_sem"] - before_fields["U_sem"],
+                "support_delta_after_reobserve": float(SEMANTIC_REOBS_VIEW_BONUS),
+            }
+            viewpoint_row.update(manifest_fields(loaded))
+            viewpoint_rows.append(viewpoint_row)
+        else:
+            path_after_reobserve = selected_path
+
+    if policy == "EvidenceGatedSemanticOnly":
+        top = candidates[0]
+        before_fields = uncertainty_fields(top, candidates)
+        triggered = (
+            before_fields["U_sem"] >= SEMANTIC_UNCERTAINTY_TRIGGER
+            and SEMANTIC_MAX_REOBSERVATIONS > 0
+        )
+        if triggered:
+            reobservations = 1
+            selected = top
+            selected_for_reobserve = top
+            selected_path = cache.distance(scene, start, top.visit_position)
+            reobserve_path = selected_path or 0.0
+            path_after_reobserve = 0.0 if selected_path is not None else None
+            after_fields = uncertainty_fields(top, candidates, extra_view_count=SEMANTIC_REOBS_VIEW_BONUS)
+            candidate_paths = [(cand, cache.distance(scene, start, cand.visit_position)) for cand in candidates]
+            postview_row: Optional[Dict[str, Any]] = None
+            postview_by_candidate: Dict[str, Dict[str, Any]] = {}
+            top_postview_score = None
+            top_score_row: Optional[Dict[str, Any]] = None
+            top_score_after = top.score
+            top_support_delta = float(SEMANTIC_REOBS_VIEW_BONUS)
+            top_projection_status = "not_used"
+            top_score_source = "support_proxy"
+            top_score_calibration = None
+            missing_image_feature_reason: Optional[str] = None
+
+            if SEMANTIC_EVIDENCE_MODE == "image_feature":
+                if postview_scores is None:
+                    missing_image_feature_reason = "missing_postview_score"
+                else:
+                    postview_row = postview_scores.find(
+                        loaded,
+                        str(episode.get("object_category") or ""),
+                        top.candidate_id,
+                    )
+                    if postview_row is None:
+                        missing_image_feature_reason = "missing_postview_score"
+                    else:
+                        postview_by_candidate = postview_candidate_scores(postview_row)
+                        top_score_row = postview_by_candidate.get(top.candidate_id)
+                        if top_score_row is None:
+                            missing_image_feature_reason = "missing_top_candidate_score"
+
+                top_projection_status = postview_projection_status(top_score_row)
+                top_score_source = postview_score_source(top_score_row)
+                top_score_calibration = postview_score_calibration(top_score_row)
+                top_postview_score = image_feature_score_value(top, top_score_row)
+                if top_postview_score is not None:
+                    top_score_after = top_postview_score
+                top_support_delta = postview_support_delta(top_score_row)
+                after_fields = dict(after_fields)
+                after_fields["U_sem"] = postview_u_sem(top_score_row, before_fields["U_sem"])
+
+            switch_candidates: List[Tuple[Candidate, float, Optional[Dict[str, Any]], Optional[float]]] = []
+            if SEMANTIC_EVIDENCE_MODE == "image_feature":
+                if top_postview_score is not None and top_projection_status == "visible":
+                    for cand, path in candidate_paths[1:]:
+                        if cand.score < top.score - SEMANTIC_TIE_BAND or path is None:
+                            continue
+                        score_row = postview_by_candidate.get(cand.candidate_id)
+                        if postview_projection_status(score_row) != "visible":
+                            continue
+                        score_value = image_feature_score_value(cand, score_row)
+                        if score_value is None:
+                            continue
+                        switch_candidates.append((cand, float(path), score_row, score_value))
+            else:
+                switch_candidates = [
+                    (cand, float(path), None, None)
+                    for cand, path in candidate_paths[1:]
+                    if cand.score >= top.score - SEMANTIC_TIE_BAND and path is not None
+                ]
+            switch_candidate: Optional[Candidate] = None
+            switch_candidate_path: Optional[float] = None
+            switch_candidate_score_row: Optional[Dict[str, Any]] = None
+            switch_candidate_score_after: Optional[float] = None
+            if switch_candidates:
+                switch_candidate, switch_candidate_path, switch_candidate_score_row, switch_candidate_score_after = max(
+                    switch_candidates,
+                    key=lambda item: (
+                        item[3] if item[3] is not None else item[0].score,
+                        -float(item[1]),
+                        -rank_of(item[0], candidates),
+                    ),
+                )
+
+            if SEMANTIC_EVIDENCE_MODE == "image_feature":
+                score_delta = (
+                    0.0
+                    if switch_candidate_score_after is None or top_postview_score is None
+                    else switch_candidate_score_after - top_postview_score
+                )
+                support_delta = postview_support_delta(switch_candidate_score_row)
+            else:
+                score_delta = 0.0 if switch_candidate is None else switch_candidate.score - top.score
+                support_delta = float(SEMANTIC_REOBS_VIEW_BONUS) if switch_candidate == top else 0.0
+            switch_fields = (
+                uncertainty_fields(switch_candidate, candidates)
+                if switch_candidate is not None
+                else after_fields
+            )
+            if SEMANTIC_EVIDENCE_MODE == "image_feature" and switch_candidate is not None:
+                switch_fields = dict(switch_fields)
+                switch_fields["U_sem"] = postview_u_sem(switch_candidate_score_row, switch_fields["U_sem"])
+            u_sem_delta = switch_fields["U_sem"] - after_fields["U_sem"]
+            switch_gate_pass = False
+            switch_gate_reason = "no_reobserve"
+            if SEMANTIC_EVIDENCE_MODE == "image_feature" and missing_image_feature_reason is not None:
+                switch_gate_reason = missing_image_feature_reason
+            elif SEMANTIC_EVIDENCE_MODE == "image_feature" and top_projection_status != "visible":
+                switch_gate_reason = "top_not_visible"
+            elif switch_candidate is None or switch_candidate_path is None:
+                switch_gate_reason = "no_reobserve"
+            elif score_delta < SEMANTIC_DELTA_SWITCH_SCORE:
+                switch_gate_reason = "score_delta_failed"
+            elif (
+                (SEMANTIC_EVIDENCE_MODE != "image_feature" or SEMANTIC_USE_POSTVIEW_UNCERTAINTY_GATE)
+                and switch_fields["U_sem"] + SEMANTIC_DELTA_SWITCH_UNCERTAINTY > after_fields["U_sem"]
+            ):
+                switch_gate_reason = "uncertainty_delta_failed"
+            elif support_delta <= 0.0:
+                switch_gate_reason = "support_delta_failed"
+            else:
+                switch_gate_pass = True
+                switch_gate_reason = "passed"
+
+            if switch_gate_pass and switch_candidate is not None:
+                selected = switch_candidate
+                path_after_reobserve = cache.distance(scene, top.visit_position, switch_candidate.visit_position)
+            if selected == top:
+                selected_after_fields = after_fields
+                selected_score_after = top_score_after
+                selected_support_delta = top_support_delta
+                selected_score_row = top_score_row
+            else:
+                selected_after_fields = dict(uncertainty_fields(selected, candidates))
+                selected_score_row = switch_candidate_score_row
+                selected_after_fields["U_sem"] = postview_u_sem(selected_score_row, selected_after_fields["U_sem"])
+                selected_score_after = (
+                    switch_candidate_score_after
+                    if switch_candidate_score_after is not None
+                    else selected.score
+                )
+                selected_support_delta = support_delta
+
+            if SEMANTIC_EVIDENCE_MODE == "image_feature" and top_postview_score is not None:
+                score_delta_after_reobserve = selected_score_after - top_postview_score
+            else:
+                score_delta_after_reobserve = selected.score - top.score
+
+            viewpoint_row = {
+                "schema_version": SCHEMA_VERSION,
+                "run_id": run_id,
+                "episode_id": str(episode.get("episode_id")),
+                "policy": policy,
+                "decision_step": 0,
+                "scene_id": episode.get("scene_id"),
+                "query": episode.get("object_category"),
+                "candidate_id": top.candidate_id,
+                "viewpoint_id": f"evidence_gated:{loaded.index}:1",
+                "viewpoint_position": top.visit_position,
+                "viewpoint_rotation": top.visit_rotation,
+                "viewpoint_policy": "EvidenceGatedSemanticOnly",
+                "semantic_gain_pred": before_fields["U_sem"] - selected_after_fields["U_sem"],
+                "slam_gain_pred": None,
+                "travel_cost_pred": selected_path,
+                "travel_cost_actual": reobserve_path,
+                "observation_success": selected_path is not None,
+                "candidate_score_before": top.score,
+                "candidate_score_after": selected_score_after,
+                "U_sem_before": before_fields["U_sem"],
+                "U_sem_after": selected_after_fields["U_sem"],
+                "candidate_rank_before": 1,
+                "candidate_rank_after": rank_of(selected, candidates),
+                "commit_after_reobserve": path_after_reobserve is not None,
+                "final_candidate_changed": selected != top,
+                "semantic_uncertainty_trigger": SEMANTIC_UNCERTAINTY_TRIGGER,
+                "semantic_tie_band": SEMANTIC_TIE_BAND,
+                "evidence_update_mode": SEMANTIC_EVIDENCE_MODE,
+                "final_candidate_id_before": top.candidate_id,
+                "final_candidate_id_after": selected.candidate_id,
+                "switch_gate_pass": switch_gate_pass,
+                "switch_gate_reason": switch_gate_reason,
+                "score_delta_after_reobserve": score_delta_after_reobserve,
+                "U_sem_delta_after_reobserve": selected_after_fields["U_sem"] - before_fields["U_sem"],
+                "support_delta_after_reobserve": selected_support_delta,
+                "switch_candidate_id": switch_candidate.candidate_id if switch_candidate else None,
+                "switch_candidate_score_delta": score_delta,
+                "switch_candidate_U_sem_delta": u_sem_delta,
+                "switch_candidate_support_delta": support_delta,
+                "postview_score_artifact": str(SEMANTIC_POSTVIEW_SCORE_ARTIFACT) if SEMANTIC_EVIDENCE_MODE == "image_feature" else None,
+                "postview_decision_id": postview_row.get("decision_id") if postview_row else None,
+                "postview_projection_status": postview_projection_status(selected_score_row) if SEMANTIC_EVIDENCE_MODE == "image_feature" else "not_used",
+                "postview_score_source": postview_score_source(selected_score_row) if SEMANTIC_EVIDENCE_MODE == "image_feature" else "support_proxy",
+                "postview_score_calibration": postview_score_calibration(selected_score_row) if SEMANTIC_EVIDENCE_MODE == "image_feature" else None,
+                "postview_evidence_rule": SEMANTIC_IMAGE_SCORE_RULE if SEMANTIC_EVIDENCE_MODE == "image_feature" else None,
+                "postview_uncertainty_gate_used": SEMANTIC_USE_POSTVIEW_UNCERTAINTY_GATE if SEMANTIC_EVIDENCE_MODE == "image_feature" else None,
+                "postview_top_projection_status": top_projection_status,
+                "postview_top_score_source": top_score_source,
+                "postview_top_score_calibration": top_score_calibration,
+                "postview_top_score_after": top_score_after if SEMANTIC_EVIDENCE_MODE == "image_feature" else None,
+                "postview_switch_score_after": switch_candidate_score_after,
+                "postview_candidate_score_count": len(postview_by_candidate) if postview_row else 0,
+            }
+            viewpoint_row.update(manifest_fields(loaded))
+            viewpoint_rows.append(viewpoint_row)
+        else:
+            path_after_reobserve = selected_path
 
     if policy == "SemanticOnly":
         top = candidates[0]
@@ -822,24 +1461,175 @@ def run_policy(
         else:
             path_after_reobserve = selected_path
 
-    commit_path = path_after_reobserve
-    path_length_total = None if commit_path is None else reobserve_path + commit_path
-    success = bool(selected.correct is True and path_length_total is not None)
+    if policy in RISK_POLICIES:
+        top = candidates[0]
+        before_fields = uncertainty_fields(top, candidates)
+        selected = top
+        top_direct_path = cache.distance(scene, start, top.visit_position)
+        selected_path = top_direct_path
+        risk_triggered = bool(risk_context.get("risk_triggered_reobserve"))
+        if risk_triggered and SEMANTIC_MAX_REOBSERVATIONS > 0:
+            reobservations = 1
+            selected_for_reobserve, selected_path, _candidate_paths = select_risk_reobserve_candidate(
+                cache,
+                scene,
+                start,
+                candidates,
+                str(risk_context.get("dominant_risk_term") or ""),
+            )
+            reobserve_path = selected_path
+            r_before_value = safe_float(risk_context.get("R_before"))
+            r_after_value = safe_float(risk_context.get("R_after"))
+            risk_delta = (
+                None
+                if r_before_value is None or r_after_value is None
+                else r_before_value - r_after_value
+            )
+            risk_resolved = bool(
+                selected_path is not None
+                and r_after_value is not None
+                and r_after_value < RISK_TOTAL_TRIGGER
+            )
+            top_support = risk_by_candidate.get(top.candidate_id, {})
+            top_positive_support = bool(top_support.get("object_node_positive_support"))
+            r_after_contradiction = safe_float(risk_context.get("R_after_contradiction")) or 0.0
+            risk_resolution_commit = bool(
+                policy == "RiskResolutionReobserve"
+                and selected_path is not None
+                and not risk_resolved
+                and risk_delta is not None
+                and risk_delta >= RISK_RESOLUTION_DELTA_TRIGGER
+                and r_after_value is not None
+                and r_after_value <= RISK_RESOLUTION_MAX_RISK
+                and r_after_contradiction <= RISK_RESOLUTION_MAX_CONTRADICTION
+                and (
+                    top_positive_support
+                    or not RISK_RESOLUTION_REQUIRE_POSITIVE_SUPPORT
+                )
+            )
+            risk_unresolved = not (risk_resolved or risk_resolution_commit)
+            path_after_reobserve = (
+                cache.distance(scene, selected_for_reobserve.visit_position, top.visit_position)
+                if (risk_resolved or risk_resolution_commit) and selected_for_reobserve != top
+                else (0.0 if (risk_resolved or risk_resolution_commit) else None)
+            )
+            commit_allowed = bool((risk_resolved or risk_resolution_commit) and path_after_reobserve is not None)
+            risk_resolution_commit_reason = "risk_unresolved_no_commit"
+            if risk_resolved:
+                risk_resolution_commit_reason = "risk_resolved_commit"
+            elif risk_resolution_commit:
+                risk_resolution_commit_reason = "risk_delta_positive_support_commit"
+            would_wrong_goal_commit = bool(
+                top.correct is False
+                and top_direct_path is not None
+                and top_direct_path >= wrong_min_path
+            )
+            would_success_commit = bool(top.correct is True and top_direct_path is not None)
+            risk_context.update(
+                {
+                    "risk_delta_after_reobserve": risk_delta,
+                    "risk_resolved_after_reobserve": risk_resolved,
+                    "risk_resolution_commit": risk_resolution_commit,
+                    "risk_resolution_commit_reason": risk_resolution_commit_reason,
+                    "risk_resolution_top_positive_support": top_positive_support,
+                    "risk_unresolved_no_commit": risk_unresolved,
+                    "wrong_goal_avoided_by_defer": bool(risk_unresolved and would_wrong_goal_commit),
+                    "success_lost_by_defer": bool(risk_unresolved and would_success_commit),
+                }
+            )
+            viewpoint_row = {
+                "schema_version": SCHEMA_VERSION,
+                "run_id": run_id,
+                "episode_id": str(episode.get("episode_id")),
+                "policy": policy,
+                "decision_step": 0,
+                "scene_id": episode.get("scene_id"),
+                "query": episode.get("object_category"),
+                "candidate_id": top.candidate_id,
+                "viewpoint_id": f"risk_only:{loaded.index}:1",
+                "viewpoint_position": selected_for_reobserve.visit_position,
+                "viewpoint_rotation": selected_for_reobserve.visit_rotation,
+                "viewpoint_policy": policy,
+                "semantic_gain_pred": None,
+                "slam_gain_pred": None,
+                "travel_cost_pred": selected_path,
+                "travel_cost_actual": reobserve_path,
+                "observation_success": selected_path is not None,
+                "candidate_score_before": top.score,
+                "candidate_score_after": top.score,
+                "U_sem_before": before_fields["U_sem"],
+                "U_sem_after": before_fields["U_sem"],
+                "candidate_rank_before": 1,
+                "candidate_rank_after": 1,
+                "commit_after_reobserve": commit_allowed,
+                "final_candidate_changed": False,
+                "semantic_uncertainty_trigger": SEMANTIC_UNCERTAINTY_TRIGGER,
+                "semantic_tie_band": SEMANTIC_TIE_BAND,
+                "evidence_update_mode": "risk_only_object_node",
+                "final_candidate_id_before": top.candidate_id,
+                "final_candidate_id_after": top.candidate_id if commit_allowed else None,
+                "reobserve_candidate_id": selected_for_reobserve.candidate_id,
+                "reobserve_candidate_rank": rank_of(selected_for_reobserve, candidates),
+                "reobserve_candidate_score": selected_for_reobserve.score,
+                "reobserve_candidate_is_top": selected_for_reobserve == top,
+                "switch_gate_pass": False,
+                "switch_gate_reason": risk_resolution_commit_reason,
+                "score_delta_after_reobserve": 0.0,
+                "U_sem_delta_after_reobserve": 0.0,
+                "support_delta_after_reobserve": 0.0,
+            }
+            viewpoint_row.update(risk_context)
+            viewpoint_row.update(manifest_fields(loaded))
+            viewpoint_rows.append(viewpoint_row)
+        else:
+            path_after_reobserve = selected_path
+
+    commit_path = path_after_reobserve if commit_allowed else None
+    if commit_path is None:
+        path_length_total = reobserve_path if (reobservations and reobserve_path is not None) else None
+    else:
+        path_length_total = (reobserve_path or 0.0) + commit_path
+    success = bool(commit_allowed and selected.correct is True and path_length_total is not None)
     spl = 0.0
     if success and p_star is not None and path_length_total is not None:
         spl = p_star / max(p_star, path_length_total)
 
-    wrong_goal_commit_distance = path_length_total if policy == "SemanticOnly" and reobservations else commit_path
+    semantic_reobserve_policy = policy in {"SemanticOnly", "SemanticVerifyTop", "EvidenceGatedSemanticOnly"} or policy in RISK_POLICIES
+    wrong_goal_commit_distance = (
+        None
+        if not commit_allowed
+        else (path_length_total if semantic_reobserve_policy and reobservations else commit_path)
+    )
     wrong_goal_visit = bool(
         selected.correct is False
         and wrong_goal_commit_distance is not None
         and wrong_goal_commit_distance >= wrong_min_path
     )
     wasted_wrong = wrong_goal_commit_distance if wrong_goal_visit else 0.0
-    wasted_reobserve = 0.0 if policy == "SemanticOnly" else (reobserve_path if reobservations else 0.0)
+    wasted_reobserve = (
+        reobserve_path if policy in RISK_POLICIES and risk_context.get("risk_unresolved_no_commit") else
+        (0.0 if semantic_reobserve_policy else (reobserve_path if reobservations else 0.0))
+    )
 
     for cand in candidates:
-        selected_for_goal = cand == selected
+        selected_for_goal = bool(commit_allowed and cand == selected)
+        candidate_extra = {}
+        if policy in RISK_POLICIES:
+            candidate_support = risk_by_candidate.get(cand.candidate_id, {})
+            candidate_extra.update(risk_context)
+            candidate_extra.update(
+                {
+                    "candidate_object_node_S_det": candidate_support.get("S_det"),
+                    "candidate_object_node_S_proj": candidate_support.get("S_proj"),
+                    "candidate_object_node_S_depth": candidate_support.get("S_depth"),
+                    "candidate_object_node_S_prop": candidate_support.get("S_prop"),
+                    "candidate_object_node_R_amb": candidate_support.get("R_amb"),
+                    "candidate_object_node_property_group": candidate_support.get("property_group"),
+                    "candidate_object_node_aux_support": candidate_support.get("object_node_aux_support"),
+                    "candidate_object_node_supported_score": candidate_support.get("object_node_supported_score"),
+                    "candidate_object_node_positive_support": candidate_support.get("object_node_positive_support"),
+                }
+            )
         candidate_rows.append(
             candidate_log_row(
                 run_id,
@@ -851,12 +1641,13 @@ def run_policy(
                 selected_for_goal,
                 selected_for_reobserve is not None and cand == selected_for_reobserve,
                 selected_for_goal,
-                (wrong_goal_commit_distance if policy == "SemanticOnly" else commit_path) if selected_for_goal else None,
+                (wrong_goal_commit_distance if semantic_reobserve_policy else commit_path) if selected_for_goal else None,
                 wrong_goal_visit if selected_for_goal else False,
+                candidate_extra if candidate_extra else None,
             )
         )
 
-    termination = "success" if success else "timeout"
+    termination = "success" if success else ("risk_unresolved" if policy in RISK_POLICIES and risk_context.get("risk_unresolved_no_commit") else "timeout")
     return (
         episode_log_row(
             run_id,
@@ -867,25 +1658,34 @@ def run_policy(
             path_length_total,
             p_star,
             reobservations,
-            1 if path_length_total is not None else 0,
+            1 if commit_allowed and commit_path is not None else 0,
             wrong_goal_visit,
             wasted_wrong,
             wasted_reobserve,
-            selected,
+            selected if commit_allowed else None,
             termination,
+            risk_context if policy in RISK_POLICIES else None,
         ),
         candidate_rows,
         viewpoint_rows,
     )
 
 
-def aggregate(episode_rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+def aggregate(
+    episode_rows: List[Dict[str, Any]],
+    viewpoint_rows: Optional[List[Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
     by_policy: Dict[str, List[Dict[str, Any]]] = {}
     for row in episode_rows:
         by_policy.setdefault(row["policy"], []).append(row)
 
+    viewpoint_by_policy: Dict[str, List[Dict[str, Any]]] = {}
+    for row in viewpoint_rows or []:
+        viewpoint_by_policy.setdefault(row["policy"], []).append(row)
+
     result: Dict[str, Any] = {}
     for policy, rows in sorted(by_policy.items()):
+        policy_viewpoints = viewpoint_by_policy.get(policy, [])
         result[policy] = {
             "episodes": len(rows),
             "success_rate": mean(1.0 if row["success"] else 0.0 for row in rows),
@@ -895,6 +1695,63 @@ def aggregate(episode_rows: List[Dict[str, Any]]) -> Dict[str, Any]:
             "mean_wasted_path_wrong_goal": mean(row.get("wasted_path_wrong_goal") for row in rows),
             "mean_wasted_path_reobserve": mean(row.get("wasted_path_reobserve") for row in rows),
             "mean_num_reobservations": mean(float(row.get("num_reobservations", 0)) for row in rows),
+            "final_candidate_changed_rate": mean(
+                1.0 if row.get("final_candidate_changed") else 0.0 for row in policy_viewpoints
+            ),
+            "switch_gate_pass_rate": mean(
+                1.0 if row.get("switch_gate_pass") else 0.0
+                for row in policy_viewpoints
+                if row.get("switch_gate_pass") is not None
+            ),
+            "mean_score_delta_after_reobserve": mean(
+                norm_float(row.get("score_delta_after_reobserve")) for row in policy_viewpoints
+            ),
+            "mean_U_sem_delta_after_reobserve": mean(
+                norm_float(row.get("U_sem_delta_after_reobserve")) for row in policy_viewpoints
+            ),
+            "mean_travel_cost_to_reobserve": mean(
+                norm_float(row.get("travel_cost_actual")) for row in policy_viewpoints
+            ),
+            "risk_triggered_reobserve_rate": mean(
+                1.0 if row.get("risk_triggered_reobserve") else 0.0
+                for row in rows
+                if row.get("risk_triggered_reobserve") is not None
+            ),
+            "risk_resolved_after_reobserve_rate": mean(
+                1.0 if row.get("risk_resolved_after_reobserve") else 0.0
+                for row in rows
+                if row.get("risk_resolved_after_reobserve") is not None
+            ),
+            "risk_unresolved_no_commit_rate": mean(
+                1.0 if row.get("risk_unresolved_no_commit") else 0.0
+                for row in rows
+                if row.get("risk_unresolved_no_commit") is not None
+            ),
+            "wrong_goal_avoided_by_defer_rate": mean(
+                1.0 if row.get("wrong_goal_avoided_by_defer") else 0.0
+                for row in rows
+                if row.get("wrong_goal_avoided_by_defer") is not None
+            ),
+            "success_lost_by_defer_rate": mean(
+                1.0 if row.get("success_lost_by_defer") else 0.0
+                for row in rows
+                if row.get("success_lost_by_defer") is not None
+            ),
+            "risk_resolution_commit_rate": mean(
+                1.0 if row.get("risk_resolution_commit") else 0.0
+                for row in rows
+                if row.get("risk_resolution_commit") is not None
+            ),
+            "mean_R_before": mean(norm_float(row.get("R_before")) for row in rows),
+            "mean_R_after": mean(norm_float(row.get("R_after")) for row in rows),
+            "mean_risk_delta_after_reobserve": mean(
+                norm_float(row.get("risk_delta_after_reobserve")) for row in rows
+            ),
+            "mean_R_total": mean(norm_float(row.get("R_total")) for row in rows),
+            "mean_R_no_evidence": mean(norm_float(row.get("R_no_evidence")) for row in rows),
+            "mean_R_contradiction": mean(norm_float(row.get("R_contradiction")) for row in rows),
+            "mean_R_ambiguity": mean(norm_float(row.get("R_ambiguity")) for row in rows),
+            "mean_R_property_weakness": mean(norm_float(row.get("R_property_weakness")) for row in rows),
         }
     return result
 
@@ -916,16 +1773,55 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--semantic-uncertainty-trigger", type=float, default=SEMANTIC_UNCERTAINTY_TRIGGER)
     parser.add_argument("--semantic-tie-band", type=float, default=SEMANTIC_TIE_BAND)
     parser.add_argument("--semantic-reobs-view-bonus", type=int, default=SEMANTIC_REOBS_VIEW_BONUS)
+    parser.add_argument("--semantic-delta-switch-score", type=float, default=SEMANTIC_DELTA_SWITCH_SCORE)
+    parser.add_argument("--semantic-delta-switch-uncertainty", type=float, default=SEMANTIC_DELTA_SWITCH_UNCERTAINTY)
+    parser.add_argument("--semantic-evidence-mode", default=SEMANTIC_EVIDENCE_MODE, choices=["support_proxy", "image_feature"])
+    parser.add_argument("--semantic-postview-score-artifact", default=None)
+    parser.add_argument("--semantic-image-score-rule", default=SEMANTIC_IMAGE_SCORE_RULE, choices=["raw_delta", "agg_local_delta"])
+    parser.add_argument("--semantic-use-postview-uncertainty-gate", type=parse_bool, default=SEMANTIC_USE_POSTVIEW_UNCERTAINTY_GATE)
+    parser.add_argument("--semantic-max-reobservations", type=int, default=SEMANTIC_MAX_REOBSERVATIONS)
+    parser.add_argument("--risk-object-node-features", default=None)
+    parser.add_argument("--risk-total-trigger", type=float, default=RISK_TOTAL_TRIGGER)
+    parser.add_argument("--risk-contradiction-scale", type=float, default=RISK_CONTRADICTION_SCALE)
+    parser.add_argument("--risk-resolution-delta-trigger", type=float, default=RISK_RESOLUTION_DELTA_TRIGGER)
+    parser.add_argument("--risk-resolution-max-risk", type=float, default=RISK_RESOLUTION_MAX_RISK)
+    parser.add_argument("--risk-resolution-max-contradiction", type=float, default=RISK_RESOLUTION_MAX_CONTRADICTION)
+    parser.add_argument("--risk-resolution-require-positive-support", type=parse_bool, default=RISK_RESOLUTION_REQUIRE_POSITIVE_SUPPORT)
     return parser.parse_args()
 
 
 def main() -> None:
+    global SEMANTIC_DELTA_SWITCH_SCORE, SEMANTIC_DELTA_SWITCH_UNCERTAINTY
+    global SEMANTIC_EVIDENCE_MODE, SEMANTIC_MAX_REOBSERVATIONS
+    global SEMANTIC_POSTVIEW_SCORE_ARTIFACT
+    global SEMANTIC_IMAGE_SCORE_RULE, SEMANTIC_USE_POSTVIEW_UNCERTAINTY_GATE
     global SEMANTIC_REOBS_VIEW_BONUS, SEMANTIC_TIE_BAND, SEMANTIC_UNCERTAINTY_TRIGGER
+    global RISK_OBJECT_NODE_FEATURE_ARTIFACT, RISK_TOTAL_TRIGGER, RISK_CONTRADICTION_SCALE
+    global RISK_RESOLUTION_DELTA_TRIGGER, RISK_RESOLUTION_MAX_RISK
+    global RISK_RESOLUTION_MAX_CONTRADICTION, RISK_RESOLUTION_REQUIRE_POSITIVE_SUPPORT
 
     args = parse_args()
     SEMANTIC_UNCERTAINTY_TRIGGER = float(args.semantic_uncertainty_trigger)
     SEMANTIC_TIE_BAND = float(args.semantic_tie_band)
     SEMANTIC_REOBS_VIEW_BONUS = int(args.semantic_reobs_view_bonus)
+    SEMANTIC_DELTA_SWITCH_SCORE = float(args.semantic_delta_switch_score)
+    SEMANTIC_DELTA_SWITCH_UNCERTAINTY = float(args.semantic_delta_switch_uncertainty)
+    SEMANTIC_EVIDENCE_MODE = str(args.semantic_evidence_mode)
+    SEMANTIC_MAX_REOBSERVATIONS = int(args.semantic_max_reobservations)
+    SEMANTIC_IMAGE_SCORE_RULE = str(args.semantic_image_score_rule)
+    SEMANTIC_USE_POSTVIEW_UNCERTAINTY_GATE = bool(args.semantic_use_postview_uncertainty_gate)
+    SEMANTIC_POSTVIEW_SCORE_ARTIFACT = Path(args.semantic_postview_score_artifact) if args.semantic_postview_score_artifact else None
+    RISK_OBJECT_NODE_FEATURE_ARTIFACT = Path(args.risk_object_node_features) if args.risk_object_node_features else None
+    RISK_TOTAL_TRIGGER = float(args.risk_total_trigger)
+    RISK_CONTRADICTION_SCALE = float(args.risk_contradiction_scale)
+    RISK_RESOLUTION_DELTA_TRIGGER = float(args.risk_resolution_delta_trigger)
+    RISK_RESOLUTION_MAX_RISK = float(args.risk_resolution_max_risk)
+    RISK_RESOLUTION_MAX_CONTRADICTION = float(args.risk_resolution_max_contradiction)
+    RISK_RESOLUTION_REQUIRE_POSITIVE_SUPPORT = bool(args.risk_resolution_require_positive_support)
+    if SEMANTIC_EVIDENCE_MODE == "image_feature" and SEMANTIC_POSTVIEW_SCORE_ARTIFACT is None:
+        raise ValueError("--semantic-postview-score-artifact is required when --semantic-evidence-mode image_feature")
+    if any(policy in RISK_POLICIES for policy in args.policies) and RISK_OBJECT_NODE_FEATURE_ARTIFACT is None:
+        raise ValueError("--risk-object-node-features is required when policy includes risk re-observation policies")
 
     data_root = Path(args.data_root).resolve()
     out = Path(args.out)
@@ -946,10 +1842,21 @@ def main() -> None:
         raise SystemExit(f"no episodes found for {source}")
 
     candidate_backend = build_candidate_backend(args.candidate_backend, args.candidate_artifact)
+    postview_scores = (
+        PostviewScoreIndex(SEMANTIC_POSTVIEW_SCORE_ARTIFACT)
+        if SEMANTIC_POSTVIEW_SCORE_ARTIFACT is not None
+        else None
+    )
+    risk_features = (
+        ObjectNodeFeatureIndex(RISK_OBJECT_NODE_FEATURE_ARTIFACT)
+        if RISK_OBJECT_NODE_FEATURE_ARTIFACT is not None
+        else None
+    )
 
     random.seed(args.seed)
     cache = SceneCache()
     episode_rows: List[Dict[str, Any]] = []
+    all_viewpoint_rows: List[Dict[str, Any]] = []
     candidate_count = 0
     viewpoint_count = 0
     try:
@@ -963,6 +1870,8 @@ def main() -> None:
                     args.run_id,
                     args.seed,
                     candidate_backend,
+                    postview_scores,
+                    risk_features,
                 )
                 append_jsonl(episode_log, episode_row)
                 for row in candidate_rows:
@@ -970,6 +1879,7 @@ def main() -> None:
                 for row in viewpoint_rows:
                     append_jsonl(viewpoint_log, row)
                 episode_rows.append(episode_row)
+                all_viewpoint_rows.extend(viewpoint_rows)
                 candidate_count += len(candidate_rows)
                 viewpoint_count += len(viewpoint_rows)
     finally:
@@ -1006,10 +1916,28 @@ def main() -> None:
         "semantic_uncertainty_trigger": SEMANTIC_UNCERTAINTY_TRIGGER,
         "semantic_tie_band": SEMANTIC_TIE_BAND,
         "semantic_reobs_view_bonus": SEMANTIC_REOBS_VIEW_BONUS,
+        "semantic_delta_switch_score": SEMANTIC_DELTA_SWITCH_SCORE,
+        "semantic_delta_switch_uncertainty": SEMANTIC_DELTA_SWITCH_UNCERTAINTY,
+        "semantic_evidence_mode": SEMANTIC_EVIDENCE_MODE,
+        "semantic_postview_score_artifact": str(SEMANTIC_POSTVIEW_SCORE_ARTIFACT) if SEMANTIC_POSTVIEW_SCORE_ARTIFACT else None,
+        "semantic_postview_score_rows": len(postview_scores.rows) if postview_scores else None,
+        "semantic_postview_uses_gt_for_action": postview_scores.uses_gt_for_action if postview_scores else None,
+        "semantic_image_score_rule": SEMANTIC_IMAGE_SCORE_RULE,
+        "semantic_use_postview_uncertainty_gate": SEMANTIC_USE_POSTVIEW_UNCERTAINTY_GATE,
+        "semantic_max_reobservations": SEMANTIC_MAX_REOBSERVATIONS,
+        "risk_object_node_feature_artifact": str(RISK_OBJECT_NODE_FEATURE_ARTIFACT) if RISK_OBJECT_NODE_FEATURE_ARTIFACT else None,
+        "risk_object_node_feature_rows": risk_features.rows if risk_features else None,
+        "risk_object_node_uses_gt_for_action": risk_features.uses_gt_for_action if risk_features else None,
+        "risk_total_trigger": RISK_TOTAL_TRIGGER,
+        "risk_contradiction_scale": RISK_CONTRADICTION_SCALE,
+        "risk_resolution_delta_trigger": RISK_RESOLUTION_DELTA_TRIGGER,
+        "risk_resolution_max_risk": RISK_RESOLUTION_MAX_RISK,
+        "risk_resolution_max_contradiction": RISK_RESOLUTION_MAX_CONTRADICTION,
+        "risk_resolution_require_positive_support": RISK_RESOLUTION_REQUIRE_POSITIVE_SUPPORT,
         "episode_rows": len(episode_rows),
         "candidate_decision_rows": candidate_count,
         "viewpoint_decision_rows": viewpoint_count,
-        "aggregate": aggregate(episode_rows),
+        "aggregate": aggregate(episode_rows, all_viewpoint_rows),
         "notes": [
             "diagnostic GT-assisted backend is for smoke only; artifact_jsonl is the non-GT adapter boundary",
             "not a paper result",

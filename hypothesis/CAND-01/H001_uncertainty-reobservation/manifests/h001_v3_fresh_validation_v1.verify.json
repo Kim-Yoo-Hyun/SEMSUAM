@@ -1,0 +1,35 @@
+{
+  "duplicate_episode_keys": [],
+  "errors": [],
+  "manifest_schema_version": "h001.split_manifest.v1",
+  "ok": true,
+  "rows": 100,
+  "scene_assets_checked": 13,
+  "sim_scene_checks": [
+    {
+      "navmesh": "/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.navmesh",
+      "ok": true,
+      "sample_navigable_point": [
+        6.892691135406494,
+        0.06882309913635254,
+        1.4872124195098877
+      ],
+      "scene": "/data/scene_datasets/hm3d/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb"
+    },
+    {
+      "navmesh": "/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.navmesh",
+      "ok": true,
+      "sample_navigable_point": [
+        -5.840879917144775,
+        0.03521956503391266,
+        1.3238335847854614
+      ],
+      "scene": "/data/scene_datasets/hm3d/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb"
+    }
+  ],
+  "source_files_loaded": 13,
+  "split_counts": {
+    "v3_fresh_validation_v1": 100
+  },
+  "unique_episode_keys": 100
+}

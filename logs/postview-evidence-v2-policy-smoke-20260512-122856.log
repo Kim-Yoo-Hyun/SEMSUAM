@@ -1,0 +1,81 @@
+[03:28:58:422963]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/train/00744-1S7LAXRdDqK/1S7LAXRdDqK.basis.scn` exists but failed to load.
+{
+  "aggregate": {
+    "EvidenceGatedSemanticOnly": {
+      "episodes": 2,
+      "final_candidate_changed_rate": 0.5,
+      "mean_U_sem_delta_after_reobserve": 0.09994856208562847,
+      "mean_num_reobservations": 1.0,
+      "mean_score_delta_after_reobserve": 0.0018356367945671082,
+      "mean_spl": 0.25099030483552787,
+      "mean_travel_cost_to_reobserve": 6.794571161270142,
+      "mean_wasted_path_reobserve": 0.0,
+      "mean_wasted_path_total": 5.923717135562897,
+      "mean_wasted_path_wrong_goal": 4.351735591888428,
+      "success_rate": 0.5,
+      "switch_gate_pass_rate": 0.5,
+      "wrong_goal_visit_rate": 0.5
+    },
+    "NoReobserve": {
+      "episodes": 2,
+      "final_candidate_changed_rate": null,
+      "mean_U_sem_delta_after_reobserve": null,
+      "mean_num_reobservations": 0.0,
+      "mean_score_delta_after_reobserve": null,
+      "mean_spl": 0.0,
+      "mean_travel_cost_to_reobserve": null,
+      "mean_wasted_path_reobserve": 0.0,
+      "mean_wasted_path_total": 6.794571161270142,
+      "mean_wasted_path_wrong_goal": 6.794571161270142,
+      "success_rate": 0.0,
+      "switch_gate_pass_rate": null,
+      "wrong_goal_visit_rate": 1.0
+    }
+  },
+  "candidate_artifact": "/runs/h001_calibration_artifacts_random256_k10_sr1_v1/all_scenes_aligned.jsonl",
+  "candidate_backend": "artifact_jsonl",
+  "candidate_backend_uses_gt_for_action": false,
+  "candidate_decision_rows": 40,
+  "dataset": "hm3d_objectnav_v2",
+  "episode_rows": 4,
+  "episodes_loaded": 2,
+  "episodes_requested": 2,
+  "loaded_datasets": [
+    "hm3d_objectnav_v2"
+  ],
+  "loaded_manifest_splits": [
+    "calibration"
+  ],
+  "loaded_source_splits": [
+    "train"
+  ],
+  "manifest": "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_splits_sr1.json",
+  "manifest_split": "calibration",
+  "notes": [
+    "diagnostic GT-assisted backend is for smoke only; artifact_jsonl is the non-GT adapter boundary",
+    "not a paper result",
+    "used to validate log schema, GT references, and baseline comparability"
+  ],
+  "policies": [
+    "NoReobserve",
+    "EvidenceGatedSemanticOnly"
+  ],
+  "requested_dataset": "hm3d_objectnav_v2",
+  "requested_split": "val",
+  "run_id": "h001_postview_evidence_v2_policy_smoke_20260512",
+  "schema_version": "h001.navlog.v1",
+  "semantic_delta_switch_score": 0.0,
+  "semantic_delta_switch_uncertainty": 0.05,
+  "semantic_evidence_mode": "image_feature",
+  "semantic_image_score_rule": "agg_local_delta",
+  "semantic_max_reobservations": 1,
+  "semantic_postview_score_artifact": "/runs/h001_postview_scores_v2_random256_k10_sr1_v1_smoke/postview_scores.jsonl",
+  "semantic_postview_score_rows": 2,
+  "semantic_postview_uses_gt_for_action": false,
+  "semantic_reobs_view_bonus": 1,
+  "semantic_tie_band": 0.01,
+  "semantic_uncertainty_trigger": 0.6,
+  "semantic_use_postview_uncertainty_gate": false,
+  "split": "train",
+  "viewpoint_decision_rows": 2
+}

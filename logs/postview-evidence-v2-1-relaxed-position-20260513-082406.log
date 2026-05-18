@@ -1,0 +1,37 @@
+started_at=2026-05-13T08:24:06+09:00
+source_root=/tmp/research3-runs/h001_postview_scores_v2_random256_k10_sr1_v1
+output_root=/tmp/research3-runs/h001_postview_scores_v2_1_relaxed_position_random256_k10_sr1_v1
+log=/home/yoohyun/research3/logs/postview-evidence-v2-1-relaxed-position-20260513-082406.log
+{'stage': 'prepared', 'rows': 50, 'frames_link': '/tmp/research3-runs/h001_postview_scores_v2_random256_k10_sr1_v1/frames'}
+{
+  "action_eligible_candidate_count": 124,
+  "action_eligible_row_rate": 0.8,
+  "candidate_artifact": "/runs/h001_calibration_artifacts_random256_k10_sr1_v1/all_scenes_aligned.jsonl",
+  "candidate_score_count": 172,
+  "center_fallback_used_for_action": false,
+  "device": "cpu",
+  "errors": [],
+  "frames": "/runs/h001_postview_scores_v2_1_relaxed_position_random256_k10_sr1_v1/postview_frames_v2.jsonl",
+  "model": "ViT-B/32",
+  "ok": true,
+  "out": "/runs/h001_postview_scores_v2_1_relaxed_position_random256_k10_sr1_v1/postview_scores.jsonl",
+  "projection_status_counts": {
+    "behind_camera": 10,
+    "out_of_fov": 38,
+    "visible": 124
+  },
+  "query_embeddings": "/runs/h001_calibration_artifacts_random256_k10_sr1_v1/embeddings",
+  "rows_requested": 50,
+  "rows_scored": 50,
+  "rows_with_action_eligible_candidate": 40,
+  "schema_version": "h001.postview_score.v2",
+  "score_calibration": "aggregate_raw_clip_cosine",
+  "score_source_counts": {
+    "not_used": 48,
+    "openai_clip_multiview_local_crop": 124
+  },
+  "uses_gt_for_action": false,
+  "valid_crop_count": 1620
+}
+{'stage': 'scoring_verified', 'rows': 50, 'candidate_score_count': 172, 'action_eligible_row_rate': 0.8, 'projection_status_counts': {'behind_camera': 10, 'out_of_fov': 38, 'visible': 124}}
+completed_at=2026-05-13T09:32:07+09:00

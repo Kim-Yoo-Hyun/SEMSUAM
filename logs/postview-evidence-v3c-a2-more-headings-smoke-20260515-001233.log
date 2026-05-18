@@ -1,0 +1,140 @@
+started_at=2026-05-15T00:12:33+09:00
+ablation=A2_more_headings
+image=research3/openvocab-perception:20260513-v3c-gdino-sam2
+device=cuda
+frames=/tmp/research3-runs/h001_postview_scores_v2_1_relaxed_position_random256_k10_sr1_v1/postview_frames_v2.jsonl
+candidate_artifact=/tmp/research3-runs/h001_calibration_artifacts_random256_k10_sr1_v1/all_scenes_aligned.jsonl
+groundingdino_dir=/tmp/research3-models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny
+sam2_checkpoint=/tmp/research3-models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt
+output_root=/tmp/research3-runs/h001_postview_detector_v3c_a2_more_headings_smoke
+log=/home/yoohyun/research3/logs/postview-evidence-v3c-a2-more-headings-smoke-20260515-001233.log
+query_template={query}
+max_headings_per_frame=6
+candidate_point_field=position
+verification_command=cat /tmp/research3-runs/h001_postview_detector_v3c_a2_more_headings_smoke/job_status.json && cat /tmp/research3-runs/h001_postview_detector_v3c_a2_more_headings_smoke/summary.json
+{'stage': 'prerequisite_check_passed', 'paths': {'frames': '/tmp/research3-runs/h001_postview_scores_v2_1_relaxed_position_random256_k10_sr1_v1/postview_frames_v2.jsonl', 'candidate_artifact': '/tmp/research3-runs/h001_calibration_artifacts_random256_k10_sr1_v1/all_scenes_aligned.jsonl', 'groundingdino_config': '/tmp/research3-models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/config.json', 'groundingdino_weights': '/tmp/research3-models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/model.safetensors', 'sam2_checkpoint': '/tmp/research3-models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt'}}
+/opt/conda/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+/opt/conda/lib/python3.11/site-packages/torchvision/transforms/functional.py:154: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_numpy.cpp:203.)
+  img = torch.from_numpy(pic.transpose((2, 0, 1))).contiguous()
+{
+  "associated_candidate_heading_count": 25,
+  "association_rows": 230,
+  "box_threshold": 0.1,
+  "candidate_artifact": "/runs/h001_calibration_artifacts_random256_k10_sr1_v1/all_scenes_aligned.jsonl",
+  "debug_images_written": 40,
+  "detector_box_count_per_heading": {
+    "max": 3,
+    "mean": 2.515625,
+    "min": 0
+  },
+  "detector_box_rows": 161,
+  "detector_mask_rows": 161,
+  "device": "cuda",
+  "frames": "/runs/h001_postview_scores_v2_1_relaxed_position_random256_k10_sr1_v1/postview_frames_v2.jsonl",
+  "groundingdino_dir": "/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny",
+  "max_detector_boxes_per_heading": 3,
+  "max_headings_per_frame": 6,
+  "max_masks_per_heading": 3,
+  "out_root": "/runs/h001_postview_detector_v3c_a2_more_headings_smoke",
+  "output_files": {
+    "detector_boxes": "detector_boxes.jsonl",
+    "detector_candidate_associations": "detector_candidate_associations.jsonl",
+    "detector_masks": "detector_masks.jsonl",
+    "frame_summary": "frame_summary.jsonl",
+    "summary": "summary.json"
+  },
+  "projected_pixel_inside_mask_count": 71,
+  "projection_status_counts": {
+    "behind_camera": 84,
+    "out_of_fov": 52,
+    "visible": 94
+  },
+  "query_template": "{query}",
+  "rows": 12,
+  "rows_with_candidate_association": 8,
+  "rows_with_candidate_association_rate": 0.6666666666666666,
+  "rows_with_detector_box": 12,
+  "rows_with_detector_box_rate": 1.0,
+  "rows_with_sam2_mask": 12,
+  "rows_with_sam2_mask_rate": 1.0,
+  "sam2_checkpoint": "/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt",
+  "schema_version": "h001.postview_detector.v3c_groundingdino_sam2",
+  "text_threshold": 0.1,
+  "uses_gt_for_action": false
+}
+{
+  "ablation": "A2_more_headings",
+  "associated_candidate_heading_count": 25,
+  "chair_or_plant_nonzero": true,
+  "promotion_association_rate": 0.5,
+  "promotion_pass": true,
+  "query_rows": {
+    "bed": {
+      "associated_heading_count": 15,
+      "association_rows": 3,
+      "rows": 3
+    },
+    "chair": {
+      "associated_heading_count": 2,
+      "association_rows": 1,
+      "rows": 3
+    },
+    "plant": {
+      "associated_heading_count": 0,
+      "association_rows": 0,
+      "rows": 2
+    },
+    "sofa": {
+      "associated_heading_count": 4,
+      "association_rows": 2,
+      "rows": 2
+    },
+    "toilet": {
+      "associated_heading_count": 1,
+      "association_rows": 1,
+      "rows": 1
+    },
+    "tv_monitor": {
+      "associated_heading_count": 3,
+      "association_rows": 1,
+      "rows": 1
+    }
+  },
+  "rows": 12,
+  "rows_with_candidate_association": 8,
+  "rows_with_candidate_association_rate": 0.6666666666666666,
+  "rows_with_detector_box_rate": 1.0,
+  "rows_with_sam2_mask_rate": 1.0,
+  "top_label_text": [
+    [
+      "chair",
+      54
+    ],
+    [
+      "bed",
+      37
+    ],
+    [
+      "sofa",
+      28
+    ],
+    [
+      "tv monitor",
+      18
+    ],
+    [
+      "toilet",
+      12
+    ],
+    [
+      "plant",
+      8
+    ],
+    [
+      "plant [SEP]",
+      4
+    ]
+  ],
+  "uses_gt_for_action": false
+}

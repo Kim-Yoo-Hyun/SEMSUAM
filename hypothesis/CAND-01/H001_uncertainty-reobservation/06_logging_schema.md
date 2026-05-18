@@ -49,7 +49,7 @@ One row per episode.
   "scene_id": "string",
   "query": "string",
   "query_type": "closed_class | open_vocabulary",
-  "policy": "NoReobserve | RandomReobserve | FrontierReobserve | CAReStyle | SemanticOnly | SLAMOnly | SemanticSLAM | GTTargetOracle | GTCandidateOracle | GTViewOracle",
+  "policy": "NoReobserve | RandomReobserve | RiskOnlyReobserve | FrontierReobserve | CAReStyle | SemanticOnly | SLAMOnly | SemanticSLAM | GTTargetOracle | GTCandidateOracle | GTViewOracle",
   "start_position": [0.0, 0.0, 0.0],
   "start_rotation": [0.0, 0.0, 0.0, 1.0],
   "success": false,
@@ -118,6 +118,142 @@ One row per semantic candidate considered.
 }
 ```
 
+## Risk-Only Re-Observation Additions
+
+### Facts
+
+`RiskOnlyReobserve` keeps the semantic top candidate as the default goal candidate and uses object-node evidence only to decide whether active re-observation is needed.
+
+`RiskResolutionReobserve` uses the same no-switch invariant, but can commit after unresolved re-observation when risk decreases enough, residual risk is bounded, contradiction is small, and the semantic top has positive object-node support.
+
+Additional episode, candidate, and viewpoint fields:
+
+```json
+{
+  "risk_policy": "RiskOnlyReobserve",
+  "risk_feature_available": true,
+  "risk_feature_source": "string",
+  "risk_top_candidate_id": "string",
+  "risk_best_alt_candidate_id": "string",
+  "risk_top_supported_score": 0.0,
+  "risk_best_alt_supported_score": 0.0,
+  "risk_support_gap_alt_minus_top": 0.0,
+  "R_no_evidence": 0.0,
+  "R_contradiction": 0.0,
+  "R_ambiguity": 0.0,
+  "R_property_weakness": 0.0,
+  "R_total": 0.0,
+  "R_before": 0.0,
+  "R_before_no_evidence": 0.0,
+  "R_before_contradiction": 0.0,
+  "R_before_ambiguity": 0.0,
+  "R_before_property_weakness": 0.0,
+  "R_after": 0.0,
+  "R_after_no_evidence": 0.0,
+  "R_after_contradiction": 0.0,
+  "R_after_ambiguity": 0.0,
+  "R_after_property_weakness": 0.0,
+  "risk_delta_after_reobserve": 0.0,
+  "risk_resolved_after_reobserve": false,
+  "risk_resolution_commit": false,
+  "risk_resolution_commit_reason": "risk_unresolved_no_commit",
+  "risk_resolution_top_positive_support": false,
+  "risk_resolution_delta_trigger": 0.05,
+  "risk_resolution_max_risk": 0.95,
+  "risk_resolution_max_contradiction": 0.25,
+  "risk_resolution_require_positive_support": true,
+  "risk_unresolved_no_commit": false,
+  "dominant_risk_term": "R_before_ambiguity",
+  "wrong_goal_avoided_by_defer": false,
+  "success_lost_by_defer": false,
+  "risk_total_trigger": 0.6,
+  "risk_contradiction_scale": 0.25,
+  "risk_triggered_reobserve": false,
+  "risk_direct_goal_switch_allowed": false
+}
+```
+
+Additional candidate-level object-node support fields:
+
+```json
+{
+  "candidate_object_node_S_det": 0.0,
+  "candidate_object_node_S_proj": 0.0,
+  "candidate_object_node_S_depth": 0.0,
+  "candidate_object_node_S_prop": 0.0,
+  "candidate_object_node_R_amb": 0.0,
+  "candidate_object_node_property_group": "string",
+  "candidate_object_node_aux_support": 0.0,
+  "candidate_object_node_supported_score": 0.0,
+  "candidate_object_node_positive_support": false
+}
+```
+
+Required invariant:
+
+```text
+risk_direct_goal_switch_allowed == false
+final_candidate_changed == false
+```
+
+Two-stage commit invariant:
+
+```text
+if policy == RiskOnlyReobserve and risk_triggered_reobserve and R_after >= risk_total_trigger:
+  num_candidate_commits == 0
+  termination_reason == risk_unresolved
+  wrong_goal_visit == false
+
+if policy == RiskResolutionReobserve:
+  final_candidate_changed == false
+  risk_resolution_commit may allow semantic-top commit without direct object-node re-ranking
+```
+
+## Risk Evidence-Resolution Additions
+
+### Facts
+
+The next risk-policy design is `AssociationRecoveryObservation`. It is a diagnostic evidence-resolution step, not a direct goal-switching method.
+
+Additional episode and viewpoint fields:
+
+```json
+{
+  "risk_evidence_resolution_policy": "AssociationRecoveryObservation",
+  "second_observation_triggered": false,
+  "second_observation_reason": "none | no_evidence | property_weakness | ambiguity | contradiction | travel_cost_blocked | no_feasible_viewpoint",
+  "second_observation_candidate_id": "string",
+  "second_observation_alt_candidate_id": "string",
+  "second_observation_viewpoint_id": "string",
+  "second_observation_travel_cost_pred": 0.0,
+  "second_observation_travel_cost_actual": 0.0,
+  "second_observation_expected_association_gain": 0.0,
+  "second_observation_observed_association_gain": 0.0,
+  "R_after2": 0.0,
+  "R_after2_no_evidence": 0.0,
+  "R_after2_contradiction": 0.0,
+  "R_after2_ambiguity": 0.0,
+  "R_after2_property_weakness": 0.0,
+  "risk_delta_after_second_observation": 0.0,
+  "risk_resolved_after_second_observation": false,
+  "risk_unresolved_after_second_observation": false,
+  "association_recovered_after_second": false,
+  "top_positive_support_after_second": false,
+  "commit_after_second_observation": false,
+  "commit_after_second_reason": "risk_resolved | risk_resolution_commit | risk_unresolved_no_commit | contradiction_blocked"
+}
+```
+
+Required invariant:
+
+```text
+if second_observation_triggered:
+  final_candidate_changed == false
+  risk_direct_goal_switch_allowed == false
+  detector/object-node evidence may resolve, defer, or request more evidence
+  detector/object-node evidence may not directly select a different final goal
+```
+
 ## Viewpoint Decision Log
 
 One row per selected re-observation viewpoint.
@@ -147,9 +283,197 @@ One row per selected re-observation viewpoint.
   "candidate_rank_before": 1,
   "candidate_rank_after": 1,
   "commit_after_reobserve": false,
-  "final_candidate_changed": false
+  "final_candidate_changed": false,
+  "evidence_update_mode": "none | support_proxy | image_feature | visibility_support",
+  "final_candidate_id_before": "string",
+  "final_candidate_id_after": "string",
+  "switch_gate_pass": false,
+  "switch_gate_reason": "not_triggered | no_reobserve | no_switch_allowed | missing_postview_score | missing_top_candidate_score | top_not_visible | score_delta_failed | uncertainty_delta_failed | support_delta_failed | passed",
+  "score_delta_after_reobserve": 0.0,
+  "U_sem_delta_after_reobserve": 0.0,
+  "support_delta_after_reobserve": 0.0,
+  "postview_score_artifact": "string",
+  "postview_projection_status": "visible | occluded | out_of_fov | behind_camera | depth_mismatch | missing_frame | not_used",
+  "postview_score_source": "support_proxy | openai_clip_local_crop | openai_clip_center_crop_fallback | openai_clip_multiview_local_crop | lseg_local_crop | not_used",
+  "postview_score_calibration": "raw_clip_cosine | aggregate_raw_clip_cosine | calibrated | null",
+  "postview_evidence_rule": "raw_delta | query_zscore_delta | row_rank_delta | agg_local_delta | null",
+  "postview_uncertainty_gate_used": false,
+  "postview_top_projection_status": "visible | occluded | out_of_fov | behind_camera | depth_mismatch | missing_frame | not_used",
+  "postview_top_score_after": 0.0,
+  "postview_switch_score_after": 0.0,
+  "postview_candidate_score_count": 0
 }
 ```
+
+## Post-view Evidence V2 Additions
+
+### Facts
+
+`postview_evidence_v2` is a planned revision of the visual evidence artifact. It keeps the same physical re-observation position but renders multiple candidate-directed headings and aggregates only local projected crops for action-facing evidence.
+
+### Inferences
+
+Center-crop fallback can be useful for debugging frame quality, but it should not drive action-facing candidate switches because it is not object-centered evidence.
+
+Additional frame artifact fields:
+
+```json
+{
+  "schema_version": "h001.postview.v2",
+  "physical_viewpoint_position": [0.0, 0.0, 0.0],
+  "physical_viewpoint_source": "EvidenceGatedSemanticOnly",
+  "heading_policy": "candidate_bearing_offsets",
+  "yaw_offsets_deg": [-30.0, 0.0, 30.0],
+  "rendered_headings": [
+    {
+      "heading_id": "string",
+      "target_candidate_id": "string",
+      "rotation_source": "bearing_to_candidate | stored_viewpoint_rotation",
+      "yaw_offset_deg": 0.0,
+      "rgb": "string",
+      "depth": "string",
+      "pose": "string",
+      "metadata": "string"
+    }
+  ],
+  "uses_gt_for_action": false
+}
+```
+
+Additional candidate score fields:
+
+```json
+{
+  "schema_version": "h001.postview_score.v2",
+  "candidate_id": "string",
+  "raw_image_text_score": 0.0,
+  "score_after": 0.0,
+  "score_source": "openai_clip_multiview_local_crop",
+  "score_calibration": "aggregate_raw_clip_cosine",
+  "action_eligible": true,
+  "center_fallback_used_for_action": false,
+  "heading_visible_count": 0,
+  "depth_consistent_count": 0,
+  "valid_crop_count": 0,
+  "best_local_raw_clip_cosine": 0.0,
+  "mean_top2_local_raw_clip_cosine": 0.0,
+  "best_heading_id": "string",
+  "best_crop_box_xyxy": [0, 0, 0, 0],
+  "best_crop_radius_px": 24,
+  "frame_evidence": []
+}
+```
+
+Required invariant:
+
+```text
+center_fallback_used_for_action == false
+uses_gt_for_action == false
+```
+
+## Post-view Detector V3B Additions
+
+### Facts
+
+`postview_detector_v3b_owlvit_box` records text-conditioned open-vocabulary detector boxes and their association to projected semantic candidates. It is a diagnostic object-evidence artifact, not yet an action-facing policy input.
+
+Detector box rows:
+
+```json
+{
+  "schema_version": "h001.postview_detector.v3b_owlvit_box",
+  "decision_id": "string",
+  "episode_id": "string",
+  "episode_key": "string",
+  "scene_id": "string",
+  "query": "string",
+  "detector_query": "string",
+  "heading_id": "string",
+  "box_index": 0,
+  "box_xyxy": [0.0, 0.0, 0.0, 0.0],
+  "detector_score": 0.0,
+  "label_index": 0,
+  "label_text": "string",
+  "box_area_px": 0.0,
+  "box_depth_median": 0.0,
+  "uses_gt_for_action": false
+}
+```
+
+Detector-candidate association rows:
+
+```json
+{
+  "schema_version": "h001.postview_detector.v3b_owlvit_box",
+  "decision_id": "string",
+  "episode_id": "string",
+  "scene_id": "string",
+  "query": "string",
+  "detector_query": "string",
+  "heading_id": "string",
+  "candidate_id": "string",
+  "candidate_rank_before": 1,
+  "point_field": "position | visit_position",
+  "projected_pixel": [0.0, 0.0],
+  "projection_status": "visible | out_of_fov | behind_camera | missing_candidate_point",
+  "best_box_index": 0,
+  "best_box_score": 0.0,
+  "projected_pixel_inside_box": true,
+  "depth_agreement_m": 0.0,
+  "associated_to_candidate": true,
+  "uses_gt_for_action": false
+}
+```
+
+### Inferences
+
+This artifact should pass a detector-box and candidate-association smoke gate before it is promoted to full calibration or policy comparison. Box-only detector evidence is insufficient if `rows_with_candidate_association_rate` remains unstable.
+
+## Post-view Detector V3C Additions
+
+### Facts
+
+`postview_detector_v3c_groundingdino_sam2` records text-conditioned `GroundingDINO` boxes, `SAM2` masks from those boxes, and mask-based candidate associations. It is the next object-evidence diagnostic after `v3b_owlvit_box`.
+
+Detector mask rows:
+
+```json
+{
+  "schema_version": "h001.postview_detector.v3c_groundingdino_sam2",
+  "decision_id": "string",
+  "episode_id": "string",
+  "scene_id": "string",
+  "query": "string",
+  "detector_query": "string",
+  "heading_id": "string",
+  "box_index": 0,
+  "box_xyxy": [0.0, 0.0, 0.0, 0.0],
+  "detector_score": 0.0,
+  "sam2_score": 0.0,
+  "mask_area_px": 0,
+  "mask_coverage": 0.0,
+  "mask_depth_median": 0.0,
+  "uses_gt_for_action": false
+}
+```
+
+Association rows add:
+
+```json
+{
+  "schema_version": "h001.postview_detector.v3c_groundingdino_sam2",
+  "projected_pixel_inside_box": true,
+  "projected_pixel_inside_mask": true,
+  "mask_depth_median": 0.0,
+  "depth_agreement_m": 0.0,
+  "associated_to_candidate": true,
+  "uses_gt_for_action": false
+}
+```
+
+### Inferences
+
+This artifact is stronger than box-only evidence only if candidate association comes from mask containment and depth agreement, not merely whole-image or loose-box overlap.
 
 ## Wrong-goal Visit Definition
 
@@ -291,6 +615,10 @@ Report per policy:
 - `SPL`
 - `mean_num_reobservations`
 - `mean_travel_cost_to_reobserve`
+- `final_candidate_changed_rate`
+- `switch_gate_pass_rate`
+- `mean_score_delta_after_reobserve`
+- `mean_U_sem_delta_after_reobserve`
 - `uncertainty_failure_auc` if enough labels exist
 - `uncertainty_failure_spearman` if enough labels exist
 

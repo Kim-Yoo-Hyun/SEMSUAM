@@ -1,0 +1,29 @@
+[03:25:46:456047]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/train/00744-1S7LAXRdDqK/1S7LAXRdDqK.basis.scn` exists but failed to load.
+{
+  "camera_height": 1.5,
+  "candidate_artifact": "/runs/h001_calibration_artifacts_random256_k10_sr1_v1/all_scenes_aligned.jsonl",
+  "errors": [],
+  "height": 120,
+  "hfov": 90.0,
+  "max_headings_per_row": 10,
+  "min_headings_per_row": 7,
+  "next_expected_file": "postview_scores.jsonl",
+  "ok": true,
+  "out_root": "/runs/h001_postview_scores_v2_random256_k10_sr1_v1_smoke",
+  "policy": "EvidenceGatedSemanticOnly",
+  "rendered_heading_count": 17,
+  "rows_exported": 2,
+  "rows_requested": 2,
+  "schema_version": "h001.postview.v2",
+  "unique_scenes": [
+    "hm3d_v0.2/train/00744-1S7LAXRdDqK/1S7LAXRdDqK.basis.glb"
+  ],
+  "uses_gt_for_action": false,
+  "viewpoint_decisions": "/runs/h001_calibration_policy_random256_k10_sr1_v1/policy_revision/viewpoint_decisions.jsonl",
+  "width": 160,
+  "yaw_offsets_deg": [
+    -30.0,
+    0.0,
+    30.0
+  ]
+}

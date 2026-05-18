@@ -1,0 +1,3009 @@
+{
+  "created_at": "2026-05-18T00:01:40.548661+00:00",
+  "creation_command": "manual v3_fresh_validation_v1 split from unused HM3D ObjectNav val scenes with fixed query quotas",
+  "excluded_scene_groups": {
+    "confirmation_independent": [
+      "6s7QHgap2fW",
+      "GLAQ4DNUx5U"
+    ],
+    "first_eval": [
+      "TEEsavR23oF",
+      "wcojb4TFT35",
+      "k1cupFYWXJ6",
+      "y9hTuugGdiq",
+      "CrMo8WxCyVb",
+      "svBbv1Pavdk",
+      "p53SfW6mjZe",
+      "h1zeeAwLh9Z",
+      "mL8ThkuaVTM",
+      "eF36g7L6Z9M"
+    ],
+    "first_eval_replacement_v1": [
+      "TEEsavR23oF",
+      "wcojb4TFT35",
+      "5cdEh9F2hJL",
+      "y9hTuugGdiq",
+      "CrMo8WxCyVb",
+      "svBbv1Pavdk",
+      "p53SfW6mjZe",
+      "h1zeeAwLh9Z",
+      "mL8ThkuaVTM",
+      "eF36g7L6Z9M"
+    ],
+    "replacement_probe": [
+      "5cdEh9F2hJL",
+      "6s7QHgap2fW",
+      "GLAQ4DNUx5U"
+    ],
+    "risk_validation_v1": [
+      "LT9Jq6dN3Ea",
+      "MHPLjHsuG27",
+      "VBzV5z6i1WS",
+      "XB4GS9ShBRE",
+      "a8BtkwhxdRV",
+      "cvZr5TUy5C5",
+      "mv2HUxq3B53",
+      "q5QZSEeHe5g",
+      "ziup5kvtCCR",
+      "zt1RVoi7PcG"
+    ]
+  },
+  "fresh_scene_keys": [
+    "4ok3usBNeis",
+    "7MXmsvcQjpJ",
+    "BAbdmeyTvMZ",
+    "DYehNKdT76V",
+    "Dd4bFSTQ8gi",
+    "HY1NcmCgn3n",
+    "Nfvxx8J5NCo",
+    "QaLdnwvtxbs",
+    "bCPU9suPUw9",
+    "bxsVRursffK",
+    "q3zU7Yy5E5s",
+    "qyAac8rV8Zk",
+    "yr17PDCnDDW"
+  ],
+  "manifest_schema_version": "h001.split_manifest.v1",
+  "paper_claim_rule": "reserved for v3 paired-objective validation; do not tune rules on this split before scoring",
+  "query_counts": {
+    "bed": 17,
+    "chair": 17,
+    "plant": 16,
+    "sofa": 17,
+    "toilet": 17,
+    "tv_monitor": 16
+  },
+  "query_quota": {
+    "bed": 17,
+    "chair": 17,
+    "plant": 16,
+    "sofa": 17,
+    "toilet": 17,
+    "tv_monitor": 16
+  },
+  "rows": [
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "b01ffa25b71ffbffebac712f8f32092bd5386772a066d888d19d7582cde18482",
+      "episode_key": "HM3D ObjectNav v2:val:Dd4bFSTQ8gi:5:1:bed",
+      "geodesic_distance": 10.25171,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 5,
+      "scene_id": "hm3d_v0.2/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb",
+      "scene_key": "Dd4bFSTQ8gi",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 0,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Dd4bFSTQ8gi.json.gz",
+      "source_split": "val",
+      "start_position": [
+        7.91341,
+        -0.08118,
+        -4.67389
+      ],
+      "start_rotation": [
+        0,
+        0.26358,
+        0,
+        0.96464
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "070c0b164688e5c83b8e4f7aa137bde3689615990a512681da0e86f8c1188081",
+      "episode_key": "HM3D ObjectNav v2:val:q3zU7Yy5E5s:5:5:bed",
+      "geodesic_distance": 3.82926,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 5,
+      "scene_id": "hm3d_v0.2/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb",
+      "scene_key": "q3zU7Yy5E5s",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 1,
+      "selection_seed": 20260518,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/q3zU7Yy5E5s.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -7.56394,
+        0.03522,
+        1.6191
+      ],
+      "start_rotation": [
+        0,
+        0.93539,
+        0,
+        0.35361
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "012da9fea409258d9d718dc603448860e466efd99bc2d4a21532a229b0b321d3",
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:19:5:bed",
+      "geodesic_distance": 2.33395,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 19,
+      "scene_id": "hm3d_v0.2/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb",
+      "scene_key": "BAbdmeyTvMZ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 2,
+      "selection_seed": 20260518,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/BAbdmeyTvMZ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        3.99174,
+        0.04521,
+        1.07885
+      ],
+      "start_rotation": [
+        0,
+        0.26088,
+        0,
+        0.96537
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "3c6ff2ad075b6fb6ca2167b1731a779a6f4e629693b45d0a4b1576da8329d4af",
+      "episode_key": "HM3D ObjectNav v2:val:bCPU9suPUw9:27:2:bed",
+      "geodesic_distance": 1.14684,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 27,
+      "scene_id": "hm3d_v0.2/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.glb",
+      "scene_key": "bCPU9suPUw9",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 3,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/bCPU9suPUw9.json.gz",
+      "source_split": "val",
+      "start_position": [
+        0.77066,
+        2.88022,
+        1.54056
+      ],
+      "start_rotation": [
+        0,
+        0.99921,
+        0,
+        0.03982
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "02d98e07c58dcfea683a562eb7544a0cc53850c18c783227e430912122560e28",
+      "episode_key": "HM3D ObjectNav v2:val:7MXmsvcQjpJ:15:0:bed",
+      "geodesic_distance": 3.48699,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 15,
+      "scene_id": "hm3d_v0.2/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb",
+      "scene_key": "7MXmsvcQjpJ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 4,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/7MXmsvcQjpJ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -4.5038,
+        1.32964,
+        -4.52845
+      ],
+      "start_rotation": [
+        0,
+        0.60642,
+        0,
+        -0.79515
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "18655ae82221e86630f4884e13bcc579b7ef772663b00e4d6bcfb9ac8e0c7fa7",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:5:2:bed",
+      "geodesic_distance": 3.73087,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 5,
+      "scene_id": "hm3d_v0.2/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb",
+      "scene_key": "QaLdnwvtxbs",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 5,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/QaLdnwvtxbs.json.gz",
+      "source_split": "val",
+      "start_position": [
+        1.49817,
+        0.03574,
+        0.49729
+      ],
+      "start_rotation": [
+        0,
+        0.74906,
+        0,
+        0.6625
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "12dfa32878be959a6e664dbb7072a470c85d1411f91eb8ac7263e073c08d5cc4",
+      "episode_key": "HM3D ObjectNav v2:val:Nfvxx8J5NCo:17:4:bed",
+      "geodesic_distance": 6.81139,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 17,
+      "scene_id": "hm3d_v0.2/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb",
+      "scene_key": "Nfvxx8J5NCo",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 6,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Nfvxx8J5NCo.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -8.52977,
+        0.03086,
+        -2.17486
+      ],
+      "start_rotation": [
+        0,
+        0.66886,
+        0,
+        0.74339
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "1413e200aab8de383559ef9e115870b65cdad871999ab4536d094b4cab7179d0",
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:17:1:bed",
+      "geodesic_distance": 1.96556,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 17,
+      "scene_id": "hm3d_v0.2/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb",
+      "scene_key": "qyAac8rV8Zk",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 7,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/qyAac8rV8Zk.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -5.42176,
+        3.0692,
+        3.34287
+      ],
+      "start_rotation": [
+        0,
+        0.93901,
+        0,
+        0.34388
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "3801d439b5131b20bc32b40efaaf503023cf782a7dbc7248fe6c7654ad207684",
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:14:2:bed",
+      "geodesic_distance": 8.0774,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 14,
+      "scene_id": "hm3d_v0.2/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb",
+      "scene_key": "4ok3usBNeis",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 8,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/4ok3usBNeis.json.gz",
+      "source_split": "val",
+      "start_position": [
+        8.89683,
+        2.06447,
+        0.4201
+      ],
+      "start_rotation": [
+        0,
+        0.87987,
+        0,
+        -0.47522
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "1ac72d4ee00dd179f9cec23927ee134c143cfa4b36014f11b7ab5f095b0b74ac",
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:16:1:bed",
+      "geodesic_distance": 2.15197,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 16,
+      "scene_id": "hm3d_v0.2/val/00873-bxsVRursffK/bxsVRursffK.basis.glb",
+      "scene_key": "bxsVRursffK",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 9,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/bxsVRursffK.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -5.39356,
+        0.02468,
+        -4.63371
+      ],
+      "start_rotation": [
+        0,
+        0.44173,
+        0,
+        -0.89715
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "20d5eb61e0ac45e63fb4745caf0cc0dd09da4f5fdf8fdab09ca1c5c514630c8d",
+      "episode_key": "HM3D ObjectNav v2:val:DYehNKdT76V:16:2:bed",
+      "geodesic_distance": 5.14732,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 16,
+      "scene_id": "hm3d_v0.2/val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb",
+      "scene_key": "DYehNKdT76V",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 10,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/DYehNKdT76V.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -5.08704,
+        0.03651,
+        -3.62725
+      ],
+      "start_rotation": [
+        0,
+        0.15192,
+        0,
+        -0.98839
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "24187caf230089f4074f52c178dd6cfd6cd18e5d4ea3e14bb9224a23dbe92496",
+      "episode_key": "HM3D ObjectNav v2:val:DYehNKdT76V:10:5:bed",
+      "geodesic_distance": 11.56708,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 10,
+      "scene_id": "hm3d_v0.2/val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb",
+      "scene_key": "DYehNKdT76V",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 11,
+      "selection_seed": 20260518,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/DYehNKdT76V.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -0.29825,
+        0.03651,
+        -1.05596
+      ],
+      "start_rotation": [
+        0,
+        0.03564,
+        0,
+        -0.99936
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "3fb7108e4b231c06ab11e2db5dfecc3ebea52474ae0763be81b9784397868587",
+      "episode_key": "HM3D ObjectNav v2:val:bCPU9suPUw9:4:0:bed",
+      "geodesic_distance": 4.33149,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 4,
+      "scene_id": "hm3d_v0.2/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.glb",
+      "scene_key": "bCPU9suPUw9",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 12,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/bCPU9suPUw9.json.gz",
+      "source_split": "val",
+      "start_position": [
+        6.28397,
+        -2.66978,
+        -1.07696
+      ],
+      "start_rotation": [
+        0,
+        0.51203,
+        0,
+        -0.85897
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "52dee45b400a86c49a850d3590c186d320994f6382bf54a6bfd187569b2a1e72",
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:7:4:bed",
+      "geodesic_distance": 3.23483,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 7,
+      "scene_id": "hm3d_v0.2/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb",
+      "scene_key": "qyAac8rV8Zk",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 13,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/qyAac8rV8Zk.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -4.95782,
+        3.0192,
+        0.45617
+      ],
+      "start_rotation": [
+        0,
+        0.94236,
+        0,
+        -0.33461
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "1be2950204181e8a3e70abb3ae7420c6fd26e27cf3c9860db6b2ebd2a4105981",
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:2:0:bed",
+      "geodesic_distance": 4.19596,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 2,
+      "scene_id": "hm3d_v0.2/val/00873-bxsVRursffK/bxsVRursffK.basis.glb",
+      "scene_key": "bxsVRursffK",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 14,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/bxsVRursffK.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -2.12554,
+        0.07468,
+        -5.93795
+      ],
+      "start_rotation": [
+        0,
+        0.57527,
+        0,
+        -0.81797
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "313408cb927ebac24243e3fc8bd472ef2a640dee74a99f016f40977e01eb925c",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:0:1:bed",
+      "geodesic_distance": 5.50588,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 0,
+      "scene_id": "hm3d_v0.2/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb",
+      "scene_key": "QaLdnwvtxbs",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 15,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/QaLdnwvtxbs.json.gz",
+      "source_split": "val",
+      "start_position": [
+        1.73861,
+        0.03574,
+        2.28409
+      ],
+      "start_rotation": [
+        0,
+        0.92321,
+        0,
+        -0.3843
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "0d8e8b8293aa0ca9ebaf0a229ef948850834f1bf51b7883063a8d826deb90e9b",
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:3:1:bed",
+      "geodesic_distance": 4.79852,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 3,
+      "scene_id": "hm3d_v0.2/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb",
+      "scene_key": "BAbdmeyTvMZ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 16,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/BAbdmeyTvMZ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -3.52545,
+        0.04521,
+        1.14434
+      ],
+      "start_rotation": [
+        0,
+        0.17234,
+        0,
+        -0.98504
+      ],
+      "target_or_query": "bed"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "00ed3899d63c44b9c74857d9440df1a133858549d832200abd961b5228a95d6c",
+      "episode_key": "HM3D ObjectNav v2:val:HY1NcmCgn3n:22:4:chair",
+      "geodesic_distance": 2.78616,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 22,
+      "scene_id": "hm3d_v0.2/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb",
+      "scene_key": "HY1NcmCgn3n",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 17,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/HY1NcmCgn3n.json.gz",
+      "source_split": "val",
+      "start_position": [
+        14.88506,
+        0.01218,
+        0.87476
+      ],
+      "start_rotation": [
+        0,
+        0.99992,
+        0,
+        -0.01297
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "07a4b87295c25355f321bdb67363ee434f4cfc9313b6b4ca6d92919f9656481a",
+      "episode_key": "HM3D ObjectNav v2:val:yr17PDCnDDW:10:3:chair",
+      "geodesic_distance": 3.0092,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 10,
+      "scene_id": "hm3d_v0.2/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb",
+      "scene_key": "yr17PDCnDDW",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 18,
+      "selection_seed": 20260518,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/yr17PDCnDDW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -12.68553,
+        -0.95161,
+        -0.90165
+      ],
+      "start_rotation": [
+        0,
+        0.19274,
+        0,
+        0.98125
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "0e52f01f7609233bb57ebbaebc1eef29caec00e1fd3a0e9e92aa2511324b0969",
+      "episode_key": "HM3D ObjectNav v2:val:7MXmsvcQjpJ:0:5:chair",
+      "geodesic_distance": 7.57711,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 0,
+      "scene_id": "hm3d_v0.2/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb",
+      "scene_key": "7MXmsvcQjpJ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 19,
+      "selection_seed": 20260518,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/7MXmsvcQjpJ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -2.39586,
+        -4.27036,
+        -0.49762
+      ],
+      "start_rotation": [
+        0,
+        0.9896,
+        0,
+        0.14385
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "04e9f39ed3ac3d51988034fdcfb53873e155935a315630214d7e56a2b3f8c2a9",
+      "episode_key": "HM3D ObjectNav v2:val:q3zU7Yy5E5s:18:4:chair",
+      "geodesic_distance": 3.72164,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 18,
+      "scene_id": "hm3d_v0.2/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb",
+      "scene_key": "q3zU7Yy5E5s",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 20,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/q3zU7Yy5E5s.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -4.9401,
+        2.57066,
+        -3.28377
+      ],
+      "start_rotation": [
+        0,
+        0.96346,
+        0,
+        -0.26785
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "1d771ddc043b88a81309b4d39307a08b4c1b237a98f7b480f8504ac25f79b8da",
+      "episode_key": "HM3D ObjectNav v2:val:Nfvxx8J5NCo:18:0:chair",
+      "geodesic_distance": 3.91477,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 18,
+      "scene_id": "hm3d_v0.2/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb",
+      "scene_key": "Nfvxx8J5NCo",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 21,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Nfvxx8J5NCo.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -13.29136,
+        0.03086,
+        3.45003
+      ],
+      "start_rotation": [
+        0,
+        0.33528,
+        0,
+        0.94212
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "5f5cc03e7881cc836263e2182538f06a027250586c9c8e5a0bf6fd056bb02262",
+      "episode_key": "HM3D ObjectNav v2:val:Dd4bFSTQ8gi:1:5:chair",
+      "geodesic_distance": 5.62798,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 1,
+      "scene_id": "hm3d_v0.2/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb",
+      "scene_key": "Dd4bFSTQ8gi",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 22,
+      "selection_seed": 20260518,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Dd4bFSTQ8gi.json.gz",
+      "source_split": "val",
+      "start_position": [
+        0.60987,
+        0.01882,
+        -0.7934
+      ],
+      "start_rotation": [
+        0,
+        0.58255,
+        0,
+        0.81279
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "11f29fd277391273264db5b0664f1144cdd532e2ebcf36f3ff397fc25791e55b",
+      "episode_key": "HM3D ObjectNav v2:val:yr17PDCnDDW:13:6:chair",
+      "geodesic_distance": 2.16938,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 13,
+      "scene_id": "hm3d_v0.2/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb",
+      "scene_key": "yr17PDCnDDW",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 23,
+      "selection_seed": 20260518,
+      "source_episode_id": "6",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/yr17PDCnDDW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -12.39742,
+        2.44839,
+        0.78712
+      ],
+      "start_rotation": [
+        0,
+        0.28307,
+        0,
+        -0.9591
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "0c994bec38cd4b4b731cc82e4abaff6d7de81bbaa5f91220bf7e5bac8e7817b1",
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:9:1:chair",
+      "geodesic_distance": 7.51651,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 9,
+      "scene_id": "hm3d_v0.2/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb",
+      "scene_key": "4ok3usBNeis",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 24,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/4ok3usBNeis.json.gz",
+      "source_split": "val",
+      "start_position": [
+        7.264,
+        -0.53553,
+        1.722
+      ],
+      "start_rotation": [
+        0,
+        0.12454,
+        0,
+        -0.99222
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "09ef3847c2d55399c0b8ec03fd306bd856a15d6838051dcdaca23048e5c0ca0f",
+      "episode_key": "HM3D ObjectNav v2:val:HY1NcmCgn3n:18:0:chair",
+      "geodesic_distance": 10.13014,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 18,
+      "scene_id": "hm3d_v0.2/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb",
+      "scene_key": "HY1NcmCgn3n",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 25,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/HY1NcmCgn3n.json.gz",
+      "source_split": "val",
+      "start_position": [
+        17.30186,
+        0.01656,
+        -6.14759
+      ],
+      "start_rotation": [
+        0,
+        0.54257,
+        0,
+        -0.84001
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "366facde2b4c6cbf2e02404639189aca882616c8ab9c071fb620ed083b1fdf36",
+      "episode_key": "HM3D ObjectNav v2:val:yr17PDCnDDW:9:2:chair",
+      "geodesic_distance": 3.76342,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 9,
+      "scene_id": "hm3d_v0.2/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb",
+      "scene_key": "yr17PDCnDDW",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 26,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/yr17PDCnDDW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -11.82189,
+        -0.95161,
+        -1.25226
+      ],
+      "start_rotation": [
+        0,
+        0.17225,
+        0,
+        -0.98505
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "3ce166905c1a09801a5dd593bab8f894f6432ae571afda37ff777bd1e945c4bc",
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:17:3:chair",
+      "geodesic_distance": 3.96775,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 17,
+      "scene_id": "hm3d_v0.2/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb",
+      "scene_key": "4ok3usBNeis",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 27,
+      "selection_seed": 20260518,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/4ok3usBNeis.json.gz",
+      "source_split": "val",
+      "start_position": [
+        3.53436,
+        -0.53553,
+        4.61387
+      ],
+      "start_rotation": [
+        0,
+        0.44827,
+        0,
+        0.8939
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "47cd937a6f0f685eefa9e20e12f41a58d68986875cb6682b20ff4e8ec8efe6aa",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:20:0:chair",
+      "geodesic_distance": 3.96403,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 20,
+      "scene_id": "hm3d_v0.2/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb",
+      "scene_key": "QaLdnwvtxbs",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 28,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/QaLdnwvtxbs.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -4.85719,
+        0.03574,
+        -1.92986
+      ],
+      "start_rotation": [
+        0,
+        0.54604,
+        0,
+        0.83776
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "1ed41b8b2e37fc6e7530b3907b946c182100ca8d089b69dd8b6bc6b25e5b1a61",
+      "episode_key": "HM3D ObjectNav v2:val:q3zU7Yy5E5s:17:3:chair",
+      "geodesic_distance": 3.34828,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 17,
+      "scene_id": "hm3d_v0.2/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb",
+      "scene_key": "q3zU7Yy5E5s",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 29,
+      "selection_seed": 20260518,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/q3zU7Yy5E5s.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -5.55509,
+        2.55876,
+        -3.06137
+      ],
+      "start_rotation": [
+        0,
+        0.65863,
+        0,
+        -0.75246
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "155c8050c38e2cb4128fadcbfd5800f4921fe751c16f1b1eecd8a5a00c924b1b",
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:12:2:chair",
+      "geodesic_distance": 2.32721,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 12,
+      "scene_id": "hm3d_v0.2/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb",
+      "scene_key": "qyAac8rV8Zk",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 30,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/qyAac8rV8Zk.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -6.02543,
+        0.0192,
+        0.68796
+      ],
+      "start_rotation": [
+        0,
+        0.11283,
+        0,
+        -0.99361
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "2a62c40de27abd461d2a3d98f8d529a3bc9d59007d00092ed17c6b8668efafdf",
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:20:3:chair",
+      "geodesic_distance": 1.49074,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 20,
+      "scene_id": "hm3d_v0.2/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb",
+      "scene_key": "BAbdmeyTvMZ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 31,
+      "selection_seed": 20260518,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/BAbdmeyTvMZ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        7.67507,
+        0.04521,
+        2.75891
+      ],
+      "start_rotation": [
+        0,
+        0.85641,
+        0,
+        0.5163
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "1464893b1442f2b09860aa49f1b9330b6084d4ba251c3d55bb0fb2f2dea439de",
+      "episode_key": "HM3D ObjectNav v2:val:DYehNKdT76V:22:4:chair",
+      "geodesic_distance": 4.58175,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 22,
+      "scene_id": "hm3d_v0.2/val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb",
+      "scene_key": "DYehNKdT76V",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 32,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/DYehNKdT76V.json.gz",
+      "source_split": "val",
+      "start_position": [
+        0.59408,
+        3.33651,
+        -3.78526
+      ],
+      "start_rotation": [
+        0,
+        0.72592,
+        0,
+        -0.68778
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "4a6d661a90bbefad96f60e4e9342ce8cc7546a4ab77f65d5f8532c75376201b7",
+      "episode_key": "HM3D ObjectNav v2:val:Nfvxx8J5NCo:9:1:chair",
+      "geodesic_distance": 3.13154,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 9,
+      "scene_id": "hm3d_v0.2/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb",
+      "scene_key": "Nfvxx8J5NCo",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 33,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Nfvxx8J5NCo.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -12.50833,
+        0.03086,
+        3.62672
+      ],
+      "start_rotation": [
+        0,
+        0.5595,
+        0,
+        -0.82883
+      ],
+      "target_or_query": "chair"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "34bd5b7b91e5e37ba40e9e5ea409586c5b0f513710f15f531f901a20b5bafc80",
+      "episode_key": "HM3D ObjectNav v2:val:Dd4bFSTQ8gi:2:5:plant",
+      "geodesic_distance": 7.34746,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 2,
+      "scene_id": "hm3d_v0.2/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb",
+      "scene_key": "Dd4bFSTQ8gi",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 34,
+      "selection_seed": 20260518,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Dd4bFSTQ8gi.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -4.10662,
+        0.01882,
+        2.25427
+      ],
+      "start_rotation": [
+        0,
+        0.45455,
+        0,
+        -0.89072
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "1b091ecbe323dcec8c534f596b3095e8be60c9fe885d8c45cb4d9276735fa08b",
+      "episode_key": "HM3D ObjectNav v2:val:HY1NcmCgn3n:1:1:plant",
+      "geodesic_distance": 7.10855,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 1,
+      "scene_id": "hm3d_v0.2/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb",
+      "scene_key": "HY1NcmCgn3n",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 35,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/HY1NcmCgn3n.json.gz",
+      "source_split": "val",
+      "start_position": [
+        24.19032,
+        0.01218,
+        3.36245
+      ],
+      "start_rotation": [
+        0,
+        0.46581,
+        0,
+        0.88489
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "0ec4a1b5d33112159d074b8abf510b669f4df410da4e5abde1db77e9eeb643e5",
+      "episode_key": "HM3D ObjectNav v2:val:7MXmsvcQjpJ:26:0:plant",
+      "geodesic_distance": 2.34477,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 26,
+      "scene_id": "hm3d_v0.2/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb",
+      "scene_key": "7MXmsvcQjpJ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 36,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/7MXmsvcQjpJ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -1.6927,
+        1.32964,
+        -3.43636
+      ],
+      "start_rotation": [
+        0,
+        0.46995,
+        0,
+        0.88269
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "38f3068306d0e2e1cc28101d18da8ea5e351fbbc6a8ad369f2cd97ee84fd1159",
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:11:1:plant",
+      "geodesic_distance": 7.25667,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 11,
+      "scene_id": "hm3d_v0.2/val/00873-bxsVRursffK/bxsVRursffK.basis.glb",
+      "scene_key": "bxsVRursffK",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 37,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/bxsVRursffK.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -7.55038,
+        0.02468,
+        -4.73312
+      ],
+      "start_rotation": [
+        0,
+        0.53064,
+        0,
+        0.8476
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "27e0e2837d60dc55831e284eb27f8825f58b4c40160337b3e87544a381fc46f9",
+      "episode_key": "HM3D ObjectNav v2:val:bCPU9suPUw9:11:0:plant",
+      "geodesic_distance": 6.99669,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 11,
+      "scene_id": "hm3d_v0.2/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.glb",
+      "scene_key": "bCPU9suPUw9",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 38,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/bCPU9suPUw9.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -0.33546,
+        0.03289,
+        -0.88074
+      ],
+      "start_rotation": [
+        0,
+        0.82993,
+        0,
+        -0.55786
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "2f905d8705565cd0b8cfc340555d3ed71e19692ecb5d53e36fd5cc45fe802237",
+      "episode_key": "HM3D ObjectNav v2:val:HY1NcmCgn3n:8:8:plant",
+      "geodesic_distance": 3.54392,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 8,
+      "scene_id": "hm3d_v0.2/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb",
+      "scene_key": "HY1NcmCgn3n",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 39,
+      "selection_seed": 20260518,
+      "source_episode_id": "8",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/HY1NcmCgn3n.json.gz",
+      "source_split": "val",
+      "start_position": [
+        17.3644,
+        0.01218,
+        -4.58794
+      ],
+      "start_rotation": [
+        0,
+        0.85541,
+        0,
+        0.51795
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "314feb66f2d3fb13251f92afbe540e95a8c725eec5665f5471432b9fad4c66d6",
+      "episode_key": "HM3D ObjectNav v2:val:DYehNKdT76V:5:2:plant",
+      "geodesic_distance": 5.50902,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 5,
+      "scene_id": "hm3d_v0.2/val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb",
+      "scene_key": "DYehNKdT76V",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 40,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/DYehNKdT76V.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -4.69808,
+        0.03651,
+        -0.74351
+      ],
+      "start_rotation": [
+        0,
+        0.89028,
+        0,
+        0.45541
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "3e753335b6cf776c53823938ab410711b37511e1929b454ea6b4e62706214799",
+      "episode_key": "HM3D ObjectNav v2:val:Dd4bFSTQ8gi:12:4:plant",
+      "geodesic_distance": 2.4649,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 12,
+      "scene_id": "hm3d_v0.2/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb",
+      "scene_key": "Dd4bFSTQ8gi",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 41,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Dd4bFSTQ8gi.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -0.63355,
+        0.01882,
+        3.97194
+      ],
+      "start_rotation": [
+        0,
+        0.99971,
+        0,
+        0.02411
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "20b274699902d93588d9706389cc77dcb775973ea23fd5d743351ab37208c579",
+      "episode_key": "HM3D ObjectNav v2:val:7MXmsvcQjpJ:5:2:plant",
+      "geodesic_distance": 2.3886,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 5,
+      "scene_id": "hm3d_v0.2/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb",
+      "scene_key": "7MXmsvcQjpJ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 42,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/7MXmsvcQjpJ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        0.75961,
+        -4.09177,
+        -2.96806
+      ],
+      "start_rotation": [
+        0,
+        0.92613,
+        0,
+        -0.37721
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "3e7ae7e4d091366830bedde00040886973f5d84ab939ad5cff01a41e0d0c9e7e",
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:4:5:plant",
+      "geodesic_distance": 6.1366,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 4,
+      "scene_id": "hm3d_v0.2/val/00873-bxsVRursffK/bxsVRursffK.basis.glb",
+      "scene_key": "bxsVRursffK",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 43,
+      "selection_seed": 20260518,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/bxsVRursffK.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -5.82999,
+        0.02468,
+        -1.87064
+      ],
+      "start_rotation": [
+        0,
+        0.94836,
+        0,
+        -0.31719
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "193dc934f2567c1a5cf1781763ad536f1bbe3f61b75c052399682aca128ec9f3",
+      "episode_key": "HM3D ObjectNav v2:val:yr17PDCnDDW:4:4:plant",
+      "geodesic_distance": 4.2368,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 4,
+      "scene_id": "hm3d_v0.2/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb",
+      "scene_key": "yr17PDCnDDW",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 44,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/yr17PDCnDDW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -3.71444,
+        2.44839,
+        -1.10417
+      ],
+      "start_rotation": [
+        0,
+        0.10699,
+        0,
+        -0.99426
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "2a35a827c9e9b556a1fe45a6182b378e3d239071f04fe519eb336cac0b8e4e5b",
+      "episode_key": "HM3D ObjectNav v2:val:bCPU9suPUw9:13:2:plant",
+      "geodesic_distance": 6.25291,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 13,
+      "scene_id": "hm3d_v0.2/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.glb",
+      "scene_key": "bCPU9suPUw9",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 45,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/bCPU9suPUw9.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -0.05154,
+        0.03022,
+        -0.19074
+      ],
+      "start_rotation": [
+        0,
+        0.82987,
+        0,
+        0.55796
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "39ea1ba88d001b29d5c41d3cf142528d1eb49ce1a5a93bf12631e0390471aa93",
+      "episode_key": "HM3D ObjectNav v2:val:DYehNKdT76V:11:3:plant",
+      "geodesic_distance": 9.08611,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 11,
+      "scene_id": "hm3d_v0.2/val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb",
+      "scene_key": "DYehNKdT76V",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 46,
+      "selection_seed": 20260518,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/DYehNKdT76V.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -9.18105,
+        0.03651,
+        -3.81045
+      ],
+      "start_rotation": [
+        0,
+        0.86088,
+        0,
+        0.5088
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "6a3d0e9576ba217ed552644e45d64e820df6f627899986e2ebcce38f77ef5e9d",
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:18:4:plant",
+      "geodesic_distance": 5.18239,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 18,
+      "scene_id": "hm3d_v0.2/val/00873-bxsVRursffK/bxsVRursffK.basis.glb",
+      "scene_key": "bxsVRursffK",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 47,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/bxsVRursffK.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -5.71062,
+        0.02468,
+        -3.03232
+      ],
+      "start_rotation": [
+        0,
+        0.8631,
+        0,
+        -0.50503
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "2a42474be5f3852733cc1505ff90ff27f2799c90a2626463abcb7402982fb890",
+      "episode_key": "HM3D ObjectNav v2:val:bCPU9suPUw9:19:5:plant",
+      "geodesic_distance": 6.6445,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 19,
+      "scene_id": "hm3d_v0.2/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.glb",
+      "scene_key": "bCPU9suPUw9",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 48,
+      "selection_seed": 20260518,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/bCPU9suPUw9.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -0.9398,
+        0.07138,
+        0.13112
+      ],
+      "start_rotation": [
+        0,
+        0.83803,
+        0,
+        -0.54562
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "6366bce99d56fcb92c0e790b2dba769400ed242635d765573e4f262fd23f0e85",
+      "episode_key": "HM3D ObjectNav v2:val:7MXmsvcQjpJ:23:3:plant",
+      "geodesic_distance": 5.25111,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 23,
+      "scene_id": "hm3d_v0.2/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb",
+      "scene_key": "7MXmsvcQjpJ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 49,
+      "selection_seed": 20260518,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/7MXmsvcQjpJ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -4.48906,
+        1.32964,
+        -2.0169
+      ],
+      "start_rotation": [
+        0,
+        0.51124,
+        0,
+        0.85944
+      ],
+      "target_or_query": "plant"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "0a6e8100e761765cac2a7ac63088ac46e699eedfacd8bec4f9a9e510eb9a5639",
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:22:2:sofa",
+      "geodesic_distance": 2.15533,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 22,
+      "scene_id": "hm3d_v0.2/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb",
+      "scene_key": "qyAac8rV8Zk",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 50,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/qyAac8rV8Zk.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -2.51407,
+        -2.7308,
+        0.97606
+      ],
+      "start_rotation": [
+        0,
+        0.91746,
+        0,
+        -0.39782
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "47ac770716a5c6c95d3b6e7934350de97c075d0484d6a9183b8df17ae081cab1",
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:8:1:sofa",
+      "geodesic_distance": 8.79219,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 8,
+      "scene_id": "hm3d_v0.2/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb",
+      "scene_key": "BAbdmeyTvMZ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 51,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/BAbdmeyTvMZ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        7.71012,
+        0.01124,
+        6.7833
+      ],
+      "start_rotation": [
+        0,
+        0.37408,
+        0,
+        0.9274
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "5026a21c4526b7b575dd2caf3b63886473599a0cfd4e65df6ae8e13db417bfee",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:9:1:sofa",
+      "geodesic_distance": 3.83591,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 9,
+      "scene_id": "hm3d_v0.2/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb",
+      "scene_key": "QaLdnwvtxbs",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 52,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/QaLdnwvtxbs.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -3.37374,
+        0.03574,
+        -3.73804
+      ],
+      "start_rotation": [
+        0,
+        0.40081,
+        0,
+        0.91616
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "2026d3c6dd5541a502fb5280a59ccae291196c1b8b310ffdeefd049aa7979769",
+      "episode_key": "HM3D ObjectNav v2:val:Nfvxx8J5NCo:16:1:sofa",
+      "geodesic_distance": 8.52332,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 16,
+      "scene_id": "hm3d_v0.2/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb",
+      "scene_key": "Nfvxx8J5NCo",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 53,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Nfvxx8J5NCo.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -3.37296,
+        0.03086,
+        -1.49953
+      ],
+      "start_rotation": [
+        0,
+        0.25129,
+        0,
+        0.96791
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "169448db945a39d25431358b7a7b7eea01513387e9f888f265d0ade6fa62ab30",
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:6:2:sofa",
+      "geodesic_distance": 4.03752,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 6,
+      "scene_id": "hm3d_v0.2/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb",
+      "scene_key": "4ok3usBNeis",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 54,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/4ok3usBNeis.json.gz",
+      "source_split": "val",
+      "start_position": [
+        7.64545,
+        -0.53553,
+        0.59389
+      ],
+      "start_rotation": [
+        0,
+        0.88847,
+        0,
+        0.45893
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "0d42b139c4ca42b10f3cee31105ff0a057de0ec7dccc8bd0b1db074d2601e7f0",
+      "episode_key": "HM3D ObjectNav v2:val:q3zU7Yy5E5s:21:0:sofa",
+      "geodesic_distance": 3.61262,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 21,
+      "scene_id": "hm3d_v0.2/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb",
+      "scene_key": "q3zU7Yy5E5s",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 55,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/q3zU7Yy5E5s.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -8.64774,
+        0.03522,
+        -1.29331
+      ],
+      "start_rotation": [
+        0,
+        0.56887,
+        0,
+        0.82243
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "590be99911635ad68103fd28b84484c5e071ce42a8421763674546f73ade3865",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:18:2:sofa",
+      "geodesic_distance": 7.10664,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 18,
+      "scene_id": "hm3d_v0.2/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb",
+      "scene_key": "QaLdnwvtxbs",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 56,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/QaLdnwvtxbs.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -0.27628,
+        0.04335,
+        -1.61861
+      ],
+      "start_rotation": [
+        0,
+        0.96021,
+        0,
+        0.27929
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "1c466ba30a1ed7bfb34eb5c14ab6425d2b8aae0e122344ca575d9b6837f5b709",
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:20:4:sofa",
+      "geodesic_distance": 2.3582,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 20,
+      "scene_id": "hm3d_v0.2/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb",
+      "scene_key": "qyAac8rV8Zk",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 57,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/qyAac8rV8Zk.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -2.49997,
+        -2.7308,
+        1.74522
+      ],
+      "start_rotation": [
+        0,
+        0.14013,
+        0,
+        -0.99013
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "07b2d49049efbc7027aca03f019cc130c2cac8085669f2c0b322e69f13c8452f",
+      "episode_key": "HM3D ObjectNav v2:val:yr17PDCnDDW:15:1:sofa",
+      "geodesic_distance": 11.04416,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 15,
+      "scene_id": "hm3d_v0.2/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb",
+      "scene_key": "yr17PDCnDDW",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 58,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/yr17PDCnDDW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -11.11182,
+        -0.95161,
+        -0.56189
+      ],
+      "start_rotation": [
+        0,
+        0.39747,
+        0,
+        0.91762
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "63fc0b0727eea7bb4055c2a41afa8f68112a7ce7d5695c88eef4da1a53923514",
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:7:0:sofa",
+      "geodesic_distance": 7.11238,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 7,
+      "scene_id": "hm3d_v0.2/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb",
+      "scene_key": "BAbdmeyTvMZ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 59,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/BAbdmeyTvMZ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -2.69112,
+        0.03937,
+        0.22078
+      ],
+      "start_rotation": [
+        0,
+        0.16462,
+        0,
+        0.98636
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "4d59278e1cd79654af979522225ed46b67c530ad2a9a206ee71479e667a7f8de",
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:25:3:sofa",
+      "geodesic_distance": 7.59323,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 25,
+      "scene_id": "hm3d_v0.2/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb",
+      "scene_key": "4ok3usBNeis",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 60,
+      "selection_seed": 20260518,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/4ok3usBNeis.json.gz",
+      "source_split": "val",
+      "start_position": [
+        0.38946,
+        2.06447,
+        -0.7569
+      ],
+      "start_rotation": [
+        0,
+        0.25591,
+        0,
+        -0.9667
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "01de89967fb043c04d3a32cc3622f82ecf7756ddd11186cd7f795623cbd28c1d",
+      "episode_key": "HM3D ObjectNav v2:val:Dd4bFSTQ8gi:14:0:sofa",
+      "geodesic_distance": 2.52976,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 14,
+      "scene_id": "hm3d_v0.2/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb",
+      "scene_key": "Dd4bFSTQ8gi",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 61,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Dd4bFSTQ8gi.json.gz",
+      "source_split": "val",
+      "start_position": [
+        5.46062,
+        -0.06768,
+        -3.16457
+      ],
+      "start_rotation": [
+        0,
+        0.16318,
+        0,
+        0.9866
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "4627e56902d6f615996db7256e30476e0b1e6683a52e34a1678afe8a61ac3433",
+      "episode_key": "HM3D ObjectNav v2:val:Nfvxx8J5NCo:27:4:sofa",
+      "geodesic_distance": 3.88985,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 27,
+      "scene_id": "hm3d_v0.2/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb",
+      "scene_key": "Nfvxx8J5NCo",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 62,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Nfvxx8J5NCo.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -11.82637,
+        0.03086,
+        3.59724
+      ],
+      "start_rotation": [
+        0,
+        0.84589,
+        0,
+        0.53337
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "38f60e2335af31eed51a5bfc36bdf2bee91606aae155d1fb89645f6d5fcc6fbf",
+      "episode_key": "HM3D ObjectNav v2:val:q3zU7Yy5E5s:25:4:sofa",
+      "geodesic_distance": 5.52302,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 25,
+      "scene_id": "hm3d_v0.2/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb",
+      "scene_key": "q3zU7Yy5E5s",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 63,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/q3zU7Yy5E5s.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -9.53705,
+        0.03522,
+        -2.68746
+      ],
+      "start_rotation": [
+        0,
+        0.33843,
+        0,
+        0.94099
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "131e60df176479bf6160f1017f6303b21d542eacccffcdcedeec368f6bb10461",
+      "episode_key": "HM3D ObjectNav v2:val:DYehNKdT76V:25:4:sofa",
+      "geodesic_distance": 1.48263,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 25,
+      "scene_id": "hm3d_v0.2/val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb",
+      "scene_key": "DYehNKdT76V",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 64,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/DYehNKdT76V.json.gz",
+      "source_split": "val",
+      "start_position": [
+        0.08386,
+        0.03651,
+        -3.01539
+      ],
+      "start_rotation": [
+        0,
+        0.82069,
+        0,
+        -0.57138
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "4500007a2ea35c2f8068362c910032e33e0502538d9a66a75236930a15df4d4f",
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:19:3:sofa",
+      "geodesic_distance": 3.15355,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 19,
+      "scene_id": "hm3d_v0.2/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb",
+      "scene_key": "qyAac8rV8Zk",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 65,
+      "selection_seed": 20260518,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/qyAac8rV8Zk.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -6.91898,
+        0.0192,
+        4.02599
+      ],
+      "start_rotation": [
+        0,
+        0.41078,
+        0,
+        -0.91174
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "15fc5c3ab292be8945e5e80372fffa0c43fc8d454e8a7957362f183eec0bd394",
+      "episode_key": "HM3D ObjectNav v2:val:yr17PDCnDDW:20:6:sofa",
+      "geodesic_distance": 5.25949,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 20,
+      "scene_id": "hm3d_v0.2/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb",
+      "scene_key": "yr17PDCnDDW",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 66,
+      "selection_seed": 20260518,
+      "source_episode_id": "6",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/yr17PDCnDDW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -2.98752,
+        -0.95161,
+        -8.16722
+      ],
+      "start_rotation": [
+        0,
+        0.52525,
+        0,
+        -0.85095
+      ],
+      "target_or_query": "sofa"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "0de7953c3d09a526e2278e9a268dc7235cc47285b56f11bb4d89b8220b9df01a",
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:5:1:toilet",
+      "geodesic_distance": 3.88801,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 5,
+      "scene_id": "hm3d_v0.2/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb",
+      "scene_key": "4ok3usBNeis",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 67,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/4ok3usBNeis.json.gz",
+      "source_split": "val",
+      "start_position": [
+        2.28079,
+        2.06447,
+        0.45369
+      ],
+      "start_rotation": [
+        0,
+        0.97781,
+        0,
+        -0.20949
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "155cdfb6231a4d55f1a2022acc133c5b29841eed1a3b46ca4346bf7bdf077f62",
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:22:0:toilet",
+      "geodesic_distance": 4.29615,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 22,
+      "scene_id": "hm3d_v0.2/val/00873-bxsVRursffK/bxsVRursffK.basis.glb",
+      "scene_key": "bxsVRursffK",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 68,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/bxsVRursffK.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -8.65389,
+        -3.05004,
+        -5.06323
+      ],
+      "start_rotation": [
+        0,
+        1.0,
+        0,
+        0.00246
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "269e480fdb0139f9128643e4286646dbb752ac61af272d6efbb1882fb41efbbe",
+      "episode_key": "HM3D ObjectNav v2:val:Nfvxx8J5NCo:2:4:toilet",
+      "geodesic_distance": 7.25907,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 2,
+      "scene_id": "hm3d_v0.2/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb",
+      "scene_key": "Nfvxx8J5NCo",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 69,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Nfvxx8J5NCo.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -5.28311,
+        0.03086,
+        -3.38487
+      ],
+      "start_rotation": [
+        0,
+        0.92958,
+        0,
+        -0.36861
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "040b6731bdcc8c3dca346f3fcf0d367a0448ffe6cc1666d9e1b589d208edbaa6",
+      "episode_key": "HM3D ObjectNav v2:val:bCPU9suPUw9:2:4:toilet",
+      "geodesic_distance": 5.34025,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 2,
+      "scene_id": "hm3d_v0.2/val/00847-bCPU9suPUw9/bCPU9suPUw9.basis.glb",
+      "scene_key": "bCPU9suPUw9",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 70,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/bCPU9suPUw9.json.gz",
+      "source_split": "val",
+      "start_position": [
+        6.62533,
+        2.88022,
+        -0.69652
+      ],
+      "start_rotation": [
+        0,
+        0.18122,
+        0,
+        -0.98344
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "563099fc17c246cda48b1d4a386e84f9df6d9fdbd507cdec5212d6708bd8d8f0",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:10:3:toilet",
+      "geodesic_distance": 9.18416,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 10,
+      "scene_id": "hm3d_v0.2/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb",
+      "scene_key": "QaLdnwvtxbs",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 71,
+      "selection_seed": 20260518,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/QaLdnwvtxbs.json.gz",
+      "source_split": "val",
+      "start_position": [
+        1.10385,
+        0.03574,
+        -0.13313
+      ],
+      "start_rotation": [
+        0,
+        0.31537,
+        0,
+        0.94897
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "13315f767c94e11c52f82c8570102fc16592122c339a06f8e798cb824a19cc66",
+      "episode_key": "HM3D ObjectNav v2:val:7MXmsvcQjpJ:24:0:toilet",
+      "geodesic_distance": 3.18308,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 24,
+      "scene_id": "hm3d_v0.2/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb",
+      "scene_key": "7MXmsvcQjpJ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 72,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/7MXmsvcQjpJ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -3.69338,
+        1.32964,
+        -2.40542
+      ],
+      "start_rotation": [
+        0,
+        0.3002,
+        0,
+        -0.95388
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "44c998c61561108198c5ecb9263d98490c76e0e23ca272a6b15c337ef47ca1cb",
+      "episode_key": "HM3D ObjectNav v2:val:Dd4bFSTQ8gi:10:3:toilet",
+      "geodesic_distance": 12.94619,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 10,
+      "scene_id": "hm3d_v0.2/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb",
+      "scene_key": "Dd4bFSTQ8gi",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 73,
+      "selection_seed": 20260518,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Dd4bFSTQ8gi.json.gz",
+      "source_split": "val",
+      "start_position": [
+        5.71439,
+        -0.04949,
+        -2.66021
+      ],
+      "start_rotation": [
+        0,
+        0.96399,
+        0,
+        0.26594
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "440b0ee015eb23e3feabf633587eb5baa481c0d5135f18eea3cecd4b4950854a",
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:27:3:toilet",
+      "geodesic_distance": 5.16777,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 27,
+      "scene_id": "hm3d_v0.2/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb",
+      "scene_key": "BAbdmeyTvMZ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 74,
+      "selection_seed": 20260518,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/BAbdmeyTvMZ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        6.09868,
+        0.04521,
+        1.16722
+      ],
+      "start_rotation": [
+        0,
+        0.94163,
+        0,
+        -0.33666
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "024f3d29810884933e01f374bc391fc62b1ec90bb1637eaa1df13c2581ead1b0",
+      "episode_key": "HM3D ObjectNav v2:val:q3zU7Yy5E5s:12:5:toilet",
+      "geodesic_distance": 3.96999,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 12,
+      "scene_id": "hm3d_v0.2/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb",
+      "scene_key": "q3zU7Yy5E5s",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 75,
+      "selection_seed": 20260518,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/q3zU7Yy5E5s.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -2.76639,
+        0.03522,
+        0.61307
+      ],
+      "start_rotation": [
+        0,
+        0.99931,
+        0,
+        -0.03705
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "4921121b7fb9f575412e575014429ab4a16141bc1e883fb957536c70fc220e47",
+      "episode_key": "HM3D ObjectNav v2:val:Dd4bFSTQ8gi:23:2:toilet",
+      "geodesic_distance": 15.63493,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 23,
+      "scene_id": "hm3d_v0.2/val/00824-Dd4bFSTQ8gi/Dd4bFSTQ8gi.basis.glb",
+      "scene_key": "Dd4bFSTQ8gi",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 76,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Dd4bFSTQ8gi.json.gz",
+      "source_split": "val",
+      "start_position": [
+        8.52623,
+        -0.08118,
+        -3.14153
+      ],
+      "start_rotation": [
+        0,
+        0.9235,
+        0,
+        -0.3836
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "61b56b6b14826caf4e4c271d230f8b666733948147db1bb0aa3f2e76515434c2",
+      "episode_key": "HM3D ObjectNav v2:val:Nfvxx8J5NCo:12:5:toilet",
+      "geodesic_distance": 5.65545,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 12,
+      "scene_id": "hm3d_v0.2/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb",
+      "scene_key": "Nfvxx8J5NCo",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 77,
+      "selection_seed": 20260518,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Nfvxx8J5NCo.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -3.79534,
+        0.03086,
+        -2.81379
+      ],
+      "start_rotation": [
+        0,
+        0.97985,
+        0,
+        -0.19974
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "7dbf9e5de3a9b4af03872832e6f97e6366eab6db1b069b5bc06312629f46f96f",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:22:2:toilet",
+      "geodesic_distance": 6.9929,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 22,
+      "scene_id": "hm3d_v0.2/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb",
+      "scene_key": "QaLdnwvtxbs",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 78,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/QaLdnwvtxbs.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -1.61143,
+        0.03574,
+        0.75548
+      ],
+      "start_rotation": [
+        0,
+        0.99178,
+        0,
+        -0.12794
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "334b2146887cadac51518870bfb008966e6b214cdee7afdb6d16c35d6c8cc96b",
+      "episode_key": "HM3D ObjectNav v2:val:7MXmsvcQjpJ:6:1:toilet",
+      "geodesic_distance": 7.33277,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 6,
+      "scene_id": "hm3d_v0.2/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb",
+      "scene_key": "7MXmsvcQjpJ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 79,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/7MXmsvcQjpJ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        3.51382,
+        1.32964,
+        -0.71575
+      ],
+      "start_rotation": [
+        0,
+        0.78054,
+        0,
+        -0.6251
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "3ac0bfe26b3e2cdb38112ad4f6744c948be620c41c3a7a3dfb4e77041233edf8",
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:15:4:toilet",
+      "geodesic_distance": 3.25731,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 15,
+      "scene_id": "hm3d_v0.2/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb",
+      "scene_key": "4ok3usBNeis",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 80,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/4ok3usBNeis.json.gz",
+      "source_split": "val",
+      "start_position": [
+        6.41969,
+        -0.53553,
+        3.87965
+      ],
+      "start_rotation": [
+        0,
+        0.98023,
+        0,
+        -0.19788
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "4437010ac930d1f5f67fa8e934810815a5732d3ce9cc20edd7541ad83b9767d8",
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:25:4:toilet",
+      "geodesic_distance": 5.52807,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 25,
+      "scene_id": "hm3d_v0.2/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb",
+      "scene_key": "BAbdmeyTvMZ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 81,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/BAbdmeyTvMZ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        6.77372,
+        0.04521,
+        4.85878
+      ],
+      "start_rotation": [
+        0,
+        0.18661,
+        0,
+        -0.98243
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "16ddf31671a527b50c0c62d747fce04274e6ed19abb79b2413d3c1f77814dc7f",
+      "episode_key": "HM3D ObjectNav v2:val:q3zU7Yy5E5s:13:6:toilet",
+      "geodesic_distance": 1.41593,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 13,
+      "scene_id": "hm3d_v0.2/val/00835-q3zU7Yy5E5s/q3zU7Yy5E5s.basis.glb",
+      "scene_key": "q3zU7Yy5E5s",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 82,
+      "selection_seed": 20260518,
+      "source_episode_id": "6",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/q3zU7Yy5E5s.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -6.0915,
+        0.03522,
+        -0.76315
+      ],
+      "start_rotation": [
+        0,
+        0.4893,
+        0,
+        -0.87212
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "33f6b37f333dfe16609c73bb21f925fc7bf769a922d2cad5d37aa5eefd42bc43",
+      "episode_key": "HM3D ObjectNav v2:val:DYehNKdT76V:20:2:toilet",
+      "geodesic_distance": 7.43055,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 20,
+      "scene_id": "hm3d_v0.2/val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb",
+      "scene_key": "DYehNKdT76V",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 83,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/DYehNKdT76V.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -0.09753,
+        3.33651,
+        0.12194
+      ],
+      "start_rotation": [
+        0,
+        0.77124,
+        0,
+        0.63655
+      ],
+      "target_or_query": "toilet"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "26670f3926fb99cee2c17d79a83bb8baf76a9362366f2cd88d883aa93c2d24e2",
+      "episode_key": "HM3D ObjectNav v2:val:HY1NcmCgn3n:17:8:tv_monitor",
+      "geodesic_distance": 22.75776,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 17,
+      "scene_id": "hm3d_v0.2/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb",
+      "scene_key": "HY1NcmCgn3n",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 84,
+      "selection_seed": 20260518,
+      "source_episode_id": "8",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/HY1NcmCgn3n.json.gz",
+      "source_split": "val",
+      "start_position": [
+        9.42012,
+        0.01218,
+        -4.70199
+      ],
+      "start_rotation": [
+        0,
+        0.1965,
+        0,
+        0.9805
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "2b4fa8c2bc99148ecc4a063d61ba1c801d530ef34495d20e66f033054aefb8d7",
+      "episode_key": "HM3D ObjectNav v2:val:HY1NcmCgn3n:9:0:tv_monitor",
+      "geodesic_distance": 12.55769,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 9,
+      "scene_id": "hm3d_v0.2/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb",
+      "scene_key": "HY1NcmCgn3n",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 85,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/HY1NcmCgn3n.json.gz",
+      "source_split": "val",
+      "start_position": [
+        19.91132,
+        0.04394,
+        -5.53383
+      ],
+      "start_rotation": [
+        0,
+        0.33251,
+        0,
+        0.9431
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "1b5f038987c405da31ca8b8e80740d6fcd019b5dda29f0dc0277c05b6fa55ff5",
+      "episode_key": "HM3D ObjectNav v2:val:yr17PDCnDDW:25:4:tv_monitor",
+      "geodesic_distance": 5.13748,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 25,
+      "scene_id": "hm3d_v0.2/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb",
+      "scene_key": "yr17PDCnDDW",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 86,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/yr17PDCnDDW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -1.85788,
+        -0.85161,
+        -3.20684
+      ],
+      "start_rotation": [
+        0,
+        0.07538,
+        0,
+        0.99715
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "2ee61592a885d186e87ae542a1ab2706a459407170e763ced2e8ed30a590f662",
+      "episode_key": "HM3D ObjectNav v2:val:HY1NcmCgn3n:16:7:tv_monitor",
+      "geodesic_distance": 7.91533,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 16,
+      "scene_id": "hm3d_v0.2/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb",
+      "scene_key": "HY1NcmCgn3n",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 87,
+      "selection_seed": 20260518,
+      "source_episode_id": "7",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/HY1NcmCgn3n.json.gz",
+      "source_split": "val",
+      "start_position": [
+        19.67142,
+        0.06218,
+        -0.82723
+      ],
+      "start_rotation": [
+        0,
+        0.19198,
+        0,
+        0.9814
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "1d00485c033af2570d32d3f3d55c4df5f0c4205f9257e3d880b297a812dad478",
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:9:5:tv_monitor",
+      "geodesic_distance": 1.8048,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 9,
+      "scene_id": "hm3d_v0.2/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb",
+      "scene_key": "qyAac8rV8Zk",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 88,
+      "selection_seed": 20260518,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/qyAac8rV8Zk.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -4.01531,
+        0.0192,
+        1.1173
+      ],
+      "start_rotation": [
+        0,
+        0.18339,
+        0,
+        -0.98304
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "3f92d5eab25b7d768b7f1478b5192a85741b6d7b4dd370d28a892d3ff42c1b6d",
+      "episode_key": "HM3D ObjectNav v2:val:yr17PDCnDDW:21:0:tv_monitor",
+      "geodesic_distance": 11.72466,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 21,
+      "scene_id": "hm3d_v0.2/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb",
+      "scene_key": "yr17PDCnDDW",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 89,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/yr17PDCnDDW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -5.99183,
+        2.44839,
+        -8.15359
+      ],
+      "start_rotation": [
+        0,
+        0.00588,
+        0,
+        -0.99998
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "800529636b467c74320b45aa2c4f43f7364a2d4e8070d66fce15e4af2ac6c6e6",
+      "episode_key": "HM3D ObjectNav v2:val:HY1NcmCgn3n:13:4:tv_monitor",
+      "geodesic_distance": 15.19549,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 13,
+      "scene_id": "hm3d_v0.2/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb",
+      "scene_key": "HY1NcmCgn3n",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 90,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/HY1NcmCgn3n.json.gz",
+      "source_split": "val",
+      "start_position": [
+        12.98987,
+        0.02132,
+        1.32736
+      ],
+      "start_rotation": [
+        0,
+        0.06726,
+        0,
+        -0.99774
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "03d9de1e39e5cc11d0d93ab3fe5dda270be03006f5a8ed2520f17f533dc96722",
+      "episode_key": "HM3D ObjectNav v2:val:Nfvxx8J5NCo:8:4:tv_monitor",
+      "geodesic_distance": 8.30974,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 8,
+      "scene_id": "hm3d_v0.2/val/00880-Nfvxx8J5NCo/Nfvxx8J5NCo.basis.glb",
+      "scene_key": "Nfvxx8J5NCo",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 91,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/Nfvxx8J5NCo.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -0.02443,
+        0.03086,
+        -2.20589
+      ],
+      "start_rotation": [
+        0,
+        0.80833,
+        0,
+        -0.58873
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "007799a5bb23ddea85919ee66d5c27abd5989bb004cee067c2cac6d829b830cb",
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:2:0:tv_monitor",
+      "geodesic_distance": 11.69069,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 2,
+      "scene_id": "hm3d_v0.2/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb",
+      "scene_key": "4ok3usBNeis",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 92,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/4ok3usBNeis.json.gz",
+      "source_split": "val",
+      "start_position": [
+        0.5709,
+        2.06447,
+        -0.90863
+      ],
+      "start_rotation": [
+        0,
+        0.92366,
+        0,
+        -0.38321
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "7fd65149bcc555bd11714a9affd66cd7fa2f49c8ea260312d501599914bfd547",
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:15:0:tv_monitor",
+      "geodesic_distance": 2.90185,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 15,
+      "scene_id": "hm3d_v0.2/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb",
+      "scene_key": "qyAac8rV8Zk",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 93,
+      "selection_seed": 20260518,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/qyAac8rV8Zk.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -2.15629,
+        -2.7308,
+        1.05323
+      ],
+      "start_rotation": [
+        0,
+        0.89926,
+        0,
+        0.43741
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "53cb70a335c484f84bae74337761b28ba963fcb8811230a43718683fcb669974",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:27:1:tv_monitor",
+      "geodesic_distance": 1.50648,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 27,
+      "scene_id": "hm3d_v0.2/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb",
+      "scene_key": "QaLdnwvtxbs",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 94,
+      "selection_seed": 20260518,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/QaLdnwvtxbs.json.gz",
+      "source_split": "val",
+      "start_position": [
+        3.43254,
+        0.03574,
+        2.41994
+      ],
+      "start_rotation": [
+        0,
+        0.96784,
+        0,
+        0.25155
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "4d0a688b2228006dc26740d1223d49577fabee33f5459fc380c8182cc4a74f74",
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:23:4:tv_monitor",
+      "geodesic_distance": 11.24323,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 23,
+      "scene_id": "hm3d_v0.2/val/00827-BAbdmeyTvMZ/BAbdmeyTvMZ.basis.glb",
+      "scene_key": "BAbdmeyTvMZ",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 95,
+      "selection_seed": 20260518,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/BAbdmeyTvMZ.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -3.17824,
+        0.04521,
+        0.72711
+      ],
+      "start_rotation": [
+        0,
+        0.08247,
+        0,
+        0.99659
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "88ba9e8974007b337d2e4f6410e63c269acaf1c6c686802957c97fadcf9b519b",
+      "episode_key": "HM3D ObjectNav v2:val:HY1NcmCgn3n:15:6:tv_monitor",
+      "geodesic_distance": 22.42433,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 15,
+      "scene_id": "hm3d_v0.2/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb",
+      "scene_key": "HY1NcmCgn3n",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 96,
+      "selection_seed": 20260518,
+      "source_episode_id": "6",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/HY1NcmCgn3n.json.gz",
+      "source_split": "val",
+      "start_position": [
+        5.59706,
+        0.01218,
+        1.90722
+      ],
+      "start_rotation": [
+        0,
+        0.00415,
+        0,
+        -0.99999
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "d52a021b01e0cb4c5ef75a66e96f28800cb6be33e93330a9ea344cfc7822f5fb",
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:4:2:tv_monitor",
+      "geodesic_distance": 4.80466,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 4,
+      "scene_id": "hm3d_v0.2/val/00832-qyAac8rV8Zk/qyAac8rV8Zk.basis.glb",
+      "scene_key": "qyAac8rV8Zk",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 97,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/qyAac8rV8Zk.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -2.24212,
+        0.0192,
+        -0.55745
+      ],
+      "start_rotation": [
+        0,
+        0.97851,
+        0,
+        0.20619
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "894d7925b50d358b8482b87d297479bc8018d7da6cc6682bb18bd4c6436377e8",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:25:2:tv_monitor",
+      "geodesic_distance": 4.59122,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 25,
+      "scene_id": "hm3d_v0.2/val/00829-QaLdnwvtxbs/QaLdnwvtxbs.basis.glb",
+      "scene_key": "QaLdnwvtxbs",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 98,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/QaLdnwvtxbs.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -0.56923,
+        0.04023,
+        -1.57799
+      ],
+      "start_rotation": [
+        0,
+        0.7841,
+        0,
+        -0.62064
+      ],
+      "target_or_query": "tv_monitor"
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "deterministic_hash": "4cbd1e22d296b9362010ca4255ec125046f6f14e8a3a19d7ae1ce63972a36ac6",
+      "episode_key": "HM3D ObjectNav v2:val:yr17PDCnDDW:23:2:tv_monitor",
+      "geodesic_distance": 9.2013,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 23,
+      "scene_id": "hm3d_v0.2/val/00831-yr17PDCnDDW/yr17PDCnDDW.basis.glb",
+      "scene_key": "yr17PDCnDDW",
+      "selected_split": "v3_fresh_validation_v1",
+      "selection_rank": 99,
+      "selection_seed": 20260518,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/yr17PDCnDDW.json.gz",
+      "source_split": "val",
+      "start_position": [
+        -0.193,
+        2.44839,
+        -0.83549
+      ],
+      "start_rotation": [
+        0,
+        0.98799,
+        0,
+        0.1545
+      ],
+      "target_or_query": "tv_monitor"
+    }
+  ],
+  "scene_counts": {
+    "v3_fresh_validation_v1": {
+      "4ok3usBNeis": 8,
+      "7MXmsvcQjpJ": 7,
+      "BAbdmeyTvMZ": 8,
+      "DYehNKdT76V": 7,
+      "Dd4bFSTQ8gi": 7,
+      "HY1NcmCgn3n": 9,
+      "Nfvxx8J5NCo": 8,
+      "QaLdnwvtxbs": 9,
+      "bCPU9suPUw9": 6,
+      "bxsVRursffK": 6,
+      "q3zU7Yy5E5s": 7,
+      "qyAac8rV8Zk": 9,
+      "yr17PDCnDDW": 9
+    }
+  },
+  "selected_split": "v3_fresh_validation_v1",
+  "selection_seed": 20260518,
+  "source_data_root": "/tmp/research3-data",
+  "split_counts": {
+    "v3_fresh_validation_v1": 100
+  }
+}

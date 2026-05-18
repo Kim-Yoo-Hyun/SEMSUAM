@@ -1,0 +1,29 @@
+FROM pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    HF_HOME=/models/.cache/huggingface \
+    TRANSFORMERS_CACHE=/models/.cache/huggingface \
+    TORCH_HOME=/models/torch
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      git \
+      libgl1 \
+      libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN python -m pip install --no-cache-dir --upgrade pip \
+    && python -m pip install --no-cache-dir \
+      huggingface_hub==0.29.3 \
+      numpy==1.26.4 \
+      opencv-python-headless==4.10.0.84 \
+      pillow==10.4.0 \
+      safetensors==0.5.3 \
+      tokenizers==0.21.4 \
+      tqdm==4.67.1 \
+      transformers==4.50.0
+
+WORKDIR /workspace
+
+CMD ["python", "-c", "import torch; import transformers; print(torch.__version__, transformers.__version__)"]

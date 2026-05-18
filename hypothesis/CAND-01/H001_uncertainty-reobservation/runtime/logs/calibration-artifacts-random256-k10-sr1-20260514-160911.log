@@ -1,0 +1,22 @@
+exact_command=SCENE_SPECS_FILE=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/sr1_scenes.txt ARTIFACT_ID=random256_k10_sr1_v1 TRAJECTORY_SUFFIX=calib_random256_k10_sr1_v1 FRAMES=256 MAX_CANDIDATES=10 TOP_PERCENTILE=98.0 OUT_ROOT=/tmp/research3-runs/h001_calibration_artifacts_random256_k10_sr1_v1 ./hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/calibration_artifact_job.sh
+
+[2026-05-14T16:09:11+09:00] check/build habitat calibration image
+
+[2026-05-14T16:09:11+09:00] verify required images
+
+[2026-05-14T16:09:11+09:00] export CLIP text embeddings
+Traceback (most recent call last):
+  File "/opt/research3/export_text_embeddings.py", line 124, in <module>
+    main()
+  File "/opt/research3/export_text_embeddings.py", line 119, in main
+    manifest = export_embeddings(args)
+  File "/opt/research3/export_text_embeddings.py", line 63, in export_embeddings
+    model, _ = clip.load(args.model, device=device, jit=False)
+  File "/usr/local/lib/python3.9/site-packages/clip/clip.py", line 120, in load
+    model_path = _download(_MODELS[name], download_root or os.path.expanduser("~/.cache/clip"))
+  File "/usr/local/lib/python3.9/site-packages/clip/clip.py", line 44, in _download
+    os.makedirs(root, exist_ok=True)
+  File "/usr/local/lib/python3.9/os.py", line 225, in makedirs
+    mkdir(name, mode)
+PermissionError: [Errno 13] Permission denied: '/models/.cache/clip'
+[2026-05-14T16:09:15+09:00] job exit status: 1

@@ -29,7 +29,7 @@ Draft.
 - Evaluation contract, split discipline, numeric gates, Step 4-5 promotion gate: `07_evaluation_contract.md`
 - Runtime integration, candidate backend, artifact generation, calibration commands: `08_runtime_integration.md`
 - 6-12 month schedule: `15_schedule.md`
-- Current next implementation target: Write policy objective revision design note while scene replacement artifact generation runs in background
+- Current next implementation target: decide whether to proceed from failed `v3b_owlvit_box` gate to `v3c_groundingdino_sam2` detector+mask smoke
 
 ## Pre-Schedule Verification Check
 
@@ -145,8 +145,29 @@ The failure is coverage-side rather than basic evaluator-side. `SemanticOnly` po
 - scene replacement coverage gate: passed, reachable correct-and-wrong rate `0.66`
 - recovered-substrate policy comparison: completed, current `SemanticOnly` still worsens wrong-goal visit rate `0.54` vs `NoReobserve` `0.38`
 - policy objective revision design: `SemanticVerifyTop` and `EvidenceGatedSemanticOnly` in `04_first_experiment.md`
+- policy objective revision implementation contract: `08_runtime_integration.md`
+- `SemanticVerifyTop` implementation smoke: passed, final candidate switch rate `0.0`
+- `EvidenceGatedSemanticOnly` support_proxy run: completed, wrong-goal `0.38`, switch gate pass rate `0.0`
+- post-view visual-language re-scoring contract: `08_runtime_integration.md`, target mode `image_feature`
+- `export_postview_frames.py` smoke: passed, 2 post-view frames exported
 - Coverage recovery decision tree: `04_first_experiment.md`
 
 ### 에이전트 추론
 
 After completion, run structural verification and coverage sanity. Do not run calibration policy comparison until coverage passes.
+
+## OpenVocab Detector Gate
+
+### 사실
+
+- Date checked: 2026-05-13
+- Separate perception image: `research3/openvocab-perception:20260513-owlvit`
+- `google/owlvit-base-patch32` offline load passed with `OwlViTProcessor` and `OwlViTForObjectDetection`.
+- `v3b_owlvit_box` 2-row Docker smoke was implemented in `runtime/h001_runtime/detect_postview_owlvit_box.py`.
+- Best tiny-smoke setting: query template `a photo of a {query}`, threshold `0.01`, point field `position`.
+- Best tiny-smoke result: detector box row rate `1.00`, candidate association row rate `0.50`.
+- `visit_position` setting reduced candidate association to `0.00`.
+
+### 에이전트 추론
+
+`OWL-ViT` box-only evidence is useful as a feasibility check but should not be promoted to full calibration yet. The next stronger top-tier-oriented path is detector+mask evidence such as `v3c_groundingdino_sam2`, because the current bottleneck is object-level association reliability, not just detector package availability.

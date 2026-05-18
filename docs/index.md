@@ -5,11 +5,12 @@
 ## How to Use
 
 1. 현재 작업 상태는 먼저 [TODO.md](../TODO.md)에서 확인한다.
-2. 연구 운영 규칙은 [AGENT.md](../AGENT.md)를 따른다.
+2. 연구 운영 규칙은 [AGENTS.md](../AGENTS.md)를 따른다.
 3. 문헌 조사 작업은 [literature.md](literature.md)를 읽고 [literature/README.md](../literature/README.md)와 [literature/PAPER.md](../literature/PAPER.md)로 이동한다.
 4. contribution candidate 검토는 [Contribution Candidates.md](../literature/Contribution%20Candidates.md)와 [CAND-01.md](../literature/CAND-01.md)를 본다.
 5. hypothesis 작업은 [hypothesis.md](hypothesis.md)를 읽고 [hypothesis/README.md](../hypothesis/README.md)로 이동한다.
-6. 현재 연구 보고서 형태의 요약은 [summary.md](../summary.md)에서 확인한다.
+6. paper novelty와 top-tier framing은 [paper.md](paper.md)를 따른다.
+7. 현재 연구 보고서 형태의 요약은 [summary.md](../summary.md)에서 확인한다.
 
 ## Workflow Docs
 
@@ -17,6 +18,7 @@
 | --- | --- | --- | --- |
 | Literature | [literature.md](literature.md) | [literature/](../literature/README.md) | field map, paper registry, contribution candidate 관리 |
 | Hypothesis | [hypothesis.md](hypothesis.md) | [hypothesis/](../hypothesis/README.md) | candidate를 검증 가능한 hypothesis와 first probe로 압축 |
+| Paper | [paper.md](paper.md) | `summary.md`, H001 documents | novelty gate, top-tier framing, paper-ready claim 판단 |
 | Stage 1 Smoke Test | [workflow-20260507-smoke.md](../hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260507-smoke.md) | H001 runtime workflow | `VLMaps` / Habitat smoke test |
 | HM3D-OVON | [workflow-20260507-ovon.md](../hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260507-ovon.md) | H001 runtime workflow | HM3D-OVON episode 확보와 mount smoke test |
 
@@ -36,16 +38,17 @@ Step 1-3은 ObjectNav first probe이고, Step 4-5는 같은 H001 안에서 SLAM 
 
 새 작업을 시작하는 에이전트는 아래 순서로 읽는다.
 
-1. `../AGENT.md`
+1. `../AGENTS.md`
 2. `../TODO.md`
 3. `index.md`
 4. `literature.md`
 5. `hypothesis.md`
-6. `../literature/README.md`
-7. `../literature/PAPER.md`
-8. `../literature/Contribution Candidates.md`
-9. `../literature/CAND-01.md`
-10. `../hypothesis/README.md`
+6. `paper.md`
+7. `../literature/README.md`
+8. `../literature/PAPER.md`
+9. `../literature/Contribution Candidates.md`
+10. `../literature/CAND-01.md`
+11. `../hypothesis/README.md`
 
 ## Update Rules
 
@@ -53,7 +56,7 @@ Step 1-3은 ObjectNav first probe이고, Step 4-5는 같은 H001 안에서 SLAM 
 - 새 연구 산출물 folder가 생기면 관련 workflow 문서와 이 index에서 함께 연결한다.
 - 긴 설명, paper summary, experiment detail은 이 파일에 넣지 않는다.
 - 아직 필요하지 않은 `experiments/`, `paper/`, `decisions/` folder는 만들지 않는다.
-- 루트에는 `AGENT.md`, `.gitignore`, `README.md`, `TODO.md`, `summary.md`만 둔다.
+- 루트에는 `AGENTS.md`, `.gitignore`, `README.md`, `TODO.md`, `summary.md`만 둔다.
 
 ## Index Page Convention
 
