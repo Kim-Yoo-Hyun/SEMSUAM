@@ -162,18 +162,19 @@ The required ablation is therefore `RiskOnlyReobserve` against `NoReobserve`, `R
 - Current benchmark path: `HM3D ObjectNav` first, `HM3D-OVON` extension.
 - Current metrics: `Success Rate`, `SPL`, wrong-goal visit, wasted path, uncertainty calibration, candidate coverage, semantic accuracy, map error, pose graph connectivity, `ATE/RPE`.
 - Current evidence 상태:
-  - `random256_k10_sr1_v1` candidate substrate는 reachable correct-and-wrong rate `0.66`으로 coverage gate를 통과했다.
-  - current `SemanticOnly`는 recovered substrate에서 wrong-goal visit을 줄이지 못했고 `NoReobserve`보다 악화되었다.
-  - `postview_evidence_v2`와 `v2.1`은 calibration gate를 통과하지 못했다.
-  - `v3a_depth_mask`는 partial signal을 보였지만 policy-scale comparison으로 promote되지 않았다.
-  - `v3b_owlvit_box`는 2-row smoke에서 detector feasibility는 보였지만 association reliability가 부족했다.
-  - `v3c_groundingdino_sam2`는 2-row top-3 detector+mask smoke를 통과했고, 50-row calibration은 HM3D/ObjectNav restore 완료 후 진행 예정이다.
+  - `risk_validation_v1` candidate substrate는 reachable correct-and-wrong rate `0.54`로 coverage gate를 통과했다.
+  - `v3_fresh_validation_v1` candidate substrate는 reachable correct-and-wrong rate `0.69`로 coverage gate를 통과했다.
+  - Direct semantic/object-node re-ranking, threshold-only revision, and positive confirmation gates produced wrong-goal or over-deferral failure modes.
+  - V4 external evidence on `risk_validation_v1` passes the current safety/full gate with `commit_rate 0.20`, `success_commit_rate 0.20`, and wrong-goal commit `0.00`.
+  - V4 still requests active mobility for unresolved rows: `request_identity_confirmation 0.40`, `request_expanded_retrieval 0.40`.
+  - `ExternalCandidateFollowupObservation` planner and small detector smoke passed, but follow-up evidence smoke failed the full gate because strong depth-associated evidence rate was `0.00`.
+  - `first_eval` replacement rerun and policy-scale comparison remain blocked.
 
 ### 에이전트 추론
 
 현재 방향은 링크에서 말한 top-tier pattern과 맞을 가능성이 있다. 이유는 단순히 semantic map을 쓰는 것이 아니라, semantic map이 navigation에서 어떤 failure를 일으키는지 wrong-goal visit과 wasted path로 정의하고, 그 failure를 active mobility decision으로 줄이려는 구조이기 때문이다.
 
-하지만 아직 top-tier-ready는 아니다. 현재 positive evidence보다 negative/diagnostic evidence가 더 많고, "왜 이 method 형태여야 하는가"가 실험적으로 충분히 닫히지 않았다. 특히 `GroundingDINO + SAM2`는 좋은 engineering component일 수 있지만, 그 자체가 novelty가 되면 안 된다. 이 component는 object evidence update가 왜 필요한지 보여주는 diagnostic 도구로만 취급해야 한다.
+하지만 아직 top-tier-ready는 아니다. V4는 semantic uncertainty를 active observation request로 바꾸는 더 좋은 method shape를 보였지만, follow-up observation이 실제로 over-deferral을 줄이고 wrong-goal commit을 다시 만들지 않는다는 full validation이 아직 없다. 특히 `GroundingDINO + SAM2`는 좋은 engineering component일 수 있지만, 그 자체가 novelty가 되면 안 된다. 이 component는 object evidence update와 active observation utility가 왜 필요한지 보여주는 diagnostic 도구로만 취급해야 한다.
 
 ## Risk of Weak Framing
 
@@ -230,12 +231,12 @@ H001은 다음 구조로 좁힐 때 가장 강하다.
 
 ## Near-Term Paper Actions
 
-1. Complete HM3D/ObjectNav restore verification.
-2. Run `v3c_groundingdino_sam2` 50-row calibration artifact.
-3. Decide whether detector+mask association passes the diagnostic gate.
-4. If it passes, run policy-scale comparison only with fixed calibration/evaluation split.
-5. Write a failure taxonomy table before adding new method components.
-6. For each new component, write the corresponding ablation before implementation.
+1. Prepare full `ExternalCandidateFollowupObservation` detector/evidence validation job.
+2. Verify whether follow-up observations convert V4 `request_identity_confirmation` and `request_expanded_retrieval` into safe commits or safe continued defers.
+3. Keep `first_eval` replacement rerun blocked until the follow-up evidence full gate passes on a fixed validation split.
+4. Write the failure taxonomy table for V2/V3/V4 and follow-up evidence before adding new method components.
+5. Define ablations for direct re-ranking, threshold-only routing, detector-score confirmation, pair-local view only, and follow-up observation removal.
+6. Promote to policy-scale comparison only after robust held-out follow-up evidence validation.
 
 ## Promotion Rule
 

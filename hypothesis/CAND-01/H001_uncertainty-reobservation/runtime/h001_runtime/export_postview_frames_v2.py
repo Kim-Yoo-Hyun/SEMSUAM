@@ -149,7 +149,7 @@ def select_candidate_set_for_row(
 
 
 def passthrough_fields(row: Dict[str, Any]) -> Dict[str, Any]:
-    prefixes = ("pair_", "arbitration_")
+    prefixes = ("pair_", "arbitration_", "external_", "followup_", "source_objective_", "source_followup_", "second_stage_")
     return {key: value for key, value in row.items() if key.startswith(prefixes)}
 
 

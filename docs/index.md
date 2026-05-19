@@ -10,7 +10,8 @@
 4. contribution candidate 검토는 [Contribution Candidates.md](../literature/Contribution%20Candidates.md)와 [CAND-01.md](../literature/CAND-01.md)를 본다.
 5. hypothesis 작업은 [hypothesis.md](hypothesis.md)를 읽고 [hypothesis/README.md](../hypothesis/README.md)로 이동한다.
 6. paper novelty와 top-tier framing은 [paper.md](paper.md)를 따른다.
-7. 현재 연구 보고서 형태의 요약은 [summary.md](../summary.md)에서 확인한다.
+7. 재현을 위한 데이터, checkpoint, Docker, artifact 위치는 [reproducibility.md](reproducibility.md)에서 확인한다.
+8. 현재 연구 보고서 형태의 요약은 [summary.md](../summary.md)에서 확인한다.
 
 ## Workflow Docs
 
@@ -19,6 +20,7 @@
 | Literature | [literature.md](literature.md) | [literature/](../literature/README.md) | field map, paper registry, contribution candidate 관리 |
 | Hypothesis | [hypothesis.md](hypothesis.md) | [hypothesis/](../hypothesis/README.md) | candidate를 검증 가능한 hypothesis와 first probe로 압축 |
 | Paper | [paper.md](paper.md) | `summary.md`, H001 documents | novelty gate, top-tier framing, paper-ready claim 판단 |
+| Reproducibility | [reproducibility.md](reproducibility.md) | H001 runtime outputs under `/tmp/research3-*` | 데이터, checkpoint, Docker, 재현 명령, artifact/evaluation 요약 |
 | Stage 1 Smoke Test | [workflow-20260507-smoke.md](../hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260507-smoke.md) | H001 runtime workflow | `VLMaps` / Habitat smoke test |
 | HM3D-OVON | [workflow-20260507-ovon.md](../hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260507-ovon.md) | H001 runtime workflow | HM3D-OVON episode 확보와 mount smoke test |
 
@@ -44,11 +46,12 @@ Step 1-3은 ObjectNav first probe이고, Step 4-5는 같은 H001 안에서 SLAM 
 4. `literature.md`
 5. `hypothesis.md`
 6. `paper.md`
-7. `../literature/README.md`
-8. `../literature/PAPER.md`
-9. `../literature/Contribution Candidates.md`
-10. `../literature/CAND-01.md`
-11. `../hypothesis/README.md`
+7. `reproducibility.md`
+8. `../literature/README.md`
+9. `../literature/PAPER.md`
+10. `../literature/Contribution Candidates.md`
+11. `../literature/CAND-01.md`
+12. `../hypothesis/README.md`
 
 ## Update Rules
 

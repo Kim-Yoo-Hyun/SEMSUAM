@@ -1,5 +1,24 @@
 # 연구 보고서: Semantic Uncertainty 기반 Active SLAM/Navigation Utility
 
+## 0. 최신 상태
+
+### 사실
+
+- Date checked: 2026-05-18
+- `risk_validation_v1` candidate substrate와 `v3_fresh_validation_v1` candidate substrate는 모두 coverage gate를 통과했다.
+- `risk_validation_v1` coverage: reachable correct-and-wrong rate `0.54`, `NoReobserve` wrong-goal visit rate `0.47`, `Success Rate 0.19`, `SPL 0.1004`.
+- `v3_fresh_validation_v1` coverage: reachable correct-and-wrong rate `0.69`, `NoReobserve` wrong-goal visit rate `0.61`, `Success Rate 0.26`, `SPL 0.1459`.
+- V4 external evidence on `risk_validation_v1` passes the current external evidence gate: `commit_rate 0.20`, `success_commit_rate 0.20`, wrong-goal commit `0.00`.
+- V4 unresolved rows are routed to mobility requests: `request_identity_confirmation 0.40`, `request_expanded_retrieval 0.40`.
+- `ExternalCandidateFollowupObservation` planner produced `28` follow-up rows with `0` skipped rows.
+- Follow-up detector smoke passed on `4` rows: detector box rate `1.00`, SAM2 mask rate `1.00`, candidate association rate `0.75`, `uses_gt_for_action false`.
+- Follow-up evidence analyzer smoke passed safety with wrong-goal/no-valid commit rates `0.00`, but full gate failed because strong depth-associated follow-up evidence rate was `0.00`.
+- Reproducibility entrypoint was added at `docs/reproducibility.md`.
+
+### 에이전트 추론
+
+현재 가장 유망한 novelty 방향은 detector/segmenter를 붙이는 것이 아니라, semantic uncertainty를 `commit/defer` threshold에서 `request_identity_confirmation`과 `request_expanded_retrieval` 같은 active SLAM/navigation utility로 변환하는 것이다. 아직 paper claim은 확정하지 않는다. 다음 gate는 full follow-up detector/evidence validation job이며, 이 결과가 없으면 `first_eval` replacement rerun과 policy-scale comparison은 계속 blocked다.
+
 ## 1. 연구 관심 배경
 
 ### 사실
@@ -207,7 +226,7 @@ First_eval `k10` candidate artifact generation은 완료됐다. Output은 `/tmp/
 
 `first_eval_spatial_nms_p97_k20_v1`은 기존 `spatial_nms_k20` maps를 재사용해 후보 추출만 `TOP_PERCENTILE=97.0`으로 낮춘 artifact다. Rows `60`, candidates `1200`, finite positions `1087`로 구조 검증은 통과했다. Coverage gate에서는 candidate reachable rate가 `0.59`까지 올랐지만, reachable correct-and-wrong rate는 `0.49`로 그대로여서 hard gate는 실패했다. 따라서 detector validation은 계속 blocked이며, 다음 recovery는 scene/episode replacement substrate probe다.
 
-Replacement pool은 first_eval에 아직 쓰지 않은 HM3D ObjectNav `val` scene 중 scene asset이 있고 여섯 ObjectNav category가 모두 있는 scene으로 제한했다. Deterministic top-3 probe scene은 `5cdEh9F2hJL`, `6s7QHgap2fW`, `GLAQ4DNUx5U`이며, `manifests/replacement_probe_scenes.txt`에 기록했다. Replacement-probe artifact generation은 `tmux` session `h001-replacement-probe-p97-k20-20260515-113921`에서 running 상태다.
+Replacement pool은 first_eval에 아직 쓰지 않은 HM3D ObjectNav `val` scene 중 scene asset이 있고 여섯 ObjectNav category가 모두 있는 scene으로 제한했다. Deterministic top-3 probe scene은 `5cdEh9F2hJL`, `6s7QHgap2fW`, `GLAQ4DNUx5U`이며, `manifests/replacement_probe_scenes.txt`에 기록했다. Replacement-probe artifact generation은 `tmux` session `h001-replacement-probe-p97-k20-20260515-113921`에서 완료됐다.
 
 Replacement-probe coverage는 통과했다. 30 episode probe에서 reachable correct-and-wrong rate는 `0.6667`, `NoReobserve` wrong-goal은 `0.6333`이었다. Scene별로는 `5cdEh9F2hJL 1.0`, `6s7QHgap2fW 0.6`, `GLAQ4DNUx5U 0.4`였다. 따라서 first_eval replacement v1은 최악 scene `k1cupFYWXJ6`만 `5cdEh9F2hJL`로 바꾸는 최소 교체안으로 구성했다.
 
@@ -275,12 +294,12 @@ First_eval replacement v1은 coverage gate를 통과했다. 100 episode 기준 `
 
 ### 에이전트 추론
 
-1. `risk_validation_v1` candidate artifact job 완료를 확인하고 coverage gate를 실행한다.
-2. RiskOnlyReobserve를 `R_before/R_after` two-stage update로 확장한다.
-3. Risk-only rule을 검증하려면 fresh split 또는 더 큰 validation split을 만든다.
-4. Independent validation에서 wrong-goal routing이 유지되고 wasted path가 과도하게 늘지 않을 때만 policy integration을 진행한다.
-5. Policy shape은 direct goal switch가 아니라 "semantic default commit + risk-triggered re-observation"으로 둔다.
-6. Robust held-out detector-objective gate 통과 후에만 policy-scale integration contract를 작성한다.
+1. Full `ExternalCandidateFollowupObservation` detector/evidence validation job을 작성한다.
+2. Full follow-up job에서 `request_identity_confirmation`과 `request_expanded_retrieval`이 safe commit 또는 safe defer로 바뀌는지 확인한다.
+3. Follow-up evidence full gate가 통과할 때만 `first_eval` replacement rerun을 검토한다.
+4. `NoReobserve`, `RandomReobserve`, geometry-only, semantic-only, direct re-ranking, threshold-only alternative를 ablation으로 고정한다.
+5. Policy shape은 direct goal switch가 아니라 "semantic default + uncertainty-triggered active observation + evidence-based commit/defer"로 둔다.
+6. Robust held-out detector-objective / follow-up evidence gate 통과 후에만 policy-scale integration contract를 작성한다.
 7. Positive signal이 나오면 Step 4-5로 확장해 pose graph connectivity, semantic accuracy, map error, `ATE`, `RPE`를 평가한다.
 8. Simulation 결과가 충분할 때 real-world proof-of-concept를 설계한다.
 
@@ -288,8 +307,8 @@ First_eval replacement v1은 coverage gate를 통과했다. 100 episode 기준 `
 
 ### 사실
 
-현재까지는 dataset/runtime/logging/candidate substrate를 구축했고, semantic uncertainty policy가 단순 score threshold만으로는 충분하지 않다는 negative evidence를 얻었다. v3a/v3b 실험은 object-level evidence가 필요하다는 방향을 지지하지만, 아직 policy-scale result로 주장할 수 있는 단계는 아니다.
+현재까지는 dataset/runtime/logging/candidate substrate를 구축했고, semantic uncertainty policy가 단순 score threshold나 direct re-ranking으로는 충분하지 않다는 negative evidence를 얻었다. V4 external evidence는 uncertainty를 active observation request로 바꾸는 방향에서 가장 좋은 신호를 보였지만, follow-up evidence full validation은 아직 통과하지 못했다.
 
 ### 에이전트 추론
 
-현재 가장 중요한 연구 판단은 `semantic uncertainty` 자체를 포기하는 것이 아니라, uncertainty update에 쓰는 object evidence objective를 더 정확하게 만드는 것이다. `GroundingDINO + SAM2`는 box/mask 생성에는 충분하지만, 현재 association rule은 policy-facing detector objective로 쓰기에는 약하다. 단순히 더 많이 associate하는 rule은 오히려 wrong-goal을 늘린다. Property-conditioned object-node score도 direct re-ranking으로 쓰면 new wrong-goal을 만든다. Confirmation/disconfirmation 방향은 여전히 유망하지만, positive confirmation은 안전하지 않다. 다음 핵심은 object-node evidence를 "맞다는 확신"이 아니라 "다시 관찰해야 한다는 risk utility"로 쓰는 것이다.
+현재 가장 중요한 연구 판단은 `semantic uncertainty` 자체를 포기하는 것이 아니라, uncertainty update를 active observation utility로 바꾸는 것이다. `GroundingDINO + SAM2`는 box/mask 생성에는 충분하지만, 그 자체가 novelty가 아니다. 단순히 더 많이 associate하거나 direct re-ranking하면 wrong-goal을 늘릴 수 있다. 다음 핵심은 object-node evidence를 "맞다는 확신"이 아니라 "어떤 추가 관찰이 필요한가"와 "관찰 뒤에도 commit이 안전한가"를 판단하는 utility로 쓰는 것이다.

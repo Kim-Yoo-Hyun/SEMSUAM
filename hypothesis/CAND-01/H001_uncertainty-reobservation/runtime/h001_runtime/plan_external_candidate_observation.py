@@ -74,20 +74,43 @@ def candidate_rank(candidate_id: str) -> Optional[int]:
         return None
 
 
-def top_confirm(row: Dict[str, Any]) -> float:
-    return float((row.get("pair_v3_top_features") or {}).get("confirm_score") or 0.0)
+def objective_prefix(row: Dict[str, Any], requested: str) -> str:
+    if requested != "auto":
+        return requested
+    for prefix in ("pair_v4b", "pair_v4", "pair_v3"):
+        if f"{prefix}_action" in row:
+            return prefix
+    raise ValueError("could not infer pair objective version from row")
 
 
-def alt_confirm(row: Dict[str, Any]) -> float:
-    return float((row.get("pair_v3_alt_features") or {}).get("confirm_score") or 0.0)
+def top_confirm(row: Dict[str, Any], prefix: str) -> float:
+    return float((row.get(f"{prefix}_top_features") or {}).get("confirm_score") or 0.0)
+
+
+def alt_confirm(row: Dict[str, Any], prefix: str) -> float:
+    return float((row.get(f"{prefix}_alt_features") or {}).get("confirm_score") or 0.0)
 
 
 def external_trigger(row: Dict[str, Any], args: argparse.Namespace) -> Tuple[bool, str]:
+    prefix = objective_prefix(row, str(args.objective_version))
+    action = str(row.get(f"{prefix}_action"))
+
+    if prefix == "pair_v4b":
+        if action == "pair_v4b_request_external_candidate_search":
+            return True, "pair_v4b_incomplete_pair_set"
+        if action == "pair_v4b_request_external_candidate_search_alt_confirm_untrusted":
+            return True, "pair_v4b_alt_confirm_untrusted_candidate_set"
+        return False, "pair_v4b_not_external_search_action"
+
+    if prefix == "pair_v4":
+        if action == "pair_v4_request_external_candidate_search":
+            return True, "pair_v4_incomplete_pair_set"
+        return False, "pair_v4_not_external_search_action"
+
     if row.get("pair_v3_defer") is not True:
         return False, "pair_v3_already_committed_or_not_deferred"
 
-    action = str(row.get("pair_v3_action"))
-    max_confirm = max(top_confirm(row), alt_confirm(row))
+    max_confirm = max(top_confirm(row, prefix), alt_confirm(row, prefix))
     confirm_gap = abs(float(row.get("pair_v3_confirm_gap_alt_minus_top") or 0.0))
     top_rejected = bool(row.get("pair_v3_top_rejection_evidence"))
 
@@ -190,6 +213,7 @@ def make_plan_row(
     selected_ids: List[str],
     args: argparse.Namespace,
 ) -> Dict[str, Any]:
+    prefix = objective_prefix(row, str(args.objective_version))
     return {
         "schema_version": SCHEMA_VERSION,
         "run_id": str(args.run_id),
@@ -217,8 +241,13 @@ def make_plan_row(
         "pair_observation_id": row.get("pair_observation_id"),
         "pair_top_candidate_id": row.get("pair_top_candidate_id"),
         "pair_alt_candidate_id": row.get("pair_alt_candidate_id"),
+        "source_objective_prefix": prefix,
+        "source_objective_action": row.get(f"{prefix}_action"),
+        "source_objective_reason": row.get(f"{prefix}_reason"),
         "pair_v3_action": row.get("pair_v3_action"),
         "pair_v3_reason": row.get("pair_v3_reason"),
+        "pair_v4b_action": row.get("pair_v4b_action"),
+        "pair_v4b_reason": row.get("pair_v4b_reason"),
     }
 
 
@@ -242,9 +271,11 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     neither_full_pool_denominator = 0
 
     for source_index, row in enumerate(pair_rows):
+        prefix = objective_prefix(row, str(args.objective_version))
+        source_action = str(row.get(f"{prefix}_action"))
         should_trigger, trigger_reason = external_trigger(row, args)
         label = str(row.get("label_case"))
-        action_by_label[label][str(row.get("pair_v3_action"))] += 1
+        action_by_label[label][source_action] += 1
         if not should_trigger:
             continue
 
@@ -315,8 +346,13 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
             "pair_observation_id": row.get("pair_observation_id"),
             "pair_top_candidate_id": row.get("pair_top_candidate_id"),
             "pair_alt_candidate_id": row.get("pair_alt_candidate_id"),
+            "source_objective_prefix": prefix,
+            "source_objective_action": row.get(f"{prefix}_action"),
+            "source_objective_reason": row.get(f"{prefix}_reason"),
             "pair_v3_action": row.get("pair_v3_action"),
             "pair_v3_reason": row.get("pair_v3_reason"),
+            "pair_v4b_action": row.get("pair_v4b_action"),
+            "pair_v4b_reason": row.get("pair_v4b_reason"),
             "label_case": label,
             "external_budget": int(args.external_budget),
             "external_pool_size": len(external_pool),
@@ -353,6 +389,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         "plan_rows": len(plan_rows),
         "skipped_rows": len(skipped_rows),
         "external_budget": int(args.external_budget),
+        "objective_version": str(args.objective_version),
         "external_selection_mode": str(args.external_selection_mode),
         "rank_band_pattern": list(args.rank_band_pattern),
         "trigger_counts": dict(sorted(trigger_counts.items())),
@@ -360,7 +397,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
             label: dict(sorted(counts.items()))
             for label, counts in sorted(trigger_by_label.items())
         },
-        "pair_v3_action_by_label_case": {
+        "source_action_by_label_case": {
             label: dict(sorted(counts.items()))
             for label, counts in sorted(action_by_label.items())
         },
@@ -426,12 +463,17 @@ def parse_int_list(text: str) -> List[int]:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Plan external-candidate observation after H001 pair objective v3 defer.")
+    parser = argparse.ArgumentParser(description="Plan external-candidate observation after H001 pair objective defer/search action.")
     parser.add_argument("--pair-objective-rows", required=True)
     parser.add_argument("--candidate-artifact", required=True)
     parser.add_argument("--out-root", required=True)
     parser.add_argument("--object-node-features")
     parser.add_argument("--run-id", default="h001_external_candidate_observation_v1")
+    parser.add_argument(
+        "--objective-version",
+        default="auto",
+        choices=["auto", "pair_v3", "pair_v4", "pair_v4b"],
+    )
     parser.add_argument("--external-budget", type=int, default=6)
     parser.add_argument("--recall-budgets", type=parse_int_list, default=[1, 2, 3, 5, 6, 10])
     parser.add_argument(

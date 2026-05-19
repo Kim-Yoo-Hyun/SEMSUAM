@@ -170,8 +170,7 @@ docker run --rm --ipc=host \
     --standoff-distances 1.25,1.75,2.25 \
     --preferred-standoff-distance-m 1.75 \
     --min-standoff-distance-m 0.75 \
-    --max-standoff-distance-m 3.25 \
-    "${PAIR_COMMON_FALLBACK_ARGS[@]}"
+    --max-standoff-distance-m 3.25
 
 CURRENT_STAGE=association_recovery_frame_export
 write_status running "${CURRENT_STAGE}"
@@ -280,7 +279,8 @@ docker run --rm --ipc=host \
     --standoff-distances 1.25,1.75,2.25 \
     --preferred-standoff-distance-m 1.75 \
     --min-standoff-distance-m 0.75 \
-    --max-standoff-distance-m 3.25
+    --max-standoff-distance-m 3.25 \
+    "${PAIR_COMMON_FALLBACK_ARGS[@]}"
 
 CURRENT_STAGE=pair_frame_export
 write_status running "${CURRENT_STAGE}"

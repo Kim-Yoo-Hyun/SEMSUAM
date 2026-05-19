@@ -9,6 +9,7 @@
 1. [AGENTS.md](AGENTS.md): 연구 운영 규칙과 에이전트 작업 규칙
 2. [TODO.md](TODO.md): 현재 작업 상태, 다음 행동, 완료 이력
 3. [docs/index.md](docs/index.md): 문헌 조사, hypothesis, workflow 문서로 이동하는 index
+4. [docs/reproducibility.md](docs/reproducibility.md): 데이터, checkpoint, Docker, 재현 명령, artifact/evaluation 요약
 
 ## Active Direction
 
@@ -26,6 +27,7 @@
 - Hypothesis index: [hypothesis/README.md](hypothesis/README.md)
 - Active hypothesis: [hypothesis/CAND-01/H001_uncertainty-reobservation/README.md](hypothesis/CAND-01/H001_uncertainty-reobservation/README.md)
 - Evaluation contract: [07_evaluation_contract.md](hypothesis/CAND-01/H001_uncertainty-reobservation/07_evaluation_contract.md)
+- Reproducibility: [docs/reproducibility.md](docs/reproducibility.md)
 - Research report summary: [summary.md](summary.md)
 
 ## Current Dataset Gates
@@ -42,6 +44,8 @@ Runtime scripts, Dockerfiles, and smoke workflow notes live under:
 ```text
 hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/
 ```
+
+Current data paths, checkpoint paths, Docker images, and reproduction commands are summarized in [docs/reproducibility.md](docs/reproducibility.md).
 
 ## Repository Rule
 

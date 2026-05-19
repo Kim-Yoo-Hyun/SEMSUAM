@@ -1,0 +1,846 @@
+started_at=2026-05-18T17:12:45+09:00
+working_directory=/home/yoohyun/research3
+manifest=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_risk_validation_v1.json
+manifest_split=risk_validation_v1
+candidate_artifact=/tmp/research3-runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl
+coverage_summary=/tmp/research3-runs/h001_risk_validation_policy_spatial_nms_p97_k20_v1/coverage_sanity/artifact_coverage.json
+object_node_features=/tmp/research3-runs/h001_risk_validation_object_node_evidence_objective_v1/candidate_object_node_features.jsonl
+pair_out=/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1
+risk_out=/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/risk_resolution
+association_recovery_out=/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery
+log=/home/yoohyun/research3/logs/risk-validation-pair-v4b-revised-geometry-20260518-171245.log
+expected_files=/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/heldout_pair_substrate_summary.json /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_objective_v4b_summary.json /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/fixed_rule_pair_v4b_revised_geometry_validation_summary.json
+verification_command=cat /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pipeline_status.json && cat /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/heldout_pair_substrate_summary.json && cat /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_objective_v4b_summary.json
+{'stage': 'prerequisite_check_passed', 'coverage_overall_pass': True}
+started_at=2026-05-18T17:12:45+09:00
+working_directory=/home/yoohyun/research3
+manifest=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_risk_validation_v1.json
+manifest_split=risk_validation_v1
+candidate_artifact=/tmp/research3-runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl
+object_node_features=/tmp/research3-runs/h001_risk_validation_object_node_evidence_objective_v1/candidate_object_node_features.jsonl
+out=/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1
+risk_out=/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/risk_resolution
+association_recovery_out=/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery
+log=/home/yoohyun/research3/logs/v3-fresh-validation-pair-v4-revised-geometry-substrate-20260518-171245.log
+pair_include_dual_fallback_for_common=1
+expected_files=/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/risk_resolution_summary.json /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery_arbitration_summary.json /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_plan_summary.json /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/summary.json /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_evidence_summary.json /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_failure_mode_summary.json /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/heldout_pair_substrate_summary.json
+verification_command=cat /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/job_status.json && cat /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/heldout_pair_substrate_summary.json && cat /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_evidence_summary.json
+{'stage': 'prerequisite_check_passed', 'paths': {'manifest': '/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_risk_validation_v1.json', 'candidate_artifact': '/tmp/research3-runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl', 'object_node_features': '/tmp/research3-runs/h001_risk_validation_object_node_evidence_objective_v1/candidate_object_node_features.jsonl', 'groundingdino_config': '/tmp/research3-models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/config.json', 'groundingdino_weights': '/tmp/research3-models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/model.safetensors', 'sam2_checkpoint': '/tmp/research3-models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt'}}
+[08:12:46:874427]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.scn` exists but failed to load.
+[08:12:47:036684]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00869-MHPLjHsuG27/MHPLjHsuG27.basis.scn` exists but failed to load.
+[08:12:47:072176]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.scn` exists but failed to load.
+[08:12:47:139309]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.scn` exists but failed to load.
+[08:12:47:189649]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.scn` exists but failed to load.
+[08:12:47:307024]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.scn` exists but failed to load.
+[08:12:47:440145]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00876-mv2HUxq3B53/mv2HUxq3B53.basis.scn` exists but failed to load.
+[08:12:47:541439]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00844-q5QZSEeHe5g/q5QZSEeHe5g.basis.scn` exists but failed to load.
+[08:12:47:693638]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00848-ziup5kvtCCR/ziup5kvtCCR.basis.scn` exists but failed to load.
+[08:12:47:748950]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00839-zt1RVoi7PcG/zt1RVoi7PcG.basis.scn` exists but failed to load.
+{
+  "aggregate": {
+    "RiskResolutionReobserve": {
+      "episodes": 100,
+      "final_candidate_changed_rate": 0.0,
+      "mean_R_after": 0.9464727572149578,
+      "mean_R_ambiguity": 0.3350000000000001,
+      "mean_R_before": 0.9932129802942274,
+      "mean_R_contradiction": 0.3269334600746048,
+      "mean_R_no_evidence": 0.58,
+      "mean_R_property_weakness": 0.6213212622464406,
+      "mean_R_total": 0.9464727572149578,
+      "mean_U_sem_delta_after_reobserve": 0.0,
+      "mean_num_reobservations": 1.0,
+      "mean_risk_delta_after_reobserve": 0.046740223079269595,
+      "mean_score_delta_after_reobserve": 0.0,
+      "mean_spl": 0.030979531772941393,
+      "mean_travel_cost_to_reobserve": 10.03330093732273,
+      "mean_wasted_path_reobserve": 8.368249934928661,
+      "mean_wasted_path_total": 10.292220575366914,
+      "mean_wasted_path_wrong_goal": 1.2363182282447815,
+      "risk_resolution_commit_rate": 0.08,
+      "risk_resolved_after_reobserve_rate": 0.05,
+      "risk_triggered_reobserve_rate": 1.0,
+      "risk_unresolved_no_commit_rate": 0.87,
+      "success_lost_by_defer_rate": 0.13,
+      "success_rate": 0.06,
+      "switch_gate_pass_rate": 0.0,
+      "wrong_goal_avoided_by_defer_rate": 0.4,
+      "wrong_goal_visit_rate": 0.07
+    }
+  },
+  "candidate_artifact": "/runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "candidate_backend": "artifact_jsonl",
+  "candidate_backend_uses_gt_for_action": false,
+  "candidate_decision_rows": 2000,
+  "dataset": "hm3d_objectnav_v2",
+  "episode_rows": 100,
+  "episodes_loaded": 100,
+  "episodes_requested": 100,
+  "loaded_datasets": [
+    "hm3d_objectnav_v2"
+  ],
+  "loaded_manifest_splits": [
+    "risk_validation_v1"
+  ],
+  "loaded_source_splits": [
+    "val"
+  ],
+  "manifest": "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_risk_validation_v1.json",
+  "manifest_split": "risk_validation_v1",
+  "notes": [
+    "diagnostic GT-assisted backend is for smoke only; artifact_jsonl is the non-GT adapter boundary",
+    "not a paper result",
+    "used to validate log schema, GT references, and baseline comparability"
+  ],
+  "policies": [
+    "RiskResolutionReobserve"
+  ],
+  "requested_dataset": "hm3d_objectnav_v2",
+  "requested_split": "val",
+  "risk_contradiction_scale": 0.25,
+  "risk_object_node_feature_artifact": "/runs/h001_risk_validation_object_node_evidence_objective_v1/candidate_object_node_features.jsonl",
+  "risk_object_node_feature_rows": 2000,
+  "risk_object_node_uses_gt_for_action": false,
+  "risk_resolution_delta_trigger": 0.05,
+  "risk_resolution_max_contradiction": 0.25,
+  "risk_resolution_max_risk": 0.95,
+  "risk_resolution_require_positive_support": true,
+  "risk_total_trigger": 0.6,
+  "run_id": "h001_risk_validation_v4b_revised_geometry_pair_objective_v2_risk_20260518-171245",
+  "schema_version": "h001.navlog.v1",
+  "semantic_delta_switch_score": 0.03,
+  "semantic_delta_switch_uncertainty": 0.05,
+  "semantic_evidence_mode": "support_proxy",
+  "semantic_image_score_rule": "raw_delta",
+  "semantic_max_reobservations": 1,
+  "semantic_postview_score_artifact": null,
+  "semantic_postview_score_rows": null,
+  "semantic_postview_uses_gt_for_action": null,
+  "semantic_reobs_view_bonus": 1,
+  "semantic_tie_band": 0.01,
+  "semantic_uncertainty_trigger": 0.6,
+  "semantic_use_postview_uncertainty_gate": true,
+  "split": "val",
+  "viewpoint_decision_rows": 100
+}
+[08:12:48:752479]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.scn` exists but failed to load.
+[08:12:48:886539]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00869-MHPLjHsuG27/MHPLjHsuG27.basis.scn` exists but failed to load.
+[08:12:48:912774]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.scn` exists but failed to load.
+[08:12:48:968206]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.scn` exists but failed to load.
+[08:12:49:005477]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.scn` exists but failed to load.
+[08:12:49:106700]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.scn` exists but failed to load.
+{
+  "candidate_artifact": "/runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "max_rows": 40,
+  "max_standoff_distance_m": 3.25,
+  "min_standoff_distance_m": 0.75,
+  "navmesh_snapped_rate": 1.0,
+  "navmesh_snapped_rows": 40,
+  "next_expected_file": "second_observation_frames.jsonl",
+  "object_node_features": "/runs/h001_risk_validation_object_node_evidence_objective_v1/candidate_object_node_features.jsonl",
+  "out_root": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery",
+  "plan_rows": 40,
+  "policy": "RiskResolutionReobserve",
+  "preferred_standoff_distance_m": 1.75,
+  "projection_sane_rate": 1.0,
+  "projection_sane_rows": 40,
+  "reason_counts": {
+    "ambiguity": 15,
+    "no_evidence": 25,
+    "travel_cost_blocked": 5
+  },
+  "run_id": "h001_risk_validation_v4b_revised_geometry_association_recovery_20260518-171245",
+  "schema_version": "h001.association_recovery_observation_plan.v1",
+  "skipped_rows": 5,
+  "standoff_distances": [
+    1.25,
+    1.75,
+    2.25
+  ],
+  "unresolved_input_rows": 87,
+  "uses_gt_for_action": false,
+  "viewpoint_decisions": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/risk_resolution/viewpoint_decisions.jsonl"
+}
+[08:12:50:491035]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.scn` exists but failed to load.
+[08:12:51:864384]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00869-MHPLjHsuG27/MHPLjHsuG27.basis.scn` exists but failed to load.
+[08:12:52:295512]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.scn` exists but failed to load.
+[08:12:52:943986]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.scn` exists but failed to load.
+[08:12:53:517465]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.scn` exists but failed to load.
+[08:12:54:314215]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.scn` exists but failed to load.
+{
+  "camera_height": 1.5,
+  "candidate_artifact": "/runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "errors": [],
+  "height": 120,
+  "hfov": 90.0,
+  "max_headings_per_row": 7,
+  "min_headings_per_row": 5,
+  "next_expected_file": "postview_scores.jsonl",
+  "ok": true,
+  "out_root": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery",
+  "policy": "AssociationRecoveryObservation",
+  "rendered_heading_count": 270,
+  "rows_exported": 40,
+  "rows_requested": 40,
+  "schema_version": "h001.postview.v2",
+  "unique_scenes": [
+    "hm3d_v0.2/val/00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.glb",
+    "hm3d_v0.2/val/00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.glb",
+    "hm3d_v0.2/val/00869-MHPLjHsuG27/MHPLjHsuG27.basis.glb",
+    "hm3d_v0.2/val/00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.glb",
+    "hm3d_v0.2/val/00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.glb",
+    "hm3d_v0.2/val/00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.glb"
+  ],
+  "uses_gt_for_action": false,
+  "viewpoint_decisions": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery/second_observation_plan.jsonl",
+  "width": 160,
+  "yaw_offsets_deg": [
+    -30.0,
+    0.0,
+    30.0
+  ]
+}
+/opt/conda/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+/opt/conda/lib/python3.11/site-packages/torchvision/transforms/functional.py:154: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_numpy.cpp:203.)
+  img = torch.from_numpy(pic.transpose((2, 0, 1))).contiguous()
+{
+  "associated_candidate_heading_count": 64,
+  "association_rows": 910,
+  "box_threshold": 0.1,
+  "candidate_artifact": "/runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "debug_images_written": 120,
+  "detector_box_count_per_heading": {
+    "max": 3,
+    "mean": 1.974074074074074,
+    "min": 0
+  },
+  "detector_box_rows": 533,
+  "detector_mask_rows": 533,
+  "device": "cuda",
+  "frames": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery/second_observation_frames.jsonl",
+  "groundingdino_dir": "/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny",
+  "max_detector_boxes_per_heading": 3,
+  "max_headings_per_frame": 0,
+  "max_masks_per_heading": 3,
+  "out_root": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery",
+  "output_files": {
+    "detector_boxes": "detector_boxes.jsonl",
+    "detector_candidate_associations": "detector_candidate_associations.jsonl",
+    "detector_masks": "detector_masks.jsonl",
+    "frame_summary": "frame_summary.jsonl",
+    "summary": "summary.json"
+  },
+  "projected_pixel_inside_mask_count": 190,
+  "projection_status_counts": {
+    "behind_camera": 338,
+    "out_of_fov": 279,
+    "visible": 293
+  },
+  "query_template": "{query}",
+  "rows": 40,
+  "rows_with_candidate_association": 19,
+  "rows_with_candidate_association_rate": 0.475,
+  "rows_with_detector_box": 40,
+  "rows_with_detector_box_rate": 1.0,
+  "rows_with_sam2_mask": 40,
+  "rows_with_sam2_mask_rate": 1.0,
+  "sam2_checkpoint": "/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt",
+  "schema_version": "h001.postview_detector.v3c_groundingdino_sam2",
+  "text_threshold": 0.1,
+  "uses_gt_for_action": false
+}
+{
+  "arbitration": {
+    "arbitration_action_by_second_observation_reason": {
+      "ambiguity": {
+        "reject_top_or_request_pair_view": 11,
+        "request_paired_top_alt_view": 4
+      },
+      "no_evidence": {
+        "reject_top_or_defer": 7,
+        "reject_top_or_request_pair_view": 8,
+        "request_paired_top_alt_view": 3,
+        "retry_association_or_defer": 7
+      }
+    },
+    "arbitration_action_counts": {
+      "reject_top_or_defer": 7,
+      "reject_top_or_request_pair_view": 19,
+      "request_paired_top_alt_view": 7,
+      "retry_association_or_defer": 7
+    },
+    "arbitration_reason_counts": {
+      "alt_not_weaker_than_top": 19,
+      "ambiguity_block": 7,
+      "persistent_no_evidence": 7,
+      "top_has_no_support_alt_has_support": 7
+    },
+    "commit_top_rate": 0.0,
+    "output_files": {
+      "rows": "association_recovery_arbitration_rows.jsonl",
+      "summary": "association_recovery_arbitration_summary.json"
+    },
+    "rows": 40,
+    "schema_version": "h001.association_recovery_arbitration.v1",
+    "success_commit_rate_if_arbitration_applied": 0.0,
+    "success_lost_by_arbitration_defer_rate": 0.275,
+    "thresholds": {
+      "ambiguity_block": 0.5,
+      "contradiction_block": 0.25,
+      "property_block": 0.5,
+      "risk_total_commit": 0.6,
+      "support_margin": 0.05
+    },
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "wrong_goal_avoided_by_arbitration_defer_rate": 0.725,
+    "wrong_goal_commit_rate_if_arbitration_applied": 0.0
+  },
+  "association_recovered_count": 11,
+  "association_recovered_rate": 0.44,
+  "candidate_decisions": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/risk_resolution/candidate_decisions.jsonl",
+  "commit_after_second_observation_rate": 0.05,
+  "detector_root": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery",
+  "gate": {
+    "baseline_risk_resolved_after_reobserve_rate": 0.05,
+    "baseline_wrong_goal_rate": 0.07,
+    "max_wrong_goal_increase_abs": 0.03,
+    "min_association_recovered_rate": 0.2,
+    "min_risk_resolution_gain_abs": 0.1,
+    "passes_policy_integration_diagnostic_gate": false
+  },
+  "mean_observed_association_gain": 0.22590774156153204,
+  "original_object_node_features": "/runs/h001_risk_validation_object_node_evidence_objective_v1/candidate_object_node_features.jsonl",
+  "plan_rows": 40,
+  "policy": "RiskResolutionReobserve",
+  "risk_resolved_after_second_observation_rate": 0.0,
+  "risk_unresolved_after_second_observation_rate": 0.95,
+  "schema_version": "h001.association_recovery_observation.v1",
+  "second_observation_plan": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery/second_observation_plan.jsonl",
+  "second_observation_trigger_rate": 1.0,
+  "success_lost_by_remaining_defer_rate": 0.275,
+  "top_positive_support_after_second_rate": 0.65,
+  "unsupported_top_before_count": 25,
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": true,
+  "wrong_goal_commit_rate_if_fixed_commit_gate_applied": 0.05
+}
+[08:13:54:014179]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.scn` exists but failed to load.
+[08:13:54:155000]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00869-MHPLjHsuG27/MHPLjHsuG27.basis.scn` exists but failed to load.
+[08:13:54:178779]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.scn` exists but failed to load.
+[08:13:54:237189]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.scn` exists but failed to load.
+[08:13:54:271595]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.scn` exists but failed to load.
+[08:13:54:372305]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.scn` exists but failed to load.
+{
+  "arbitration_rows": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery/association_recovery_arbitration_rows.jsonl",
+  "candidate_artifact": "/runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "common_dual_fallback_unavailable_pairs": 0,
+  "common_pair_row_count": 0,
+  "common_with_dual_fallback_row_count": 39,
+  "include_dual_fallback_for_common": true,
+  "matched_dual_row_count": 26,
+  "max_pair_bearing_separation_deg": 70.0,
+  "mode_counts": {
+    "common_with_dual_fallback": 13,
+    "matched_dual_standoff": 13
+  },
+  "navmesh_snapped_row_rate": 1.0,
+  "next_expected_file": "pair_observation_frames.jsonl",
+  "out_root": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1",
+  "pair_count": 26,
+  "plan_rows": 65,
+  "policy": "PairTopAltObservation",
+  "role_counts": {
+    "alt": 26,
+    "common": 13,
+    "top": 26
+  },
+  "run_id": "h001_risk_validation_v4b_revised_geometry_pair_observation_20260518-171245",
+  "schema_version": "h001.pair_observation_plan.v1",
+  "skipped_rows": 0,
+  "standoff_distances": [
+    1.25,
+    1.75,
+    2.25
+  ],
+  "uses_gt_for_action": false
+}
+[08:13:55:668564]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.scn` exists but failed to load.
+[08:13:57:070296]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00869-MHPLjHsuG27/MHPLjHsuG27.basis.scn` exists but failed to load.
+[08:13:57:398992]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.scn` exists but failed to load.
+[08:13:58:318222]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.scn` exists but failed to load.
+[08:13:58:844556]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.scn` exists but failed to load.
+[08:13:59:870355]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.scn` exists but failed to load.
+{
+  "camera_height": 1.5,
+  "candidate_artifact": "/runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "errors": [],
+  "height": 120,
+  "hfov": 90.0,
+  "max_headings_per_row": 7,
+  "min_headings_per_row": 4,
+  "next_expected_file": "postview_scores.jsonl",
+  "ok": true,
+  "out_root": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1",
+  "policy": "PairTopAltObservation",
+  "rendered_heading_count": 396,
+  "rows_exported": 65,
+  "rows_requested": 65,
+  "schema_version": "h001.postview.v2",
+  "unique_scenes": [
+    "hm3d_v0.2/val/00849-a8BtkwhxdRV/a8BtkwhxdRV.basis.glb",
+    "hm3d_v0.2/val/00862-LT9Jq6dN3Ea/LT9Jq6dN3Ea.basis.glb",
+    "hm3d_v0.2/val/00869-MHPLjHsuG27/MHPLjHsuG27.basis.glb",
+    "hm3d_v0.2/val/00871-VBzV5z6i1WS/VBzV5z6i1WS.basis.glb",
+    "hm3d_v0.2/val/00878-XB4GS9ShBRE/XB4GS9ShBRE.basis.glb",
+    "hm3d_v0.2/val/00891-cvZr5TUy5C5/cvZr5TUy5C5.basis.glb"
+  ],
+  "uses_gt_for_action": false,
+  "viewpoint_decisions": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_plan.jsonl",
+  "width": 160,
+  "yaw_offsets_deg": [
+    -30.0,
+    0.0,
+    30.0
+  ]
+}
+/opt/conda/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+/opt/conda/lib/python3.11/site-packages/torchvision/transforms/functional.py:154: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_numpy.cpp:203.)
+  img = torch.from_numpy(pic.transpose((2, 0, 1))).contiguous()
+{
+  "associated_candidate_heading_count": 139,
+  "association_rows": 752,
+  "box_threshold": 0.1,
+  "candidate_artifact": "/runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "debug_images_written": 120,
+  "detector_box_count_per_heading": {
+    "max": 3,
+    "mean": 1.9444444444444444,
+    "min": 0
+  },
+  "detector_box_rows": 770,
+  "detector_mask_rows": 770,
+  "device": "cuda",
+  "frames": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_frames.jsonl",
+  "groundingdino_dir": "/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny",
+  "max_detector_boxes_per_heading": 3,
+  "max_headings_per_frame": 0,
+  "max_masks_per_heading": 3,
+  "out_root": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1",
+  "output_files": {
+    "detector_boxes": "detector_boxes.jsonl",
+    "detector_candidate_associations": "detector_candidate_associations.jsonl",
+    "detector_masks": "detector_masks.jsonl",
+    "frame_summary": "frame_summary.jsonl",
+    "summary": "summary.json"
+  },
+  "projected_pixel_inside_mask_count": 245,
+  "projection_status_counts": {
+    "behind_camera": 228,
+    "out_of_fov": 87,
+    "visible": 437
+  },
+  "query_template": "{query}",
+  "rows": 65,
+  "rows_with_candidate_association": 45,
+  "rows_with_candidate_association_rate": 0.6923076923076923,
+  "rows_with_detector_box": 65,
+  "rows_with_detector_box_rate": 1.0,
+  "rows_with_sam2_mask": 65,
+  "rows_with_sam2_mask_rate": 1.0,
+  "sam2_checkpoint": "/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt",
+  "schema_version": "h001.postview_detector.v3c_groundingdino_sam2",
+  "text_threshold": 0.1,
+  "uses_gt_for_action": false
+}
+{
+  "association_rows": 752,
+  "candidate_decisions": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/risk_resolution/candidate_decisions.jsonl",
+  "correct_top_rows": 8,
+  "detector_root": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1",
+  "gate": {
+    "false_reject_correct_top_rate": 0.5,
+    "max_false_reject_correct_top_rate": 0.1,
+    "max_support_wrong_top_rate": 0.1,
+    "min_pair_disambiguation_rate": 0.3,
+    "min_pair_evidence_available_rate": 0.5,
+    "min_wrong_top_reject_rate": 0.3,
+    "pair_disambiguation_rate": 0.6153846153846154,
+    "pair_evidence_available_rate": 1.0,
+    "passes_pair_evidence_diagnostic_gate": false,
+    "support_wrong_top_rate": 0.5555555555555556,
+    "wrong_top_reject_rate": 0.1111111111111111
+  },
+  "label_policy": "RiskResolutionReobserve",
+  "mode_counts": {
+    "common_with_dual_fallback": 13,
+    "matched_dual_standoff": 13
+  },
+  "output_files": {
+    "rows": "pair_observation_evidence_rows.jsonl",
+    "summary": "pair_observation_evidence_summary.json"
+  },
+  "pair_evidence_action_counts": {
+    "pair_ambiguous_defer": 10,
+    "pair_reject_top": 6,
+    "pair_support_top": 10
+  },
+  "pair_evidence_margin": 0.05,
+  "pair_observation_plan": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_plan.jsonl",
+  "pair_rows": 26,
+  "schema_version": "h001.pair_observation_evidence.v1",
+  "unmatched_association_rows": 0,
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": true,
+  "wrong_top_rows": 18
+}
+{
+  "action_by_label_case": {
+    "alt_only_correct": {
+      "pair_ambiguous_defer": 2,
+      "pair_reject_top": 1,
+      "pair_support_top": 2
+    },
+    "both_candidates_correct": {
+      "pair_ambiguous_defer": 4,
+      "pair_reject_top": 4
+    },
+    "neither_candidate_correct": {
+      "pair_ambiguous_defer": 4,
+      "pair_reject_top": 1,
+      "pair_support_top": 8
+    }
+  },
+  "detector_associations": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/detector_candidate_associations.jsonl",
+  "diagnosis": {
+    "candidate_association_coverage": "sufficient_for_failure_diagnosis",
+    "detector_mask_availability": "not_primary_failure",
+    "paired_evidence_objective": "failed",
+    "policy_scale_integration": "blocked"
+  },
+  "failure_tag_counts": {
+    "alt_correct_but_pair_ambiguous": 2,
+    "both_candidates_correct_rank_ambiguity": 8,
+    "false_reject_metric_confounded_by_both_correct": 4,
+    "matched_dual_standoff_raw_scores_not_directly_comparable": 10,
+    "matched_dual_standoff_view_opportunity_imbalance": 7,
+    "neither_candidate_correct_pair_forces_choice": 13,
+    "paired_success_reject_wrong_top": 1,
+    "rejects_wrong_top_but_not_to_known_correct_alt": 1,
+    "wrong_top_supported_by_association_count": 5,
+    "wrong_top_supported_by_pair_score": 10,
+    "wrong_top_supported_when_alt_correct": 2
+  },
+  "label_case_counts": {
+    "alt_only_correct": 5,
+    "both_candidates_correct": 8,
+    "neither_candidate_correct": 13
+  },
+  "output_files": {
+    "rows": "pair_observation_failure_modes.jsonl",
+    "summary": "pair_observation_failure_mode_summary.json"
+  },
+  "pair_evidence_rows": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_evidence_rows.jsonl",
+  "pair_rows": 26,
+  "primary_failure_by_mode": {
+    "common_with_dual_fallback": {
+      "both_candidates_correct_rank_ambiguity": 5,
+      "neither_candidate_correct_pair_forces_choice": 7,
+      "paired_success_reject_wrong_top": 1
+    },
+    "matched_dual_standoff": {
+      "alt_correct_but_pair_ambiguous": 2,
+      "both_candidates_correct_rank_ambiguity": 3,
+      "neither_candidate_correct_pair_forces_choice": 6,
+      "wrong_top_supported_when_alt_correct": 2
+    }
+  },
+  "primary_failure_by_query": {
+    "bed": {
+      "alt_correct_but_pair_ambiguous": 2,
+      "both_candidates_correct_rank_ambiguity": 3,
+      "neither_candidate_correct_pair_forces_choice": 2
+    },
+    "chair": {
+      "both_candidates_correct_rank_ambiguity": 2
+    },
+    "plant": {
+      "both_candidates_correct_rank_ambiguity": 2,
+      "neither_candidate_correct_pair_forces_choice": 2,
+      "wrong_top_supported_when_alt_correct": 2
+    },
+    "sofa": {
+      "neither_candidate_correct_pair_forces_choice": 6
+    },
+    "toilet": {
+      "neither_candidate_correct_pair_forces_choice": 2
+    },
+    "tv_monitor": {
+      "both_candidates_correct_rank_ambiguity": 1,
+      "neither_candidate_correct_pair_forces_choice": 1,
+      "paired_success_reject_wrong_top": 1
+    }
+  },
+  "primary_failure_mode_counts": {
+    "alt_correct_but_pair_ambiguous": 2,
+    "both_candidates_correct_rank_ambiguity": 8,
+    "neither_candidate_correct_pair_forces_choice": 13,
+    "paired_success_reject_wrong_top": 1,
+    "wrong_top_supported_when_alt_correct": 2
+  },
+  "reinterpreted_rates": {
+    "alt_only_correct_reject_top_rate": 0.2,
+    "alt_only_correct_rows": 5,
+    "alt_only_correct_support_wrong_top_rate": 0.4,
+    "both_candidates_correct_reject_top_rate": 0.5,
+    "both_candidates_correct_rows": 8,
+    "neither_candidate_correct_forced_choice_rate": 0.6923076923076923,
+    "neither_candidate_correct_rows": 13,
+    "top_only_correct_false_reject_rate": null,
+    "top_only_correct_rows": 0
+  },
+  "revision_requirements": [
+    "separate no-valid-candidate cases before forcing top-vs-alt choice",
+    "treat both-candidates-correct rows as rank ambiguity rather than wrong-goal failure",
+    "normalize matched_dual_standoff evidence before comparing raw top and alt scores",
+    "require evidence that disconfirms top or confirms alt, not only detector support for top"
+  ],
+  "schema_version": "h001.pair_observation_failure_modes.v1",
+  "thresholds": {
+    "association_margin_threshold": 1.0,
+    "detector_margin_threshold": 0.05,
+    "visible_imbalance_threshold": 2.0
+  },
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": true
+}
+{
+  "association_recovery_action_counts": {
+    "reject_top_or_defer": 7,
+    "reject_top_or_request_pair_view": 19,
+    "request_paired_top_alt_view": 7,
+    "retry_association_or_defer": 7
+  },
+  "association_recovery_arbitration_summary": "association_recovery_arbitration_summary.json",
+  "association_recovery_out": "/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery",
+  "candidate_artifact": "/tmp/research3-runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "detector_summary": "summary.json",
+  "gate": {
+    "association_recovery_rows": 40,
+    "detector_box_rate": 1.0,
+    "min_association_recovery_rows": 20,
+    "min_detector_box_rate": 0.8,
+    "min_pair_evidence_available_rate": 0.5,
+    "min_pair_observation_rows": 10,
+    "min_pair_trigger_rows": 10,
+    "min_risk_resolution_rows": 80,
+    "min_sam2_mask_rate": 0.8,
+    "pair_evidence_available_rate": 1.0,
+    "pair_observation_rows": 26,
+    "pair_trigger_rows": 26,
+    "passes_substrate_validity_gate": true,
+    "risk_resolution_rows": 100,
+    "sam2_mask_rate": 1.0
+  },
+  "manifest": "/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_risk_validation_v1.json",
+  "manifest_split": "risk_validation_v1",
+  "next_expected_file": "pair_observation_objective_v2_summary.json",
+  "object_node_features": "/tmp/research3-runs/h001_risk_validation_object_node_evidence_objective_v1/candidate_object_node_features.jsonl",
+  "out": "/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1",
+  "pair_evidence_action_counts": {
+    "pair_ambiguous_defer": 10,
+    "pair_reject_top": 6,
+    "pair_support_top": 10
+  },
+  "pair_observation_evidence_summary": "pair_observation_evidence_summary.json",
+  "pair_observation_failure_mode_summary": "pair_observation_failure_mode_summary.json",
+  "pair_observation_plan_summary": "pair_observation_plan_summary.json",
+  "pair_plan_mode_counts": {
+    "common_with_dual_fallback": 13,
+    "matched_dual_standoff": 13
+  },
+  "pair_primary_failure_mode_counts": {
+    "alt_correct_but_pair_ambiguous": 2,
+    "both_candidates_correct_rank_ambiguity": 8,
+    "neither_candidate_correct_pair_forces_choice": 13,
+    "paired_success_reject_wrong_top": 1,
+    "wrong_top_supported_when_alt_correct": 2
+  },
+  "risk_out": "/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/risk_resolution",
+  "risk_summary": "risk_resolution_summary.json",
+  "schema_version": "h001.heldout_pair_substrate.v1",
+  "uses_gt_for_action": false
+}
+completed_at=2026-05-18T17:15:21+09:00
+{
+  "action_by_label_case": {
+    "alt_only_correct": {
+      "pair_v4b_defer_rank_ambiguous_or_duplicate_goal": 1,
+      "pair_v4b_request_external_candidate_search_alt_confirm_untrusted": 4
+    },
+    "both_candidates_correct": {
+      "pair_v4b_defer_insufficient_disconfirmation": 2,
+      "pair_v4b_defer_rank_ambiguous_or_duplicate_goal": 4,
+      "pair_v4b_request_external_candidate_search_alt_confirm_untrusted": 2
+    },
+    "neither_candidate_correct": {
+      "pair_v4b_defer_insufficient_disconfirmation": 5,
+      "pair_v4b_defer_rank_ambiguous_or_duplicate_goal": 2,
+      "pair_v4b_defer_view_not_comparable": 1,
+      "pair_v4b_reject_top_confirm_alt": 1,
+      "pair_v4b_request_external_candidate_search": 4
+    }
+  },
+  "action_counts": {
+    "pair_v4b_defer_insufficient_disconfirmation": 7,
+    "pair_v4b_defer_rank_ambiguous_or_duplicate_goal": 7,
+    "pair_v4b_defer_view_not_comparable": 1,
+    "pair_v4b_reject_top_confirm_alt": 1,
+    "pair_v4b_request_external_candidate_search": 4,
+    "pair_v4b_request_external_candidate_search_alt_confirm_untrusted": 6
+  },
+  "gate": {
+    "alt_only_reject_or_defer_rate": 1.0,
+    "alt_only_reject_top_gate_applies": true,
+    "alt_only_reject_top_rate": 0.0,
+    "blocked_alt_commit_count": 6,
+    "both_correct_ambiguous_or_success_rate": 0.5,
+    "commit_rate": 0.038461538461538464,
+    "max_neither_candidate_commit_rate": 0.1,
+    "max_support_wrong_top_rate": 0.0,
+    "max_top_survival_commit_rate": 0.0,
+    "max_wrong_goal_commit_rate": 0.1,
+    "min_alt_only_reject_or_defer_rate": 1.0,
+    "min_alt_only_reject_top_rate": 0.3,
+    "min_alt_only_rows_for_reject_top_gate": 3,
+    "min_commit_rate": 0.15,
+    "neither_candidate_commit_rate": 0.07692307692307693,
+    "passes_pair_objective_v4b_full_gate": false,
+    "passes_pair_objective_v4b_safety_gate": true,
+    "success_commit_rate": 0.0,
+    "support_wrong_top_rate": 0.0,
+    "top_survival_commit_rate": 0.0,
+    "wrong_goal_commit_rate": 0.038461538461538464,
+    "wrong_goal_commit_rate_on_commits": 1.0
+  },
+  "objective_design": {
+    "new_action": "pair_v4b_request_external_candidate_search_alt_confirm_untrusted",
+    "not_threshold_only": [
+      "keeps V4 evidence computation unchanged",
+      "blocks alt commit when association recovery still reports unresolved ambiguity",
+      "routes alt-confirmed but pair-incomplete cases to external candidate search"
+    ],
+    "paired_branch_role": "v4_plus_candidate_set_completeness_guard_before_alt_commit"
+  },
+  "output_files": {
+    "rows": "pair_observation_objective_v4b_rows.jsonl",
+    "summary": "pair_observation_objective_v4b_summary.json"
+  },
+  "pair_evidence_rows": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_evidence_rows.jsonl",
+  "pair_observation_plan": "/runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_plan.jsonl",
+  "reason_counts": {
+    "alt_confirmation_without_pair_set_completeness": 6,
+    "alt_confirmed_with_complete_pair_set": 1,
+    "both_candidates_have_confirmation_evidence": 7,
+    "matched_dual_standoff_view_opportunity_imbalance": 1,
+    "no_strong_alt_confirmation_or_verified_top": 7,
+    "top_supported_but_pair_set_may_be_incomplete": 4
+  },
+  "rows": 26,
+  "rows_with_labels": 26,
+  "schema_version": "h001.pair_observation_objective.v4b",
+  "thresholds": {
+    "max_alt_commit_ambiguity": 0.0,
+    "min_alt_commit_confirm_gap": 0.02,
+    "min_alt_commit_prior_gap": 0.01,
+    "min_alt_commit_strict_rate": 0.5,
+    "min_alt_commit_strict_rate_gap": 0.1
+  },
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": true
+}
+{
+  "candidate_artifact": "/tmp/research3-runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "coverage_summary": "/tmp/research3-runs/h001_risk_validation_policy_spatial_nms_p97_k20_v1/coverage_sanity/artifact_coverage.json",
+  "manifest": "/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_risk_validation_v1.json",
+  "manifest_split": "risk_validation_v1",
+  "object_node_features": "/tmp/research3-runs/h001_risk_validation_object_node_evidence_objective_v1/candidate_object_node_features.jsonl",
+  "objective_action_by_label_case": {
+    "alt_only_correct": {
+      "pair_v4b_defer_rank_ambiguous_or_duplicate_goal": 1,
+      "pair_v4b_request_external_candidate_search_alt_confirm_untrusted": 4
+    },
+    "both_candidates_correct": {
+      "pair_v4b_defer_insufficient_disconfirmation": 2,
+      "pair_v4b_defer_rank_ambiguous_or_duplicate_goal": 4,
+      "pair_v4b_request_external_candidate_search_alt_confirm_untrusted": 2
+    },
+    "neither_candidate_correct": {
+      "pair_v4b_defer_insufficient_disconfirmation": 5,
+      "pair_v4b_defer_rank_ambiguous_or_duplicate_goal": 2,
+      "pair_v4b_defer_view_not_comparable": 1,
+      "pair_v4b_reject_top_confirm_alt": 1,
+      "pair_v4b_request_external_candidate_search": 4
+    }
+  },
+  "objective_action_counts": {
+    "pair_v4b_defer_insufficient_disconfirmation": 7,
+    "pair_v4b_defer_rank_ambiguous_or_duplicate_goal": 7,
+    "pair_v4b_defer_view_not_comparable": 1,
+    "pair_v4b_reject_top_confirm_alt": 1,
+    "pair_v4b_request_external_candidate_search": 4,
+    "pair_v4b_request_external_candidate_search_alt_confirm_untrusted": 6
+  },
+  "objective_gate": {
+    "alt_only_reject_or_defer_rate": 1.0,
+    "alt_only_reject_top_gate_applies": true,
+    "alt_only_reject_top_rate": 0.0,
+    "blocked_alt_commit_count": 6,
+    "both_correct_ambiguous_or_success_rate": 0.5,
+    "commit_rate": 0.038461538461538464,
+    "max_neither_candidate_commit_rate": 0.1,
+    "max_support_wrong_top_rate": 0.0,
+    "max_top_survival_commit_rate": 0.0,
+    "max_wrong_goal_commit_rate": 0.1,
+    "min_alt_only_reject_or_defer_rate": 1.0,
+    "min_alt_only_reject_top_rate": 0.3,
+    "min_alt_only_rows_for_reject_top_gate": 3,
+    "min_commit_rate": 0.15,
+    "neither_candidate_commit_rate": 0.07692307692307693,
+    "passes_pair_objective_v4b_full_gate": false,
+    "passes_pair_objective_v4b_safety_gate": true,
+    "success_commit_rate": 0.0,
+    "support_wrong_top_rate": 0.0,
+    "top_survival_commit_rate": 0.0,
+    "wrong_goal_commit_rate": 0.038461538461538464,
+    "wrong_goal_commit_rate_on_commits": 1.0
+  },
+  "pair_out": "/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1",
+  "pair_plan_mode_counts": {
+    "common_with_dual_fallback": 13,
+    "matched_dual_standoff": 13
+  },
+  "schema_version": "h001.v3_fresh_pair_objective_v4b.revised_geometry_validation.v1",
+  "substrate_gate": {
+    "association_recovery_rows": 40,
+    "detector_box_rate": 1.0,
+    "min_association_recovery_rows": 20,
+    "min_detector_box_rate": 0.8,
+    "min_pair_evidence_available_rate": 0.5,
+    "min_pair_observation_rows": 10,
+    "min_pair_trigger_rows": 10,
+    "min_risk_resolution_rows": 80,
+    "min_sam2_mask_rate": 0.8,
+    "pair_evidence_available_rate": 1.0,
+    "pair_observation_rows": 26,
+    "pair_trigger_rows": 26,
+    "passes_substrate_validity_gate": true,
+    "risk_resolution_rows": 100,
+    "sam2_mask_rate": 1.0
+  },
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": true
+}
+completed_at=2026-05-18T17:15:21+09:00

@@ -7158,6 +7158,1614 @@ full_gate_failure_reason: old common-view evidence remains too one-sided and no 
 next_step: launch revised geometry detector/evidence validation with fixed objective v4
 ```
 
+Revised geometry fixed V4 validation launch:
+
+```text
+date_launched: 2026-05-18
+job_wrapper: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v3_fresh_validation_pair_objective_v4_revised_geometry.sh
+tmux_session: h001-v3-fresh-pair-v4-geo-20260518-135204
+log: logs/v3-fresh-validation-pair-objective-v4-revised-geometry-20260518-135204.log
+status: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/pipeline_status.json
+output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1
+initial_status: running
+initial_stage: revised_geometry_pair_substrate
+```
+
+Exact launch command:
+
+```bash
+tmux new-session -d -s h001-v3-fresh-pair-v4-geo-20260518-135204 \
+  "cd /home/yoohyun/research3 && TS=20260518-135204 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v3_fresh_validation_pair_objective_v4_revised_geometry.sh"
+```
+
+Inputs:
+
+```text
+manifest: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_v3_fresh_validation_v1.json
+manifest_split: v3_fresh_validation_v1
+candidate_artifact: /tmp/research3-runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl
+coverage_summary: /tmp/research3-runs/h001_v3_fresh_validation_policy_spatial_nms_p97_k20_v1/coverage_sanity/artifact_coverage.json
+object_node_features: /tmp/research3-runs/h001_v3_fresh_validation_object_node_evidence_objective_v1/candidate_object_node_features.jsonl
+pair_include_dual_fallback_for_common: true
+```
+
+Expected files:
+
+```text
+/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/heldout_pair_substrate_summary.json
+/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/pair_observation_plan_summary.json
+/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/pair_observation_evidence_summary.json
+/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/pair_observation_objective_v4_summary.json
+/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/fixed_rule_pair_v4_revised_geometry_validation_summary.json
+```
+
+Verification command:
+
+```bash
+cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/pipeline_status.json
+cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/heldout_pair_substrate_summary.json
+cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/pair_observation_objective_v4_summary.json
+cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/fixed_rule_pair_v4_revised_geometry_validation_summary.json
+```
+
+Do not monitor continuously. Check this job only when requested or before deciding whether to rerun first-eval replacement validation.
+
+Revised geometry fixed V4 validation result:
+
+```text
+date_checked: 2026-05-18
+pipeline_status: completed
+substrate_gate: pass
+pair_objective_v4_safety_gate: pass
+pair_objective_v4_full_gate: fail
+uses_gt_for_action: false
+```
+
+Substrate:
+
+```text
+risk_resolution_rows: 100
+association_recovery_rows: 40
+pair_trigger_rows: 31
+pair_observation_rows: 31
+detector_box_rate: 0.9651
+sam2_mask_rate: 0.9651
+pair_evidence_available_rate: 1.0
+pair_plan_mode_counts: common_with_dual_fallback 24, matched_dual_standoff 7
+plan_rows: 86
+```
+
+V4 objective:
+
+```text
+commit_rate: 0.0323
+min_commit_rate: 0.15
+wrong_goal_commit_rate: 0.0323
+wrong_goal_commit_rate_on_commits: 1.0
+neither_candidate_commit_rate: 0.0909
+alt_only_reject_top_rate: 0.0
+top_survival_commit_rate: 0.0
+support_wrong_top_rate: 0.0
+```
+
+Action counts:
+
+```text
+pair_v4_defer_rank_ambiguous_or_duplicate_goal: 18
+pair_v4_request_external_candidate_search: 7
+pair_v4_defer_view_not_comparable: 5
+pair_v4_reject_top_confirm_alt: 1
+```
+
+Failure interpretation:
+
+```text
+first_eval_rerun: blocked
+primary_failure: alt-confirmation can still commit to a wrong repeated-category candidate when neither pair candidate is correct
+next_revision: V4b alt-confirmation safety / candidate-set completeness guard before any first_eval replacement rerun
+```
+
+V4b alt-confirmation safety result:
+
+```text
+date_checked: 2026-05-18
+analyzer: runtime/h001_runtime/analyze_pair_observation_objective_v4b.py
+validated_output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1
+design_smoke_out: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_design_smoke
+fixed_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/fixed_rule_pair_v4b_revised_geometry_validation_summary.json
+uses_gt_for_action: false
+```
+
+Design rule:
+
+```text
+V4b keeps V4 evidence computation unchanged.
+Before alt commit, require candidate-set completeness through residual ambiguity guard.
+If V4 alt-confirmation fires while ambiguity remains unresolved, route to external candidate search.
+```
+
+V4b objective:
+
+```text
+passes_pair_objective_v4b_safety_gate: true
+passes_pair_objective_v4b_full_gate: false
+wrong_goal_commit_rate: 0.0
+neither_candidate_commit_rate: 0.0
+commit_rate: 0.0
+blocked_alt_commit_count: 1
+alt_only_reject_top_rate: 0.0
+```
+
+Action counts:
+
+```text
+pair_v4b_defer_rank_ambiguous_or_duplicate_goal: 18
+pair_v4b_request_external_candidate_search: 7
+pair_v4b_defer_view_not_comparable: 5
+pair_v4b_request_external_candidate_search_alt_confirm_untrusted: 1
+```
+
+Runtime interpretation:
+
+```text
+first_eval_rerun: still blocked
+policy_scale_integration: still blocked
+next_step: score external candidate branch for V4b external-search cases
+reason: pair-local evidence is now safe but too conservative; utility must come from recovering correct candidates outside the top-alt pair
+```
+
+V4b external-candidate scoring diagnostic:
+
+```text
+date_checked: 2026-05-18
+planner: runtime/h001_runtime/plan_external_candidate_observation.py
+scoring_analyzer: runtime/h001_runtime/analyze_external_candidate_scoring_v1.py
+output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_scoring_design_v1
+objective_version: pair_v4b
+external_selection_mode: rank_bands
+external_budget: 6
+triggered_rows: 8
+plan_rows: 48
+skipped_rows: 0
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Retrieval result:
+
+```text
+external_set_contains_correct_rate: 0.875
+first_external_correct_rate: 0.125
+neither_candidate_external_set_contains_correct_rate: 1.0
+pair_correct_candidate_unnecessary_external_rate: 0.875
+```
+
+Proxy scoring result:
+
+```text
+best_variant: E2_detector_score
+feature_source_role: proxy_after_association_recovery_not_external_observation
+commit_rate: 0.375
+success_commit_rate: 0.25
+wrong_goal_commit_rate: 0.125
+wrong_goal_commit_rate_on_commits: 0.3333
+selected_correct_improvement_over_first: 0.125
+passes_external_scoring_safety_gate: false
+passes_external_scoring_full_gate: false
+```
+
+Runtime interpretation:
+
+```text
+first_eval_rerun: still blocked
+policy_scale_integration: still blocked
+external_candidate_retrieval: promising but not enough
+external_candidate_commit: blocked
+next_step: actual ExternalCandidateObservation detector-evidence gate
+reason: current proxy features are not measured from the external viewpoint and still produce one wrong commit on the 8-row V4b branch
+```
+
+Actual ExternalCandidateObservation detector-evidence gate:
+
+```text
+date_checked: 2026-05-18
+analyzer: runtime/h001_runtime/analyze_external_candidate_observation_evidence.py
+frame_exporter_update: export_postview_frames_v2.py preserves external_* and source_objective_* fields
+detector_update: detect_postview_groundingdino_sam2.py preserves external_* and source_objective_* fields
+schema_smoke_out: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_evidence_schema_smoke
+frame_schema_smoke_out: /tmp/research3-runs/h001_v3_fresh_external_candidate_frame_schema_smoke
+uses_gt_for_action: false
+```
+
+Fixed gate:
+
+```text
+min_detector_box_rate: 0.80
+min_sam2_mask_rate: 0.80
+min_candidate_association_rate: 0.20
+min_external_evidence_available_rate: 0.50
+min_external_positive_evidence_rate: 0.30
+max_wrong_goal_commit_rate: 0.10
+max_no_valid_external_commit_rate: 0.10
+min_commit_rate: 0.15
+min_selected_correct_improvement_over_first: 0.10
+min_commit_score: 0.35
+min_commit_margin: 0.10
+min_strict_association_count: 1
+```
+
+Schema smoke result:
+
+```text
+rows: 8
+plan_rows: 48
+association_rows: 0
+action_counts:
+  external_evidence_v1_defer: 8
+passes_external_detector_substrate_gate: false
+passes_external_evidence_safety_gate: true
+passes_external_evidence_full_gate: false
+```
+
+Frame export smoke:
+
+```text
+rows_exported: 1
+rendered_heading_count: 4
+external metadata preserved: true
+gpu_flag_required_for_habitat_rendering: true
+```
+
+Runtime interpretation:
+
+```text
+first_eval_rerun: still blocked
+policy_scale_integration: still blocked
+gate_definition_status: fixed
+next_step: build and launch V4b external-candidate detector artifact job as a background task
+```
+
+V4b external-candidate detector artifact job:
+
+```text
+date_launched: 2026-05-18
+job_wrapper: runtime/jobs/v3_fresh_validation_pair_objective_v4b_external_candidate_detector.sh
+tmux_session: h001-v3-fresh-v4b-external-detector-20260518-163832
+command: TS=20260518-163832 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v3_fresh_validation_pair_objective_v4b_external_candidate_detector.sh
+working_directory: /home/yoohyun/research3
+log: logs/v3-fresh-validation-pair-v4b-external-candidate-detector-20260518-163832.log
+output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1
+status_file: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/job_status.json
+```
+
+Input paths:
+
+```text
+pair_objective_rows: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/pair_observation_objective_v4b_rows.jsonl
+candidate_artifact: /tmp/research3-runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl
+object_node_features: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/association_recovery/candidate_object_node_features_after_second.jsonl
+```
+
+Expected files:
+
+```text
+/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_plan/external_candidate_observation_plan.jsonl
+/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_frames/postview_frames_v2.jsonl
+/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_detector/summary.json
+/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_evidence/external_candidate_evidence_summary.json
+/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_detector_validation_summary.json
+```
+
+Initial status check:
+
+```text
+status: running
+stage: external_detector
+plan_triggered_rows: 8
+plan_rows: 48
+frame_rows_exported: 48
+rendered_heading_count: 168
+uses_gt_for_action: false
+```
+
+Verification command:
+
+```bash
+cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/job_status.json
+cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_detector_validation_summary.json
+```
+
+Completion result:
+
+```text
+date_completed: 2026-05-18
+status: completed
+stage: completed
+validation_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_detector_validation_summary.json
+evidence_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_evidence/external_candidate_evidence_summary.json
+detector_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_detector/summary.json
+tmux_session_status: closed after completion
+uses_gt_for_action: false
+```
+
+Detector substrate:
+
+```text
+frame_rows_exported: 48
+rendered_heading_count: 168
+detector_rows: 48
+rows_with_detector_box_rate: 0.9583
+rows_with_sam2_mask_rate: 0.9583
+rows_with_candidate_association_rate: 0.1250
+associated_candidate_heading_count: 13
+passes_external_detector_substrate_gate: false
+```
+
+Evidence gate:
+
+```text
+external_evidence_available_rate: 1.0
+external_positive_evidence_rate: 0.875
+external_set_contains_correct_rate: 0.875
+first_external_correct_rate: 0.125
+selected_correct_rate_if_forced: 0.625
+selected_correct_improvement_over_first: 0.5
+commit_rate: 0.375
+success_commit_rate: 0.125
+wrong_goal_commit_rate: 0.25
+wrong_goal_commit_rate_on_commits: 0.6667
+no_valid_external_commit_rate: 0.0
+passes_external_evidence_safety_gate: false
+passes_external_evidence_full_gate: false
+```
+
+Failure pattern:
+
+```text
+successful external recovery:
+  q3zU7Yy5E5s / bed / neither_candidate_correct
+  selected candidate rank 2
+  strict_association_count 3
+
+wrong external commits:
+  HY1NcmCgn3n / plant / top_only_correct
+  selected candidate rank 4
+  strict_association_count 1
+  repeated in two episodes with the same scene/query/candidate pattern
+
+deferred useful candidates:
+  7MXmsvcQjpJ / plant / alt_only_correct
+  selected candidate rank 4 was correct but score or margin was weak
+```
+
+Runtime interpretation:
+
+```text
+first_eval_rerun: still blocked
+policy_scale_integration: still blocked
+primary_failure: external view evidence can improve candidate selection but still commits wrong plant instances
+next_step: design external evidence objective v2 from failure taxonomy
+not_next_step: threshold-only rerun or first_eval replacement rerun
+```
+
+External evidence objective v2:
+
+```text
+date_checked: 2026-05-18
+analyzer: runtime/h001_runtime/analyze_external_candidate_observation_evidence_v2.py
+input_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1
+output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_evidence_v2
+summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_evidence_v2/external_candidate_evidence_v2_summary.json
+rows: 8
+plan_rows: 48
+association_rows: 168
+uses_gt_for_action: false
+```
+
+V2 design:
+
+```text
+not threshold-only:
+  branch-level detector substrate replaces frame-level association-rate gate
+  commit requires strong depth-associated evidence
+  small_or_cluttered objects need stricter contrast/depth support
+  repeated furniture can use duplicate-goal evidence only when multiple candidates have strong depth support
+```
+
+V2 result:
+
+```text
+detector_box_rate: 0.9583
+sam2_mask_rate: 0.9583
+candidate_association_rate_diagnostic: 0.1250
+external_evidence_available_rate: 1.0
+external_positive_evidence_rate: 0.875
+branch_strong_depth_evidence_rate: 0.25
+commit_rate: 0.25
+success_commit_rate: 0.25
+wrong_goal_commit_rate: 0.0
+no_valid_external_commit_rate: 0.0
+selected_correct_improvement_over_first: 0.5
+passes_external_detector_substrate_gate_v2: true
+passes_external_evidence_safety_gate_v2: true
+passes_external_evidence_full_gate_v2: true
+```
+
+Commit/defer pattern:
+
+```text
+commits:
+  bed / neither_candidate_correct / correct external rank 2
+  chair / both_candidates_correct / correct external rank 4
+
+blocked:
+  plant / top_only_correct / wrong external rank 4 / weak strict depth association
+```
+
+Runtime interpretation:
+
+```text
+status: fixed-rule diagnostic pass on the same detector artifact
+paper_claim_status: not yet held-out
+first_eval_rerun: still blocked until frozen V2 passes fresh or held-out detector-objective validation
+policy_scale_integration: still blocked
+next_step: run frozen V2 on a fresh/held-out external-candidate detector artifact, or define that artifact contract before rerun
+```
+
+Frozen V2 held-out validation contract:
+
+```text
+date_defined: 2026-05-18
+target_split: risk_validation_v1
+manifest: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_risk_validation_v1.json
+candidate_artifact: /tmp/research3-runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl
+coverage_summary: /tmp/research3-runs/h001_risk_validation_policy_spatial_nms_p97_k20_v1/coverage_sanity/artifact_coverage.json
+object_node_features: /tmp/research3-runs/h001_risk_validation_object_node_evidence_objective_v1/candidate_object_node_features.jsonl
+pair_out: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1
+external_out: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1
+frozen_analyzer: runtime/h001_runtime/analyze_external_candidate_observation_evidence_v2.py
+job_wrapper: runtime/jobs/risk_validation_pair_objective_v4b_external_candidate_v2_holdout.sh
+frozen_thresholds: use analyzer defaults; no threshold change on this split
+```
+
+Split isolation:
+
+```text
+risk_validation_v1 vs v3_fresh_validation_v1 scene overlap: 0
+risk_validation_v1 vs first_eval_replacement_v1 scene overlap: 0
+risk_validation_v1 vs confirmation_independent_v1 scene overlap: 0
+coverage_overall_pass: true
+candidate_backend_uses_gt_for_action: false
+```
+
+Execution plan:
+
+Use the wrapper below for the actual run. It records the pair-objective stage, external detector stage, frozen V2 analyzer output, exact logs, status, and final validation summary.
+
+```bash
+TS=<timestamp> bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/risk_validation_pair_objective_v4b_external_candidate_v2_holdout.sh
+```
+
+Expanded command contract:
+
+```bash
+TS=<timestamp> \
+MANIFEST=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_risk_validation_v1.json \
+MANIFEST_SPLIT=risk_validation_v1 \
+CANDIDATE_ARTIFACT=/tmp/research3-runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl \
+COVERAGE_SUMMARY=/tmp/research3-runs/h001_risk_validation_policy_spatial_nms_p97_k20_v1/coverage_sanity/artifact_coverage.json \
+OBJECT_NODE_FEATURES=/tmp/research3-runs/h001_risk_validation_object_node_evidence_objective_v1/candidate_object_node_features.jsonl \
+PAIR_OUT=/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1 \
+RUN_PREFIX=h001_risk_validation_v4b_revised_geometry \
+bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v3_fresh_validation_pair_objective_v4_revised_geometry.sh
+
+TS=<timestamp> \
+PAIR_OBJECTIVE_ROWS=/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/pair_observation_objective_v4b_rows.jsonl \
+CANDIDATE_ARTIFACT=/tmp/research3-runs/h001_risk_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl \
+OBJECT_NODE_FEATURES=/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_revised_geometry_v1/association_recovery/candidate_object_node_features_after_second.jsonl \
+OUT=/tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1 \
+bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v3_fresh_validation_pair_objective_v4b_external_candidate_detector.sh
+
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /tmp/research3-runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.analyze_external_candidate_observation_evidence_v2 \
+    --external-observation-plan /runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_plan/external_candidate_observation_plan.jsonl \
+    --external-branch-rows /runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_plan/external_candidate_branch_rows.jsonl \
+    --detector-root /runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_detector \
+    --out-root /runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_evidence_v2
+```
+
+Promotion gate:
+
+```text
+uses_gt_for_action: false
+coverage_overall_pass: true
+pair_substrate_gate: pass
+external_detector_box_rate >= 0.80
+sam2_mask_rate >= 0.80
+external_evidence_available_rate >= 0.50
+external_positive_evidence_rate >= 0.30
+branch_strong_depth_evidence_rate >= 0.20
+wrong_goal_commit_rate <= 0.10
+no_valid_external_commit_rate <= 0.10
+commit_rate >= 0.15
+selected_correct_improvement_over_first >= 0.10
+```
+
+Interpretation rule:
+
+```text
+pass: V2 can unblock first_eval replacement detector/objective validation, still not final paper claim
+fail_safety: revise failure taxonomy before any first_eval rerun
+fail_utility_only: keep V2 as safe defer branch, but do not claim recovery utility
+fail_substrate: fix pair/external observation substrate before method objective changes
+```
+
+Launch record:
+
+```text
+date_launched: 2026-05-18
+tmux_session: h001-risk-v4b-ext-v2-holdout-20260518-171245
+command: TS=20260518-171245 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/risk_validation_pair_objective_v4b_external_candidate_v2_holdout.sh
+working_directory: /home/yoohyun/research3
+log: logs/risk-validation-pair-v4b-external-candidate-v2-holdout-20260518-171245.log
+status: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/frozen_v2_holdout_job_status.json
+output_root: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1
+initial_status: running
+initial_stage: pair_objective_v4b_revised_geometry
+```
+
+Completion result:
+
+```text
+date_completed: 2026-05-18
+status: completed
+stage: completed
+final_summary: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/frozen_v2_holdout_validation_summary.json
+failure_mode_summary: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_evidence_v2_failure_modes/external_candidate_evidence_failure_mode_summary.json
+uses_gt_for_action: false
+```
+
+Frozen V2 held-out gate result:
+
+```text
+triggered_rows: 10
+plan_rows: 60
+detector_box_rate: 0.9333
+sam2_mask_rate: 0.9333
+candidate_association_rate_diagnostic: 0.2000
+external_set_contains_correct_rate: 0.4000
+first_external_correct_rate: 0.2000
+branch_strong_depth_evidence_rate: 0.6000
+commit_rate: 0.6000
+success_commit_rate: 0.2000
+wrong_goal_commit_rate: 0.4000
+wrong_goal_commit_rate_on_commits: 0.6667
+no_valid_external_commit_rate: 0.2000
+selected_correct_improvement_over_first: 0.0000
+passes_external_detector_substrate_gate_v2: true
+passes_external_evidence_safety_gate_v2: false
+passes_external_evidence_full_gate_v2: false
+```
+
+Failure taxonomy:
+
+```text
+external_retrieval_miss_defer: 4
+successful_external_commit: 2
+unsafe_no_valid_external_commit: 2
+wrong_rerank_over_correct_first_candidate: 2
+
+by_query:
+  bed:
+    external_retrieval_miss_defer: 2
+    unsafe_no_valid_external_commit: 2
+    wrong_rerank_over_correct_first_candidate: 2
+  plant:
+    successful_external_commit: 2
+  sofa:
+    external_retrieval_miss_defer: 2
+
+revision_implications:
+  first_eval_rerun_blocked: true
+  threshold_only_revision_rejected: true
+  needs_instance_safety_or_identity_consistency: true
+  needs_external_retrieval_revision: true
+  needs_alt_confirm_untrusted_scope_guard: true
+```
+
+Interpretation:
+
+```text
+first_eval_rerun: blocked
+policy_scale_integration: blocked
+V2_status: rejected as a held-out commit objective
+not_a_threshold_problem: true
+```
+
+The held-out failure is different from the same-artifact V2 diagnostic. The earlier V2 rule fixed weak-depth `plant` false commits, but held-out `risk_validation_v1` shows two harder problems:
+
+1. strong depth-associated evidence can still select the wrong `bed` instance when repeated furniture instances are close or visually similar;
+2. external retrieval can miss the correct candidate entirely, yet detector evidence on an invalid external set can still look strong enough to commit.
+
+The next method revision must therefore add identity consistency or instance-safety evidence and retrieval validity checks. A pure score threshold or margin change is not a defensible top-tier contribution path.
+
+External evidence objective V3 design check:
+
+```text
+date_checked: 2026-05-18
+analyzer: runtime/h001_runtime/analyze_external_candidate_observation_evidence_v3.py
+heldout_out: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_evidence_v3
+diagnosis_out: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_evidence_v3
+uses_gt_for_action: false
+```
+
+V3 design:
+
+```text
+large_repeated_furniture:
+  block commit from alt_confirmation_without_pair_set_completeness
+  require selected external rank <= 2
+  require evidence margin >= 0.70
+  defer if multiple strong instances are present
+
+small_or_cluttered:
+  keep V2-style strict depth + contrast gate
+```
+
+Held-out result on `risk_validation_v1`:
+
+```text
+commit_rate: 0.20
+success_commit_rate: 0.20
+wrong_goal_commit_rate: 0.00
+no_valid_external_commit_rate: 0.00
+passes_external_detector_substrate_gate_v3: true
+passes_external_evidence_safety_gate_v3: true
+passes_external_evidence_full_gate_v3: true
+```
+
+Regression check on the previous V3-fresh diagnostic artifact:
+
+```text
+commit_rate: 0.00
+success_commit_rate: 0.00
+wrong_goal_commit_rate: 0.00
+passes_external_detector_substrate_gate_v3: true
+passes_external_evidence_safety_gate_v3: true
+passes_external_evidence_full_gate_v3: false
+```
+
+Interpretation:
+
+```text
+V3_status: safety repair, not method promotion
+reason: it fixes held-out wrong commits by blocking large repeated-furniture external commits, but also removes the earlier correct bed recovery
+next_method_need: explicit identity-consistency observation or retrieval-validity confirmation for large repeated furniture
+first_eval_rerun: still blocked
+```
+
+External identity-confirmation path V4:
+
+```text
+date_checked: 2026-05-18
+analyzer: runtime/h001_runtime/analyze_external_candidate_observation_evidence_v4.py
+risk_validation_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_evidence_v4
+v3_fresh_diagnostic_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_evidence_v4
+uses_gt_for_action: false
+```
+
+V4 action model:
+
+```text
+external_evidence_v4_commit_candidate:
+  commit only when identity is confirmed
+
+external_evidence_v4_request_identity_confirmation:
+  large repeated furniture has strong evidence, but instance identity is ambiguous
+
+external_evidence_v4_request_expanded_retrieval:
+  no positive external evidence, weak evidence, or missing strong depth association
+```
+
+Large repeated furniture identity rule:
+
+```text
+identity_confirmed_single_instance:
+  selected external rank <= 2
+  evidence margin >= 0.70
+  exactly one strong depth-associated candidate
+```
+
+Held-out `risk_validation_v1` result:
+
+```text
+action_counts:
+  external_evidence_v4_commit_candidate: 2
+  external_evidence_v4_request_identity_confirmation: 4
+  external_evidence_v4_request_expanded_retrieval: 4
+
+commit_rate: 0.20
+success_commit_rate: 0.20
+wrong_goal_commit_rate: 0.00
+no_valid_external_commit_rate: 0.00
+passes_external_detector_substrate_gate_v4: true
+passes_external_evidence_safety_gate_v4: true
+passes_external_evidence_full_gate_v4: true
+```
+
+Previous V3-fresh diagnostic result:
+
+```text
+action_counts:
+  external_evidence_v4_commit_candidate: 1
+  external_evidence_v4_request_identity_confirmation: 1
+  external_evidence_v4_request_expanded_retrieval: 6
+
+commit_rate: 0.125
+success_commit_rate: 0.125
+wrong_goal_commit_rate: 0.00
+no_valid_external_commit_rate: 0.00
+passes_external_detector_substrate_gate_v4: true
+passes_external_evidence_safety_gate_v4: true
+passes_external_evidence_full_gate_v4: false
+```
+
+Interpretation:
+
+```text
+V4_status: better contribution-shaped path, not paper-ready
+positive_signal: recovers the hard V3-fresh bed case that V3 over-deferred
+remaining_gap: requests identity confirmation or expanded retrieval for most large repeated furniture rows
+first_eval_rerun: still blocked
+next_step: implement or design the follow-up planner for request_identity_confirmation and request_expanded_retrieval before full validation
+```
+
+External candidate follow-up planner:
+
+```text
+date_checked: 2026-05-18
+planner: runtime/h001_runtime/plan_external_candidate_followup_observation.py
+policy: ExternalCandidateFollowupObservation
+input: external_candidate_evidence_v4_rows.jsonl
+uses_gt_for_action: false
+```
+
+Planner semantics:
+
+```text
+request_identity_confirmation:
+  generate standoff-navmesh observations for the selected candidate and strong/positive rival candidates
+  candidate_ids include selected, strong candidates, positive candidates, then original external candidate ids
+
+request_expanded_retrieval:
+  select additional semantic candidates outside pair top/alt and outside the current external candidate set
+  use candidate visit viewpoints as a retrieval-validity expansion probe
+```
+
+`risk_validation_v1` planner output:
+
+```text
+output_root: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_plan
+plan_rows: 28
+skipped_rows: 0
+followup_action_counts:
+  expanded_retrieval: 18
+  identity_confirmation: 10
+viewpoint_source_counts:
+  expanded_candidate_visit_position: 18
+  standoff_navmesh: 10
+frame_smoke: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_frame_smoke
+frame_smoke_rows_exported: 4
+frame_smoke_rendered_heading_count: 33
+frame_smoke_ok: true
+detector_smoke: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_detector_smoke
+detector_smoke_rows: 4
+detector_smoke_box_rate: 1.00
+detector_smoke_sam2_mask_rate: 1.00
+detector_smoke_candidate_association_rate: 0.75
+detector_smoke_uses_gt_for_action: false
+metadata_preserved: followup_action, followup_reason, followup_role, followup_viewpoint_source
+```
+
+Previous V3-fresh diagnostic planner output:
+
+```text
+output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_plan
+plan_rows: 39
+skipped_rows: 0
+followup_action_counts:
+  expanded_retrieval: 36
+  identity_confirmation: 3
+viewpoint_source_counts:
+  expanded_candidate_visit_position: 36
+  standoff_navmesh: 3
+frame_smoke: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_frame_smoke
+frame_smoke_rows_exported: 4
+frame_smoke_rendered_heading_count: 43
+frame_smoke_ok: true
+```
+
+Interpretation:
+
+```text
+planner_status: schema and rendering path validated
+detector_rerun_status: small smoke passed on risk_validation_v1 follow-up frames
+first_eval_rerun: still blocked
+next_step: implement follow-up evidence analyzer before any full follow-up detector job
+```
+
+Follow-up evidence analyzer:
+
+```text
+date_checked: 2026-05-18
+analyzer: runtime/h001_runtime/analyze_external_candidate_followup_evidence.py
+smoke_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_evidence_smoke
+input_v4_rows: external_candidate_evidence_v4_rows.jsonl
+input_followup_plan: external_candidate_followup_observation_plan.jsonl
+input_detector_root: external_candidate_followup_detector_smoke
+observed_only: true
+source_request_rows: 8
+source_rows_analyzed: 2
+frame_rows: 4
+association_rows: 198
+unmatched_association_rows: 0
+action_counts:
+  followup_evidence_v1_defer: 2
+reason_counts:
+  defer_expanded_retrieval_without_strong_depth_association: 2
+gate:
+  detector_box_rate: 1.00
+  sam2_mask_rate: 1.00
+  candidate_association_rate_diagnostic: 0.75
+  followup_evidence_available_rate: 1.00
+  followup_positive_evidence_rate: 1.00
+  followup_strong_depth_evidence_rate: 0.00
+  wrong_goal_commit_rate: 0.00
+  no_valid_commit_rate: 0.00
+  passes_followup_detector_substrate_gate_v1: false
+  passes_followup_evidence_safety_gate_v1: true
+  passes_followup_evidence_full_gate_v1: false
+uses_gt_for_action: false
+```
+
+Interpretation:
+
+```text
+analyzer_status: schema smoke passed
+current_behavior: safe defer on the observed expanded-retrieval rows
+remaining_gap: no strong depth-associated follow-up evidence in the four-frame smoke
+first_eval_rerun: still blocked
+next_step: prepare full follow-up detector/evidence validation as a background job
+```
+
+Full follow-up detector/evidence validation job:
+
+```text
+date_checked: 2026-05-19
+wrapper: runtime/jobs/risk_validation_external_candidate_followup_detector.sh
+tmux_session: h001-followup-full-20260519-001658
+log: logs/risk-validation-external-candidate-followup-detector-20260519-001658.log
+status_file: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_job_status.json
+output_root: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1
+initial_status: running
+initial_stage: followup_frame_export
+expected_plan_rows: 28
+expected_source_request_rows: 8
+```
+
+The wrapper records command, working directory, output paths, expected files, log path, status JSON, and verification command. It runs:
+
+```text
+1. prerequisite_check
+2. followup_plan
+3. followup_frame_export
+4. followup_detector
+5. followup_evidence_analysis
+6. verification
+```
+
+Verification checks:
+
+```text
+uses_gt_for_action == false
+frame_rows_exported == plan_rows
+plan_rows == 28
+source_request_rows == 8
+```
+
+Runtime interpretation:
+
+```text
+This is the first full-scale validation of the V4 active observation branch on the risk-validation split.
+It tests whether request_identity_confirmation and request_expanded_retrieval can be converted into safe follow-up evidence decisions.
+first_eval replacement and policy-scale comparison remain blocked until this job completes and the full gate is inspected.
+```
+
+Full follow-up validation result:
+
+```text
+date_checked: 2026-05-19
+status: completed
+plan_rows: 28
+frame_rows_exported: 28
+rendered_heading_count: 326
+detector_rows: 28
+detector_box_rate: 1.00
+sam2_mask_rate: 1.00
+candidate_association_rate_diagnostic: 0.714
+followup_evidence_available_rate: 1.00
+followup_positive_evidence_rate: 1.00
+followup_strong_depth_evidence_rate: 0.75
+action_counts:
+  followup_evidence_v1_commit_expanded_candidate: 2
+  followup_evidence_v1_defer: 6
+reason_counts:
+  commit_expanded_candidate_after_followup: 2
+  defer_expanded_retrieval_without_strong_depth_association: 2
+  defer_identity_ambiguous_rival_supported: 4
+commit_rate: 0.25
+success_commit_rate: 0.00
+wrong_goal_commit_rate: 0.25
+no_valid_commit_rate: 0.25
+passes_followup_detector_substrate_gate_v1: true
+passes_followup_evidence_safety_gate_v1: false
+passes_followup_evidence_full_gate_v1: false
+uses_gt_for_action: false
+```
+
+Runtime interpretation:
+
+```text
+The rendering/detector substrate is usable, but the evidence objective is unsafe.
+The two commits are expanded-retrieval sofa cases in `LT9Jq6dN3Ea` where the follow-up candidate set does not contain a valid/correct candidate.
+Identity-confirmation rows stayed conservative and deferred under rival support.
+The next revision should block expanded-retrieval commits when the expanded set lacks a validity/identity guard; do not rerun first_eval yet.
+```
+
+Follow-up evidence failure taxonomy:
+
+```text
+date_checked: 2026-05-19
+analyzer: runtime/h001_runtime/analyze_external_candidate_followup_failure_modes.py
+output_root: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_failure_modes
+rows: 8
+commit_rows: 2
+success_commit_rows: 0
+wrong_commit_rows: 2
+no_valid_commit_rows: 2
+safe_identity_defer_rows: 4
+primary_failure_mode_counts:
+  safe_identity_defer_rival_supported: 4
+  safe_expanded_retrieval_defer_no_valid_target: 2
+  unsafe_no_valid_expanded_retrieval_commit: 2
+failure_tags_on_unsafe_commits:
+  unsafe_no_valid_expanded_retrieval_commit
+  unsafe_wrong_goal_followup_commit
+  strong_depth_evidence_not_instance_safe
+  positive_detector_support_not_instance_safe
+  expanded_retrieval_set_missing_valid_target
+  large_repeated_furniture_instance_confusion
+revision_implications:
+  first_eval_rerun_blocked: true
+  threshold_only_revision_rejected: true
+  needs_expanded_retrieval_validity_guard: true
+  needs_instance_safety_beyond_depth_association: true
+  preserve_identity_confirmation_defer: true
+```
+
+Runtime implication:
+
+```text
+Expanded retrieval cannot use "best observed detector-supported candidate" as a commit rule for large repeated furniture.
+The next objective should require an additional validity/identity condition before commit, or convert these rows into identity-confirmation/defer.
+```
+
+Follow-up evidence objective V2:
+
+```text
+date_checked: 2026-05-19
+analyzer: runtime/h001_runtime/analyze_external_candidate_followup_evidence.py
+objective_version: v2
+large_repeated_expanded_retrieval_guard: auto
+output_root: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_evidence_v2
+failure_taxonomy_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_failure_modes_v2
+action_counts:
+  followup_evidence_v1_defer: 6
+  followup_evidence_v1_request_identity_confirmation: 2
+reason_counts:
+  defer_expanded_retrieval_without_strong_depth_association: 2
+  defer_identity_ambiguous_rival_supported: 4
+  request_identity_confirmation_after_expanded_retrieval_large_repeated_instance_guard: 2
+commit_rate: 0.00
+success_commit_rate: 0.00
+wrong_goal_commit_rate: 0.00
+no_valid_commit_rate: 0.00
+request_identity_confirmation_rate: 0.25
+passes_followup_detector_substrate_gate_v1: true
+passes_followup_evidence_safety_gate_v1: true
+passes_followup_evidence_full_gate_v1: false
+uses_gt_for_action: false
+```
+
+Runtime implication:
+
+```text
+V2 confirms the safety fix: no direct commit is allowed for large repeated furniture expanded-retrieval evidence.
+The remaining gap is utility, because the repaired objective turns unsafe commits into identity-confirmation requests rather than successes.
+The next runtime target is a second-stage identity-confirmation contract for V2 request outputs.
+```
+
+Second-stage identity-confirmation runtime contract:
+
+```text
+date_checked: 2026-05-19
+contract_name: ExternalCandidateSecondStageIdentityConfirmationV2
+policy_name: ExternalCandidateSecondStageIdentityConfirmation
+input_rows: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_evidence_v2/external_candidate_followup_evidence_rows.jsonl
+input_filter: followup_evidence_v1_action == followup_evidence_v1_request_identity_confirmation
+current_request_rows: 2
+current_rows:
+  - external_candidate:25 / LT9Jq6dN3Ea / sofa / selected vlmaps:export:sofa:spatial_nms:1
+  - external_candidate:7 / LT9Jq6dN3Ea / sofa / selected vlmaps:export:sofa:spatial_nms:1
+selected_candidate_signal:
+  S_ext: 0.8034
+  score_margin: 0.3076
+  positive_support: true
+  followup_strong_depth_evidence: true
+  strict_association_count: 7
+  mask_hit_count: 26
+top_positive_rival_signal:
+  candidate_id: vlmaps:export:sofa:spatial_nms:0
+  S_ext: 0.4959
+  positive_support: true
+  followup_strong_depth_evidence: false
+  strict_association_count: 0
+  mask_hit_count: 18
+uses_gt_for_action: false
+```
+
+Planner contract:
+
+```text
+module_to_add: h001_runtime.plan_external_candidate_second_stage_identity_confirmation
+input: V2 follow-up evidence rows
+output_root: external_candidate_followup_identity_stage2_plan
+output_files:
+  external_candidate_second_stage_identity_plan.jsonl
+  external_candidate_second_stage_identity_summary.json
+policy: ExternalCandidateSecondStageIdentityConfirmation
+rows_per_request:
+  selected_standoff around V2 selected candidate
+  top_positive_rival_standoff around best positive rival candidate
+  optional selected/rival common_or_matched_view if navmesh feasible
+viewpoint_source_rule:
+  standoff_navmesh is preferred
+  candidate_visit_position may be fallback for observation only
+  candidate_visit_position-only evidence cannot authorize commit
+metadata_required:
+  source_external_branch_id
+  source_followup_action
+  second_stage_role
+  second_stage_viewpoint_source
+  selected_candidate_id
+  rival_candidate_ids
+  candidate_ids
+```
+
+Analyzer contract:
+
+```text
+module_to_add: h001_runtime.analyze_external_candidate_second_stage_identity_evidence
+input:
+  V2 follow-up evidence rows
+  second-stage plan rows
+  second-stage detector root
+output_root: external_candidate_followup_identity_stage2_evidence
+commit_allowed_only_if:
+  selected candidate has strong evidence from second-stage standoff/comparable views
+  no rival has positive or strong comparable-view evidence
+  selected-vs-rival margin remains above the fixed identity margin
+  evidence is not based only on expanded_candidate_visit_position
+defer_or_request_allowed_if:
+  selected remains strong but rival comparability is missing
+  rival remains positive/strong
+  no comparable-view instance evidence exists
+  selected object is detector-supported but not identity-discriminative
+```
+
+Validation gate:
+
+```text
+schema_gate:
+  uses_gt_for_action == false
+  plan_rows > 0
+  frame_rows_exported == plan_rows
+  metadata preserved through frame export and detector association
+substrate_gate:
+  detector_box_rate >= 0.80
+  sam2_mask_rate >= 0.80
+  candidate_association_rate_diagnostic >= 0.60
+safety_gate:
+  wrong_goal_commit_rate == 0.00
+  no_valid_commit_rate == 0.00
+  visit_position_only_commit_rate == 0.00
+current_split_expected_result:
+  commit_rate == 0.00
+  success_commit_rate == 0.00
+  action is defer or request further identity confirmation
+paper_utility_gate:
+  requires an additional split where V2 request rows contain at least one valid/correct target
+```
+
+Runtime implication:
+
+```text
+This contract keeps the current risk-validation rows as a safety diagnostic, not a utility proof.
+The planner/schema path must pass before detector evidence or policy-scale comparison.
+```
+
+Second-stage identity planner / frame smoke result:
+
+```text
+date_checked: 2026-05-19
+planner: runtime/h001_runtime/plan_external_candidate_second_stage_identity_confirmation.py
+policy: ExternalCandidateSecondStageIdentityConfirmation
+plan_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_identity_stage2_plan
+frame_smoke_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_identity_stage2_frame_smoke
+input_rows: external_candidate_followup_evidence_v2/external_candidate_followup_evidence_rows.jsonl
+request_rows: 2
+plan_rows: 4
+skipped_rows: 0
+role_counts:
+  selected_standoff: 2
+  rival_1_standoff: 2
+viewpoint_source_counts:
+  standoff_navmesh: 4
+rows_by_external_branch_id:
+  external_candidate:7: 2
+  external_candidate:25: 2
+frame_rows_requested: 4
+frame_rows_exported: 4
+rendered_heading_count: 46
+min_headings_per_row: 11
+max_headings_per_row: 12
+metadata_preserved:
+  external_branch_id: true
+  followup_evidence_v1_action: true
+  source_followup_action: true
+  second_stage_role: true
+  second_stage_viewpoint_source: true
+  second_stage_selected_candidate_id: true
+  second_stage_rival_candidate_ids: true
+uses_gt_for_action: false
+```
+
+Runtime implication:
+
+```text
+The planner/schema path is now unblocked.
+The two V2 sofa request rows produce selected/rival standoff observations from the same action-side evidence contract.
+The next implementation should add the second-stage identity evidence analyzer and keep policy-scale comparison blocked until that analyzer passes a detector-backed safety gate.
+```
+
+Second-stage identity evidence analyzer / schema smoke:
+
+```text
+date_checked: 2026-05-19
+analyzer: runtime/h001_runtime/analyze_external_candidate_second_stage_identity_evidence.py
+schema_version: h001.external_candidate_second_stage_identity_evidence.v1
+output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_identity_stage2_evidence_schema_smoke
+input_followup_evidence_rows: external_candidate_followup_evidence_v2/external_candidate_followup_evidence_rows.jsonl
+input_second_stage_plan: external_candidate_followup_identity_stage2_plan/external_candidate_second_stage_identity_plan.jsonl
+detector_root_for_schema_smoke: external_candidate_followup_identity_stage2_frame_smoke
+source_request_rows: 2
+source_rows_analyzed: 2
+plan_rows: 4
+frame_rows: 4
+association_rows: 0
+action_counts:
+  second_stage_identity_v1_defer: 2
+reason_counts:
+  defer_selected_no_positive_support: 2
+passes_second_stage_identity_schema_gate_v1: true
+passes_second_stage_identity_safety_gate_v1: true
+passes_second_stage_identity_detector_substrate_gate_v1: false
+passes_second_stage_identity_full_gate_v1: false
+commit_rate: 0.0
+wrong_goal_commit_rate: 0.0
+no_valid_commit_rate: 0.0
+visit_position_only_commit_rate: 0.0
+uses_gt_for_action: false
+```
+
+Runtime implication:
+
+```text
+The analyzer contract is implemented and fails closed without detector evidence.
+The next runtime target is a second-stage identity detector/evidence smoke on the four planned rows.
+Policy-scale comparison remains blocked until detector-backed second-stage safety is checked.
+```
+
+Second-stage identity detector / evidence smoke:
+
+```text
+date_checked: 2026-05-19
+detector: runtime/h001_runtime/detect_postview_groundingdino_sam2.py
+analyzer: runtime/h001_runtime/analyze_external_candidate_second_stage_identity_evidence.py
+detector_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_identity_stage2_detector_smoke
+evidence_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_identity_stage2_evidence_smoke
+detector_rows: 4
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 1.0
+association_rows: 92
+detector_box_rows: 120
+detector_mask_rows: 120
+source_request_rows: 2
+source_rows_analyzed: 2
+plan_rows: 4
+action_counts:
+  second_stage_identity_v1_defer: 2
+reason_counts:
+  defer_selected_without_strong_depth_evidence: 2
+passes_second_stage_identity_schema_gate_v1: true
+passes_second_stage_identity_detector_substrate_gate_v1: true
+passes_second_stage_identity_safety_gate_v1: true
+passes_second_stage_identity_full_gate_v1: false
+commit_rate: 0.0
+success_commit_rate: 0.0
+wrong_goal_commit_rate: 0.0
+no_valid_commit_rate: 0.0
+visit_position_only_commit_rate: 0.0
+uses_gt_for_action: false
+```
+
+Runtime implication:
+
+```text
+Second-stage detector substrate and safety gates pass on the current no-valid sofa diagnostic rows.
+The result is a safety confirmation, not a utility proof, because commit and success rates remain 0.0.
+The next runtime target is V2 follow-up validation integration with second-stage identity outputs recorded.
+`first_eval` and policy-scale comparison remain blocked.
+```
+
+V2 follow-up + second-stage integrated summary:
+
+```text
+date_checked: 2026-05-19
+script: runtime/h001_runtime/summarize_followup_v2_stage2.py
+output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_v2_stage2_validation
+summary: external_candidate_followup_v2_stage2_validation_summary.json
+terminal_rows: external_candidate_followup_v2_stage2_terminal_rows.jsonl
+followup_v2_rows: 8
+stage2_required_rows: 2
+stage2_resolved_rows: 2
+stage2_request_coverage_rate: 1.0
+terminal_action_counts:
+  followup_evidence_v1_defer: 6
+  second_stage_identity_v1_defer: 2
+terminal_source_counts:
+  followup_v2: 6
+  second_stage_identity: 2
+passes_integrated_stage2_coverage: true
+passes_integrated_detector_substrate: true
+passes_integrated_safety_gate: true
+passes_integrated_full_gate: false
+commit_rate: 0.0
+success_commit_rate: 0.0
+wrong_goal_commit_rate: 0.0
+no_valid_commit_rate: 0.0
+visit_position_only_commit_rate: 0.0
+first_eval_rerun_blocked: true
+policy_scale_comparison_blocked: true
+uses_gt_for_action: false
+```
+
+Runtime implication:
+
+```text
+V2 identity-confirmation requests are no longer unresolved in the validation summary.
+They are terminally accounted for as second-stage identity defer rows.
+This confirms safety preservation but not utility.
+The next rerun should target a broader/fresh split where second-stage identity requests can contain valid/correct targets; otherwise first_eval remains blocked.
+```
+
+V2 follow-up + second-stage regression rerun:
+
+```text
+date_checked: 2026-05-19
+v2_rerun_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_evidence_v2_rerun_v1
+integrated_rerun_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_v2_stage2_validation_rerun_v1
+core_metric_match_previous_integrated_summary: true
+terminal_rows: 8
+stage2_required_rows: 2
+stage2_resolved_rows: 2
+terminal_action_counts:
+  followup_evidence_v1_defer: 6
+  second_stage_identity_v1_defer: 2
+passes_integrated_safety_gate: true
+passes_integrated_full_gate: false
+commit_rate: 0.0
+success_commit_rate: 0.0
+wrong_goal_commit_rate: 0.0
+no_valid_commit_rate: 0.0
+visit_position_only_commit_rate: 0.0
+first_eval_rerun_blocked: true
+uses_gt_for_action: false
+```
+
+Runtime implication:
+
+```text
+The frozen-artifact V2 + second-stage result is reproducible.
+Rerunning the same detector artifact does not create utility signal.
+The next runtime target is a broader/fresh-row feasibility inspection for valid second-stage identity utility cases.
+```
+
+Broader/fresh follow-up feasibility inspection:
+
+```text
+date_checked: 2026-05-19
+script: runtime/h001_runtime/inspect_followup_v2_stage2_feasibility.py
+risk_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/followup_v2_stage2_feasibility
+v3_fresh_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/followup_v2_stage2_feasibility
+risk_validation_v1:
+  source_request_rows: 8
+  expanded_request_rows_with_correct_followup_set: 0
+  potential_v2_second_stage_identity_utility_rows: 0
+  fresh_followup_detector_rerun_supported: false
+v3_fresh_validation_v1:
+  source_request_rows: 7
+  expanded_request_rows_with_correct_followup_set: 6
+  potential_followup_utility_rows: 7
+  potential_v2_second_stage_identity_utility_rows: 1
+  potential_v2_second_stage_identity_branch_ids: external_candidate:12
+  potential_non_identity_followup_utility_rows: 5
+  fresh_followup_detector_rerun_supported: true
+first_eval_rerun_blocked: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Runtime implication:
+
+```text
+`risk_validation_v1` remains a safety diagnostic, not a utility split.
+`v3_fresh_validation_v1` has enough label-only evidence to justify a fresh follow-up detector + V2 + second-stage validation job before `first_eval`.
+The inspection does not replace detector evidence because it uses labels only for analysis.
+```
+
+Fresh follow-up V2 + second-stage detector job:
+
+```text
+date_launched: 2026-05-19
+script: runtime/jobs/v3_fresh_external_candidate_followup_v2_stage2.sh
+tmux_session: h001-v3-fresh-followup-v2-stage2-20260519-125841
+command: TS=20260519-125841 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v3_fresh_external_candidate_followup_v2_stage2.sh
+working_directory: /home/yoohyun/research3
+log: logs/v3-fresh-external-candidate-followup-v2-stage2-20260519-125841.log
+status_file: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v2_stage2_job_status.json
+output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1
+expected_outputs:
+  external_candidate_followup_detector/summary.json
+  external_candidate_followup_evidence_v2/external_candidate_followup_evidence_summary.json
+  external_candidate_followup_identity_stage2_detector/summary.json
+  external_candidate_followup_identity_stage2_evidence/external_candidate_second_stage_identity_evidence_summary.json
+  external_candidate_followup_v2_stage2_validation/external_candidate_followup_v2_stage2_validation_summary.json
+verification_command:
+  cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v2_stage2_job_status.json
+  cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v2_stage2_validation/external_candidate_followup_v2_stage2_validation_summary.json
+final_status: completed
+result:
+  followup_v2_detector_substrate: pass
+  followup_v2_safety_gate: fail
+  stage2_detector_substrate: pass
+  stage2_safety_gate: pass
+  integrated_safety_gate: fail
+  integrated_full_gate: fail
+followup_v2:
+  source_request_rows: 7
+  action_counts:
+    followup_evidence_v1_commit_expanded_candidate: 3
+    followup_evidence_v1_request_identity_confirmation: 3
+    followup_evidence_v1_defer: 1
+  wrong_goal_commit_rate: 0.4286
+  success_commit_rate: 0.0
+stage2:
+  source_request_rows: 3
+  action_counts:
+    second_stage_identity_v1_request_further_identity_confirmation: 3
+  detector_box_rate: 1.0
+  sam2_mask_rate: 1.0
+  candidate_association_rate: 1.0
+integrated:
+  terminal_rows: 7
+  wrong_goal_commit_rows: 3
+  success_commit_rows: 0
+  first_eval_rerun_blocked: true
+uses_gt_for_action: false
+```
+
+Fresh V2 failure taxonomy and V3 safety repair:
+
+```text
+date_checked: 2026-05-19
+failure_taxonomy: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v2_failure_modes/external_candidate_followup_failure_mode_summary.json
+v3_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_evidence_v3
+v3_failure_taxonomy: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v3_failure_modes/external_candidate_followup_failure_mode_summary.json
+v2_failure:
+  unsafe_wrong_goal_followup_commit: 3
+  strong_depth_evidence_not_instance_safe: 3
+  positive_detector_support_not_instance_safe: 3
+  query: plant
+  property_group: small_or_cluttered
+v3_revision:
+  small_or_cluttered expanded retrieval no longer direct-commits from one strong visible distractor
+  route to request_identity_confirmation_after_expanded_retrieval_small_or_cluttered_instance_guard
+v3_result:
+  action_counts:
+    followup_evidence_v1_request_identity_confirmation: 6
+    followup_evidence_v1_defer: 1
+  passes_followup_detector_substrate_gate_v1: true
+  passes_followup_evidence_safety_gate_v1: true
+  passes_followup_evidence_full_gate_v1: false
+  wrong_goal_commit_rate: 0.0
+  no_valid_commit_rate: 0.0
+  commit_rate: 0.0
+  success_commit_rate: 0.0
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Runtime implication:
+
+```text
+The fresh detector rerun confirms that detector/mask evidence is available, but V2 direct commit is unsafe for compact objects.
+V3 is a safety repair, not a utility proof: it removes the wrong commits by routing all expanded-retrieval cases to identity confirmation.
+The next runtime target is second-stage identity validation on all six V3 request rows.
+`first_eval` remains blocked until an integrated gate has both safety and nonzero success utility.
+```
+
+Fresh V3 second-stage identity validation launch:
+
+```text
+date_launched: 2026-05-19
+tmux: h001-v3-fresh-followup-v3-stage2-20260519-132201
+command: TS=20260519-132201 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v3_fresh_external_candidate_followup_v3_stage2.sh
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/v3-fresh-external-candidate-followup-v3-stage2-20260519-132201.log
+status: running/second_stage_detector
+input_followup_evidence: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_evidence_v3
+output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1
+expected_stage2_request_rows: 6
+expected_integrated_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v3_stage2_validation/external_candidate_followup_v2_stage2_validation_summary.json
+verification_command: cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v3_stage2_job_status.json && cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v3_stage2_validation/external_candidate_followup_v2_stage2_validation_summary.json
+```
+
+Fresh V3 second-stage result and utility diagnostic:
+
+```text
+date_checked: 2026-05-19
+stage2_job_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v3_stage2_job_summary.json
+integrated_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v3_stage2_validation/external_candidate_followup_v2_stage2_validation_summary.json
+utility_diagnostic: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/second_stage_utility_diagnostic_v1/second_stage_utility_diagnostic_summary.json
+stage2:
+  request_rows: 6
+  plan_rows: 12
+  frame_rows_exported: 12
+  detector_box_rate: 1.0
+  sam2_mask_rate: 1.0
+  candidate_association_rate: 1.0
+  action_counts:
+    second_stage_identity_v1_request_further_identity_confirmation: 6
+integrated_gate:
+  safety: pass
+  full: fail
+  commit_rate: 0.0
+  success_commit_rate: 0.0
+  wrong_goal_commit_rate: 0.0
+utility_failure_modes:
+  selected_correct_but_weak_rival_overguarded: 2
+  selected_correct_but_view_geometry_insufficient: 1
+  correct_candidate_requires_candidate_set_expansion: 3
+diagnostic_variants:
+  selected_margin_ignore_weak_rival:
+    success_commit_rows: 2
+    wrong_goal_commit_rows: 0
+    uses_gt_for_decision: false
+  selected_strong_ignore_rival:
+    success_commit_rows: 3
+    wrong_goal_commit_rows: 3
+    uses_gt_for_decision: false
+  best_strong_score:
+    success_commit_rows: 2
+    wrong_goal_commit_rows: 4
+    uses_gt_for_decision: false
+  oracle_observed_correct_upper_bound:
+    success_commit_rows: 3
+    wrong_goal_commit_rows: 0
+    uses_gt_for_decision: true
+  oracle_candidate_set_upper_bound:
+    success_commit_rows: 6
+    wrong_goal_commit_rows: 0
+    uses_gt_for_decision: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Runtime implication:
+
+```text
+The next implementable probe is a second-stage objective variant that allows selected-candidate commit when selected evidence is strong in its own view, the score margin is high, and rival evidence is weak but not strong.
+This should be treated as a same-artifact diagnostic until a held-out fresh validation rerun passes.
+Rows where the correct object is outside the selected/rival evidence set require candidate-set expansion, not another identity-confirmation threshold.
+`first_eval` remains blocked until the objective variant is validated beyond this diagnostic artifact.
+```
+
+Second-stage objective V2 same-artifact probe:
+
+```text
+date_checked: 2026-05-19
+objective: selected_margin_ignore_weak_rival
+evidence_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_v3_evidence_objective_v2/external_candidate_second_stage_identity_evidence_summary.json
+integrated_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v3_stage2_objective_v2_validation/external_candidate_followup_v2_stage2_validation_summary.json
+validation_scope: same_artifact_diagnostic
+second_stage:
+  commit_rows: 2
+  success_commit_rows: 2
+  wrong_goal_commit_rows: 0
+  action_counts:
+    second_stage_identity_v1_commit_selected_candidate: 2
+    second_stage_identity_v1_request_further_identity_confirmation: 4
+  reason_counts:
+    commit_selected_identity_confirmed_weak_rival_margin: 2
+    request_further_identity_confirmation_selected_not_strong_in_own_view: 1
+    request_further_identity_confirmation_strong_rival_supported: 3
+integrated:
+  terminal_rows: 7
+  commit_rows: 2
+  success_commit_rows: 2
+  wrong_goal_commit_rows: 0
+  commit_rate: 0.2857142857142857
+  success_commit_rate: 0.2857142857142857
+  wrong_goal_commit_rate: 0.0
+  local_integrated_gate_passed: true
+  first_eval_rerun_blocked: true
+  utility_proof_passed: false
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Agent inference:
+
+```text
+The V2 objective is the first non-GT action variant in this branch that produces nonzero success utility without a wrong-goal commit on the fresh diagnostic artifact.
+This is promising, but it is not yet a paper claim because the objective was derived from this same artifact.
+The next required validation is held-out fresh rows with the V2 objective fixed before running the validation.
+```
+
+Held-out validation route inspection:
+
+```text
+date_checked: 2026-05-19
+HM3D ObjectNav v2 val scenes: 36
+unused val scenes across current manifests: 0
+recommended objective-heldout route: h001_first_eval_replacement_v1
+reason:
+  scene-disjoint from v3_fresh_validation_v1 where objective V2 was derived
+  existing candidate artifact and pair substrate are available
+  should be treated as objective-heldout, not final paper test set
+next_runtime_target:
+  run external-candidate follow-up + stage2 objective V2 on h001_first_eval_replacement_v1
+  keep final first_eval/policy-scale blocked until this fixed-rule validation passes
+```
+
 ## User Decision Needed
 
 - Whether `habitat-h001` should use a minimal Habitat runtime first or reuse an existing baseline repository.

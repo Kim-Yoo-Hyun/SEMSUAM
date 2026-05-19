@@ -5455,13 +5455,1267 @@ The key V4 design change is action-space separation, not threshold tuning:
 5. commit top -> only with comparable top evidence plus alt disconfirmation
 ```
 
-###### 논문 주장
+###### Revised Geometry Fixed V4 Validation Result
+
+###### 사실
+
+```text
+date_checked: 2026-05-18
+output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1
+pipeline_status: completed
+substrate_gate: pass
+pair_objective_v4_safety_gate: pass
+pair_objective_v4_full_gate: fail
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Substrate:
+
+```text
+risk_resolution_rows: 100
+association_recovery_rows: 40
+pair_trigger_rows: 31
+pair_observation_rows: 31
+detector_box_rate: 0.9651
+sam2_mask_rate: 0.9651
+pair_evidence_available_rate: 1.0
+plan_rows: 86
+pair_plan_mode_counts: common_with_dual_fallback 24, matched_dual_standoff 7
+role_counts: common 24, top 31, alt 31
+```
+
+V4 objective:
+
+```text
+commit_rate: 0.0323
+min_commit_rate: 0.15
+wrong_goal_commit_rate: 0.0323
+wrong_goal_commit_rate_on_commits: 1.0
+top_survival_commit_rate: 0.0
+support_wrong_top_rate: 0.0
+alt_only_reject_top_rate: 0.0
+```
+
+Action counts:
+
+```text
+pair_v4_defer_rank_ambiguous_or_duplicate_goal: 18
+pair_v4_request_external_candidate_search: 7
+pair_v4_defer_view_not_comparable: 5
+pair_v4_reject_top_confirm_alt: 1
+```
+
+Wrong commit:
+
+```text
+episode_key: HM3D ObjectNav v2:val:q3zU7Yy5E5s:5:5:bed
+label_case: neither_candidate_correct
+action: pair_v4_reject_top_confirm_alt
+mode: common_with_dual_fallback
+prior_alt_gap: 0.0264
+top_strict_association_count: 2
+alt_strict_association_count: 4
+top_confirm_score: 0.3809
+alt_confirm_score: 0.5504
+```
+
+###### 에이전트 추론
+
+The revised geometry did what it was supposed to do: it reduced one-sided common-view evidence by adding top/alt fallback views and removed the old top-survival commit path. However, the V4 alt-confirmation rule is still not paper-safe because a repeated-category `bed` case made the alternative look more supported even though neither candidate was correct. This is a candidate-set completeness / category ambiguity failure, not a detector availability failure.
+
+The next revision should not lower thresholds or rerun first_eval. It should harden `pair_v4_reject_top_confirm_alt` so alt commit requires evidence that the pair set is complete enough or that the alt candidate is not merely another wrong repeated-category instance.
 
 This is not yet a paper claim. It is a fixed objective contract for the next revised-geometry validation run.
 
-###### 논문 주장
+###### V4b Alt-Confirmation Safety
 
-This is still not a paper claim. It is a design bridge from the observed failure mechanism to the next action. It becomes claim-relevant only if pair evidence separates wrong semantic top from correct ambiguous top better than single-candidate standoff observation.
+###### 사실
+
+```text
+date_checked: 2026-05-18
+code: runtime/h001_runtime/analyze_pair_observation_objective_v4b.py
+design_smoke_out: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_design_smoke
+validated_output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1
+fixed_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/fixed_rule_pair_v4b_revised_geometry_validation_summary.json
+uses_gt_for_action: false
+```
+
+V4b keeps V4 evidence computation unchanged and adds a candidate-set completeness guard before alt commit:
+
+```text
+if V4 would reject top and commit alt:
+  allow alt commit only when residual pair ambiguity is zero and alt evidence is strong
+else:
+  request external candidate search
+```
+
+V4b result on revised-geometry evidence:
+
+```text
+rows: 31
+passes_pair_objective_v4b_safety_gate: true
+passes_pair_objective_v4b_full_gate: false
+wrong_goal_commit_rate: 0.0
+commit_rate: 0.0
+blocked_alt_commit_count: 1
+neither_candidate_commit_rate: 0.0
+alt_only_reject_top_rate: 0.0
+```
+
+Action counts:
+
+```text
+pair_v4b_defer_rank_ambiguous_or_duplicate_goal: 18
+pair_v4b_request_external_candidate_search: 7
+pair_v4b_defer_view_not_comparable: 5
+pair_v4b_request_external_candidate_search_alt_confirm_untrusted: 1
+```
+
+###### 에이전트 추론
+
+V4b fixes the immediate safety failure: the only V4 wrong alt commit is now routed to external candidate search. This confirms that pair-local top-vs-alt evidence should not be treated as a closed-world decision when `arbitration_R_after2_ambiguity` remains unresolved.
+
+V4b is safe but not useful enough as a final policy because it has zero commit rate on the fresh validation split. The next method step should score external candidates for V4b external-search cases rather than rerun first_eval or tune pair-local thresholds.
+
+###### V4b External Candidate Scoring Diagnostic
+
+###### 사실
+
+```text
+date_checked: 2026-05-18
+planner: runtime/h001_runtime/plan_external_candidate_observation.py
+scoring_analyzer: runtime/h001_runtime/analyze_external_candidate_scoring_v1.py
+output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_scoring_design_v1
+source_objective_rows: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/pair_observation_objective_v4b_rows.jsonl
+objective_version: pair_v4b
+external_selection_mode: rank_bands
+external_budget: 6
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+V4b external-search branch result:
+
+```text
+triggered_rows: 8
+plan_rows: 48
+skipped_rows: 0
+external_set_contains_correct_rate: 0.875
+first_external_correct_rate: 0.125
+neither_candidate_external_set_contains_correct_rate: 1.0
+pair_correct_candidate_unnecessary_external_rate: 0.875
+```
+
+Best proxy scoring variant:
+
+```text
+best_variant: E2_detector_score
+commit_rate: 0.375
+success_commit_rate: 0.25
+wrong_goal_commit_rate: 0.125
+wrong_goal_commit_rate_on_commits: 0.3333
+selected_correct_rate_if_forced: 0.25
+passes_external_scoring_safety_gate: false
+passes_external_scoring_full_gate: false
+```
+
+###### 에이전트 추론
+
+The V4b external branch has a useful candidate-set signal: most external-search rows contain a correct candidate within budget. However, the current proxy scorer is not safe enough for a policy claim. The failing cases show that external candidate retrieval and external candidate commitment must be separated: retrieval can be active, but commitment needs evidence from the actual external viewpoint, not only semantic rank or association-recovery proxy features.
+
+The next implementation step should therefore be an actual `ExternalCandidateObservation` detector-evidence gate. It should render the external viewpoints, run the detector/segmenter on those frames, and score candidates with a fixed safety gate before any first_eval rerun or policy-scale comparison.
+
+###### Actual ExternalCandidateObservation Detector-Evidence Gate
+
+###### 사실
+
+```text
+date_checked: 2026-05-18
+analyzer: runtime/h001_runtime/analyze_external_candidate_observation_evidence.py
+frame_exporter_update: runtime/h001_runtime/export_postview_frames_v2.py preserves external_* and source_objective_* fields
+detector_update: runtime/h001_runtime/detect_postview_groundingdino_sam2.py preserves external_* and source_objective_* fields
+schema_smoke_out: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_evidence_schema_smoke
+frame_schema_smoke_out: /tmp/research3-runs/h001_v3_fresh_external_candidate_frame_schema_smoke
+uses_gt_for_action: false
+```
+
+Gate contract:
+
+```text
+detector substrate:
+  detector_box_rate >= 0.80
+  sam2_mask_rate >= 0.80
+  candidate_association_rate >= 0.20
+
+external evidence:
+  external_evidence_available_rate >= 0.50
+  external_positive_evidence_rate >= 0.30
+  commit_rate >= 0.15
+  selected_correct_improvement_over_first >= 0.10
+
+safety:
+  wrong_goal_commit_rate <= 0.10
+  no_valid_external_commit_rate <= 0.10
+```
+
+Schema smoke result without detector artifact:
+
+```text
+rows: 8
+plan_rows: 48
+association_rows: 0
+passes_external_detector_substrate_gate: false
+passes_external_evidence_safety_gate: true
+passes_external_evidence_full_gate: false
+action_counts:
+  external_evidence_v1_defer: 8
+```
+
+Frame export schema smoke:
+
+```text
+rows_exported: 1
+rendered_heading_count: 4
+policy: ExternalCandidateObservation
+metadata_preserved:
+  external_branch_id
+  external_branch_rank
+  external_candidate_ids
+  source_objective_action
+  source_objective_reason
+  pair_v4b_action
+```
+
+###### 에이전트 추론
+
+This completes the fixed analysis gate but does not yet prove the method. The gate intentionally fails when actual detector evidence is missing. The next step is a background detector artifact job that renders all V4b external observation rows, runs `GroundingDINO + SAM2`, and evaluates this analyzer on the resulting detector associations.
+
+###### ExternalCandidateObservation Detector Artifact Result
+
+###### 사실
+
+```text
+date_checked: 2026-05-18
+job_wrapper: runtime/jobs/v3_fresh_validation_pair_objective_v4b_external_candidate_detector.sh
+output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1
+validation_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_detector_validation_summary.json
+status: completed
+uses_gt_for_action: false
+```
+
+Detector substrate:
+
+```text
+frame_rows_exported: 48
+rendered_heading_count: 168
+rows_with_detector_box_rate: 0.9583
+rows_with_sam2_mask_rate: 0.9583
+rows_with_candidate_association_rate: 0.1250
+passes_external_detector_substrate_gate: false
+```
+
+Evidence gate:
+
+```text
+commit_rate: 0.375
+success_commit_rate: 0.125
+wrong_goal_commit_rate: 0.25
+wrong_goal_commit_rate_on_commits: 0.6667
+selected_correct_improvement_over_first: 0.5
+passes_external_evidence_safety_gate: false
+passes_external_evidence_full_gate: false
+```
+
+###### 에이전트 추론
+
+The result is a useful negative result, not a method promotion. External observation can recover a correct non-top candidate in at least one hard `bed` case, and forced selection improves over first external rank. However, the current commit rule is unsafe for `plant`: candidate-specific external views can still produce strong-looking projected/mask evidence for wrong repeated instances. This is not solved by first_eval rerun and should become an external-evidence failure taxonomy problem.
+
+The next revision should not be threshold-only. It should separate:
+
+```text
+candidate retrieval success
+external detector availability
+candidate-object association reliability
+safe commit evidence
+```
+
+The immediate next method step is `external evidence objective v2`, likely with a stricter branch-level contrast and category/property-conditioned association reliability guard.
+
+###### External Evidence Objective V2
+
+###### 사실
+
+```text
+date_checked: 2026-05-18
+analyzer: runtime/h001_runtime/analyze_external_candidate_observation_evidence_v2.py
+input_artifact: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1
+output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_evidence_v2
+summary: external_candidate_evidence_v2_summary.json
+rows: 8
+plan_rows: 48
+association_rows: 168
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+V2 gate result:
+
+```text
+detector_box_rate: 0.9583
+sam2_mask_rate: 0.9583
+candidate_association_rate_diagnostic: 0.1250
+external_evidence_available_rate: 1.0
+external_positive_evidence_rate: 0.875
+branch_strong_depth_evidence_rate: 0.25
+commit_rate: 0.25
+success_commit_rate: 0.25
+wrong_goal_commit_rate: 0.0
+wrong_goal_commit_rate_on_commits: 0.0
+no_valid_external_commit_rate: 0.0
+selected_correct_rate_if_forced: 0.625
+selected_correct_improvement_over_first: 0.5
+passes_external_detector_substrate_gate_v2: true
+passes_external_evidence_safety_gate_v2: true
+passes_external_evidence_full_gate_v2: true
+```
+
+Action summary:
+
+```text
+external_evidence_v2_commit_candidate: 2
+external_evidence_v2_defer: 6
+
+commit_external_candidate:
+  bed / neither_candidate_correct / selected rank 2 / correct
+  chair / both_candidates_correct / selected rank 4 / correct
+
+defer_without_strong_depth_association:
+  plant / top_only_correct / selected rank 4 / wrong
+```
+
+###### 에이전트 추론
+
+V2 changes the gate from a frame-level association-rate requirement to branch-level evidence quality:
+
+```text
+candidate retrieval success
+external detector availability
+strong depth-associated candidate evidence
+property-conditioned commit safety
+duplicate-goal evidence for repeated furniture
+```
+
+This directly addresses the V1 failure taxonomy. The wrong `plant` commits are blocked because mask/projection evidence without strong depth association is not enough for `small_or_cluttered` objects. The hard `bed` recovery remains commit-eligible because it has strong strict association and large margin. The repeated `chair` case is treated as safe duplicate-goal evidence because multiple plausible candidates have strong depth support.
+
+This is not yet a paper claim. The rule was designed after observing this same detector artifact, so it is a fixed-rule regression result on the diagnosis artifact. The next validation must freeze these thresholds and run V2 on a fresh or held-out external-candidate detector artifact before any `first_eval` replacement rerun or policy-scale claim.
+
+###### Frozen V2 Held-Out Validation
+
+###### 사실
+
+```text
+date_checked: 2026-05-18
+split: risk_validation_v1
+job_wrapper: runtime/jobs/risk_validation_pair_objective_v4b_external_candidate_v2_holdout.sh
+output_root: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1
+summary: frozen_v2_holdout_validation_summary.json
+failure_mode_summary: external_candidate_evidence_v2_failure_modes/external_candidate_evidence_failure_mode_summary.json
+status: completed
+uses_gt_for_action: false
+```
+
+V2 held-out result:
+
+```text
+triggered_rows: 10
+plan_rows: 60
+detector_box_rate: 0.9333
+sam2_mask_rate: 0.9333
+external_set_contains_correct_rate: 0.4000
+first_external_correct_rate: 0.2000
+commit_rate: 0.6000
+success_commit_rate: 0.2000
+wrong_goal_commit_rate: 0.4000
+no_valid_external_commit_rate: 0.2000
+selected_correct_improvement_over_first: 0.0000
+passes_external_detector_substrate_gate_v2: true
+passes_external_evidence_safety_gate_v2: false
+passes_external_evidence_full_gate_v2: false
+```
+
+Failure taxonomy:
+
+```text
+external_retrieval_miss_defer: 4
+successful_external_commit: 2
+unsafe_no_valid_external_commit: 2
+wrong_rerank_over_correct_first_candidate: 2
+```
+
+###### 에이전트 추론
+
+Frozen V2 is rejected as a held-out commit objective. The failure is not the original weak-depth `plant` case. On `risk_validation_v1`, the main failures are `bed` repeated-instance errors and retrieval validity errors:
+
+```text
+strong depth evidence != instance identity guarantee
+external set contains correct candidate only 0.40 of triggered rows
+wrong commits still occur when external set contains no valid target
+wrong reranking can override a correct first external candidate
+```
+
+This blocks `first_eval` replacement rerun and policy-scale comparison. The next method step should be a V3 design that treats external observation as an identity-consistency / retrieval-validity problem, not another threshold-only evidence score.
+
+###### External Evidence Objective V3 Check
+
+###### 사실
+
+```text
+date_checked: 2026-05-18
+analyzer: runtime/h001_runtime/analyze_external_candidate_observation_evidence_v3.py
+risk_validation_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_evidence_v3
+v3_fresh_diagnostic_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_evidence_v3
+uses_gt_for_action: false
+```
+
+V3 on `risk_validation_v1`:
+
+```text
+commit_rate: 0.20
+success_commit_rate: 0.20
+wrong_goal_commit_rate: 0.00
+no_valid_external_commit_rate: 0.00
+passes_external_evidence_full_gate_v3: true
+```
+
+V3 on the earlier V3-fresh diagnostic artifact:
+
+```text
+commit_rate: 0.00
+success_commit_rate: 0.00
+wrong_goal_commit_rate: 0.00
+passes_external_evidence_full_gate_v3: false
+```
+
+###### 에이전트 추론
+
+V3 is a safety repair, not a method promotion. It blocks the held-out `bed` wrong commits by refusing large repeated-furniture commits from `alt_confirmation_without_pair_set_completeness`, but that same guard also blocks the earlier correct `bed` recovery.
+
+The next contribution-relevant revision should not be another threshold change. It should add an explicit identity-consistency or retrieval-validity confirmation path for large repeated furniture, so the method can distinguish:
+
+```text
+correct hard bed recovery
+wrong repeated bed instance
+no-valid external candidate set
+```
+
+###### External Identity-Confirmation Path V4
+
+###### 사실
+
+```text
+date_checked: 2026-05-18
+analyzer: runtime/h001_runtime/analyze_external_candidate_observation_evidence_v4.py
+risk_validation_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_evidence_v4
+v3_fresh_diagnostic_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_evidence_v4
+uses_gt_for_action: false
+```
+
+V4 action categories:
+
+```text
+commit_candidate
+request_identity_confirmation
+request_expanded_retrieval
+```
+
+V4 on `risk_validation_v1`:
+
+```text
+commit_candidate: 2
+request_identity_confirmation: 4
+request_expanded_retrieval: 4
+commit_rate: 0.20
+success_commit_rate: 0.20
+wrong_goal_commit_rate: 0.00
+no_valid_external_commit_rate: 0.00
+passes_external_evidence_full_gate_v4: true
+```
+
+V4 on the earlier V3-fresh diagnostic artifact:
+
+```text
+commit_candidate: 1
+request_identity_confirmation: 1
+request_expanded_retrieval: 6
+commit_rate: 0.125
+success_commit_rate: 0.125
+wrong_goal_commit_rate: 0.00
+no_valid_external_commit_rate: 0.00
+passes_external_evidence_full_gate_v4: false
+```
+
+###### 에이전트 추론
+
+V4 is better aligned with the research claim because it no longer treats semantic uncertainty as only a commit/defer threshold. It routes uncertainty into mobility needs:
+
+```text
+identity-confirmed candidate -> commit
+identity-ambiguous repeated object -> request identity confirmation
+retrieval-invalid external set -> request expanded retrieval
+```
+
+This is closer to "semantic uncertainty as active SLAM/navigation utility" than V2/V3. However, it is not paper-ready because the follow-up actions are not implemented as actual viewpoint planning and detector reruns yet. The next implementation should generate observations for `request_identity_confirmation` and `request_expanded_retrieval`, then test whether those requests reduce over-deferral without reintroducing wrong-goal commits.
+
+###### Follow-Up Observation Planner
+
+###### 사실
+
+```text
+date_checked: 2026-05-18
+planner: runtime/h001_runtime/plan_external_candidate_followup_observation.py
+policy: ExternalCandidateFollowupObservation
+uses_gt_for_action: false
+```
+
+`risk_validation_v1` output:
+
+```text
+output_root: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_plan
+plan_rows: 28
+skipped_rows: 0
+expanded_retrieval_rows: 18
+identity_confirmation_rows: 10
+standoff_navmesh_rows: 10
+frame_smoke_rows_exported: 4
+frame_smoke_rendered_heading_count: 33
+frame_smoke_ok: true
+detector_smoke_rows: 4
+detector_smoke_box_rate: 1.00
+detector_smoke_sam2_mask_rate: 1.00
+detector_smoke_candidate_association_rate: 0.75
+detector_smoke_uses_gt_for_action: false
+```
+
+V3-fresh diagnostic output:
+
+```text
+output_root: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_plan
+plan_rows: 39
+skipped_rows: 0
+expanded_retrieval_rows: 36
+identity_confirmation_rows: 3
+standoff_navmesh_rows: 3
+frame_smoke_rows_exported: 4
+frame_smoke_rendered_heading_count: 43
+frame_smoke_ok: true
+```
+
+###### 에이전트 추론
+
+The follow-up planner is the first concrete step where semantic uncertainty becomes an active observation contract rather than a scalar gate.
+
+```text
+identity ambiguity -> standoff observations around selected/rival candidates
+retrieval invalidity -> expanded candidate observations outside the current candidate set
+```
+
+This still does not unblock `first_eval` rerun. The next gate is a small detector smoke on the follow-up frames, then an analyzer that checks whether follow-up evidence can turn `request_identity_confirmation` or `request_expanded_retrieval` into safe commits or safe continued defers.
+
+The small detector smoke has now passed on the `risk_validation_v1` follow-up frames. `followup_action`, `followup_reason`, `followup_role`, and `followup_viewpoint_source` are preserved through frame export and detector association outputs, so the next step is the follow-up evidence analyzer, not a full detector job yet.
+
+###### Follow-Up Evidence Analyzer
+
+###### 사실
+
+```text
+date_checked: 2026-05-18
+analyzer: runtime/h001_runtime/analyze_external_candidate_followup_evidence.py
+smoke_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_evidence_smoke
+source_request_rows: 8
+source_rows_analyzed: 2
+observed_only: true
+frame_rows: 4
+association_rows: 198
+action_counts:
+  followup_evidence_v1_defer: 2
+reason_counts:
+  defer_expanded_retrieval_without_strong_depth_association: 2
+detector_box_rate: 1.00
+sam2_mask_rate: 1.00
+candidate_association_rate_diagnostic: 0.75
+followup_evidence_available_rate: 1.00
+followup_positive_evidence_rate: 1.00
+followup_strong_depth_evidence_rate: 0.00
+wrong_goal_commit_rate: 0.00
+no_valid_commit_rate: 0.00
+passes_followup_detector_substrate_gate_v1: false
+passes_followup_evidence_safety_gate_v1: true
+passes_followup_evidence_full_gate_v1: false
+uses_gt_for_action: false
+```
+
+###### 에이전트 추론
+
+The analyzer now turns V4 mobility requests into post-follow-up decisions:
+
+```text
+request_identity_confirmation -> selected-vs-rival identity check
+request_expanded_retrieval -> expanded candidate commit / identity request / defer check
+```
+
+The smoke validates schema, metadata linkage, and safe defer behavior. It does not validate the full intervention yet because only four follow-up frames were exported and the observed expanded-retrieval rows did not produce strong depth-associated evidence. The next step should be a full follow-up detector/evidence validation job on the `risk_validation_v1` follow-up plan.
+
+###### Full Follow-Up Detector / Evidence Validation Launch
+
+###### 사실
+
+```text
+date_checked: 2026-05-19
+wrapper: runtime/jobs/risk_validation_external_candidate_followup_detector.sh
+tmux_session: h001-followup-full-20260519-001658
+log: logs/risk-validation-external-candidate-followup-detector-20260519-001658.log
+status_file: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_job_status.json
+initial_status: running
+initial_stage: followup_frame_export
+expected_plan_rows: 28
+expected_source_request_rows: 8
+```
+
+###### 에이전트 추론
+
+This job is the first non-smoke check of the full active observation branch for V4 external-candidate requests. It should determine whether `request_identity_confirmation` and `request_expanded_retrieval` can produce safe follow-up evidence decisions across the full `risk_validation_v1` request set. `first_eval` replacement remains blocked until the job completes and the follow-up evidence gate is inspected.
+
+###### Full Follow-Up Detector / Evidence Validation Result
+
+###### 사실
+
+```text
+date_checked: 2026-05-19
+status: completed
+plan_rows: 28
+frame_rows_exported: 28
+rendered_heading_count: 326
+detector_rows: 28
+detector_box_rate: 1.00
+sam2_mask_rate: 1.00
+candidate_association_rate_diagnostic: 0.714
+source_request_rows: 8
+source_rows_analyzed: 8
+followup_evidence_action_counts:
+  followup_evidence_v1_commit_expanded_candidate: 2
+  followup_evidence_v1_defer: 6
+followup_evidence_reason_counts:
+  commit_expanded_candidate_after_followup: 2
+  defer_expanded_retrieval_without_strong_depth_association: 2
+  defer_identity_ambiguous_rival_supported: 4
+commit_rate: 0.25
+success_commit_rate: 0.00
+wrong_goal_commit_rate: 0.25
+no_valid_commit_rate: 0.25
+passes_followup_detector_substrate_gate_v1: true
+passes_followup_evidence_safety_gate_v1: false
+passes_followup_evidence_full_gate_v1: false
+uses_gt_for_action: false
+```
+
+###### 에이전트 추론
+
+The full job turns the previous smoke result into a clearer failure mode. Follow-up observation has enough detector/mask signal, but the current expanded-retrieval commit rule is unsafe: it commits two `sofa` rows in `LT9Jq6dN3Ea` even though the expanded follow-up set does not contain a valid/correct candidate. This means the next contribution-shaped step is not threshold tuning or `first_eval` rerun. It is a failure-taxonomy-driven revision that separates "expanded retrieval found a reliable object" from "expanded retrieval found a detector-supported but invalid repeated object."
+
+###### Follow-Up Evidence Failure Taxonomy
+
+###### 사실
+
+```text
+date_checked: 2026-05-19
+analyzer: runtime/h001_runtime/analyze_external_candidate_followup_failure_modes.py
+output_root: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_failure_modes
+rows: 8
+commit_rows: 2
+success_commit_rows: 0
+wrong_commit_rows: 2
+no_valid_commit_rows: 2
+safe_identity_defer_rows: 4
+primary_failure_mode_counts:
+  safe_identity_defer_rival_supported: 4
+  safe_expanded_retrieval_defer_no_valid_target: 2
+  unsafe_no_valid_expanded_retrieval_commit: 2
+primary_failure_by_query:
+  bed:
+    safe_identity_defer_rival_supported: 4
+    safe_expanded_retrieval_defer_no_valid_target: 2
+  sofa:
+    unsafe_no_valid_expanded_retrieval_commit: 2
+revision_implications:
+  first_eval_rerun_blocked: true
+  threshold_only_revision_rejected: true
+  needs_expanded_retrieval_validity_guard: true
+  needs_instance_safety_beyond_depth_association: true
+  preserve_identity_confirmation_defer: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Unsafe commit examples:
+
+```text
+scene: LT9Jq6dN3Ea
+query: sofa
+label_case: neither_candidate_correct
+selected_candidate_id: vlmaps:export:sofa:spatial_nms:1
+selected_score: 0.8034
+selected_margin: 0.3076
+selected_strong_depth_evidence: true
+selected_strict_association_count: 7
+selected_mask_hit_count: 26
+followup_set_contains_correct: false
+```
+
+###### 에이전트 추론
+
+The next objective should preserve the identity-confirmation behavior, because those rows safely deferred under rival support. The broken part is expanded retrieval: a high-score, positive, strong-depth-associated `sofa` observation can still be an invalid repeated object. Therefore the revision should add a non-GT validity/identity guard before expanded-retrieval commit, not loosen thresholds or rerun `first_eval`.
+
+###### Follow-Up Evidence Objective V2
+
+###### 사실
+
+```text
+date_checked: 2026-05-19
+analyzer: runtime/h001_runtime/analyze_external_candidate_followup_evidence.py
+objective_version: v2
+guard: large_repeated_expanded_retrieval_guard=auto
+output_root: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_evidence_v2
+failure_taxonomy_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_failure_modes_v2
+source_request_rows: 8
+source_rows_analyzed: 8
+action_counts:
+  followup_evidence_v1_defer: 6
+  followup_evidence_v1_request_identity_confirmation: 2
+reason_counts:
+  defer_expanded_retrieval_without_strong_depth_association: 2
+  defer_identity_ambiguous_rival_supported: 4
+  request_identity_confirmation_after_expanded_retrieval_large_repeated_instance_guard: 2
+commit_rate: 0.00
+success_commit_rate: 0.00
+wrong_goal_commit_rate: 0.00
+no_valid_commit_rate: 0.00
+request_identity_confirmation_rate: 0.25
+passes_followup_detector_substrate_gate_v1: true
+passes_followup_evidence_safety_gate_v1: true
+passes_followup_evidence_full_gate_v1: false
+uses_gt_for_action: false
+```
+
+V2 failure taxonomy:
+
+```text
+primary_failure_mode_counts:
+  safe_identity_defer_rival_supported: 4
+  safe_expanded_retrieval_defer_no_valid_target: 4
+commit_rows: 0
+wrong_commit_rows: 0
+no_valid_commit_rows: 0
+success_commit_rows: 0
+failure_tag_counts:
+  expanded_retrieval_requests_identity_confirmation: 2
+  safe_expanded_retrieval_defer_no_valid_target: 4
+  safe_identity_defer_rival_supported: 4
+```
+
+###### 에이전트 추론
+
+V2 is a safety repair, not a paper claim. It blocks the unsafe no-valid `sofa` commits by treating large repeated furniture expanded-retrieval evidence as an identity-confirmation request instead of direct commit. This preserves the good V1 behavior on identity-confirmation rows, but utility is still unresolved because there are no success commits. The next method step should define the second-stage identity-confirmation loop for V2 request outputs, not move directly to policy-scale comparison.
+
+###### Second-Stage Identity-Confirmation Contract
+
+###### 사실
+
+```text
+date_checked: 2026-05-19
+contract_name: ExternalCandidateSecondStageIdentityConfirmationV2
+input_rows: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_evidence_v2/external_candidate_followup_evidence_rows.jsonl
+input_filter: followup_evidence_v1_action == followup_evidence_v1_request_identity_confirmation
+current_target_rows: 2
+target_query: sofa
+target_scene: LT9Jq6dN3Ea
+selected_candidate_id: vlmaps:export:sofa:spatial_nms:1
+selected_candidate_evidence:
+  selected_score: 0.8034
+  selected_margin: 0.3076
+  positive_support: true
+  followup_strong_depth_evidence: true
+  strict_association_count: 7
+  mask_hit_count: 26
+top_positive_rival_candidate_id: vlmaps:export:sofa:spatial_nms:0
+top_positive_rival_evidence:
+  score: 0.4959
+  positive_support: true
+  followup_strong_depth_evidence: false
+  strict_association_count: 0
+  mask_hit_count: 18
+uses_gt_for_action: false
+```
+
+Contracted planner:
+
+```text
+planner_name: plan_external_candidate_second_stage_identity_confirmation
+policy_name: ExternalCandidateSecondStageIdentityConfirmation
+input: V2 follow-up evidence rows
+candidate_source: candidate artifact + V2 followup_candidate_evidence
+plan_rows_per_request:
+  selected_standoff: selected candidate from V2 request
+  top_positive_rival_standoff: strongest positive rival if present
+  optional_common_or_matched_view: selected/rival comparable view if navmesh feasible
+viewpoint_rule:
+  use standoff_navmesh around candidate position
+  avoid candidate_visit_position-only evidence for final commit
+  yaw offsets must cover target-facing and local context views
+```
+
+Contracted analyzer:
+
+```text
+analyzer_name: analyze_external_candidate_second_stage_identity_evidence
+commit_allowed_only_if:
+  selected has positive support and strong depth association in independent second-stage views
+  selected beats every positive/strong rival under comparable selected-vs-rival evidence
+  selected/rival evidence is not based only on the original expanded_candidate_visit_position
+  source action path remains non-GT
+request_or_defer_if:
+  selected remains strong but no comparable rival view exists
+  rival has positive or strong evidence in a comparable view
+  evidence is available but not instance-discriminative
+  no candidate passes the comparable-view validity guard
+```
+
+Promotion gates:
+
+```text
+substrate_gate:
+  plan_rows > 0
+  frame_rows_exported == plan_rows
+  detector_box_rate >= 0.80
+  sam2_mask_rate >= 0.80
+  candidate_association_rate_diagnostic >= 0.60
+safety_gate:
+  uses_gt_for_action == false
+  wrong_goal_commit_rate == 0.00
+  no_valid_commit_rate == 0.00
+  visit_position_only_commit_rate == 0.00
+utility_gate:
+  current risk_validation_v1 target rows are no-valid diagnostic rows, so expected commit_rate is 0.00 on this subset
+  utility promotion requires an additional split where V2 request rows include at least one reachable/correct candidate
+```
+
+Expected current-split behavior:
+
+```text
+risk_validation_v1:
+  expected_action: defer or request further identity confirmation
+  expected_success_commit_rate: 0.00
+  expected_wrong_goal_commit_rate: 0.00
+  expected_no_valid_commit_rate: 0.00
+```
+
+###### 에이전트 추론
+
+The second-stage contract should not try to force success on the current two `sofa` rows, because analysis labels show the expanded set has no valid/correct target. Its purpose on `risk_validation_v1` is safety: verify that the system can recognize "detector-supported object exists" is not enough for ObjectNav commit. Utility should be judged later on rows where V2 identity-confirmation requests contain at least one valid candidate.
+
+###### Second-Stage Identity Planner / Frame Smoke
+
+###### 사실
+
+```text
+date_checked: 2026-05-19
+planner: runtime/h001_runtime/plan_external_candidate_second_stage_identity_confirmation.py
+policy: ExternalCandidateSecondStageIdentityConfirmation
+plan_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_identity_stage2_plan
+frame_smoke_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_identity_stage2_frame_smoke
+input_rows: external_candidate_followup_evidence_v2/external_candidate_followup_evidence_rows.jsonl
+request_rows: 2
+plan_rows: 4
+skipped_rows: 0
+role_counts:
+  selected_standoff: 2
+  rival_1_standoff: 2
+viewpoint_source_counts:
+  standoff_navmesh: 4
+rows_by_external_branch_id:
+  external_candidate:7: 2
+  external_candidate:25: 2
+frame_rows_requested: 4
+frame_rows_exported: 4
+rendered_heading_count: 46
+min_headings_per_row: 11
+max_headings_per_row: 12
+metadata_preserved:
+  external_branch_id: true
+  followup_evidence_v1_action: true
+  source_followup_action: true
+  second_stage_role: true
+  second_stage_viewpoint_source: true
+  second_stage_selected_candidate_id: true
+  second_stage_rival_candidate_ids: true
+uses_gt_for_action: false
+```
+
+###### 에이전트 추론
+
+The planner/schema path is now unblocked. The two V2 `sofa` request rows produce comparable selected/rival standoff observations without relying on `candidate_visit_position` as final commit evidence. The next step should be a second-stage identity evidence analyzer that consumes detector evidence from these frames and enforces the no-direct-commit safety rule.
+
+###### Second-Stage Identity Evidence Analyzer / Schema Smoke
+
+###### 사실
+
+```text
+date_checked: 2026-05-19
+analyzer: runtime/h001_runtime/analyze_external_candidate_second_stage_identity_evidence.py
+schema_version: h001.external_candidate_second_stage_identity_evidence.v1
+output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_identity_stage2_evidence_schema_smoke
+input_followup_evidence_rows: external_candidate_followup_evidence_v2/external_candidate_followup_evidence_rows.jsonl
+input_second_stage_plan: external_candidate_followup_identity_stage2_plan/external_candidate_second_stage_identity_plan.jsonl
+detector_root_for_schema_smoke: external_candidate_followup_identity_stage2_frame_smoke
+source_request_rows: 2
+source_rows_analyzed: 2
+plan_rows: 4
+frame_rows: 4
+association_rows: 0
+action_counts:
+  second_stage_identity_v1_defer: 2
+reason_counts:
+  defer_selected_no_positive_support: 2
+passes_second_stage_identity_schema_gate_v1: true
+passes_second_stage_identity_safety_gate_v1: true
+passes_second_stage_identity_detector_substrate_gate_v1: false
+passes_second_stage_identity_full_gate_v1: false
+commit_rate: 0.0
+wrong_goal_commit_rate: 0.0
+no_valid_commit_rate: 0.0
+visit_position_only_commit_rate: 0.0
+uses_gt_for_action: false
+```
+
+###### 에이전트 추론
+
+The analyzer contract is now implemented. This schema smoke intentionally uses frame output without detector associations, so detector substrate/full gates should fail while schema and safety gates pass. The next step is a small detector/evidence smoke on the second-stage frames; `first_eval` and policy-scale comparison remain blocked until detector-backed second-stage safety is checked.
+
+###### Second-Stage Identity Detector / Evidence Smoke
+
+###### 사실
+
+```text
+date_checked: 2026-05-19
+detector: runtime/h001_runtime/detect_postview_groundingdino_sam2.py
+analyzer: runtime/h001_runtime/analyze_external_candidate_second_stage_identity_evidence.py
+detector_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_identity_stage2_detector_smoke
+evidence_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_identity_stage2_evidence_smoke
+detector_rows: 4
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 1.0
+association_rows: 92
+detector_box_rows: 120
+detector_mask_rows: 120
+source_request_rows: 2
+source_rows_analyzed: 2
+plan_rows: 4
+action_counts:
+  second_stage_identity_v1_defer: 2
+reason_counts:
+  defer_selected_without_strong_depth_evidence: 2
+passes_second_stage_identity_schema_gate_v1: true
+passes_second_stage_identity_detector_substrate_gate_v1: true
+passes_second_stage_identity_safety_gate_v1: true
+passes_second_stage_identity_full_gate_v1: false
+commit_rate: 0.0
+success_commit_rate: 0.0
+wrong_goal_commit_rate: 0.0
+no_valid_commit_rate: 0.0
+visit_position_only_commit_rate: 0.0
+uses_gt_for_action: false
+```
+
+###### 에이전트 추론
+
+The second-stage detector substrate is strong on this smoke, and the safety gate holds. The full gate should not pass on this split because both V2 request rows are `sofa` rows where the follow-up set has no valid/correct target. This result supports the safety mechanism, not utility. The next step is to rerun or integrate V2 follow-up validation with the second-stage branch recorded, while keeping `first_eval` blocked.
+
+###### V2 Follow-Up + Second-Stage Integrated Summary
+
+###### 사실
+
+```text
+date_checked: 2026-05-19
+script: runtime/h001_runtime/summarize_followup_v2_stage2.py
+output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_v2_stage2_validation
+summary: external_candidate_followup_v2_stage2_validation_summary.json
+terminal_rows: external_candidate_followup_v2_stage2_terminal_rows.jsonl
+followup_v2_rows: 8
+stage2_required_rows: 2
+stage2_resolved_rows: 2
+stage2_request_coverage_rate: 1.0
+terminal_action_counts:
+  followup_evidence_v1_defer: 6
+  second_stage_identity_v1_defer: 2
+terminal_source_counts:
+  followup_v2: 6
+  second_stage_identity: 2
+passes_integrated_stage2_coverage: true
+passes_integrated_detector_substrate: true
+passes_integrated_safety_gate: true
+passes_integrated_full_gate: false
+commit_rate: 0.0
+success_commit_rate: 0.0
+wrong_goal_commit_rate: 0.0
+no_valid_commit_rate: 0.0
+visit_position_only_commit_rate: 0.0
+first_eval_rerun_blocked: true
+policy_scale_comparison_blocked: true
+uses_gt_for_action: false
+```
+
+###### 에이전트 추론
+
+The integrated summary converts V2 `request_identity_confirmation` rows into terminal second-stage outcomes instead of leaving them as unresolved requests. This is the cleanest current evidence that the branch is safety-preserving. It still does not justify `first_eval` or policy-scale rerun, because the integrated terminal policy produces no success commits on this diagnostic split. The next useful check is whether a broader or fresh V2 validation split contains valid/correct second-stage identity cases; otherwise, this branch remains a safety-only mechanism.
+
+###### V2 Follow-Up + Second-Stage Rerun
+
+###### 사실
+
+```text
+date_checked: 2026-05-19
+v2_rerun_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_evidence_v2_rerun_v1
+integrated_rerun_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_v2_stage2_validation_rerun_v1
+core_metric_match_previous_integrated_summary: true
+terminal_rows: 8
+stage2_required_rows: 2
+stage2_resolved_rows: 2
+terminal_action_counts:
+  followup_evidence_v1_defer: 6
+  second_stage_identity_v1_defer: 2
+passes_integrated_safety_gate: true
+passes_integrated_full_gate: false
+commit_rate: 0.0
+success_commit_rate: 0.0
+wrong_goal_commit_rate: 0.0
+no_valid_commit_rate: 0.0
+visit_position_only_commit_rate: 0.0
+first_eval_rerun_blocked: true
+uses_gt_for_action: false
+```
+
+###### 에이전트 추론
+
+The rerun is a reproducibility check, not a new validation claim. It confirms that the V2 + second-stage accounting is deterministic on the frozen detector artifact. Since the rerun still has no success commits, the next step should inspect broader or fresh rows for valid second-stage identity utility cases before any `first_eval` rerun.
+
+###### Broader/Fresh Second-Stage Feasibility Inspection
+
+###### 사실
+
+```text
+date_checked: 2026-05-19
+script: runtime/h001_runtime/inspect_followup_v2_stage2_feasibility.py
+risk_output: /tmp/research3-runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/followup_v2_stage2_feasibility
+v3_fresh_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/followup_v2_stage2_feasibility
+analysis_role: label-only feasibility inspection before detector rerun
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+`risk_validation_v1` result:
+
+```text
+source_request_rows: 8
+expanded_request_rows: 4
+expanded_request_rows_with_correct_followup_set: 0
+identity_request_rows: 4
+identity_request_rows_with_correct_followup_set: 2
+potential_v2_second_stage_identity_utility_rows: 0
+fresh_followup_detector_rerun_supported: false
+recommended_next: broaden_or_replace_split_before_detector_rerun
+first_eval_rerun_blocked: true
+```
+
+`v3_fresh_validation_v1` result:
+
+```text
+source_request_rows: 7
+expanded_request_rows: 6
+expanded_request_rows_with_correct_followup_set: 6
+identity_request_rows: 1
+identity_request_rows_with_correct_followup_set: 1
+potential_followup_utility_rows: 7
+potential_v2_second_stage_identity_utility_rows: 1
+potential_v2_second_stage_identity_branch_ids: external_candidate:12
+potential_non_identity_followup_utility_rows: 5
+recommended_next: run_fresh_followup_detector_v2_stage2_before_first_eval
+first_eval_rerun_blocked: true
+```
+
+###### 에이전트 추론
+
+The previous `risk_validation_v1` second-stage result is safety-only because the expanded-retrieval request rows do not contain a known valid target. The broader `v3_fresh_validation_v1` artifact is a better next detector rerun target: all six expanded-retrieval request rows contain at least one correct follow-up candidate, and one large-repeated `chair` row can test the V2 large-repeated guard turning expanded retrieval into a valid second-stage identity utility path. This still does not unblock `first_eval`; it only justifies running the fresh follow-up detector + V2 + second-stage validation before any policy-scale or `first_eval` rerun.
+
+###### Fresh Follow-Up V2 Failure and V3 Safety Repair
+
+###### 사실
+
+```text
+date_checked: 2026-05-19
+job_script: runtime/jobs/v3_fresh_external_candidate_followup_v2_stage2.sh
+job_status: completed
+job_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1
+v2_integrated_summary: external_candidate_followup_v2_stage2_validation/external_candidate_followup_v2_stage2_validation_summary.json
+v2_failure_taxonomy: external_candidate_followup_v2_failure_modes/external_candidate_followup_failure_mode_summary.json
+v3_evidence_output: external_candidate_followup_evidence_v3
+v3_failure_taxonomy: external_candidate_followup_v3_failure_modes/external_candidate_followup_failure_mode_summary.json
+uses_gt_for_action: false
+```
+
+Fresh V2 integrated result:
+
+```text
+terminal_rows: 7
+stage2_required_rows: 3
+stage2_resolved_rows: 3
+passes_integrated_detector_substrate: true
+passes_integrated_safety_gate: false
+passes_integrated_full_gate: false
+terminal_action_counts:
+  followup_evidence_v1_commit_expanded_candidate: 3
+  second_stage_identity_v1_request_further_identity_confirmation: 3
+  followup_evidence_v1_defer: 1
+wrong_goal_commit_rate: 0.4286
+success_commit_rate: 0.0
+```
+
+Fresh V2 failure taxonomy:
+
+```text
+primary_failure_mode_counts:
+  unsafe_wrong_goal_followup_commit: 3
+  expanded_retrieval_defer: 3
+  safe_identity_defer_rival_supported: 1
+failure_tags:
+  strong_depth_evidence_not_instance_safe: 3
+  positive_detector_support_not_instance_safe: 3
+failing_query: plant
+failing_property_group: small_or_cluttered
+```
+
+V3 safety repair:
+
+```text
+objective_version: v3
+revision: small_or_cluttered expanded retrieval cannot direct-commit from one strong visible distractor
+action_counts:
+  followup_evidence_v1_request_identity_confirmation: 6
+  followup_evidence_v1_defer: 1
+passes_followup_detector_substrate_gate_v1: true
+passes_followup_evidence_safety_gate_v1: true
+passes_followup_evidence_full_gate_v1: false
+wrong_goal_commit_rate: 0.0
+no_valid_commit_rate: 0.0
+commit_rate: 0.0
+success_commit_rate: 0.0
+```
+
+###### 에이전트 추론
+
+The fresh run found a stronger failure mechanism than the earlier no-valid `sofa` diagnostic: for compact objects, detector-positive and depth-associated evidence can still select a visible distractor while the correct candidate remains weakly observed. This rejects threshold-only revision because the wrong candidate already has strong evidence. V3 is therefore a property-conditioned safety repair that converts compact-object expanded retrieval into identity confirmation. It restores safety but does not prove utility. The next experiment must run second-stage identity validation for all six V3 request rows and then decide whether identity confirmation can recover any success commits or only converts unsafe commits into deferrals.
+
+###### Fresh V3 Second-Stage Utility Diagnostic
+
+Runtime evidence:
+
+```text
+date_checked: 2026-05-19
+integrated_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v3_stage2_validation/external_candidate_followup_v2_stage2_validation_summary.json
+utility_diagnostic: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/second_stage_utility_diagnostic_v1/second_stage_utility_diagnostic_summary.json
+```
+
+Facts:
+
+```text
+stage2_request_rows: 6
+stage2_plan_rows: 12
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 1.0
+integrated_safety_gate: pass
+integrated_full_gate: fail
+commit_rate: 0.0
+success_commit_rate: 0.0
+wrong_goal_commit_rate: 0.0
+```
+
+Failure decomposition:
+
+```text
+selected_correct_but_weak_rival_overguarded: 2
+selected_correct_but_view_geometry_insufficient: 1
+correct_candidate_requires_candidate_set_expansion: 3
+```
+
+Diagnostic variants:
+
+```text
+selected_margin_ignore_weak_rival:
+  uses_gt_for_decision: false
+  success_commit_rows: 2
+  wrong_goal_commit_rows: 0
+selected_strong_ignore_rival:
+  uses_gt_for_decision: false
+  success_commit_rows: 3
+  wrong_goal_commit_rows: 3
+best_strong_score:
+  uses_gt_for_decision: false
+  success_commit_rows: 2
+  wrong_goal_commit_rows: 4
+oracle_observed_correct_upper_bound:
+  uses_gt_for_decision: true
+  success_commit_rows: 3
+  wrong_goal_commit_rows: 0
+oracle_candidate_set_upper_bound:
+  uses_gt_for_decision: true
+  success_commit_rows: 6
+  wrong_goal_commit_rows: 0
+```
+
+Agent inference:
+
+```text
+The next recovery path should not be broad threshold lowering.
+The immediate objective probe should test high-margin selected evidence with weak-rival blocking relaxed, because it recovers two success commits without wrong commits on this artifact.
+Rows where the correct candidate is outside selected/rival evidence need candidate-set expansion, not another identity-confirmation threshold.
+This is same-artifact diagnostic evidence only; first_eval and policy-scale runs remain blocked until held-out validation passes.
+```
+
+Objective V2 probe result:
+
+```text
+date_checked: 2026-05-19
+objective: selected_margin_ignore_weak_rival
+evidence_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_v3_evidence_objective_v2/external_candidate_second_stage_identity_evidence_summary.json
+integrated_summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v3_stage2_objective_v2_validation/external_candidate_followup_v2_stage2_validation_summary.json
+validation_scope: same_artifact_diagnostic
+local_integrated_gate_passed: true
+utility_proof_passed: false
+first_eval_rerun_blocked: true
+commit_rows: 2
+success_commit_rows: 2
+wrong_goal_commit_rows: 0
+uses_gt_for_action: false
+```
+
+Agent inference:
+
+```text
+The objective V2 probe supports a narrower method principle: weak rival-positive evidence should not automatically block commit when selected evidence is strong in its own view and the selected-vs-rival margin is high.
+This principle is different from threshold lowering because strong-rival evidence still blocks commit.
+The remaining no-utility rows require candidate-set expansion because the correct candidate is outside selected/rival evidence.
+```
 
 ### Risk Update After Active Observation
 

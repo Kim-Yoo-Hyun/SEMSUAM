@@ -320,8 +320,8 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     return summary
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Apply H001 paired top-vs-alt objective v4.")
+def build_parser(description: str = "Apply H001 paired top-vs-alt objective v4.") -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument("--pair-evidence-rows", required=True)
     parser.add_argument("--pair-observation-plan", required=True)
     parser.add_argument("--out-root", required=True)
@@ -356,7 +356,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-commit-rate", type=float, default=0.15)
     parser.add_argument("--min-alt-only-rows-for-reject-top-gate", type=int, default=3)
     parser.add_argument("--min-alt-only-reject-top-rate", type=float, default=0.30)
-    return parser.parse_args()
+    return parser
+
+
+def parse_args() -> argparse.Namespace:
+    return build_parser().parse_args()
 
 
 def main() -> None:

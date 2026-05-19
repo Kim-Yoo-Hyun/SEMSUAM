@@ -17,7 +17,7 @@ First probe는 small subset 또는 one-scene replay에서 semantic map uncertain
 
 ## Current Status
 
-Draft.
+Active diagnostic. H001 remains a hypothesis, not a paper-ready claim.
 
 ## Current Gate
 
@@ -29,7 +29,24 @@ Draft.
 - Evaluation contract, split discipline, numeric gates, Step 4-5 promotion gate: `07_evaluation_contract.md`
 - Runtime integration, candidate backend, artifact generation, calibration commands: `08_runtime_integration.md`
 - 6-12 month schedule: `15_schedule.md`
-- Current next implementation target: decide whether to proceed from failed `v3b_owlvit_box` gate to `v3c_groundingdino_sam2` detector+mask smoke
+- Reproducibility entrypoint: `../../../docs/reproducibility.md`
+- Current next implementation target: prepare full follow-up detector/evidence validation job for `ExternalCandidateFollowupObservation`
+
+## Latest Gate
+
+### 사실
+
+- Date checked: 2026-05-18
+- `risk_validation_v1` and `v3_fresh_validation_v1` candidate coverage gates pass with non-GT `artifact_jsonl` candidates.
+- V4 external evidence on `risk_validation_v1` passes the current external evidence gate with `commit_rate 0.20`, `success_commit_rate 0.20`, and wrong-goal commit `0.00`.
+- V4 routes unresolved semantic uncertainty into `request_identity_confirmation` and `request_expanded_retrieval`.
+- `ExternalCandidateFollowupObservation` planner produced `28` `risk_validation_v1` follow-up rows with `0` skipped rows.
+- Follow-up detector smoke passed on `4` rows with detector box rate `1.00`, SAM2 mask rate `1.00`, and candidate association rate `0.75`.
+- Follow-up evidence analyzer smoke passed safety with wrong-goal/no-valid commit rates `0.00`, but full gate failed because strong depth-associated follow-up evidence rate was `0.00`.
+
+### 에이전트 추론
+
+The current method shape is more contribution-aligned than detector-based re-ranking because semantic uncertainty is being converted into an active observation request. It is still not paper-ready; the next gate is a full follow-up detector/evidence validation job before any `first_eval` replacement rerun or policy-scale comparison.
 
 ## Pre-Schedule Verification Check
 
@@ -43,7 +60,7 @@ Draft.
 
 ### 에이전트 추론
 
-No additional literature review gate is required before continuing the 6-month to 1-year schedule. The active blocker is not literature, but reproducible non-GT calibration coverage.
+No additional literature review gate is required before continuing the 6-month to 1-year schedule. The active blocker is no longer basic dataset or candidate coverage; it is full follow-up detector/evidence validation for active observation requests.
 
 ### 사용자 판단 필요
 
@@ -60,7 +77,7 @@ No additional literature review gate is required before continuing the 6-month t
 
 ### 에이전트 추론
 
-The schedule is still valid. The current execution point is P1 candidate-budget coverage recovery with `random256_k10_v1`.
+The schedule is still valid. The current execution point has moved past candidate-budget coverage recovery into active observation evidence validation.
 
 ## HM3D VLMaps Gate
 
@@ -93,7 +110,7 @@ The interface gate passed, but sparse smoke artifacts are not paper-facing Objec
 
 ### 에이전트 추론
 
-The next runtime step is launching the `random256_k10_v1` candidate-budget recovery job, not policy threshold tuning.
+This is now a historical gate. Later `risk_validation_v1` and `v3_fresh_validation_v1` coverage gates pass; current work should not return to policy threshold tuning.
 
 ## Active Re-observation Gate
 
@@ -130,9 +147,9 @@ The failure is coverage-side rather than basic evaluator-side. `SemanticOnly` po
 
 - Last completed recovery artifact: `random256_v1`
 - `random256_v1` status: completed, structurally valid, hard ambiguity coverage failed.
-- Next recovery contract: `random256_k10_v1` in `08_runtime_integration.md`
-- Next output root: `/tmp/research3-runs/h001_calibration_artifacts_random256_k10_v1`
-- Next job status file: `/tmp/research3-runs/h001_calibration_artifacts_random256_k10_v1/job_status.json`
+- Historical recovery contract: `random256_k10_v1` in `08_runtime_integration.md`
+- Historical output root: `/tmp/research3-runs/h001_calibration_artifacts_random256_k10_v1`
+- Historical job status file: `/tmp/research3-runs/h001_calibration_artifacts_random256_k10_v1/job_status.json`
 - `random256_k10_v1` launch status: completed
 - `random256_k10_v1` session: `h001-calib-artifacts-random256-k10-20260510-165427`
 - `random256_k10_v1` log: `runtime/logs/calibration-artifacts-random256-k10-20260510-165427.log`
@@ -170,4 +187,4 @@ After completion, run structural verification and coverage sanity. Do not run ca
 
 ### 에이전트 추론
 
-`OWL-ViT` box-only evidence is useful as a feasibility check but should not be promoted to full calibration yet. The next stronger top-tier-oriented path is detector+mask evidence such as `v3c_groundingdino_sam2`, because the current bottleneck is object-level association reliability, not just detector package availability.
+`OWL-ViT` box-only evidence remains useful as a feasibility check but should not be promoted to full calibration. The active detector substrate is `GroundingDINO + SAM2`; the current bottleneck is whether follow-up observations produce strong enough object-node evidence for safe commit/defer decisions.
