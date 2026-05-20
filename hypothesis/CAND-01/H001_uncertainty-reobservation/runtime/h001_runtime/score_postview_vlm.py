@@ -13,6 +13,8 @@ from PIL import Image
 SCHEMA_VERSION = "h001.postview_score.v1"
 LOCAL_CROP_SOURCE = "openai_clip_local_crop"
 CENTER_FALLBACK_SOURCE = "openai_clip_center_crop_fallback"
+DEFAULT_GROUNDED_POINT_HEIGHT_M = 0.8
+DEFAULT_GROUNDED_POINT_MAX_VERTICAL_GAP_M = 2.0
 
 
 def slug(text: str) -> str:
@@ -192,7 +194,50 @@ def uncertainty_for(
     }
 
 
-def candidate_point(candidate: Dict[str, Any], field: str) -> Optional[np.ndarray]:
+def grounded_candidate_point(
+    candidate: Dict[str, Any],
+    grounded_point_height_m: float = DEFAULT_GROUNDED_POINT_HEIGHT_M,
+    grounded_point_max_vertical_gap_m: float = DEFAULT_GROUNDED_POINT_MAX_VERTICAL_GAP_M,
+) -> Optional[np.ndarray]:
+    position = finite_vector(candidate.get("position"), 3)
+    visit_position = finite_vector(candidate.get("visit_position"), 3)
+    if position is None and visit_position is None:
+        return None
+    if position is None:
+        return np.asarray(
+            [
+                float(visit_position[0]),
+                float(visit_position[1]) + float(grounded_point_height_m),
+                float(visit_position[2]),
+            ],
+            dtype=np.float64,
+        )
+    if visit_position is None:
+        return np.asarray(position, dtype=np.float64)
+    if abs(float(position[1]) - float(visit_position[1])) > float(grounded_point_max_vertical_gap_m):
+        return np.asarray(
+            [
+                float(position[0]),
+                float(visit_position[1]) + float(grounded_point_height_m),
+                float(position[2]),
+            ],
+            dtype=np.float64,
+        )
+    return np.asarray(position, dtype=np.float64)
+
+
+def candidate_point(
+    candidate: Dict[str, Any],
+    field: str,
+    grounded_point_height_m: float = DEFAULT_GROUNDED_POINT_HEIGHT_M,
+    grounded_point_max_vertical_gap_m: float = DEFAULT_GROUNDED_POINT_MAX_VERTICAL_GAP_M,
+) -> Optional[np.ndarray]:
+    if field == "grounded_position":
+        return grounded_candidate_point(
+            candidate,
+            grounded_point_height_m,
+            grounded_point_max_vertical_gap_m,
+        )
     fields = [field]
     for fallback in ("position", "visit_position"):
         if fallback not in fields:
@@ -356,7 +401,12 @@ def score_frame_candidates(
         score_before = finite_float(candidate.get("score")) or 0.0
         support_before = int(finite_float(candidate.get("view_count")) or 0)
         before_fields = uncertainty_for(candidate, candidates)
-        point = candidate_point(candidate, args.candidate_point_field)
+        point = candidate_point(
+            candidate,
+            args.candidate_point_field,
+            float(args.grounded_point_height_m),
+            float(args.grounded_point_max_vertical_gap_m),
+        )
 
         projection = {"projection_status": "missing_frame", "projected_pixel": None}
         if point is not None:
@@ -540,6 +590,9 @@ def score_postview(args: argparse.Namespace) -> Dict[str, Any]:
         "projection_status_counts": dict(sorted(status_counts.items())),
         "score_source_counts": dict(sorted(source_counts.items())),
         "score_calibration": "raw_clip_cosine",
+        "candidate_point_field": str(args.candidate_point_field),
+        "grounded_point_height_m": float(args.grounded_point_height_m),
+        "grounded_point_max_vertical_gap_m": float(args.grounded_point_max_vertical_gap_m),
         "uses_gt_for_action": False,
         "errors": errors,
     }
@@ -562,7 +615,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--depth-window-px", type=int, default=2)
     parser.add_argument("--hfov", type=float, default=90.0)
     parser.add_argument("--min-projection-depth-m", type=float, default=0.05)
-    parser.add_argument("--candidate-point-field", default="position", choices=["position", "visit_position"])
+    parser.add_argument(
+        "--candidate-point-field",
+        default="position",
+        choices=["position", "visit_position", "grounded_position"],
+    )
+    parser.add_argument("--grounded-point-height-m", type=float, default=DEFAULT_GROUNDED_POINT_HEIGHT_M)
+    parser.add_argument(
+        "--grounded-point-max-vertical-gap-m",
+        type=float,
+        default=DEFAULT_GROUNDED_POINT_MAX_VERTICAL_GAP_M,
+    )
     parser.add_argument("--strict-depth-check", action="store_true")
     parser.add_argument("--center-fallback-for-selected", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--include-camera-point", action="store_true")

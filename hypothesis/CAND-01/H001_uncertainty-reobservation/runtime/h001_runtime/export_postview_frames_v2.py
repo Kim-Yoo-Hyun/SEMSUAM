@@ -21,6 +21,8 @@ from h001_runtime.export_postview_frames import finite_vector, quaternion_from_x
 
 
 SCHEMA_VERSION = "h001.postview.v2"
+DEFAULT_GROUNDED_POINT_HEIGHT_M = 0.8
+DEFAULT_GROUNDED_POINT_MAX_VERTICAL_GAP_M = 2.0
 
 
 def load_jsonl(path: Path) -> List[Dict[str, Any]]:
@@ -71,6 +73,15 @@ def finite_float(value: Any) -> Optional[float]:
     if not math.isfinite(number):
         return None
     return number
+
+
+def vector3(value: Any) -> Optional[List[float]]:
+    if not isinstance(value, list) or len(value) != 3:
+        return None
+    values = [finite_float(item) for item in value]
+    if any(item is None for item in values):
+        return None
+    return [float(item) for item in values]
 
 
 def artifact_index(path: Path) -> Dict[Tuple[str, str], List[Dict[str, Any]]]:
@@ -153,14 +164,53 @@ def passthrough_fields(row: Dict[str, Any]) -> Dict[str, Any]:
     return {key: value for key, value in row.items() if key.startswith(prefixes)}
 
 
-def candidate_point(candidate: Dict[str, Any], field: str) -> Optional[np.ndarray]:
+def grounded_candidate_point(
+    candidate: Dict[str, Any],
+    grounded_point_height_m: float,
+    grounded_point_max_vertical_gap_m: float,
+) -> Optional[np.ndarray]:
+    position = vector3(candidate.get("position"))
+    visit_position = vector3(candidate.get("visit_position"))
+    if position is None and visit_position is None:
+        return None
+    if position is None:
+        return np.asarray(
+            [
+                float(visit_position[0]),
+                float(visit_position[1]) + float(grounded_point_height_m),
+                float(visit_position[2]),
+            ],
+            dtype=np.float64,
+        )
+    if visit_position is None:
+        return np.asarray(position, dtype=np.float64)
+    if abs(float(position[1]) - float(visit_position[1])) > float(grounded_point_max_vertical_gap_m):
+        return np.asarray(
+            [
+                float(position[0]),
+                float(visit_position[1]) + float(grounded_point_height_m),
+                float(position[2]),
+            ],
+            dtype=np.float64,
+        )
+    return np.asarray(position, dtype=np.float64)
+
+
+def candidate_point(
+    candidate: Dict[str, Any],
+    field: str,
+    grounded_point_height_m: float,
+    grounded_point_max_vertical_gap_m: float,
+) -> Optional[np.ndarray]:
+    if field == "grounded_position":
+        return grounded_candidate_point(candidate, grounded_point_height_m, grounded_point_max_vertical_gap_m)
     fields = [field]
     for fallback in ("position", "visit_position"):
         if fallback not in fields:
             fields.append(fallback)
     for name in fields:
-        values = candidate.get(name)
-        if finite_vector(values, 3):
+        values = vector3(candidate.get(name))
+        if values is not None:
             return np.asarray(values, dtype=np.float64)
     return None
 
@@ -190,6 +240,8 @@ def build_heading_specs(
     dedupe_degrees: float,
     include_stored_heading: bool,
     candidate_point_field: str,
+    grounded_point_height_m: float,
+    grounded_point_max_vertical_gap_m: float,
 ) -> List[Dict[str, Any]]:
     specs: List[Dict[str, Any]] = []
     used_yaws: List[float] = []
@@ -207,7 +259,12 @@ def build_heading_specs(
 
     min_distance = math.radians(max(0.0, dedupe_degrees))
     for candidate in candidates:
-        point = candidate_point(candidate, candidate_point_field)
+        point = candidate_point(
+            candidate,
+            candidate_point_field,
+            grounded_point_height_m,
+            grounded_point_max_vertical_gap_m,
+        )
         if point is None:
             continue
         yaw = yaw_to_point(base_position, point)
@@ -288,6 +345,8 @@ def render_rows(args: argparse.Namespace) -> Dict[str, Any]:
                 float(args.dedupe_degrees),
                 bool(args.include_stored_heading),
                 str(args.candidate_point_field),
+                float(args.grounded_point_height_m),
+                float(args.grounded_point_max_vertical_gap_m),
             )
 
             did = decision_id(row)
@@ -408,6 +467,9 @@ def render_rows(args: argparse.Namespace) -> Dict[str, Any]:
         "height": int(args.height),
         "camera_height": float(args.camera_height),
         "hfov": float(args.hfov),
+        "candidate_point_field": str(args.candidate_point_field),
+        "grounded_point_height_m": float(args.grounded_point_height_m),
+        "grounded_point_max_vertical_gap_m": float(args.grounded_point_max_vertical_gap_m),
         "yaw_offsets_deg": [float(value) for value in args.yaw_offsets],
         "uses_gt_for_action": False,
         "errors": errors,
@@ -429,7 +491,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-candidates-per-decision", type=int, default=5)
     parser.add_argument("--yaw-offsets", type=parse_float_list, default=[-30.0, 0.0, 30.0])
     parser.add_argument("--dedupe-degrees", type=float, default=10.0)
-    parser.add_argument("--candidate-point-field", default="position", choices=["position", "visit_position"])
+    parser.add_argument(
+        "--candidate-point-field",
+        default="position",
+        choices=["position", "visit_position", "grounded_position"],
+    )
+    parser.add_argument("--grounded-point-height-m", type=float, default=DEFAULT_GROUNDED_POINT_HEIGHT_M)
+    parser.add_argument(
+        "--grounded-point-max-vertical-gap-m",
+        type=float,
+        default=DEFAULT_GROUNDED_POINT_MAX_VERTICAL_GAP_M,
+    )
     parser.add_argument("--include-stored-heading", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--width", type=int, default=160)
     parser.add_argument("--height", type=int, default=120)

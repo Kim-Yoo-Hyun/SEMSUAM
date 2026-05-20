@@ -43,7 +43,12 @@ def stage2_index(rows: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
     return {str(row.get("external_branch_id")): row for row in rows}
 
 
-def terminal_row(v2_row: Dict[str, Any], stage2_by_branch: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+def terminal_row(
+    v2_row: Dict[str, Any],
+    stage2_by_branch: Dict[str, Dict[str, Any]],
+    schema_version: str,
+    followup_label: str,
+) -> Dict[str, Any]:
     branch_id = str(v2_row.get("external_branch_id"))
     v2_action = str(v2_row.get("followup_evidence_v1_action"))
     stage2_row = stage2_by_branch.get(branch_id)
@@ -58,6 +63,10 @@ def terminal_row(v2_row: Dict[str, Any], stage2_by_branch: Dict[str, Dict[str, A
         terminal_visit_position_only = bool_value(stage2_row.get("second_stage_identity_v1_visit_position_only_commit"))
         selected_candidate_id = stage2_row.get("selected_candidate_id")
         selected_candidate_correct = stage2_row.get("selected_candidate_correct")
+        source_selected_candidate_id = stage2_row.get("source_selected_candidate_id")
+        source_selected_candidate_correct = stage2_row.get("source_selected_candidate_correct")
+        committed_candidate_id = stage2_row.get("committed_candidate_id")
+        committed_candidate_correct = stage2_row.get("committed_candidate_correct")
         terminal_source = "second_stage_identity"
     else:
         terminal_action = v2_row.get("followup_evidence_v1_action")
@@ -69,17 +78,21 @@ def terminal_row(v2_row: Dict[str, Any], stage2_by_branch: Dict[str, Dict[str, A
         terminal_visit_position_only = False
         selected_candidate_id = v2_row.get("selected_candidate_id")
         selected_candidate_correct = v2_row.get("selected_candidate_correct")
-        terminal_source = "followup_v2"
-    return {
-        "schema_version": SCHEMA_VERSION,
+        source_selected_candidate_id = v2_row.get("selected_candidate_id")
+        source_selected_candidate_correct = v2_row.get("selected_candidate_correct")
+        committed_candidate_id = selected_candidate_id if terminal_commits else None
+        committed_candidate_correct = selected_candidate_correct if terminal_commits else None
+        terminal_source = followup_label
+    row = {
+        "schema_version": schema_version,
         "external_branch_id": branch_id,
         "episode_key": v2_row.get("episode_key"),
         "scene_id": v2_row.get("scene_id"),
         "query": v2_row.get("query"),
         "property_group": v2_row.get("property_group"),
         "label_case": v2_row.get("label_case"),
-        "source_followup_v2_action": v2_action,
-        "source_followup_v2_reason": v2_row.get("followup_evidence_v1_reason"),
+        "source_followup_action": v2_action,
+        "source_followup_reason": v2_row.get("followup_evidence_v1_reason"),
         "terminal_source": terminal_source,
         "terminal_action": terminal_action,
         "terminal_reason": terminal_reason,
@@ -90,12 +103,19 @@ def terminal_row(v2_row: Dict[str, Any], stage2_by_branch: Dict[str, Dict[str, A
         "terminal_visit_position_only_commit": terminal_visit_position_only,
         "selected_candidate_id": selected_candidate_id,
         "selected_candidate_correct": selected_candidate_correct,
+        "source_selected_candidate_id": source_selected_candidate_id,
+        "source_selected_candidate_correct": source_selected_candidate_correct,
+        "committed_candidate_id": committed_candidate_id,
+        "committed_candidate_correct": committed_candidate_correct,
         "followup_set_contains_correct": v2_row.get("followup_set_contains_correct"),
         "stage2_available": stage2_row is not None,
         "uses_gt_for_action": False,
         "uses_gt_for_analysis": bool_value(v2_row.get("uses_gt_for_analysis"))
         or bool(stage2_row and stage2_row.get("uses_gt_for_analysis") is True),
     }
+    row[f"source_{followup_label}_action"] = v2_action
+    row[f"source_{followup_label}_reason"] = v2_row.get("followup_evidence_v1_reason")
+    return row
 
 
 def compact_detector_summary(summary: Dict[str, Any]) -> Dict[str, Any]:
@@ -121,8 +141,11 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     base_validation = load_json(Path(args.base_validation_summary) if args.base_validation_summary else None)
 
     stage2_by_branch = stage2_index(stage2_rows)
-    terminal_rows = [terminal_row(row, stage2_by_branch) for row in v2_rows]
-    write_jsonl(out_root / "external_candidate_followup_v2_stage2_terminal_rows.jsonl", terminal_rows)
+    terminal_rows = [
+        terminal_row(row, stage2_by_branch, str(args.schema_version), str(args.followup_label))
+        for row in v2_rows
+    ]
+    write_jsonl(out_root / str(args.terminal_rows_file), terminal_rows)
 
     request_identity_rows = [row for row in v2_rows if row.get("followup_evidence_v1_action") == REQUEST_IDENTITY_ACTION]
     stage2_required = len(request_identity_rows)
@@ -176,6 +199,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         gate["passes_followup_v2_detector_substrate"]
         and (stage2_required == 0 or gate["passes_stage2_detector_substrate"])
     )
+    gate["passes_integrated_stage2_full"] = bool(stage2_required == 0 or gate["passes_stage2_full"])
     gate["passes_integrated_safety_gate"] = bool(
         not any_gt_action
         and gate["passes_followup_v2_safety"]
@@ -187,11 +211,16 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     gate["passes_integrated_full_gate"] = bool(
         gate["passes_integrated_stage2_coverage"]
         and gate["passes_integrated_detector_substrate"]
+        and gate["passes_integrated_stage2_full"]
         and gate["passes_integrated_safety_gate"]
         and (gate["commit_rate"] or 0.0) >= float(args.min_commit_rate)
         and (gate["success_commit_rate"] or 0.0) >= float(args.min_success_commit_rate)
     )
-    validation_scope_blocks_rerun = args.validation_scope == "same_artifact_diagnostic"
+    validation_scope_blocks_rerun = args.validation_scope in {
+        "same_artifact_diagnostic",
+        "v4_fixed_terminal_diagnostic",
+        "v4_semantic_neighbor_diagnostic",
+    }
     utility_proof_passed = bool(gate["passes_integrated_full_gate"] and not validation_scope_blocks_rerun)
     first_eval_rerun_blocked = bool(not gate["passes_integrated_full_gate"] or validation_scope_blocks_rerun)
     next_required = "inspect integrated failure before rerun"
@@ -201,8 +230,9 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         next_required = "find or rerun a validation split where second-stage identity requests include valid/correct targets"
 
     payload = {
-        "schema_version": SCHEMA_VERSION,
+        "schema_version": str(args.schema_version),
         "out_root": str(out_root),
+        "followup_label": str(args.followup_label),
         "paths": {
             "base_validation_summary": args.base_validation_summary,
             "followup_v2_summary": args.followup_v2_summary,
@@ -222,6 +252,16 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
             "plan_rows": v2_summary.get("plan_rows"),
             "frame_rows": v2_summary.get("frame_rows"),
             "association_rows": v2_summary.get("association_rows"),
+            "action_counts": v2_summary.get("action_counts"),
+            "reason_counts": v2_summary.get("reason_counts"),
+            "gate": v2_gate,
+        },
+        "source_followup": {
+            "label": str(args.followup_label),
+            "schema_version": v2_summary.get("schema_version"),
+            "objective_version": v2_summary.get("objective_version"),
+            "source_request_rows": v2_summary.get("source_request_rows"),
+            "source_rows_analyzed": v2_summary.get("source_rows_analyzed"),
             "action_counts": v2_summary.get("action_counts"),
             "reason_counts": v2_summary.get("reason_counts"),
             "gate": v2_gate,
@@ -278,11 +318,11 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         "uses_gt_for_action": any_gt_action,
         "uses_gt_for_analysis": any_gt_analysis,
         "output_files": {
-            "terminal_rows": "external_candidate_followup_v2_stage2_terminal_rows.jsonl",
-            "summary": "external_candidate_followup_v2_stage2_validation_summary.json",
+            "terminal_rows": str(args.terminal_rows_file),
+            "summary": str(args.summary_file),
         },
     }
-    write_json(out_root / "external_candidate_followup_v2_stage2_validation_summary.json", payload)
+    write_json(out_root / str(args.summary_file), payload)
     return payload
 
 
@@ -299,9 +339,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--base-validation-summary", default=None)
     parser.add_argument(
         "--validation-scope",
-        choices=["unspecified", "same_artifact_diagnostic", "heldout_validation"],
+        choices=[
+            "unspecified",
+            "same_artifact_diagnostic",
+            "heldout_validation",
+            "heldout_semantic_neighbor_v3_validation",
+            "heldout_explicit_candidate_diagnostic",
+            "v4_fixed_terminal_diagnostic",
+            "v4_semantic_neighbor_diagnostic",
+        ],
         default="unspecified",
     )
+    parser.add_argument("--schema-version", default=SCHEMA_VERSION)
+    parser.add_argument("--followup-label", default="followup_v2")
+    parser.add_argument("--terminal-rows-file", default="external_candidate_followup_v2_stage2_terminal_rows.jsonl")
+    parser.add_argument("--summary-file", default="external_candidate_followup_v2_stage2_validation_summary.json")
     parser.add_argument("--max-wrong-goal-commit-rate", type=float, default=0.0)
     parser.add_argument("--max-no-valid-commit-rate", type=float, default=0.0)
     parser.add_argument("--max-visit-position-only-commit-rate", type=float, default=0.0)

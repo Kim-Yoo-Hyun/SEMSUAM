@@ -1,5 +1,6 @@
 import argparse
 import json
+import math
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
@@ -29,6 +30,19 @@ def feature_index(path: Optional[Path]) -> Dict[Tuple[str, str], Dict[str, Any]]
     indexed: Dict[Tuple[str, str], Dict[str, Any]] = {}
     for row in load_jsonl(path):
         indexed[(str(row.get("episode_key")), str(row.get("candidate_id")))] = row
+    return indexed
+
+
+def artifact_index(path: Optional[Path]) -> Dict[Tuple[str, str], Dict[str, Dict[str, Any]]]:
+    if path is None or not path.exists():
+        return {}
+    indexed: Dict[Tuple[str, str], Dict[str, Dict[str, Any]]] = {}
+    for row in load_jsonl(path):
+        indexed[(str(row.get("scene_id")), str(row.get("query")))] = {
+            str(candidate.get("candidate_id")): candidate
+            for candidate in row.get("candidates") or []
+            if candidate.get("candidate_id") is not None
+        }
     return indexed
 
 
@@ -108,6 +122,20 @@ def rank_from_role(role: Any) -> Optional[int]:
         return None
 
 
+def candidate_position(candidate_id: str, artifact_candidates: Dict[str, Dict[str, Any]]) -> Optional[List[float]]:
+    candidate = artifact_candidates.get(candidate_id)
+    if not candidate:
+        return None
+    value = candidate.get("position")
+    if not isinstance(value, list) or len(value) != 3:
+        return None
+    return [safe_float(item) or 0.0 for item in value]
+
+
+def distance_xz(a: List[float], b: List[float]) -> float:
+    return math.hypot(float(a[0]) - float(b[0]), float(a[2]) - float(b[2]))
+
+
 def support_rows_by_branch_candidate(
     plan_rows: List[Dict[str, Any]],
     association_rows: List[Dict[str, Any]],
@@ -174,9 +202,80 @@ def make_candidate_rows(
     return rows
 
 
+def selected_local_cluster_margin_guard(
+    selected: Dict[str, Any],
+    candidates: List[Dict[str, Any]],
+    artifact_candidates: Dict[str, Dict[str, Any]],
+    args: argparse.Namespace,
+) -> Tuple[bool, str, Dict[str, Any]]:
+    selected_id = str(selected.get("candidate_id"))
+    selected_score = safe_float(selected.get("S_ext")) or 0.0
+    selected_pos = candidate_position(selected_id, artifact_candidates)
+    if selected_pos is None:
+        return False, "defer_identity_selected_cluster_position_missing", {
+            "identity_objective": "selected_local_cluster_margin",
+            "selected_candidate_id": selected_id,
+            "selected_position_available": False,
+        }
+
+    local: List[Dict[str, Any]] = []
+    outside: List[Dict[str, Any]] = []
+    skipped_position = 0
+    radius_m = float(args.identity_cluster_radius_m)
+    for candidate in candidates:
+        if candidate.get("positive_support") is not True:
+            continue
+        if candidate.get("followup_strong_depth_evidence") is not True:
+            continue
+        if (safe_float(candidate.get("S_ext")) or 0.0) < float(args.min_commit_score):
+            continue
+        candidate_id = str(candidate.get("candidate_id"))
+        pos = candidate_position(candidate_id, artifact_candidates)
+        if pos is None:
+            skipped_position += 1
+            continue
+        if distance_xz(selected_pos, pos) <= radius_m:
+            local.append(candidate)
+        else:
+            outside.append(candidate)
+
+    local_scores = [
+        safe_float(candidate.get("S_ext")) or 0.0
+        for candidate in local
+        if str(candidate.get("candidate_id")) != selected_id
+    ]
+    outside_scores = [safe_float(candidate.get("S_ext")) or 0.0 for candidate in outside]
+    guard = {
+        "identity_objective": "selected_local_cluster_margin",
+        "selected_candidate_id": selected_id,
+        "selected_score": selected_score,
+        "selected_position_available": True,
+        "identity_cluster_radius_m": radius_m,
+        "identity_min_local_strong_count": int(args.identity_min_local_strong_count),
+        "identity_local_score_tolerance": float(args.identity_local_score_tolerance),
+        "identity_outside_score_margin": float(args.identity_outside_score_margin),
+        "local_strong_candidate_count": len(local),
+        "outside_strong_candidate_count": len(outside),
+        "position_skipped_strong_candidate_count": skipped_position,
+        "local_strong_candidate_ids": [row.get("candidate_id") for row in local],
+        "outside_strong_candidate_ids": [row.get("candidate_id") for row in outside],
+        "best_local_other_score": max(local_scores) if local_scores else None,
+        "best_outside_score": max(outside_scores) if outside_scores else None,
+    }
+
+    if len(local) < int(args.identity_min_local_strong_count):
+        return False, "defer_identity_selected_local_cluster_too_small", guard
+    if local_scores and max(local_scores) > selected_score + float(args.identity_local_score_tolerance):
+        return False, "defer_identity_selected_local_rival_stronger", guard
+    if outside_scores and max(outside_scores) >= selected_score - float(args.identity_outside_score_margin):
+        return False, "defer_identity_selected_outside_rival_near_tie", guard
+    return True, "commit_selected_identity_confirmed_local_cluster_margin_after_followup", guard
+
+
 def select_identity_confirmation(
     source: Dict[str, Any],
     candidates: List[Dict[str, Any]],
+    artifact_candidates: Dict[str, Dict[str, Any]],
     args: argparse.Namespace,
 ) -> Tuple[Optional[Dict[str, Any]], Optional[float], float, str, Dict[str, Any]]:
     selected_id = str(source.get("selected_candidate_id"))
@@ -206,6 +305,30 @@ def select_identity_confirmation(
         return selected, rival_score, margin, "defer_identity_selected_evidence_weak", guard
     if selected.get("followup_strong_depth_evidence") is not True:
         return selected, rival_score, margin, "defer_identity_selected_without_strong_depth_association", guard
+    if str(args.objective_version) in {"v4", "v5"}:
+        accepted, reason, cluster_guard = selected_local_cluster_margin_guard(
+            selected,
+            candidates,
+            artifact_candidates,
+            args,
+        )
+        guard.update(cluster_guard)
+        if accepted:
+            return selected, rival_score, margin, reason, guard
+        if str(args.objective_version) == "v5" and reason == "defer_identity_selected_local_rival_stronger":
+            guard["heldout_local_rival_route"] = {
+                "route": "request_identity_confirmation",
+                "reason": "local_rival_stronger_after_followup",
+                "uses_gt_for_action": False,
+            }
+            return (
+                selected,
+                rival_score,
+                margin,
+                "request_identity_confirmation_after_local_rival_stronger",
+                guard,
+            )
+        return selected, rival_score, margin, reason, guard
     if strong_rivals:
         return selected, rival_score, margin, "defer_identity_ambiguous_rival_supported", guard
     if margin < float(args.min_identity_followup_margin):
@@ -230,10 +353,10 @@ def select_expanded_retrieval(
     strong_candidates = [row for row in ranked if row.get("followup_strong_depth_evidence") is True]
     large_repeated_guard = str(args.large_repeated_expanded_retrieval_guard)
     objective_version = str(args.objective_version)
-    if objective_version in {"v2", "v3"} and large_repeated_guard == "auto":
+    if objective_version in {"v2", "v3", "v4", "v5"} and large_repeated_guard == "auto":
         large_repeated_guard = "request_identity"
     small_or_cluttered_guard = str(args.small_or_cluttered_expanded_retrieval_guard)
-    if objective_version == "v3" and small_or_cluttered_guard == "auto":
+    if objective_version in {"v3", "v4", "v5"} and small_or_cluttered_guard == "auto":
         small_or_cluttered_guard = "request_identity"
     guard = {
         "property_group": property_group,
@@ -393,6 +516,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     observed_branch_ids = branch_observed_ids(frame_rows, association_rows)
     rows_by_branch_candidate, unmatched_association_rows = support_rows_by_branch_candidate(plan_rows, association_rows)
     labels = feature_index(Path(args.object_node_features) if args.object_node_features else None)
+    artifacts = artifact_index(Path(args.candidate_artifact) if args.candidate_artifact else None)
 
     request_actions = {
         "external_evidence_v4_request_identity_confirmation",
@@ -425,7 +549,13 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         )
         source_action = str(source.get("external_evidence_v4_action"))
         if source_action == "external_evidence_v4_request_identity_confirmation":
-            selected, second_score, margin, reason, guard = select_identity_confirmation(source, candidate_rows, args)
+            artifact_candidates = artifacts.get((str(source.get("scene_id")), str(source.get("query"))), {})
+            selected, second_score, margin, reason, guard = select_identity_confirmation(
+                source,
+                candidate_rows,
+                artifact_candidates,
+                args,
+            )
         else:
             selected, second_score, margin, reason, guard = select_expanded_retrieval(source, candidate_rows, args)
         selected = selected or {}
@@ -492,6 +622,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         "followup_observation_plan": str(args.followup_observation_plan),
         "detector_root": str(args.detector_root),
         "object_node_features": args.object_node_features,
+        "candidate_artifact": args.candidate_artifact,
         "out_root": str(out_root),
         "source_rows_total": len(source_rows),
         "source_request_rows": len(source_request_rows),
@@ -512,6 +643,10 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
             "min_strong_strict_association_count": float(args.min_strong_strict_association_count),
             "min_strong_mask_hit_count": float(args.min_strong_mask_hit_count),
             "min_strong_visible_count": float(args.min_strong_visible_count),
+            "identity_cluster_radius_m": float(args.identity_cluster_radius_m),
+            "identity_min_local_strong_count": int(args.identity_min_local_strong_count),
+            "identity_local_score_tolerance": float(args.identity_local_score_tolerance),
+            "identity_outside_score_margin": float(args.identity_outside_score_margin),
         },
         "objective_design": {
             "role": "convert V4 mobility requests into post-follow-up commit/request/defer decisions",
@@ -524,12 +659,23 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
                 "large repeated furniture expanded-retrieval rows do not directly commit from detector/depth support alone",
                 "strong depth association is treated as observation evidence, not instance-validity proof",
                 "identity-confirmation defer behavior is preserved for rival-supported repeated-object rows",
-            ] if str(args.objective_version) in {"v2", "v3"} else [],
+            ] if str(args.objective_version) in {"v2", "v3", "v4", "v5"} else [],
             "v3_revision": [
                 "small or cluttered object expanded-retrieval rows do not directly commit from a single strong visible distractor",
                 "positive detector support plus strong depth association is not treated as instance-safe for compact repeated objects",
                 "compact-object expanded retrieval is routed to identity confirmation or defer before any first_eval rerun",
-            ] if str(args.objective_version) == "v3" else [],
+            ] if str(args.objective_version) in {"v3", "v4", "v5"} else [],
+            "v4_revision": [
+                "identity confirmation can commit only the source selected candidate",
+                "selected candidate must have positive support, strong depth association, and pass a non-GT local spatial cluster margin",
+                "nearby strong candidates are treated as local identity support only when they do not materially outscore the selected candidate",
+                "outside-cluster strong candidates block commit when they are near-tied with the selected candidate",
+            ] if str(args.objective_version) in {"v4", "v5"} else [],
+            "v5_revision": [
+                "local-rival-stronger identity ambiguity is routed to second-stage identity confirmation instead of terminal defer",
+                "outside-cluster near-tie rows remain deferred because they may require broader retrieval rather than identity arbitration",
+                "the routing decision uses the non-GT local spatial cluster guard, not candidate correctness labels",
+            ] if str(args.objective_version) == "v5" else [],
             "failure_modes_addressed": [
                 "over-deferral after retrieval-invalid external evidence",
                 "wrong repeated-object commit after identity-ambiguous evidence",
@@ -555,8 +701,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--detector-root", required=True)
     parser.add_argument("--out-root", required=True)
     parser.add_argument("--object-node-features", default=None)
+    parser.add_argument("--candidate-artifact", default=None)
     parser.add_argument("--observed-only", action=argparse.BooleanOptionalAction, default=True)
-    parser.add_argument("--objective-version", choices=["v1", "v2", "v3"], default="v1")
+    parser.add_argument("--objective-version", choices=["v1", "v2", "v3", "v4", "v5"], default="v1")
     parser.add_argument(
         "--large-repeated-expanded-retrieval-guard",
         choices=["auto", "allow", "request_identity", "defer"],
@@ -574,6 +721,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-strong-strict-association-count", type=float, default=2.0)
     parser.add_argument("--min-strong-mask-hit-count", type=float, default=2.0)
     parser.add_argument("--min-strong-visible-count", type=float, default=3.0)
+    parser.add_argument("--identity-cluster-radius-m", type=float, default=2.0)
+    parser.add_argument("--identity-min-local-strong-count", type=int, default=2)
+    parser.add_argument("--identity-local-score-tolerance", type=float, default=0.002)
+    parser.add_argument("--identity-outside-score-margin", type=float, default=0.005)
     parser.add_argument("--min-detector-box-rate", type=float, default=0.80)
     parser.add_argument("--min-sam2-mask-rate", type=float, default=0.80)
     parser.add_argument("--min-followup-evidence-available-rate", type=float, default=0.50)

@@ -261,6 +261,46 @@ def select_second_stage_action(
         return selected, best_rival, rival_score, margin, "request_further_identity_confirmation_selected_not_strong_in_own_view", guard
     if selected.get("visit_position_only_evidence") is True:
         return selected, best_rival, rival_score, margin, "request_further_identity_confirmation_visit_position_only_blocked", guard
+    if args.objective_version in {"v3", "v4"}:
+        semantic_arbitrated, semantic_arbitration_guard = semantic_prior_strong_tie_arbitration(
+            selected, candidates, args
+        )
+        guard["semantic_prior_strong_tie_arbitration"] = semantic_arbitration_guard
+        local_arbitrated = None
+        if args.objective_version == "v4":
+            local_arbitrated, local_arbitration_guard = local_context_strong_tie_arbitration(
+                selected, candidates, args
+            )
+            guard["local_context_strong_tie_arbitration"] = local_arbitration_guard
+            if local_arbitrated is not None and local_arbitrated.get("candidate_id") != selected_id:
+                arbitrated_score = safe_float(local_arbitrated.get("S_ext"))
+                arbitrated_margin = (arbitrated_score or 0.0) - (selected_score or 0.0)
+                return (
+                    local_arbitrated,
+                    best_rival,
+                    rival_score,
+                    arbitrated_margin,
+                    "commit_arbitrated_identity_local_context_strong_tie",
+                    guard,
+                )
+        if semantic_arbitrated is not None and semantic_arbitrated.get("candidate_id") != selected_id:
+            arbitrated_score = safe_float(semantic_arbitrated.get("S_ext"))
+            arbitrated_margin = (arbitrated_score or 0.0) - (selected_score or 0.0)
+            return (
+                semantic_arbitrated,
+                best_rival,
+                rival_score,
+                arbitrated_margin,
+                "commit_arbitrated_identity_semantic_prior_strong_tie",
+                guard,
+            )
+        if strong_rivals:
+            return selected, best_rival, rival_score, margin, "request_further_identity_confirmation_strong_rival_supported", guard
+        if margin < float(args.min_identity_margin):
+            return selected, best_rival, rival_score, margin, "request_further_identity_confirmation_not_contrastive", guard
+        if weak_positive_rivals:
+            return selected, best_rival, rival_score, margin, "commit_selected_identity_confirmed_weak_rival_margin", guard
+        return selected, best_rival, rival_score, margin, "commit_selected_identity_confirmed", guard
     if args.objective_version == "v2":
         if strong_rivals:
             return selected, best_rival, rival_score, margin, "request_further_identity_confirmation_strong_rival_supported", guard
@@ -278,7 +318,295 @@ def select_second_stage_action(
     return selected, best_rival, rival_score, margin, "commit_selected_identity_confirmed", guard
 
 
+def has_semantic_neighbor_role(candidate: Dict[str, Any]) -> bool:
+    return any(str(role).startswith("semantic_neighbor_") for role in candidate.get("second_stage_roles") or [])
+
+
+def has_local_context_role(candidate: Dict[str, Any]) -> bool:
+    return any(str(role).startswith("local_context_") for role in candidate.get("second_stage_roles") or [])
+
+
+def own_view_strict(candidate: Optional[Dict[str, Any]]) -> float:
+    if candidate is None:
+        return 0.0
+    return safe_float(candidate.get("own_view_strict_association_count")) or 0.0
+
+
+def own_view_mask(candidate: Optional[Dict[str, Any]]) -> float:
+    if candidate is None:
+        return 0.0
+    return safe_float(candidate.get("own_view_mask_hit_count")) or 0.0
+
+
+def own_view_visible(candidate: Optional[Dict[str, Any]]) -> float:
+    if candidate is None:
+        return 0.0
+    return safe_float(candidate.get("own_view_visible_count")) or 0.0
+
+
+def strong_own_view_candidate(candidate: Dict[str, Any], args: argparse.Namespace) -> bool:
+    return bool(
+        candidate.get("positive_support") is True
+        and candidate.get("second_stage_strong_depth_evidence") is True
+        and candidate.get("own_view_strong_depth_evidence") is True
+        and candidate.get("visit_position_only_evidence") is not True
+        and (safe_float(candidate.get("S_ext")) or 0.0) >= float(args.min_identity_score)
+    )
+
+
+def semantic_prior_strong_tie_arbitration(
+    selected: Optional[Dict[str, Any]],
+    candidates: List[Dict[str, Any]],
+    args: argparse.Namespace,
+) -> Tuple[Optional[Dict[str, Any]], Dict[str, Any]]:
+    if selected is None:
+        return None, {"eligible": False, "reason": "missing_selected"}
+
+    scored = [
+        row for row in candidates
+        if row.get("identity_role") in {"selected", "rival"}
+        and row.get("positive_support") is True
+        and row.get("second_stage_strong_depth_evidence") is True
+        and row.get("own_view_strong_depth_evidence") is True
+        and row.get("visit_position_only_evidence") is not True
+        and (safe_float(row.get("S_ext")) or 0.0) >= float(args.min_identity_score)
+    ]
+    if len(scored) < 2:
+        return None, {
+            "eligible": False,
+            "reason": "fewer_than_two_strong_candidates",
+            "strong_candidate_count": len(scored),
+        }
+
+    best_score = max((safe_float(row.get("S_ext")) or 0.0) for row in scored)
+    tied = [
+        row for row in scored
+        if best_score - (safe_float(row.get("S_ext")) or 0.0) <= float(args.max_strong_tie_score_gap)
+    ]
+    semantic_neighbors = [row for row in tied if has_semantic_neighbor_role(row)]
+    selected_strict = safe_float(selected.get("own_view_strict_association_count")) or 0.0
+    selected_sem = safe_float(selected.get("S_sem")) or 0.0
+    selected_id = selected.get("candidate_id")
+    non_semantic_strict = [
+        safe_float(row.get("own_view_strict_association_count")) or 0.0
+        for row in tied
+        if row.get("candidate_id") != selected_id
+        and not has_semantic_neighbor_role(row)
+    ]
+    best_non_semantic_strict = max([selected_strict, *non_semantic_strict])
+    ranked_neighbors = sorted(
+        semantic_neighbors,
+        key=lambda row: (
+            safe_float(row.get("own_view_strict_association_count")) or 0.0,
+            safe_float(row.get("S_sem")) or 0.0,
+            safe_float(row.get("S_ext")) or 0.0,
+        ),
+        reverse=True,
+    )
+    winner = ranked_neighbors[0] if ranked_neighbors else None
+    winner_strict = safe_float(winner.get("own_view_strict_association_count")) if winner else None
+    winner_sem = safe_float(winner.get("S_sem")) if winner else None
+    strict_advantage = (winner_strict or 0.0) - best_non_semantic_strict
+    semantic_gap = selected_sem - (winner_sem or 0.0)
+    guard = {
+        "eligible": True,
+        "strong_candidate_count": len(scored),
+        "tied_candidate_count": len(tied),
+        "best_score": best_score,
+        "selected_candidate_id": selected.get("candidate_id"),
+        "selected_score": safe_float(selected.get("S_ext")),
+        "selected_semantic_prior": selected_sem,
+        "selected_own_strict_association_count": selected_strict,
+        "semantic_neighbor_candidates": [row.get("candidate_id") for row in semantic_neighbors],
+        "arbitrated_candidate_id": None if winner is None else winner.get("candidate_id"),
+        "arbitrated_score": None if winner is None else safe_float(winner.get("S_ext")),
+        "arbitrated_semantic_prior": winner_sem,
+        "arbitrated_own_strict_association_count": winner_strict,
+        "best_non_semantic_own_strict_association_count": best_non_semantic_strict,
+        "strict_advantage": strict_advantage,
+        "semantic_prior_gap_from_selected": semantic_gap,
+        "max_strong_tie_score_gap": float(args.max_strong_tie_score_gap),
+        "min_arbitration_strict_advantage": float(args.min_arbitration_strict_advantage),
+        "max_arbitration_semantic_prior_gap": float(args.max_arbitration_semantic_prior_gap),
+    }
+    if winner is None:
+        guard["reason"] = "no_semantic_neighbor_in_strong_tie"
+        return None, guard
+    if strict_advantage < float(args.min_arbitration_strict_advantage):
+        guard["reason"] = "semantic_neighbor_strict_advantage_too_small"
+        return None, guard
+    if semantic_gap > float(args.max_arbitration_semantic_prior_gap):
+        guard["reason"] = "semantic_neighbor_semantic_prior_gap_too_large"
+        return None, guard
+    guard["reason"] = "commit_semantic_neighbor_strong_tie"
+    return winner, guard
+
+
+def local_context_strong_tie_arbitration(
+    selected: Optional[Dict[str, Any]],
+    candidates: List[Dict[str, Any]],
+    args: argparse.Namespace,
+) -> Tuple[Optional[Dict[str, Any]], Dict[str, Any]]:
+    if selected is None:
+        return None, {"eligible": False, "reason": "missing_selected"}
+
+    scored = [
+        row
+        for row in candidates
+        if row.get("identity_role") in {"selected", "rival"}
+        and strong_own_view_candidate(row, args)
+    ]
+    if len(scored) < 2:
+        return None, {
+            "eligible": False,
+            "reason": "fewer_than_two_strong_candidates",
+            "strong_candidate_count": len(scored),
+        }
+
+    best_score = max((safe_float(row.get("S_ext")) or 0.0) for row in scored)
+    tied = [
+        row
+        for row in scored
+        if best_score - (safe_float(row.get("S_ext")) or 0.0) <= float(args.max_strong_tie_score_gap)
+    ]
+    local_contexts = [row for row in tied if has_local_context_role(row)]
+    ranked_local = sorted(
+        local_contexts,
+        key=lambda row: (
+            own_view_strict(row),
+            own_view_mask(row),
+            own_view_visible(row),
+            safe_float(row.get("S_ext")) or 0.0,
+        ),
+        reverse=True,
+    )
+    winner = ranked_local[0] if ranked_local else None
+    other_local = ranked_local[1:]
+    nonlocal_tied = [row for row in tied if not has_local_context_role(row)]
+    best_other_local = max(
+        other_local,
+        key=lambda row: (own_view_strict(row), own_view_mask(row), own_view_visible(row)),
+        default=None,
+    )
+    best_nonlocal = max(
+        nonlocal_tied,
+        key=lambda row: (own_view_strict(row), own_view_mask(row), own_view_visible(row)),
+        default=None,
+    )
+    strict_advantage_vs_selected = own_view_strict(winner) - own_view_strict(selected)
+    mask_advantage_vs_selected = own_view_mask(winner) - own_view_mask(selected)
+    visible_advantage_vs_selected = own_view_visible(winner) - own_view_visible(selected)
+    strict_advantage_vs_other_local = own_view_strict(winner) - own_view_strict(best_other_local)
+    mask_advantage_vs_other_local = own_view_mask(winner) - own_view_mask(best_other_local)
+    strict_advantage_vs_nonlocal = own_view_strict(winner) - own_view_strict(best_nonlocal)
+    mask_advantage_vs_nonlocal = own_view_mask(winner) - own_view_mask(best_nonlocal)
+    guard = {
+        "eligible": True,
+        "strong_candidate_count": len(scored),
+        "tied_candidate_count": len(tied),
+        "best_score": best_score,
+        "selected_candidate_id": selected.get("candidate_id"),
+        "selected_score": safe_float(selected.get("S_ext")),
+        "selected_own_strict_association_count": own_view_strict(selected),
+        "selected_own_mask_hit_count": own_view_mask(selected),
+        "selected_own_visible_count": own_view_visible(selected),
+        "local_context_candidates": [row.get("candidate_id") for row in local_contexts],
+        "arbitrated_candidate_id": None if winner is None else winner.get("candidate_id"),
+        "arbitrated_score": None if winner is None else safe_float(winner.get("S_ext")),
+        "arbitrated_own_strict_association_count": own_view_strict(winner),
+        "arbitrated_own_mask_hit_count": own_view_mask(winner),
+        "arbitrated_own_visible_count": own_view_visible(winner),
+        "best_other_local_candidate_id": None if best_other_local is None else best_other_local.get("candidate_id"),
+        "best_nonlocal_candidate_id": None if best_nonlocal is None else best_nonlocal.get("candidate_id"),
+        "best_nonlocal_own_strict_association_count": own_view_strict(best_nonlocal),
+        "best_nonlocal_own_mask_hit_count": own_view_mask(best_nonlocal),
+        "strict_advantage_vs_selected": strict_advantage_vs_selected,
+        "mask_advantage_vs_selected": mask_advantage_vs_selected,
+        "visible_advantage_vs_selected": visible_advantage_vs_selected,
+        "strict_advantage_vs_other_local": strict_advantage_vs_other_local,
+        "mask_advantage_vs_other_local": mask_advantage_vs_other_local,
+        "strict_advantage_vs_nonlocal": strict_advantage_vs_nonlocal,
+        "mask_advantage_vs_nonlocal": mask_advantage_vs_nonlocal,
+        "max_strong_tie_score_gap": float(args.max_strong_tie_score_gap),
+        "thresholds": {
+            "min_local_context_own_strict_count": float(args.min_local_context_own_strict_count),
+            "min_local_context_own_mask_count": float(args.min_local_context_own_mask_count),
+            "min_local_context_own_visible_count": float(args.min_local_context_own_visible_count),
+            "min_local_context_strict_advantage_vs_selected": float(
+                args.min_local_context_strict_advantage_vs_selected
+            ),
+            "min_local_context_mask_advantage_vs_selected": float(
+                args.min_local_context_mask_advantage_vs_selected
+            ),
+            "min_local_context_visible_advantage_vs_selected": float(
+                args.min_local_context_visible_advantage_vs_selected
+            ),
+            "min_local_context_strict_advantage_vs_other_local": float(
+                args.min_local_context_strict_advantage_vs_other_local
+            ),
+            "min_local_context_mask_advantage_vs_other_local": float(
+                args.min_local_context_mask_advantage_vs_other_local
+            ),
+            "min_local_context_strict_advantage_vs_nonlocal": float(
+                args.min_local_context_strict_advantage_vs_nonlocal
+            ),
+            "min_local_context_mask_advantage_vs_nonlocal": float(
+                args.min_local_context_mask_advantage_vs_nonlocal
+            ),
+        },
+    }
+    if winner is None:
+        guard["reason"] = "no_local_context_in_strong_tie"
+        return None, guard
+    checks = {
+        "local_context_own_strict_count": (
+            own_view_strict(winner) >= float(args.min_local_context_own_strict_count)
+        ),
+        "local_context_own_mask_count": (
+            own_view_mask(winner) >= float(args.min_local_context_own_mask_count)
+        ),
+        "local_context_own_visible_count": (
+            own_view_visible(winner) >= float(args.min_local_context_own_visible_count)
+        ),
+        "strict_advantage_vs_selected": (
+            strict_advantage_vs_selected >= float(args.min_local_context_strict_advantage_vs_selected)
+        ),
+        "mask_advantage_vs_selected": (
+            mask_advantage_vs_selected >= float(args.min_local_context_mask_advantage_vs_selected)
+        ),
+        "visible_advantage_vs_selected": (
+            visible_advantage_vs_selected >= float(args.min_local_context_visible_advantage_vs_selected)
+        ),
+        "strict_advantage_vs_other_local": (
+            best_other_local is None
+            or strict_advantage_vs_other_local >= float(args.min_local_context_strict_advantage_vs_other_local)
+        ),
+        "mask_advantage_vs_other_local": (
+            best_other_local is None
+            or mask_advantage_vs_other_local >= float(args.min_local_context_mask_advantage_vs_other_local)
+        ),
+        "strict_advantage_vs_nonlocal": (
+            best_nonlocal is None
+            or strict_advantage_vs_nonlocal >= float(args.min_local_context_strict_advantage_vs_nonlocal)
+        ),
+        "mask_advantage_vs_nonlocal": (
+            best_nonlocal is None
+            or mask_advantage_vs_nonlocal >= float(args.min_local_context_mask_advantage_vs_nonlocal)
+        ),
+    }
+    guard["checks"] = checks
+    failed = [name for name, passed in checks.items() if not passed]
+    if failed:
+        guard["reason"] = "local_context_advantage_gate_failed"
+        guard["failed_checks"] = failed
+        return None, guard
+    guard["reason"] = "commit_local_context_unique_own_view_advantage"
+    return winner, guard
+
+
 def action_for_reason(reason: str) -> str:
+    if reason.startswith("commit_arbitrated_identity"):
+        return "second_stage_identity_v1_commit_arbitrated_candidate"
     if reason.startswith("commit_selected_identity_confirmed"):
         return "second_stage_identity_v1_commit_selected_candidate"
     if reason.startswith("request_"):
@@ -413,10 +741,14 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         branch_id = str(source.get("external_branch_id"))
         branch_plan_rows = plans_by_branch.get(branch_id, [])
         candidate_rows = candidate_evidence_rows(source, branch_plan_rows, rows_by_candidate, rows_by_role, args)
+        source_selected_candidate_id = source.get("selected_candidate_id")
+        source_selected_candidate_correct = source.get("selected_candidate_correct")
         selected, best_rival, rival_score, margin, reason, guard = select_second_stage_action(source, candidate_rows, args)
         selected = selected or {}
         action = action_for_reason(reason)
-        commits = action == "second_stage_identity_v1_commit_selected_candidate"
+        commits = str(action).startswith("second_stage_identity_v1_commit_")
+        committed_candidate_id = selected.get("candidate_id") if commits else None
+        committed_candidate_correct = selected.get("candidate_correct") if commits else None
         contains_correct = source.get("followup_set_contains_correct")
         if contains_correct is None:
             contains_correct = any(row.get("candidate_correct") is True for row in candidate_rows)
@@ -447,6 +779,12 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
                     for rival in (row.get("second_stage_rival_candidate_ids") or [])
                 ),
                 "followup_set_contains_correct": contains_correct,
+                "source_selected_candidate_id": source_selected_candidate_id,
+                "source_selected_candidate_correct": source_selected_candidate_correct,
+                "decision_candidate_id": selected.get("candidate_id"),
+                "decision_candidate_correct": selected_correct,
+                "committed_candidate_id": committed_candidate_id,
+                "committed_candidate_correct": committed_candidate_correct,
                 "selected_candidate_id": selected.get("candidate_id"),
                 "selected_candidate_correct": selected_correct,
                 "selected_score": selected.get("S_ext"),
@@ -495,6 +833,33 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
             "min_strong_strict_association_count": float(args.min_strong_strict_association_count),
             "min_strong_mask_hit_count": float(args.min_strong_mask_hit_count),
             "min_strong_visible_count": float(args.min_strong_visible_count),
+            "max_strong_tie_score_gap": float(args.max_strong_tie_score_gap),
+            "min_arbitration_strict_advantage": float(args.min_arbitration_strict_advantage),
+            "max_arbitration_semantic_prior_gap": float(args.max_arbitration_semantic_prior_gap),
+            "min_local_context_own_strict_count": float(args.min_local_context_own_strict_count),
+            "min_local_context_own_mask_count": float(args.min_local_context_own_mask_count),
+            "min_local_context_own_visible_count": float(args.min_local_context_own_visible_count),
+            "min_local_context_strict_advantage_vs_selected": float(
+                args.min_local_context_strict_advantage_vs_selected
+            ),
+            "min_local_context_mask_advantage_vs_selected": float(
+                args.min_local_context_mask_advantage_vs_selected
+            ),
+            "min_local_context_visible_advantage_vs_selected": float(
+                args.min_local_context_visible_advantage_vs_selected
+            ),
+            "min_local_context_strict_advantage_vs_other_local": float(
+                args.min_local_context_strict_advantage_vs_other_local
+            ),
+            "min_local_context_mask_advantage_vs_other_local": float(
+                args.min_local_context_mask_advantage_vs_other_local
+            ),
+            "min_local_context_strict_advantage_vs_nonlocal": float(
+                args.min_local_context_strict_advantage_vs_nonlocal
+            ),
+            "min_local_context_mask_advantage_vs_nonlocal": float(
+                args.min_local_context_mask_advantage_vs_nonlocal
+            ),
         },
         "objective_design": {
             "role": "convert V2 identity-confirmation requests into detector-backed selected-vs-rival identity decisions",
@@ -508,9 +873,23 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
                 "high score margin can override weak rival-positive evidence",
                 "strong rival evidence still blocks direct commit",
             ],
+            "v3_arbitration_contract": [
+                "strong selected-vs-rival ties do not commit by detector score alone",
+                "a semantic-neighbor candidate can win only when it is strong in its own active view",
+                "the semantic-neighbor candidate must have a strict-association advantage over selected/non-semantic rivals",
+                "the semantic-neighbor candidate must stay close to the selected candidate's semantic prior",
+            ],
+            "v4_local_context_arbitration_contract": [
+                "detector-score-saturated repeated-object rows can promote a local-context candidate",
+                "the local-context candidate must be strong in its own active view",
+                "the local-context candidate must beat the selected candidate, other local-context candidates, and non-local tied candidates by own-view evidence",
+                "GT labels are used only for analysis, not for action",
+            ],
             "failure_modes_addressed": [
                 "large repeated furniture false commit from detector-supported but identity-invalid instance",
                 "selected-vs-rival ambiguity after expanded retrieval",
+                "semantic-neighbor recovery when single-view weak evidence becomes multiview strong evidence",
+                "local-context recovery when semantic-neighbor evidence is weaker than a nearby repeated-object candidate",
                 "visit-position-only evidence being treated as instance identity proof",
             ],
         },
@@ -532,13 +911,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--detector-root", required=True)
     parser.add_argument("--out-root", required=True)
     parser.add_argument("--observed-only", action=argparse.BooleanOptionalAction, default=True)
-    parser.add_argument("--objective-version", choices=["v1", "v2"], default="v1")
+    parser.add_argument("--objective-version", choices=["v1", "v2", "v3", "v4"], default="v1")
     parser.add_argument("--allow-direct-commit", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--min-identity-score", type=float, default=0.35)
     parser.add_argument("--min-identity-margin", type=float, default=0.20)
     parser.add_argument("--min-strong-strict-association-count", type=float, default=2.0)
     parser.add_argument("--min-strong-mask-hit-count", type=float, default=2.0)
     parser.add_argument("--min-strong-visible-count", type=float, default=3.0)
+    parser.add_argument("--max-strong-tie-score-gap", type=float, default=0.02)
+    parser.add_argument("--min-arbitration-strict-advantage", type=float, default=3.0)
+    parser.add_argument("--max-arbitration-semantic-prior-gap", type=float, default=0.08)
+    parser.add_argument("--min-local-context-own-strict-count", type=float, default=5.0)
+    parser.add_argument("--min-local-context-own-mask-count", type=float, default=8.0)
+    parser.add_argument("--min-local-context-own-visible-count", type=float, default=10.0)
+    parser.add_argument("--min-local-context-strict-advantage-vs-selected", type=float, default=3.0)
+    parser.add_argument("--min-local-context-mask-advantage-vs-selected", type=float, default=6.0)
+    parser.add_argument("--min-local-context-visible-advantage-vs-selected", type=float, default=8.0)
+    parser.add_argument("--min-local-context-strict-advantage-vs-other-local", type=float, default=3.0)
+    parser.add_argument("--min-local-context-mask-advantage-vs-other-local", type=float, default=6.0)
+    parser.add_argument("--min-local-context-strict-advantage-vs-nonlocal", type=float, default=2.0)
+    parser.add_argument("--min-local-context-mask-advantage-vs-nonlocal", type=float, default=4.0)
     parser.add_argument("--min-detector-box-rate", type=float, default=0.80)
     parser.add_argument("--min-sam2-mask-rate", type=float, default=0.80)
     parser.add_argument("--min-second-stage-evidence-available-rate", type=float, default=0.50)

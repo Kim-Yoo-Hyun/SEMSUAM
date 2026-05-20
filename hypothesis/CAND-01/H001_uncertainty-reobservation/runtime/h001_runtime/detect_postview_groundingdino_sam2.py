@@ -44,6 +44,53 @@ def passthrough_fields(row: Dict[str, Any]) -> Dict[str, Any]:
     return {key: value for key, value in row.items() if key.startswith(prefixes)}
 
 
+def ordered_unique(values: Iterable[Any]) -> List[str]:
+    result: List[str] = []
+    seen: set[str] = set()
+    for value in values:
+        if value is None:
+            continue
+        text = str(value)
+        if not text or text == "None" or text in seen:
+            continue
+        seen.add(text)
+        result.append(text)
+    return result
+
+
+def select_candidate_set_for_frame(
+    all_candidates: List[Dict[str, Any]],
+    frame: Dict[str, Any],
+    semantic_tie_band: float,
+    max_candidates: int,
+) -> Tuple[List[Dict[str, Any]], str]:
+    frame_candidate_id = str(frame.get("candidate_id")) if frame.get("candidate_id") is not None else None
+    explicit_ids = ordered_unique(frame.get("candidate_ids") or frame.get("second_observation_candidate_ids") or [])
+    if explicit_ids:
+        by_id = {str(candidate.get("candidate_id")): candidate for candidate in all_candidates}
+        if frame_candidate_id is not None and frame_candidate_id not in explicit_ids:
+            explicit_ids.insert(0, frame_candidate_id)
+        selected = [by_id[candidate_id] for candidate_id in explicit_ids if candidate_id in by_id]
+        if max_candidates > 0 and len(selected) > max_candidates:
+            trimmed = selected[:max_candidates]
+            if frame_candidate_id is not None and all(
+                str(candidate.get("candidate_id")) != frame_candidate_id for candidate in trimmed
+            ):
+                frame_candidate = next(
+                    (candidate for candidate in selected if str(candidate.get("candidate_id")) == frame_candidate_id),
+                    None,
+                )
+                if frame_candidate is not None:
+                    trimmed[-1] = frame_candidate
+            selected = trimmed
+        if selected:
+            return selected, "explicit_candidate_ids"
+    return (
+        select_candidate_set(all_candidates, frame_candidate_id, semantic_tie_band, max_candidates),
+        "semantic_tie_band",
+    )
+
+
 def choose_device(device: str) -> str:
     if device == "auto":
         return "cuda" if torch.cuda.is_available() else "cpu"
@@ -275,6 +322,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     association_rows: List[Dict[str, Any]] = []
     frame_summaries: List[Dict[str, Any]] = []
     projection_counts: Counter[str] = Counter()
+    candidate_selection_counts: Counter[str] = Counter()
     detector_box_counts: List[int] = []
     associated_heading_count = 0
     projected_inside_mask_count = 0
@@ -287,12 +335,14 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         detector_query = format_detector_query(query, str(args.query_template))
         all_candidates = candidate_rows.get((scene_id, query), [])
         ranks = candidate_rank_lookup(all_candidates)
-        selected_candidates = select_candidate_set(
+        selected_candidates, candidate_selection_source = select_candidate_set_for_frame(
             all_candidates,
-            str(frame.get("candidate_id")) if frame.get("candidate_id") is not None else None,
+            frame,
             float(args.semantic_tie_band),
             int(args.max_candidates_per_frame),
         )
+        candidate_selection_counts[candidate_selection_source] += 1
+        selected_candidate_ids = [str(candidate.get("candidate_id")) for candidate in selected_candidates]
         frame_detector_count = 0
         frame_mask_count = 0
         frame_associated_count = 0
@@ -377,7 +427,12 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
             heading_associations: List[Dict[str, Any]] = []
             for candidate in selected_candidates:
                 candidate_id = str(candidate.get("candidate_id"))
-                point = candidate_point(candidate, args.candidate_point_field)
+                point = candidate_point(
+                    candidate,
+                    args.candidate_point_field,
+                    float(args.grounded_point_height_m),
+                    float(args.grounded_point_max_vertical_gap_m),
+                )
                 projection = (
                     {"projection_status": "missing_candidate_point", "projected_pixel": None, "camera_forward_m": None}
                     if point is None
@@ -437,6 +492,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
                     "heading_id": heading_id,
                     "candidate_id": candidate_id,
                     "candidate_rank_before": ranks.get(candidate_id),
+                    "candidate_selection_source": candidate_selection_source,
                     "point_field": args.candidate_point_field,
                     "projected_pixel": projected_pixel,
                     "projection_status": projection_status,
@@ -475,6 +531,8 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
                 "query_template": str(args.query_template),
                 "rendered_heading_count": len(rendered_headings),
                 "selected_candidate_count": len(selected_candidates),
+                "selected_candidate_ids": selected_candidate_ids,
+                "candidate_selection_source": candidate_selection_source,
                 "detector_box_count": frame_detector_count,
                 "sam2_mask_count": frame_mask_count,
                 "associated_candidate_heading_count": frame_associated_count,
@@ -505,9 +563,13 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         "query_template": str(args.query_template),
         "box_threshold": float(args.box_threshold),
         "text_threshold": float(args.text_threshold),
+        "candidate_point_field": str(args.candidate_point_field),
+        "grounded_point_height_m": float(args.grounded_point_height_m),
+        "grounded_point_max_vertical_gap_m": float(args.grounded_point_max_vertical_gap_m),
         "max_headings_per_frame": int(args.max_headings_per_frame),
         "max_detector_boxes_per_heading": int(args.max_detector_boxes_per_heading),
         "max_masks_per_heading": int(args.max_masks_per_heading),
+        "candidate_selection_counts": dict(sorted(candidate_selection_counts.items())),
         "rows": len(frame_summaries),
         "detector_box_rows": len(detector_rows),
         "detector_mask_rows": len(mask_rows_all),
@@ -553,7 +615,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-frames", type=int, default=0)
     parser.add_argument("--semantic-tie-band", type=float, default=0.01)
     parser.add_argument("--max-candidates-per-frame", type=int, default=5)
-    parser.add_argument("--candidate-point-field", default="position", choices=["position", "visit_position"])
+    parser.add_argument(
+        "--candidate-point-field",
+        default="position",
+        choices=["position", "visit_position", "grounded_position"],
+    )
+    parser.add_argument("--grounded-point-height-m", type=float, default=0.8)
+    parser.add_argument("--grounded-point-max-vertical-gap-m", type=float, default=2.0)
     parser.add_argument("--box-threshold", type=float, default=0.15)
     parser.add_argument("--text-threshold", type=float, default=0.15)
     parser.add_argument("--query-template", default="a {query}.")

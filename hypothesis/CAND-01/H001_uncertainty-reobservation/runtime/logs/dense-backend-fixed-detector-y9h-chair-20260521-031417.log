@@ -1,0 +1,307 @@
+started_at=2026-05-21T03:14:17+09:00
+working_directory=/home/yoohyun/research3
+pair_objective_rows=/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/pair_observation_objective_v4b_y9h_chair_rows.jsonl
+candidate_artifact=/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/all_scenes_aligned.jsonl
+object_node_features=/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/empty_object_node_features.jsonl
+out=/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1
+plan_out=/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_plan
+frames_out=/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_frames
+detector_out=/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_detector
+evidence_out=/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_evidence
+log=hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/dense-backend-fixed-detector-y9h-chair-20260521-031417.log
+run_id=h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1
+expected_triggered_rows=2
+expected_files=/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_plan/external_candidate_observation_plan.jsonl /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_frames/postview_frames_v2.jsonl /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_detector/summary.json /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_evidence/external_candidate_evidence_summary.json
+verification_command=cat /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/job_status.json && cat /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_detector_validation_summary.json
+{'stage': 'prerequisite_check_passed', 'paths': {'pair_objective_rows': '/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/pair_observation_objective_v4b_y9h_chair_rows.jsonl', 'candidate_artifact': '/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/all_scenes_aligned.jsonl', 'object_node_features': '/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/empty_object_node_features.jsonl', 'groundingdino_config': '/tmp/research3-models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/config.json', 'groundingdino_weights': '/tmp/research3-models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/model.safetensors', 'sam2_checkpoint': '/tmp/research3-models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt'}}
+{
+  "candidate_artifact": "/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/all_scenes_aligned.jsonl",
+  "diagnosis": {
+    "branch_role": "request_observation_not_commit",
+    "paper_claim_status": "blocked_until_external_observation_is_scored_on_fresh_split",
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false
+  },
+  "external_budget": 6,
+  "external_recall_by_budget": {
+    "1": {
+      "contains_correct_rate": 0.0,
+      "contains_correct_rows": 0,
+      "rows": 2
+    },
+    "10": {
+      "contains_correct_rate": 0.0,
+      "contains_correct_rows": 0,
+      "rows": 2
+    },
+    "2": {
+      "contains_correct_rate": 0.0,
+      "contains_correct_rows": 0,
+      "rows": 2
+    },
+    "3": {
+      "contains_correct_rate": 0.0,
+      "contains_correct_rows": 0,
+      "rows": 2
+    },
+    "5": {
+      "contains_correct_rate": 0.0,
+      "contains_correct_rows": 0,
+      "rows": 2
+    },
+    "6": {
+      "contains_correct_rate": 0.0,
+      "contains_correct_rows": 0,
+      "rows": 2
+    }
+  },
+  "external_selection_mode": "rank_bands",
+  "full_external_pool_contains_correct_rate": 0.0,
+  "neither_candidate_external_set_contains_correct_rate": 0.0,
+  "neither_candidate_first_external_correct_rate": 0.0,
+  "neither_candidate_full_external_pool_contains_correct_rate": 0.0,
+  "neither_candidate_triggered_rows": 2,
+  "object_node_features": "/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/empty_object_node_features.jsonl",
+  "objective_version": "pair_v4b",
+  "output_files": {
+    "branch_rows": "external_candidate_branch_rows.jsonl",
+    "plan_rows": "external_candidate_observation_plan.jsonl",
+    "skipped_rows": "external_candidate_observation_skipped.jsonl",
+    "summary": "external_candidate_branch_summary.json"
+  },
+  "pair_correct_candidate_unnecessary_external_rate": 0.0,
+  "pair_correct_candidate_unnecessary_external_rows": 0,
+  "pair_objective_rows": "/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/pair_observation_objective_v4b_y9h_chair_rows.jsonl",
+  "plan_rows": 12,
+  "rank_band_pattern": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    10
+  ],
+  "rows": 2,
+  "schema_version": "h001.external_candidate_observation_plan.v1",
+  "skipped_rows": 0,
+  "source_action_by_label_case": {
+    "neither_candidate_correct": {
+      "pair_v4b_request_external_candidate_search_alt_confirm_untrusted": 2
+    }
+  },
+  "trigger_by_label_case": {
+    "neither_candidate_correct": {
+      "pair_v4b_alt_confirm_untrusted_candidate_set": 2
+    }
+  },
+  "trigger_counts": {
+    "pair_v4b_alt_confirm_untrusted_candidate_set": 2
+  },
+  "triggered_rows": 2
+}
+[18:14:18:896213]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.scn` exists but failed to load.
+{
+  "camera_height": 1.5,
+  "candidate_artifact": "/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/all_scenes_aligned.jsonl",
+  "candidate_point_field": "position",
+  "errors": [],
+  "grounded_point_height_m": 0.8,
+  "grounded_point_max_vertical_gap_m": 2.0,
+  "height": 120,
+  "hfov": 90.0,
+  "max_headings_per_row": 4,
+  "min_headings_per_row": 1,
+  "next_expected_file": "postview_scores.jsonl",
+  "ok": true,
+  "out_root": "/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_frames",
+  "policy": "ExternalCandidateObservation",
+  "rendered_heading_count": 36,
+  "rows_exported": 12,
+  "rows_requested": 12,
+  "schema_version": "h001.postview.v2",
+  "unique_scenes": [
+    "hm3d_v0.2/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.glb"
+  ],
+  "uses_gt_for_action": false,
+  "viewpoint_decisions": "/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_plan/external_candidate_observation_plan.jsonl",
+  "width": 160,
+  "yaw_offsets_deg": [
+    -30.0,
+    0.0,
+    30.0
+  ]
+}
+/opt/conda/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+/opt/conda/lib/python3.11/site-packages/torchvision/transforms/functional.py:154: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_numpy.cpp:203.)
+  img = torch.from_numpy(pic.transpose((2, 0, 1))).contiguous()
+{
+  "associated_candidate_heading_count": 0,
+  "association_rows": 36,
+  "box_threshold": 0.1,
+  "candidate_artifact": "/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/all_scenes_aligned.jsonl",
+  "candidate_point_field": "position",
+  "candidate_selection_counts": {
+    "explicit_candidate_ids": 12
+  },
+  "debug_images_written": 36,
+  "detector_box_count_per_heading": {
+    "max": 3,
+    "mean": 3.0,
+    "min": 3
+  },
+  "detector_box_rows": 108,
+  "detector_mask_rows": 108,
+  "device": "cuda",
+  "frames": "/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_frames/postview_frames_v2.jsonl",
+  "grounded_point_height_m": 0.8,
+  "grounded_point_max_vertical_gap_m": 2.0,
+  "groundingdino_dir": "/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny",
+  "max_detector_boxes_per_heading": 3,
+  "max_headings_per_frame": 0,
+  "max_masks_per_heading": 3,
+  "out_root": "/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_detector",
+  "output_files": {
+    "detector_boxes": "detector_boxes.jsonl",
+    "detector_candidate_associations": "detector_candidate_associations.jsonl",
+    "detector_masks": "detector_masks.jsonl",
+    "frame_summary": "frame_summary.jsonl",
+    "summary": "summary.json"
+  },
+  "projected_pixel_inside_mask_count": 12,
+  "projection_status_counts": {
+    "behind_camera": 10,
+    "out_of_fov": 6,
+    "visible": 20
+  },
+  "query_template": "{query}",
+  "rows": 12,
+  "rows_with_candidate_association": 0,
+  "rows_with_candidate_association_rate": 0.0,
+  "rows_with_detector_box": 12,
+  "rows_with_detector_box_rate": 1.0,
+  "rows_with_sam2_mask": 12,
+  "rows_with_sam2_mask_rate": 1.0,
+  "sam2_checkpoint": "/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt",
+  "schema_version": "h001.postview_detector.v3c_groundingdino_sam2",
+  "text_threshold": 0.1,
+  "uses_gt_for_action": false
+}
+{
+  "action_by_label_case": {
+    "neither_candidate_correct": {
+      "external_evidence_v1_defer": 2
+    }
+  },
+  "action_counts": {
+    "external_evidence_v1_defer": 2
+  },
+  "association_rows": 36,
+  "detector_root": "/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_detector",
+  "diagnosis": {
+    "branch_role": "actual_external_view_detector_evidence_gate",
+    "commit_status": "allowed_only_when_external_view_evidence_is_positive_margin_safe",
+    "paper_claim_status": "blocked_until_this_gate_passes_on_heldout_detector_artifact"
+  },
+  "external_branch_rows": "/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_plan/external_candidate_branch_rows.jsonl",
+  "external_observation_plan": "/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_plan/external_candidate_observation_plan.jsonl",
+  "gate": {
+    "candidate_association_rate": 0.0,
+    "commit_rate": 0.0,
+    "detector_box_rate": 1.0,
+    "external_evidence_available_rate": 1.0,
+    "external_positive_evidence_rate": 1.0,
+    "external_set_contains_correct_rate": 0.0,
+    "first_external_correct_rate": 0.0,
+    "max_no_valid_external_commit_rate": 0.1,
+    "max_wrong_goal_commit_rate": 0.1,
+    "min_candidate_association_rate": 0.2,
+    "min_commit_rate": 0.15,
+    "min_detector_box_rate": 0.8,
+    "min_external_evidence_available_rate": 0.5,
+    "min_external_positive_evidence_rate": 0.3,
+    "min_sam2_mask_rate": 0.8,
+    "min_selected_correct_improvement_over_first": 0.1,
+    "no_valid_external_commit_rate": 0.0,
+    "passes_external_detector_substrate_gate": false,
+    "passes_external_evidence_full_gate": false,
+    "passes_external_evidence_safety_gate": true,
+    "sam2_mask_rate": 1.0,
+    "selected_correct_improvement_over_first": 0.0,
+    "selected_correct_rate_if_forced": 0.0,
+    "success_commit_rate": 0.0,
+    "wrong_goal_commit_rate": 0.0,
+    "wrong_goal_commit_rate_on_commits": null
+  },
+  "output_files": {
+    "rows": "external_candidate_evidence_rows.jsonl",
+    "summary": "external_candidate_evidence_summary.json"
+  },
+  "plan_rows": 12,
+  "reason_counts": {
+    "defer_ambiguous_external_evidence": 2
+  },
+  "rows": 2,
+  "schema_version": "h001.external_candidate_observation_evidence.v1",
+  "thresholds": {
+    "min_commit_margin": 0.1,
+    "min_commit_score": 0.35,
+    "min_strict_association_count": 1.0
+  },
+  "unmatched_association_rows": 0,
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": false
+}
+{
+  "candidate_artifact": "/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/all_scenes_aligned.jsonl",
+  "detector_out": "/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_detector",
+  "detector_summary": {
+    "rows": 12,
+    "rows_with_candidate_association_rate": 0.0,
+    "rows_with_detector_box_rate": 1.0,
+    "rows_with_sam2_mask_rate": 1.0
+  },
+  "evidence_action_counts": {
+    "external_evidence_v1_defer": 2
+  },
+  "evidence_gate": {
+    "candidate_association_rate": 0.0,
+    "commit_rate": 0.0,
+    "detector_box_rate": 1.0,
+    "external_evidence_available_rate": 1.0,
+    "external_positive_evidence_rate": 1.0,
+    "external_set_contains_correct_rate": 0.0,
+    "first_external_correct_rate": 0.0,
+    "max_no_valid_external_commit_rate": 0.1,
+    "max_wrong_goal_commit_rate": 0.1,
+    "min_candidate_association_rate": 0.2,
+    "min_commit_rate": 0.15,
+    "min_detector_box_rate": 0.8,
+    "min_external_evidence_available_rate": 0.5,
+    "min_external_positive_evidence_rate": 0.3,
+    "min_sam2_mask_rate": 0.8,
+    "min_selected_correct_improvement_over_first": 0.1,
+    "no_valid_external_commit_rate": 0.0,
+    "passes_external_detector_substrate_gate": false,
+    "passes_external_evidence_full_gate": false,
+    "passes_external_evidence_safety_gate": true,
+    "sam2_mask_rate": 1.0,
+    "selected_correct_improvement_over_first": 0.0,
+    "selected_correct_rate_if_forced": 0.0,
+    "success_commit_rate": 0.0,
+    "wrong_goal_commit_rate": 0.0,
+    "wrong_goal_commit_rate_on_commits": null
+  },
+  "evidence_out": "/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_evidence",
+  "frame_rows_exported": 12,
+  "frames_out": "/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_frames",
+  "pair_objective_rows": "/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/pair_observation_objective_v4b_y9h_chair_rows.jsonl",
+  "plan_out": "/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/external_candidate_plan",
+  "plan_rows": 12,
+  "rendered_heading_count": 36,
+  "schema_version": "h001.v3_fresh_pair_v4b_external_candidate_detector_validation.v1",
+  "triggered_rows": 2,
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": false
+}
+completed_at=2026-05-21T03:14:35+09:00

@@ -1,0 +1,82 @@
+started_at=2026-05-21T01:54:32+09:00
+working_directory=/home/yoohyun/research3
+exact_command=TS=20260521-015432 bash /home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v4_semantic_neighbor_stage2_validation.sh
+followup_evidence_out=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v5_local_rival_route
+stage2_plan_out=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_plan
+stage2_frames_out=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_frames
+stage2_detector_out=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_detector
+stage2_evidence_out=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_evidence_v3
+integrated_out=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_v5_stage2_local_rival_expanded_grounded_v1
+log=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/heldout-local-rival-expanded-grounded-20260521-015432.log
+verification_command=cat /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/v4_semantic_neighbor_stage2_validation_job_status.json && cat /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_v5_stage2_local_rival_expanded_grounded_v1/external_candidate_followup_v5_stage2_local_rival_expanded_grounded_summary.json
+{'stage': 'prerequisite_check_passed', 'paths': {'data_root': '/tmp/research3-data', 'hm3d': '/tmp/research3-data/scene_datasets/hm3d', 'candidate_artifact': '/tmp/research3-runs/h001_first_eval_replacement_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl', 'followup_rows': '/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v5_local_rival_route/external_candidate_followup_evidence_rows.jsonl', 'followup_summary': '/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v5_local_rival_route/external_candidate_followup_evidence_summary.json', 'groundingdino_config': '/tmp/research3-models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/config.json', 'groundingdino_weights': '/tmp/research3-models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/model.safetensors', 'sam2_checkpoint': '/tmp/research3-models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt'}}
+[16:54:32:878423]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.scn` exists but failed to load.
+{
+  "candidate_artifact": "/runs/h001_first_eval_replacement_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "external_branch_ids_filter": [],
+  "followup_evidence_rows": "/runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v5_local_rival_route/external_candidate_followup_evidence_rows.jsonl",
+  "grounded_point_height_m": 0.8,
+  "grounded_point_max_vertical_gap_m": 2.0,
+  "max_candidate_ids": 8,
+  "max_local_context_distance_m": 2.5,
+  "max_local_contexts": 2,
+  "max_rivals": 1,
+  "max_semantic_neighbors": 1,
+  "max_targets_per_request": 5,
+  "max_viewpoints_per_target": 1,
+  "out_root": "/runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_plan",
+  "output_files": {
+    "plan_rows": "external_candidate_second_stage_identity_plan.jsonl",
+    "skipped_rows": "external_candidate_second_stage_identity_skipped.jsonl",
+    "summary": "external_candidate_second_stage_identity_summary.json"
+  },
+  "plan_rows": 22,
+  "policy": "ExternalCandidateSecondStageIdentityConfirmation",
+  "request_query_counts": {
+    "sofa": 2
+  },
+  "request_rows": 2,
+  "role_counts": {
+    "local_context_1_standoff": 6,
+    "local_context_2_standoff": 6,
+    "rival_1_standoff": 2,
+    "selected_standoff": 2,
+    "semantic_neighbor_1_standoff": 6
+  },
+  "rows_by_external_branch_id": {
+    "external_candidate:13": 11,
+    "external_candidate:9": 11
+  },
+  "schema_version": "h001.external_candidate_second_stage_identity_plan.v1",
+  "semantic_neighbor_viewpoints_per_target": 3,
+  "skipped_rows": 0,
+  "source_rows": 5,
+  "target_point_mode": "grounded_position",
+  "target_selection_mode": "local_rival_expanded",
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": false,
+  "viewpoint_source_counts": {
+    "standoff_navmesh": 22
+  }
+}
+[16:54:34:046306]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.scn` exists but failed to load.
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/opt/conda/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/export_postview_frames_v2.py", line 513, in <module>
+    main()
+  File "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/export_postview_frames_v2.py", line 506, in main
+    summary = render_rows(args)
+  File "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/export_postview_frames_v2.py", line 331, in render_rows
+    heading_specs = build_heading_specs(
+  File "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/export_postview_frames_v2.py", line 253, in build_heading_specs
+    point = candidate_point(
+  File "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/export_postview_frames_v2.py", line 197, in candidate_point
+    return grounded_candidate_point(candidate, grounded_point_height_m, grounded_point_max_vertical_gap_m)
+  File "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/export_postview_frames_v2.py", line 178, in grounded_candidate_point
+    if abs(float(position[1]) - float(visit_position[1])) > float(grounded_point_max_vertical_gap_m):
+TypeError: 'bool' object is not subscriptable
+failed_stage=second_stage_frame_export
+exit_code=1

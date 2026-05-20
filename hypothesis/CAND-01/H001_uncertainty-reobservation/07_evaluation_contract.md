@@ -249,6 +249,168 @@ Policy progression:
 
 Do not tune switch gates on held-out `first_eval`.
 
+## Fixed Dense Backend Terminal Diagnostic Contract
+
+### 사실
+
+This contract applies only to the two held-out `y9hTuugGdiq` chair rows that were previously classified as no-correct-candidate backend recall failures.
+
+```text
+fixed_dense_backend_artifact: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/all_scenes_aligned.jsonl
+fixed_dense_backend_verification: recovered 2 / 2, recall@5 1.0, candidate_count 100
+strict_detector_observation: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1
+strict_detector_association_rate: 0.0
+association_diagnostic_failure: visible_inside_mask_but_depth_or_association_rejects
+depth2_detector_observation: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1
+association_depth_tolerance_m: 2.0
+depth2_candidate_association_rate: 0.5
+posthoc_commit_evaluation: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1/dense_repair_commit_evaluation_v1
+posthoc_action_commits: 2 / 2
+posthoc_success_commits: 2 / 2
+posthoc_wrong_goal_commits: 0 / 2
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+### Evaluation Boundary
+
+Action selection may use only non-GT semantic scores, detector boxes, SAM2 masks, depth association, branch rows, and evidence summaries.
+
+GT candidate correctness or recall-probe labels may be used only after action selection for:
+
+- post-hoc candidate correctness labeling;
+- wrong-goal / success accounting;
+- oracle-gap diagnosis;
+- scope decisions about whether a diagnostic can be promoted.
+
+Do not interpret built-in evidence gate fields that require `candidate_correct` when dense branch rows do not contain correctness labels. In this diagnostic, `no_valid_external_commit_rate=1.0` is a label-plumbing artifact, not evidence that the committed actions are truly no-valid.
+
+### Allowed Interpretation
+
+- `spatial_nms_p95_k100_d10` can recover correct chair candidates for these two held-out rows without GT action selection.
+- `association_depth_tolerance_m=2.0` can recover detector association that strict `1.0m` depth matching rejects in this local chair diagnostic.
+- The post-hoc result supports the failure taxonomy: candidate backend recall failure -> detector association depth gate failure -> evaluation-label plumbing failure.
+- The result is useful for deciding the next non-GT backend and association validation path.
+
+### Not Allowed
+
+- Do not claim a policy-scale ObjectNav improvement from this diagnostic.
+- Do not claim that `association_depth_tolerance_m=2.0` is generally valid across categories, scenes, or detectors.
+- Do not report this as `Success Rate`, `SPL`, or `wrong_goal_visit_rate` improvement on `first_eval`.
+- Do not merge post-hoc GT labels into action-time branch rows unless the field is explicitly marked evaluation-only.
+- Do not use this result to unblock first_eval or policy-scale comparison by itself.
+
+### Promotion Gate
+
+Before using this repair beyond the two-row diagnostic, complete all gates below:
+
+| Gate | Required evidence |
+| --- | --- |
+| evaluation-label plumbing | action rows and evaluation-only correctness labels are stored separately |
+| scene/category expansion | validate on at least one independent scene/query set or all held-out no-correct rows |
+| simpler alternatives | compare strict depth `1.0m`, depth `2.0m`, no-depth mask association, and grounded-position association |
+| safety | wrong-goal commit does not increase under GT analysis labels |
+| utility | commit/success improves over defer-only handling without action-time GT |
+| reproducibility | command, image, artifact path, and validation summary are recorded |
+
+### Scope Status
+
+| Scope | Status |
+| --- | --- |
+| local two-row chair diagnostic | positive |
+| general detector association repair | do not generalize yet |
+| `first_eval` rerun | blocked |
+| policy-scale comparison | blocked |
+
+### Generalization Decision
+
+#### 사실
+
+The two-row dense chair diagnostic supports `association_depth_tolerance_m=2.0` locally:
+
+```text
+variant: mask_depth_2_0
+local_rows: 36 detector/candidate association rows
+local_episodes: 2 held-out y9hTuugGdiq chair episodes
+local_episode_correct_association_rate: 1.0
+local_episode_wrong_association_rate: 0.0
+local_association_rate: 0.2222
+posthoc_success_commits: 2 / 2
+posthoc_wrong_goal_commits: 0 / 2
+```
+
+A broader existing 100-row `first_eval` replacement association-variant diagnostic does not support threshold-only generalization:
+
+```text
+diagnostic: /tmp/research3-runs/h001_first_eval_replacement_detector_v3c_association_variants_v1/summary.json
+mask_depth_2p0:
+  rows_with_any_association_rate: 0.49
+  associated_count_auc: 0.520
+  selected_correct_delta_on_all_rows: -0.21
+  wrong_goal_fixes: 2
+  new_wrong_goals: 6
+  detector_calibration_gate: false
+box_or_mask_depth_2p0:
+  rows_with_any_association_rate: 0.56
+  associated_count_auc: 0.549
+  selected_correct_delta_on_all_rows: -0.14
+  wrong_goal_fixes: 5
+  new_wrong_goals: 4
+  detector_calibration_gate: false
+```
+
+#### 에이전트 추론
+
+Do not generalize `association_depth_tolerance_m=2.0` as a global detector association default. It is allowed only as a local diagnostic treatment for the fixed dense backend chair path.
+
+The reason is that the local chair rows diagnose a specific point-height/depth mismatch, while the broader association-variant diagnostic shows that relaxed depth matching increases association coverage without making association count a reliable correctness signal. A global depth relaxation risks adding supported wrong candidates, especially in repeated or cluttered object cases.
+
+Broader use requires a new validation contract where depth tolerance is an ablation or property-conditioned association term, not a fixed default.
+
+Required evidence before promotion:
+
+- independent scene/category validation;
+- action/evaluation label separation;
+- strict `1.0m` vs `2.0m` vs no-depth mask vs grounded-position comparison;
+- wrong-goal commit non-increase;
+- utility improvement over defer-only handling;
+- per-category failure accounting.
+
+### Terminal Arbitration Decision
+
+#### 사실
+
+Dense terminal arbitration diagnostic:
+
+```text
+script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/diagnose_dense_terminal_arbitration.py
+output: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1/dense_terminal_arbitration_diagnostic_v1
+rows: 2
+commit_rows: 2
+action_recompute_match_rate: 1.0
+selected_posthoc_correct_rate: 1.0
+first_external_posthoc_correct_rate: 1.0
+selected_correct_improvement_over_first: 0.0
+wrong_positive_support_row_rate: 0.0
+same_goal_evidence_selection_rate: 1.0
+terminal_arbitration_class: same_goal_evidence_selection_not_wrong_repair 2
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Both rows commit `vlmaps:export:chair:spatial_nms:7`, while the first external candidate `vlmaps:export:chair:spatial_nms:2` is also post-hoc correct. Positive-support candidates are `spatial_nms:2`, `spatial_nms:5`, and `spatial_nms:7`; all are post-hoc correct.
+
+#### 에이전트 추론
+
+Terminal arbitration is locally safe under post-hoc labels, but it does not prove wrong-goal repair utility. The result shows detector evidence can rank a correct dense candidate inside a same-goal correct cluster. It does not show that the terminal objective can choose a correct candidate when wrong candidates also receive positive detector support.
+
+Therefore, the next validation should target independent rows with one of these conditions:
+
+- first external candidate is post-hoc wrong but a correct candidate is present;
+- both correct and wrong candidates receive positive support;
+- multiple repeated-object candidates receive strong detector/depth support;
+- current strict association fails but `2.0m` depth association creates a candidate conflict.
+
 ## Random Baseline Gate
 
 `SemanticOnly` must pass at least two of:

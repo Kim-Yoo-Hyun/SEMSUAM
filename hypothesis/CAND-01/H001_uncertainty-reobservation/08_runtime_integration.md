@@ -8766,6 +8766,1498 @@ next_runtime_target:
   keep final first_eval/policy-scale blocked until this fixed-rule validation passes
 ```
 
+Held-out Objective V2 validation launch:
+
+```text
+date_launched: 2026-05-19
+tmux: h001-first-eval-replacement-objective-v2-heldout-20260519-143805
+command: TS=20260519-143805 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/first_eval_replacement_objective_v2_heldout.sh
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/first-eval-replacement-objective-v2-heldout-20260519-143805.log
+status: running/pair_v4b_revised_geometry
+manifest: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_first_eval_replacement_v1.json
+derivation_manifest: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_v3_fresh_validation_v1.json
+scene_overlap_with_derivation_split: 0
+candidate_artifact: /tmp/research3-runs/h001_first_eval_replacement_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl
+coverage_summary: /tmp/research3-runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/artifact_coverage.json
+output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1
+expected_summary: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/objective_v2_heldout_validation_summary.json
+validation_scope: heldout_validation
+verification_command: cat /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/objective_v2_heldout_job_status.json && cat /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/objective_v2_heldout_validation_summary.json
+```
+
+Held-out Objective V2 validation result:
+
+```text
+date_checked: 2026-05-19
+status: completed
+summary: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/objective_v2_heldout_validation_summary.json
+integrated_summary: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_v3_stage2_objective_v2_heldout_validation/external_candidate_followup_v2_stage2_validation_summary.json
+validation_scope: heldout_validation
+pair_action_counts:
+  pair_v4b_defer_insufficient_disconfirmation: 8
+  pair_v4b_defer_rank_ambiguous_or_duplicate_goal: 11
+  pair_v4b_request_external_candidate_search: 2
+  pair_v4b_request_external_candidate_search_alt_confirm_untrusted: 3
+external_v4_action_counts:
+  external_evidence_v4_request_identity_confirmation: 5
+followup_terminal_action_counts:
+  followup_evidence_v1_defer: 5
+integrated:
+  terminal_rows: 5
+  commit_rows: 0
+  success_commit_rows: 0
+  wrong_goal_commit_rows: 0
+  passes_integrated_safety_gate: true
+  passes_integrated_full_gate: false
+  first_eval_rerun_blocked: true
+  policy_scale_comparison_blocked: true
+  utility_proof_passed: false
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Candidate-set expansion diagnostic:
+
+```text
+date_checked: 2026-05-19
+diagnostic: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/candidate_set_expansion_diagnostic_v1/candidate_set_expansion_summary.json
+docker_command:
+  docker run --rm --ipc=host --user "$(id -u):$(id -g)" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /tmp/research3-runs:/runs -v /home/yoohyun/research3:/workspace:ro research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python -m h001_runtime.diagnose_candidate_expansion --external-evidence-v4-rows /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_evidence_v4/external_candidate_evidence_v4_rows.jsonl --followup-evidence-rows /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v3_heldout/external_candidate_followup_evidence_rows.jsonl --followup-observation-plan /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_plan_v3_heldout/external_candidate_followup_observation_plan.jsonl --candidate-artifact /runs/h001_first_eval_replacement_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl --object-node-features /runs/h001_first_eval_replacement_pair_objective_v4b_heldout_v1/association_recovery/candidate_object_node_features_after_second.jsonl --out-root /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/candidate_set_expansion_diagnostic_v1 --recall-budgets 6,10,20
+failure_mode_counts:
+  detector_association_dropped_planned_correct_candidate: 2
+  selected_correct_but_identity_ambiguous: 1
+  v4_external_set_missing_correct_candidate: 2
+candidate_set_recall:
+  current_followup_set: 1/5
+  followup_plan_explicit_set: 3/5
+  v4_external_set: 3/5
+  current_plus_v4_external: 3/5
+  artifact_semantic_top6: 3/5
+  artifact_semantic_top10: 3/5
+  artifact_semantic_top20: 3/5
+recommendation: make_detector_association_respect_explicit_frame_candidate_ids_first
+```
+
+Facts:
+
+```text
+The fixed Objective V2 held-out run passes safety but produces no success commit.
+The detector substrate is not the immediate bottleneck for these five branches: V4 external evidence sees a correct candidate on 3/5 rows.
+The follow-up planner explicit candidate set preserves a correct candidate on 3/5 rows.
+The current detector/evidence row keeps a correct candidate on only 1/5 rows.
+Two sofa rows already contain correct candidates in the follow-up plan, but detector association drops them because `detect_postview_groundingdino_sam2.py` used semantic tie-band candidate selection instead of explicit frame `candidate_ids`.
+Two chair rows do not contain a correct candidate even in the V4 external set or artifact semantic top20.
+```
+
+Agent inference:
+
+```text
+The next revision should not tune the identity threshold first.
+The first implementable repair is to make detector association respect explicit frame `candidate_ids`, so planned V4 external candidates are not removed before evidence aggregation.
+The remaining chair failures require broader retrieval/backend expansion and should be a separate revision after the preservation repair is validated.
+```
+
+Detector association repair:
+
+```text
+date_checked: 2026-05-19
+file: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/detect_postview_groundingdino_sam2.py
+change:
+  add explicit candidate set selection from frame candidate_ids / second_observation_candidate_ids
+  preserve frame candidate_id under max_candidates_per_frame cap
+  record candidate_selection_source and selected_candidate_ids in detector frame summaries
+smoke:
+  branch external_candidate:13 uses source explicit_candidate_ids
+  selected ids match frame candidate_ids:
+    vlmaps:export:sofa:spatial_nms:2
+    vlmaps:export:sofa:spatial_nms:7
+    vlmaps:export:sofa:spatial_nms:6
+    vlmaps:export:sofa:spatial_nms:5
+    vlmaps:export:sofa:spatial_nms:9
+    vlmaps:export:sofa:spatial_nms:14
+next_validation:
+  rerun held-out follow-up detector/evidence with the repaired detector association before any final first_eval or policy-scale run
+```
+
+Explicit-candidate held-out validation launch:
+
+```text
+date_launched: 2026-05-19
+tmux: h001-followup-explicit-heldout-20260519-150430
+command: TS=20260519-150430 EXTERNAL_OUT=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1 CANDIDATE_ARTIFACT=/tmp/research3-runs/h001_first_eval_replacement_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl EXTERNAL_EVIDENCE_V4_ROWS=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_evidence_v4/external_candidate_evidence_v4_rows.jsonl OBJECT_NODE_FEATURES=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_heldout_v1/association_recovery/candidate_object_node_features_after_second.jsonl FOLLOWUP_PLAN_OUT=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_plan_v3_explicit_candidates FOLLOWUP_FRAMES_OUT=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_frames_v3_explicit_candidates FOLLOWUP_DETECTOR_OUT=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_detector_v3_explicit_candidates FOLLOWUP_EVIDENCE_V2_OUT=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v3_explicit_candidates STAGE2_PLAN_OUT=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v2_explicit_candidates_plan STAGE2_FRAMES_OUT=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v2_explicit_candidates_frames STAGE2_DETECTOR_OUT=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v2_explicit_candidates_detector STAGE2_EVIDENCE_OUT=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v2_explicit_candidates_evidence INTEGRATED_OUT=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_v3_stage2_objective_v2_explicit_candidate_validation STATUS=/tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/followup_v3_stage2_objective_v2_explicit_candidate_job_status.json LOG=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/first-eval-replacement-followup-explicit-candidates-20260519-150430.log RUN_ID=h001_first_eval_replacement_followup_explicit_candidates_20260519-150430 EXPECTED_FOLLOWUP_PLAN_ROWS=15 EXPECTED_SOURCE_REQUEST_ROWS=5 EXPECTED_STAGE2_REQUEST_ROWS=any FOLLOWUP_OBJECTIVE_VERSION=v3 SECOND_STAGE_OBJECTIVE_VERSION=v2 VALIDATION_SCOPE=heldout_explicit_candidate_diagnostic DEVICE=cuda MAX_CANDIDATES_PER_DECISION=6 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v3_fresh_external_candidate_followup_v2_stage2.sh
+status: running/followup_detector
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/first-eval-replacement-followup-explicit-candidates-20260519-150430.log
+output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_v3_stage2_objective_v2_explicit_candidate_validation
+verification_command: cat /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/followup_v3_stage2_objective_v2_explicit_candidate_job_status.json && cat /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_v3_stage2_objective_v2_explicit_candidate_validation/external_candidate_followup_v2_stage2_validation_summary.json
+```
+
+Explicit-candidate held-out validation result:
+
+```text
+date_checked: 2026-05-19
+status: completed_after_integrated_summary_recovery
+status_file: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/followup_v3_stage2_objective_v2_explicit_candidate_job_status.json
+followup_detector_summary: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_detector_v3_explicit_candidates/summary.json
+followup_evidence_summary: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v3_explicit_candidates/external_candidate_followup_evidence_summary.json
+integrated_summary: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_v3_stage2_objective_v2_explicit_candidate_validation/external_candidate_followup_v2_stage2_validation_summary.json
+detector:
+  candidate_selection_counts:
+    explicit_candidate_ids: 15
+  frame_rows: 15
+  association_rows: 1008
+  rows_with_candidate_association_rate: 0.8666666666666667
+followup_evidence:
+  source_request_rows: 5
+  action_counts:
+    followup_evidence_v1_defer: 5
+  reason_counts:
+    defer_identity_ambiguous_rival_supported: 5
+  followup_set_contains_correct_rows: 3
+  detector_box_rate: 1.0
+  sam2_mask_rate: 1.0
+  followup_strong_depth_evidence_rate: 1.0
+integrated:
+  terminal_rows: 5
+  commit_rows: 0
+  success_commit_rows: 0
+  wrong_goal_commit_rows: 0
+  passes_integrated_safety_gate: true
+  passes_integrated_full_gate: false
+  utility_proof_passed: false
+  first_eval_rerun_blocked: true
+  policy_scale_comparison_blocked: true
+```
+
+Facts:
+
+```text
+The explicit-candidate repair fixed the harness mismatch: all 15 follow-up frames used explicit frame candidate IDs.
+The repaired detector/evidence path recovered correct candidate visibility in 3/5 held-out request branches.
+The policy still makes no commit because every row is classified as identity-ambiguous with supported rivals.
+```
+
+Agent inference:
+
+```text
+The next blocker is no longer candidate-set preservation for sofa rows.
+The next failure mechanism is contrastive identity ambiguity: multiple candidates have strong detector/depth support, and the current evidence objective has no rule for choosing among them without risking wrong-goal commit.
+The two chair rows where no correct candidate is present remain a separate retrieval/backend expansion problem.
+```
+
+Identity ambiguity diagnostic:
+
+```text
+date_checked: 2026-05-19
+diagnostic: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/identity_ambiguity_diagnostic_v1/identity_ambiguity_summary.json
+docker_command:
+  docker run --rm --ipc=host --user "$(id -u):$(id -g)" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /tmp/research3-runs:/runs -v /home/yoohyun/research3:/workspace:ro research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python -m h001_runtime.diagnose_identity_ambiguity --followup-evidence-rows /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v3_explicit_candidates/external_candidate_followup_evidence_rows.jsonl --out-root /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/identity_ambiguity_diagnostic_v1 --min-contrastive-margin 0.05
+rows: 5
+action_counts:
+  followup_evidence_v1_defer: 5
+failure_mode_counts:
+  correct_present_but_not_contrastive_against_wrong_rival: 2
+  no_correct_candidate_in_followup_set: 2
+  selected_correct_but_supported_wrong_rival: 1
+rows_with_correct_candidate: 3
+rows_with_strong_correct_candidate: 3
+rows_where_best_score_candidate_is_correct: 1
+recommendation: contrastive_identity_objective_or_viewpoint_required_before_first_eval
+threshold_only_revision_is_supported: false
+```
+
+Agent inference:
+
+```text
+The next objective should not simply lower defer thresholds.
+For the two sofa rows, the correct candidate exists and has strong evidence, but wrong rivals have comparable or slightly higher evidence.
+For the selected-correct chair row, multiple correct candidates and one supported wrong rival make instance-level commit unsafe.
+The next design should either add a contrastive identity view/objective or split these rows into category-level goal-region commit versus instance-specific ambiguity.
+```
+
+Identity resolution design diagnostic:
+
+```text
+date_checked: 2026-05-19
+diagnostic: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/identity_resolution_design_v1/identity_resolution_design_summary.json
+docker_command:
+  docker run --rm --ipc=host --user "$(id -u):$(id -g)" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /tmp/research3-runs:/runs -v /home/yoohyun/research3:/workspace:ro research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python -m h001_runtime.design_identity_resolution --followup-evidence-rows /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v3_explicit_candidates/external_candidate_followup_evidence_rows.jsonl --candidate-artifact /runs/h001_first_eval_replacement_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl --out-root /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/identity_resolution_design_v1 --cluster-radius-m 2.0 --local-score-tolerance 0.002 --outside-score-margin 0.005
+variant_summary:
+  current_v3_defer:
+    commit_rows: 0
+    success_commit_rows: 0
+    wrong_goal_commit_rows: 0
+  best_strong_score:
+    commit_rows: 5
+    success_commit_rows: 1
+    wrong_goal_commit_rows: 4
+    no_valid_commit_rows: 2
+  selected_local_cluster_margin:
+    commit_rows: 1
+    success_commit_rows: 1
+    wrong_goal_commit_rows: 0
+    no_valid_commit_rows: 0
+  oracle_best_strong_correct:
+    commit_rows: 3
+    success_commit_rows: 3
+    wrong_goal_commit_rows: 0
+recommended_design: selected_local_cluster_margin
+same_split_design_only: true
+```
+
+Selected local cluster margin contract:
+
+```text
+commit target:
+  only the source selected candidate
+required non-GT evidence:
+  selected candidate has positive support and strong depth evidence
+  at least one additional strong candidate lies within 2.0m local spatial cluster
+  no local strong candidate has score higher than selected by more than 0.002
+  no outside-cluster strong candidate is within 0.005 score of selected
+route no-correct-candidate rows:
+  broader retrieval/backend expansion, not identity threshold relaxation
+status:
+  design candidate only
+  must be implemented as fixed non-GT objective and validated on a separate split before first_eval or policy-scale
+```
+
+Facts:
+
+```text
+The static best-score alternative is unsafe on the explicit-candidate held-out rows.
+The selected-local-cluster design recovers only branch external_candidate:23 on this diagnostic split and does not commit the two sofa rows.
+The oracle ceiling is 3/5, so two rows require retrieval/backend expansion before any identity objective can help.
+```
+
+Agent inference:
+
+```text
+The near-term fixed objective should be conservative: recover spatially local duplicate-goal cases where the selected node is still the source candidate and no outside strong rival is near-tied.
+The sofa rows need either a stronger contrastive viewpoint or a category-level goal-region formulation; a direct detector-score objective would likely create wrong-goal commits.
+```
+
+Fixed V4 objective validation:
+
+```text
+date_checked: 2026-05-19
+implementation: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_external_candidate_followup_evidence.py
+objective_version: v4
+objective_name: selected_local_cluster_margin
+non_gt_action_inputs:
+  source selected candidate id
+  detector positive support
+  follow-up strong depth evidence
+  candidate artifact position
+  local cluster score margins
+docker_compile_check:
+  python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_external_candidate_followup_evidence.py
+```
+
+Held-out explicit-candidate validation:
+
+```text
+output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v4_selected_local_cluster_margin
+docker_command:
+  docker run --rm --ipc=host --user "$(id -u):$(id -g)" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /tmp/research3-runs:/runs -v /home/yoohyun/research3:/workspace:ro research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python -m h001_runtime.analyze_external_candidate_followup_evidence --external-evidence-v4-rows /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_evidence_v4/external_candidate_evidence_v4_rows.jsonl --followup-observation-plan /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_plan_v3_explicit_candidates/external_candidate_followup_observation_plan.jsonl --detector-root /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_detector_v3_explicit_candidates --object-node-features /runs/h001_first_eval_replacement_pair_objective_v4b_heldout_v1/association_recovery/candidate_object_node_features_after_second.jsonl --candidate-artifact /runs/h001_first_eval_replacement_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl --out-root /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v4_selected_local_cluster_margin --objective-version v4
+source_request_rows: 5
+action_counts:
+  followup_evidence_v1_commit_selected_candidate: 1
+  followup_evidence_v1_defer: 4
+reason_counts:
+  commit_selected_identity_confirmed_local_cluster_margin_after_followup: 1
+  defer_identity_selected_local_rival_stronger: 2
+  defer_identity_selected_outside_rival_near_tie: 2
+gate:
+  detector_box_rate: 1.0
+  sam2_mask_rate: 1.0
+  candidate_association_rate_diagnostic: 0.8666666666666667
+  commit_rate: 0.2
+  success_commit_rate: 0.2
+  wrong_goal_commit_rate: 0.0
+  no_valid_commit_rate: 0.0
+  passes_followup_detector_substrate_gate_v1: true
+  passes_followup_evidence_safety_gate_v1: true
+  passes_followup_evidence_full_gate_v1: true
+```
+
+Separate split validation:
+
+```text
+split: v3_fresh_validation_v1
+output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_evidence_v4_selected_local_cluster_margin
+docker_command:
+  docker run --rm --ipc=host --user "$(id -u):$(id -g)" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /tmp/research3-runs:/runs -v /home/yoohyun/research3:/workspace:ro research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python -m h001_runtime.analyze_external_candidate_followup_evidence --external-evidence-v4-rows /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_evidence_v4/external_candidate_evidence_v4_rows.jsonl --followup-observation-plan /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_plan/external_candidate_followup_observation_plan.jsonl --detector-root /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_detector --object-node-features /runs/h001_v3_fresh_validation_pair_objective_v4_revised_geometry_v1/association_recovery/candidate_object_node_features_after_second.jsonl --candidate-artifact /runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl --out-root /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_evidence_v4_selected_local_cluster_margin --objective-version v4
+source_request_rows: 7
+action_counts:
+  followup_evidence_v1_defer: 1
+  followup_evidence_v1_request_identity_confirmation: 6
+reason_counts:
+  defer_identity_selected_local_cluster_too_small: 1
+  request_identity_confirmation_after_expanded_retrieval_multiple_strong: 3
+  request_identity_confirmation_after_expanded_retrieval_small_or_cluttered_instance_guard: 3
+gate:
+  detector_box_rate: 1.0
+  sam2_mask_rate: 1.0
+  candidate_association_rate_diagnostic: 0.358974358974359
+  commit_rate: 0.0
+  success_commit_rate: 0.0
+  wrong_goal_commit_rate: 0.0
+  no_valid_commit_rate: 0.0
+  request_identity_confirmation_rate: 0.8571428571428571
+  passes_followup_detector_substrate_gate_v1: true
+  passes_followup_evidence_safety_gate_v1: true
+  passes_followup_evidence_full_gate_v1: false
+```
+
+Facts:
+
+```text
+V4 is a fixed non-GT objective in the follow-up analyzer, not just an offline design diagnostic.
+The explicit-candidate held-out diagnostic passes the local full gate with one safe success commit.
+The separate v3_fresh_validation_v1 run passes safety but produces no commit; six of seven analyzed rows are routed to identity confirmation.
+```
+
+Agent inference:
+
+```text
+selected_local_cluster_margin is a safe local duplicate-goal recovery rule, but it does not yet solve the broader utility problem.
+The next blocker is the request-identity branch on the separate split, especially expanded retrieval rows that contain correct candidates but still need instance-safe confirmation.
+first_eval and policy-scale remain blocked until the separate-split utility bottleneck is resolved or explicitly scoped as a limitation.
+```
+
+V4 request-identity bottleneck diagnostic:
+
+```text
+date_checked: 2026-05-19
+diagnostic: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_request_identity_bottleneck_diagnostic_v1/v4_request_identity_bottleneck_summary.json
+docker_command:
+  docker run --rm --ipc=host --user "$(id -u):$(id -g)" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /tmp/research3-runs:/runs -v /home/yoohyun/research3:/workspace:ro research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python -m h001_runtime.diagnose_v4_request_identity_bottleneck --v4-followup-evidence-rows /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_evidence_v4_selected_local_cluster_margin/external_candidate_followup_evidence_rows.jsonl --stage2-evidence-rows /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_v3_evidence_objective_v2/external_candidate_second_stage_identity_evidence_rows.jsonl --out-root /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_request_identity_bottleneck_diagnostic_v1
+rows: 7
+request_identity_rows: 6
+request_identity_selected_correct_rows: 3
+request_identity_selected_wrong_rows: 3
+mode_counts:
+  request_identity_resolved_by_stage2_objective: 2
+  selected_correct_needs_better_view_geometry: 1
+  selected_wrong_correct_candidate_without_strong_support: 3
+  identity_defer_all_candidates_correct_local_cluster_too_small: 1
+recommended_route_counts:
+  second_stage_identity_objective: 2
+  viewpoint_geometry_revision: 1
+  broader_retrieval_or_candidate_viewpoint_revision: 3
+  category_goal_region_or_duplicate_goal_contract: 1
+```
+
+Variant comparison:
+
+```text
+current_v4:
+  commit/success/wrong/no_valid: 0/0/0/0
+selected_direct_first_stage:
+  commit/success/wrong/no_valid: 6/3/3/0
+  interpretation: unsafe
+stage2_objective_v2_existing:
+  commit/success/wrong/no_valid: 2/2/0/0
+  interpretation: safe nonzero utility but incomplete
+category_goal_region_commit_selected:
+  commit/success/wrong/no_valid: 7/4/3/0
+  interpretation: conflicts with current GT wrong-goal labels unless evaluation contract changes
+oracle_followup_candidate_set:
+  commit/success/wrong/no_valid: 7/7/0/0
+oracle_stage2_observed_strong_correct:
+  commit/success/wrong/no_valid: 3/3/0/0
+```
+
+Facts:
+
+```text
+Directly committing selected request-identity candidates is unsafe on the separate split.
+Existing second-stage identity objective V2 recovers two selected-correct plant rows without wrong-goal commit.
+Three selected-wrong plant rows have correct candidates in the follow-up set, but those correct candidates do not receive strong detector/depth support.
+One chair row has all observed candidates labeled correct, but V4 defers because the local spatial cluster is too small.
+```
+
+Agent inference:
+
+```text
+The next safe utility path is V4 plus second-stage identity objective V2, not first-stage threshold relaxation.
+Second-stage identity alone is insufficient: it recovers nonzero utility but leaves selected-wrong plant rows unresolved.
+The selected-wrong plant rows need broader retrieval or candidate-viewpoint revision, because current evidence observes a wrong selected candidate strongly while the correct candidate remains weak.
+The all-correct chair defer row is an evaluation-contract question: under the current wrong-goal labels, a duplicate-goal/category-region rule must be handled separately from the main ObjectNav GT contract.
+```
+
+V4 + second-stage identity V2 terminal diagnostic:
+
+```text
+date_checked: 2026-05-19
+output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_objective_v2_terminal_diagnostic
+summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_objective_v2_terminal_diagnostic/external_candidate_followup_v4_stage2_terminal_summary.json
+terminal_rows: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_objective_v2_terminal_diagnostic/external_candidate_followup_v4_stage2_terminal_rows.jsonl
+docker_command:
+  docker run --rm --ipc=host --user "$(id -u):$(id -g)" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /tmp/research3-runs:/runs -v /home/yoohyun/research3:/workspace:ro research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python -m h001_runtime.summarize_followup_v2_stage2 --followup-v2-summary /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_evidence_v4_selected_local_cluster_margin/external_candidate_followup_evidence_summary.json --followup-v2-rows /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_evidence_v4_selected_local_cluster_margin/external_candidate_followup_evidence_rows.jsonl --second-stage-plan-summary /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_v3_plan/external_candidate_second_stage_identity_summary.json --second-stage-frame-summary /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_v3_frames/summary.json --second-stage-detector-summary /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_v3_detector/summary.json --second-stage-evidence-summary /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_v3_evidence_objective_v2/external_candidate_second_stage_identity_evidence_summary.json --second-stage-evidence-rows /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_v3_evidence_objective_v2/external_candidate_second_stage_identity_evidence_rows.jsonl --out-root /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_objective_v2_terminal_diagnostic --validation-scope v4_fixed_terminal_diagnostic --schema-version h001.external_candidate_followup_v4_stage2_terminal_diagnostic.v1 --followup-label followup_v4 --terminal-rows-file external_candidate_followup_v4_stage2_terminal_rows.jsonl --summary-file external_candidate_followup_v4_stage2_terminal_summary.json
+terminal_rows: 7
+stage2_required/resolved/unresolved: 6/6/0
+terminal_source_counts:
+  followup_v4: 1
+  second_stage_identity: 6
+terminal_action_counts:
+  followup_evidence_v1_defer: 1
+  second_stage_identity_v1_commit_selected_candidate: 2
+  second_stage_identity_v1_request_further_identity_confirmation: 4
+commit/success/wrong/no_valid: 2/2/0/0
+visit_position_only_commit_rows: 0
+gate:
+  passes_integrated_stage2_coverage: true
+  passes_integrated_detector_substrate: true
+  passes_integrated_safety_gate: true
+  passes_integrated_full_gate: true
+validation_scope: v4_fixed_terminal_diagnostic
+utility_proof_passed: false
+first_eval_rerun_blocked: true
+policy_scale_comparison_blocked: true
+```
+
+Facts:
+
+```text
+V4 plus existing second-stage identity objective V2 gives nonzero safe terminal utility on the same V4 separate-split diagnostic substrate.
+The integrated terminal diagnostic recovers two successful commits without wrong-goal, no-valid, or visit-position-only commits.
+The integrated local gate passes, but the validation scope is still diagnostic, so it does not authorize first_eval or policy-scale rerun.
+```
+
+Agent inference:
+
+```text
+The fixed terminal path is now strong enough to be the next local method contract, but not strong enough for a paper claim.
+The next actual blocker is no longer identity-terminal integration; it is the selected-wrong plant branch where the correct candidate exists but remains weakly observed.
+```
+
+Selected-wrong plant recovery design:
+
+```text
+date_checked: 2026-05-19
+script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/design_selected_wrong_recovery.py
+output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/selected_wrong_plant_recovery_design_v1
+summary: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/selected_wrong_plant_recovery_design_v1/selected_wrong_recovery_summary.json
+docker_command:
+  docker run --rm --ipc=host --user "$(id -u):$(id -g)" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /tmp/research3-runs:/runs -v /tmp/research3-data:/data:ro -v /home/yoohyun/research3:/workspace:ro research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python -m h001_runtime.design_selected_wrong_recovery --bottleneck-rows /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_request_identity_bottleneck_diagnostic_v1/v4_request_identity_bottleneck_rows.jsonl --v4-followup-evidence-rows /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_evidence_v4_selected_local_cluster_margin/external_candidate_followup_evidence_rows.jsonl --candidate-artifact /runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl --stage2-plan /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_v3_plan/external_candidate_second_stage_identity_plan.jsonl --data-root /data --out-root /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/selected_wrong_plant_recovery_design_v1
+rows: 3
+followup_set_contains_correct_rows: 3
+current_stage2_context_contains_correct_rows: 3
+current_stage2_targets_correct_rows: 0
+semantic_neighbor_rule_targets_correct_rows: 3
+semantic_neighbor_viewpoint_feasible_rows: 3
+recommendation: candidate_viewpoint_revision_first
+```
+
+Facts:
+
+```text
+The remaining selected-wrong plant rows are all in scene 7MXmsvcQjpJ and query plant.
+The correct candidate is vlmaps:export:plant:spatial_nms:1 for all three rows.
+The current stage2 plan observes selected candidate 0 and strongest positive/strong rival 6, while candidate 1 is only included as context.
+The current follow-up set already contains candidate 1, so broader retrieval is not required for these three rows.
+A non-GT selected_plus_semantic_neighbor_1 target rule would observe candidates 0 and 1, and both standoff viewpoints are feasible through standoff_navmesh.
+```
+
+Agent inference:
+
+```text
+The immediate blocker is candidate-viewpoint target selection, not retrieval recall.
+The next implementation should add a semantic-neighbor target rule to second-stage identity planning for selected-wrong/small_or_cluttered identity requests, then run a schema/frame smoke before detector-backed validation.
+This remains a diagnostic design result, because GT labels are used only to evaluate whether proposed target sets contain the correct candidate.
+```
+
+Semantic-neighbor second-stage planner/frame smoke:
+
+```text
+date_checked: 2026-05-19
+planner_file: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_external_candidate_second_stage_identity_confirmation.py
+planner_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_plan_smoke
+frame_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_frame_smoke
+planner_command:
+  docker run --rm --ipc=host --user "$(id -u):$(id -g)" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /tmp/research3-runs:/runs -v /tmp/research3-data:/data:ro -v /home/yoohyun/research3:/workspace:ro research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python -m h001_runtime.plan_external_candidate_second_stage_identity_confirmation --data-root /data --followup-evidence-rows /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_evidence_v4_selected_local_cluster_margin/external_candidate_followup_evidence_rows.jsonl --candidate-artifact /runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl --out-root /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_plan_smoke --run-id h001_stage2_semantic_neighbor_plan_smoke --target-selection-mode semantic_neighbor --max-semantic-neighbors 1 --max-rivals 1 --max-targets-per-request 3 --max-candidate-ids 6
+frame_command:
+  docker run --rm --gpus all --ipc=host --user "$(id -u):$(id -g)" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /tmp/research3-runs:/runs -v /tmp/research3-data:/data:ro -v /home/yoohyun/research3:/workspace:ro research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python -m h001_runtime.export_postview_frames_v2 --data-root /data --viewpoint-decisions /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_plan_smoke/external_candidate_second_stage_identity_plan.jsonl --candidate-artifact /runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl --out-root /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_frame_smoke --policy ExternalCandidateSecondStageIdentityConfirmation --max-decisions 0 --max-candidates-per-decision 6 --yaw-offsets=-30,0,30 --candidate-point-field position
+planner_summary:
+  request_rows: 6
+  plan_rows: 15
+  skipped_rows: 0
+  target_selection_mode: semantic_neighbor
+  role_counts:
+    selected_standoff: 6
+    semantic_neighbor_1_standoff: 6
+    rival_1_standoff: 3
+  viewpoint_source_counts:
+    standoff_navmesh: 15
+frame_summary:
+  ok: true
+  rows_exported/requested: 15/15
+  rendered_heading_count: 182
+  candidate_set_rule:
+    explicit_candidate_ids: 15
+uses_gt_for_action: false
+uses_gt_for_analysis: false
+```
+
+Facts:
+
+```text
+The planner now has a non-default `--target-selection-mode semantic_neighbor`.
+For selected-wrong plant branches external_candidate:14, external_candidate:17, and external_candidate:21, the planner targets selected candidate 0, semantic-neighbor candidate 1, and strongest rival candidate 6.
+The frame export preserves `second_stage_role`, `second_stage_rival_candidate_ids`, and explicit `candidate_ids` metadata.
+The first frame export attempt without `--gpus all` failed at Habitat EGL context creation; the Docker frame smoke passes with GPU access.
+```
+
+Agent inference:
+
+```text
+The planner/frame substrate now supports the candidate-viewpoint revision implied by the selected-wrong plant diagnostic.
+This is not yet a utility proof, because detector association and second-stage evidence have not been rerun on the semantic-neighbor frames.
+The next gate is detector-backed semantic-neighbor validation before any first_eval or policy-scale rerun.
+```
+
+Detector-backed semantic-neighbor validation:
+
+```text
+date_checked: 2026-05-20
+job_script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v4_semantic_neighbor_stage2_validation.sh
+primary_command:
+  TS=20260519-232655 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v4_semantic_neighbor_stage2_validation.sh
+primary_tmux: h001-v4-sem-neighbor-stage2-20260519-232655
+primary_status_file: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_semantic_neighbor_stage2_validation_job_status.json
+primary_log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/v4-semantic-neighbor-stage2-validation-20260519-232655.log
+primary_status: failed
+primary_failed_stage: second_stage_detector
+primary_failure: CUDA out of memory
+gpu_context:
+  nvidia-smi free_memory_at_failure: about 1815 MiB
+  largest observed external process: python using about 23096 MiB
+cpu_retry_command:
+  TS=20260519-232755 DEVICE=cpu MAX_HEADINGS_PER_FRAME=6 MAX_DETECTOR_BOXES_PER_HEADING=2 MAX_MASKS_PER_HEADING=2 STAGE2_PLAN_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_cpu_plan STAGE2_FRAMES_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_cpu_frames STAGE2_DETECTOR_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_cpu_detector STAGE2_EVIDENCE_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_cpu_evidence_objective_v2 INTEGRATED_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_semantic_neighbor_cpu_validation STATUS=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_semantic_neighbor_stage2_cpu_validation_job_status.json bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v4_semantic_neighbor_stage2_validation.sh
+cpu_retry_tmux: h001-v4-sem-neighbor-stage2-cpu-20260519-232755
+cpu_retry_status_file: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_semantic_neighbor_stage2_cpu_validation_job_status.json
+cpu_retry_log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/v4-semantic-neighbor-stage2-validation-20260519-232755.log
+cpu_retry_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_semantic_neighbor_cpu_validation
+cpu_retry_status: completed
+cpu_retry_result:
+  detector_rows: 15
+  candidate_association_rate: 0.80
+  integrated_commit_success_wrong_no_valid: 2/2/0/0
+  utility_proof_passed: false
+gpu_rerun_command:
+  TS=20260520-190626 STAGE2_PLAN_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_gpu_rerun_v1_plan STAGE2_FRAMES_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_gpu_rerun_v1_frames STAGE2_DETECTOR_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_gpu_rerun_v1_detector STAGE2_EVIDENCE_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_gpu_rerun_v1_evidence_objective_v2 INTEGRATED_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_semantic_neighbor_gpu_rerun_v1 STATUS=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_semantic_neighbor_stage2_gpu_rerun_v1_job_status.json bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v4_semantic_neighbor_stage2_validation.sh
+gpu_rerun_tmux: h001-v4-sem-neighbor-stage2-gpu-20260520-190626
+gpu_rerun_status_file: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_semantic_neighbor_stage2_gpu_rerun_v1_job_status.json
+gpu_rerun_log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/v4-semantic-neighbor-stage2-validation-20260520-190626.log
+gpu_rerun_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_semantic_neighbor_gpu_rerun_v1
+gpu_rerun_status: completed
+verification_command:
+  cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_semantic_neighbor_stage2_gpu_rerun_v1_job_status.json && cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_semantic_neighbor_gpu_rerun_v1/external_candidate_followup_v4_stage2_semantic_neighbor_summary.json
+gpu_rerun_result:
+  plan_rows: 15
+  frame_rows: 15
+  rendered_heading_count: 182
+  detector_rows: 15
+  detector_box_rate: 1.00
+  sam2_mask_rate: 1.00
+  candidate_association_rate: 1.00
+  second_stage_request_coverage: 6/6
+  integrated_terminal_rows: 7
+  integrated_commit_success_wrong_no_valid: 2/2/0/0
+  visit_position_only_commit: 0
+  local_integrated_gate_passed: true
+  validation_scope: v4_semantic_neighbor_diagnostic
+  utility_proof_passed: false
+  first_eval_rerun_blocked: true
+  policy_scale_comparison_blocked: true
+terminal_action_counts:
+  followup_evidence_v1_defer: 1
+  second_stage_identity_v1_commit_selected_candidate: 2
+  second_stage_identity_v1_request_further_identity_confirmation: 4
+terminal_reason_counts:
+  commit_selected_identity_confirmed_weak_rival_margin: 2
+  defer_identity_selected_local_cluster_too_small: 1
+  request_further_identity_confirmation_selected_not_strong_in_own_view: 1
+  request_further_identity_confirmation_strong_rival_supported: 3
+```
+
+Facts:
+
+```text
+The first detector-backed semantic-neighbor run generated the semantic-neighbor plan and reached the detector stage before CUDA OOM.
+The initial GPU attempt failed because CUDA memory was already occupied by unrelated processes.
+No user or external GPU process was terminated.
+The CPU retry completed with a reduced heading budget and wrote a separate output path.
+The full GPU rerun completed with the default detector budget and candidate association rate 1.00.
+The semantic-neighbor diagnostic local integrated gate passes with no wrong-goal, no-valid, or visit-position-only commits.
+The run remains a diagnostic result because `validation_scope` is `v4_semantic_neighbor_diagnostic`.
+The `both_candidates_correct` chair row is a duplicate-goal/category-region evaluation-contract issue, not a main ObjectNav GT utility recovery.
+```
+
+Agent inference:
+
+```text
+Detector substrate is no longer the current blocker for semantic-neighbor stage2 validation.
+Semantic-neighbor viewpoint selection alone is insufficient because objective V2 can only commit the selected candidate and otherwise requests further confirmation when a strong rival is supported.
+The unresolved `alt_only_correct` rows must be diagnosed before any rival-switch / contrastive identity objective.
+Broader retrieval is still needed for rows with no correct candidate in the follow-up set, but it should not be mixed with the current semantic-neighbor objective diagnostic.
+First_eval and policy-scale remain blocked until a held-out objective gate passes.
+```
+
+Semantic-neighbor unresolved row diagnosis:
+
+```text
+date_checked: 2026-05-20
+input_rows: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_gpu_rerun_v1_evidence_objective_v2/external_candidate_second_stage_identity_evidence_rows.jsonl
+selected_wrong_plant_rows:
+  external_candidate:14
+  external_candidate:17
+  external_candidate:21
+common_pattern:
+  selected_candidate: vlmaps:export:plant:spatial_nms:0
+  selected_candidate_correct: false
+  selected_score: about 0.783
+  selected_strong_depth: true
+  strongest_wrong_rival: vlmaps:export:plant:spatial_nms:6
+  strongest_wrong_rival_score: about 0.784
+  strongest_wrong_rival_strong_depth: true
+  strongest_correct_candidate: vlmaps:export:plant:spatial_nms:1
+  strongest_correct_candidate_role: semantic_neighbor_1_standoff
+  strongest_correct_candidate_score: about 0.483
+  strongest_correct_candidate_strong_depth: false
+  terminal_reason: request_further_identity_confirmation_strong_rival_supported
+```
+
+Facts:
+
+```text
+The semantic-neighbor planner targeted the correct candidate for the selected-wrong plant rows.
+The detector/evidence run did not make that correct semantic-neighbor candidate strong enough for a safe switch.
+The wrong selected candidate and an additional wrong rival both have stronger detector/depth evidence than the correct semantic-neighbor candidate.
+```
+
+Agent inference:
+
+```text
+A simple rival-switch objective is not supported by the current evidence.
+The next revision should improve evidence acquisition/viewpoint geometry for the semantic-neighbor candidate before changing terminal action semantics.
+Candidate viewpoint selection should optimize candidate-centered visibility and depth association, not only include the semantic neighbor in the target set.
+```
+
+Semantic-neighbor multiview acquisition revision:
+
+```text
+date_checked: 2026-05-20
+code_change:
+  planner: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_external_candidate_second_stage_identity_confirmation.py
+  job_wrapper: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v4_semantic_neighbor_stage2_validation.sh
+new_planner_args:
+  --semantic-neighbor-viewpoints-per-target
+  --max-viewpoints-per-target
+  --external-branch-ids
+focused_branches:
+  external_candidate:14
+  external_candidate:17
+  external_candidate:21
+plan_smoke_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_plan_smoke
+plan_smoke_result:
+  request_rows: 3
+  plan_rows: 24
+  skipped_rows: 0
+  selected_standoff: 3
+  semantic_neighbor_1_standoff: 18
+  rival_1_standoff: 3
+frame_smoke_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_frame_smoke
+frame_smoke_result:
+  rows_exported: 24/24
+  rendered_heading_count: 312
+  unique_scenes: hm3d_v0.2/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb
+```
+
+Focused detector-backed multiview job:
+
+```text
+date_launched: 2026-05-20
+tmux: h001-v4-sem-neighbor-multiview-20260520-235618
+status_file: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_semantic_neighbor_multiview_selected_wrong_v1_job_status.json
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/v4-semantic-neighbor-multiview-selected-wrong-20260520-235618.log
+output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_semantic_neighbor_multiview_selected_wrong_v1
+status: completed
+exact_command:
+  cd /home/yoohyun/research3 && TS=20260520-235618 LOG=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/v4-semantic-neighbor-multiview-selected-wrong-20260520-235618.log STATUS=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_semantic_neighbor_multiview_selected_wrong_v1_job_status.json EXTERNAL_BRANCH_IDS=external_candidate:14,external_candidate:17,external_candidate:21 SEMANTIC_NEIGHBOR_VIEWPOINTS_PER_TARGET=6 MAX_VIEWPOINTS_PER_TARGET=1 STAGE2_PLAN_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_selected_wrong_v1_plan STAGE2_FRAMES_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_selected_wrong_v1_frames STAGE2_DETECTOR_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_selected_wrong_v1_detector STAGE2_EVIDENCE_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_selected_wrong_v1_evidence_objective_v2 INTEGRATED_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_semantic_neighbor_multiview_selected_wrong_v1 RUN_ID=h001_v4_semantic_neighbor_multiview_selected_wrong_v1 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v4_semantic_neighbor_stage2_validation.sh
+verification_command:
+  cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_semantic_neighbor_multiview_selected_wrong_v1_job_status.json && cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_semantic_neighbor_multiview_selected_wrong_v1/external_candidate_followup_v4_stage2_semantic_neighbor_summary.json
+expected_files:
+  external_candidate_second_stage_identity_plan.jsonl
+  postview_frames_v2.jsonl
+  detector_candidate_associations.jsonl
+  external_candidate_second_stage_identity_evidence_rows.jsonl
+  external_candidate_followup_v4_stage2_semantic_neighbor_summary.json
+result:
+  detector_rows: 24
+  detector_candidate_association_rate: 0.875
+  detector_box_rate: 1.00
+  sam2_mask_rate: 1.00
+  second_stage_action_counts:
+    second_stage_identity_v1_request_further_identity_confirmation: 3
+  correct_semantic_neighbor_candidate: vlmaps:export:plant:spatial_nms:1
+  correct_semantic_neighbor_score: about 0.783
+  correct_semantic_neighbor_strong_depth: true
+  correct_semantic_neighbor_own_strict_association_count: 13
+  wrong_selected_score: about 0.786
+  wrong_rival_score: about 0.786
+  integrated_commit_success_wrong_no_valid: 0/0/0/0
+  safety_diagnostic_passed: true
+  utility_proof_passed: false
+```
+
+Facts:
+
+```text
+The multiview planner revision does not use GT for action.
+The focused smoke creates six standoff viewpoints for the semantic-neighbor candidate on each selected-wrong plant branch.
+The frame export is valid and uses the same candidate set contract as the previous detector-backed semantic-neighbor run.
+The focused detector-backed run makes the correct semantic-neighbor candidate strong on all three selected-wrong plant rows.
+The terminal objective still defers all three rows because the selected wrong candidate and another wrong rival also have strong detector/depth support.
+```
+
+Agent inference:
+
+```text
+The previous weak correct semantic-neighbor evidence was a single-view geometry problem, not a candidate-set absence problem.
+The next blocker is not broader retrieval for these rows.
+The next method step should be a semantic-prior strong-tie arbitration objective: when several candidates are strong after active re-observation, use non-GT semantic prior/rank plus role-specific evidence to decide whether to switch, commit, or request another contrastive view.
+Do not run held-out or policy-scale evaluation until this arbitration rule is defined and smoke-tested on the focused diagnostic rows.
+```
+
+Semantic-prior strong-tie arbitration objective V3:
+
+```text
+date_checked: 2026-05-21
+code_change:
+  analyzer: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_external_candidate_second_stage_identity_evidence.py
+  integrated_summary: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/summarize_followup_v2_stage2.py
+objective_version: v3
+input_detector_artifact: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_selected_wrong_v1_detector
+evidence_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_selected_wrong_v1_evidence_objective_v3
+integrated_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_semantic_neighbor_multiview_selected_wrong_v1_objective_v3
+focused_branches:
+  external_candidate:14
+  external_candidate:17
+  external_candidate:21
+thresholds:
+  max_strong_tie_score_gap: 0.02
+  min_arbitration_strict_advantage: 3.0
+  max_arbitration_semantic_prior_gap: 0.08
+result:
+  second_stage_action_counts:
+    second_stage_identity_v1_commit_arbitrated_candidate: 3
+  second_stage_reason_counts:
+    commit_arbitrated_identity_semantic_prior_strong_tie: 3
+  source_selected_candidate: vlmaps:export:plant:spatial_nms:0
+  committed_candidate: vlmaps:export:plant:spatial_nms:1
+  source_selected_correct: false
+  committed_candidate_correct: true
+  strict_association_advantage: 8
+  semantic_prior_gap_from_selected: 0.0526
+  focused_commit_success_wrong_no_valid: 3/3/0/0
+  integrated_terminal_commit_success_wrong_no_valid: 3/3/0/0
+  integrated_stage2_request_coverage: 3/6
+  integrated_full_gate: false
+  utility_proof_passed: false
+```
+
+Facts:
+
+```text
+Objective V3 does not use GT for action.
+V3 commits only when a semantic-neighbor candidate is inside a strong detector/depth tie, is strong in its own active view, has enough own-view strict-association advantage over selected/non-semantic tied candidates, and remains close to the selected candidate's semantic prior.
+On the focused selected-wrong plant rows, V3 changes the terminal decision from further confirmation to a correct semantic-neighbor commit.
+The focused integrated summary does not cover all V4 identity-request rows, so it is not a utility proof.
+```
+
+Agent inference:
+
+```text
+The current positive signal is no longer just evidence acquisition; it is a candidate decision rule that converts active re-observation evidence into safe correction on a known failure slice.
+The next required validation is a full V4 request-row rerun with V3 and sufficient multiview coverage before any held-out first_eval or policy-scale run.
+Broader retrieval/backend expansion remains necessary for rows where the correct candidate is absent, but it should be handled after the V3 full-coverage gate clarifies which unresolved rows remain.
+```
+
+Full V4 semantic-neighbor multiview V3 coverage job:
+
+```text
+date_launched: 2026-05-21
+tmux: h001-v4-sem-neighbor-v3-full-20260521-004207
+status_file: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_semantic_neighbor_v3_full_coverage_job_status.json
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/v4-semantic-neighbor-v3-full-20260521-004207.log
+output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_semantic_neighbor_multiview_v3_full
+stage2_plan_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_plan
+stage2_frames_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_frames
+stage2_detector_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_detector
+stage2_evidence_output: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_evidence
+exact_command:
+  cd /home/yoohyun/research3 && TS=20260521-004207 LOG=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/v4-semantic-neighbor-v3-full-20260521-004207.log STATUS=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_semantic_neighbor_v3_full_coverage_job_status.json SEMANTIC_NEIGHBOR_VIEWPOINTS_PER_TARGET=6 MAX_VIEWPOINTS_PER_TARGET=1 SECOND_STAGE_OBJECTIVE_VERSION=v3 RUN_ID=h001_v4_semantic_neighbor_v3_full_coverage STAGE2_PLAN_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_plan STAGE2_FRAMES_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_frames STAGE2_DETECTOR_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_detector STAGE2_EVIDENCE_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_evidence INTEGRATED_OUT=/tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_semantic_neighbor_multiview_v3_full bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v4_semantic_neighbor_stage2_validation.sh
+verification_command:
+  cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/v4_semantic_neighbor_v3_full_coverage_job_status.json && cat /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_v4_stage2_semantic_neighbor_multiview_v3_full/external_candidate_followup_v4_stage2_semantic_neighbor_summary.json
+final_status:
+  status: completed
+  stage: completed
+  request_rows: 6
+  plan_rows: 45
+  skipped_rows: 0
+  frame_rows: 45
+  rendered_heading_count: 523
+  detector_candidate_association_rate: 0.80
+  detector_box_rate: 1.00
+  sam2_mask_rate: 1.00
+  stage2_action_counts:
+    second_stage_identity_v1_commit_arbitrated_candidate: 3
+    second_stage_identity_v1_commit_selected_candidate: 2
+    second_stage_identity_v1_request_further_identity_confirmation: 1
+  integrated_terminal_action_counts:
+    second_stage_identity_v1_commit_arbitrated_candidate: 3
+    second_stage_identity_v1_commit_selected_candidate: 2
+    second_stage_identity_v1_request_further_identity_confirmation: 1
+    followup_evidence_v1_defer: 1
+  integrated_commit_success_wrong_no_valid: 5/5/0/0
+  integrated_stage2_request_coverage: 6/6
+  integrated_full_gate: true
+  utility_proof_passed: false
+```
+
+Facts:
+
+```text
+Full V4 multiview V3 covers all six identity-request rows.
+The local integrated gate passes with no wrong-goal, no-valid, or visit-position-only commits.
+The remaining unresolved terminal row is a chair row where the selected candidate is correct but not strong in its own view.
+The separate follow-up defer row remains outside second-stage identity because it is not routed through request_identity_confirmation.
+```
+
+Agent inference:
+
+```text
+V3 is now strong enough for a scene-disjoint validation attempt, but this diagnostic split should not be cited as final utility evidence.
+The held-out validation contract should either route ambiguous/defer rows into second-stage identity or select a fresh held-out substrate where request_identity_confirmation rows exist under the same non-GT objective contract.
+```
+
+Scene-disjoint held-out validation contract for V3:
+
+```text
+date_checked: 2026-05-21
+heldout_followup_v4: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v4_selected_local_cluster_margin
+heldout_rows: 5
+current_v4_actions:
+  followup_evidence_v1_commit_selected_candidate: 1
+  followup_evidence_v1_defer: 4
+current_v4_reasons:
+  commit_selected_identity_confirmed_local_cluster_margin_after_followup: 1
+  defer_identity_selected_local_rival_stronger: 2
+  defer_identity_selected_outside_rival_near_tie: 2
+row_split:
+  local_rival_stronger_sofa_rows:
+    count: 2
+    followup_set_contains_correct: true
+    proposed_route: request_identity_confirmation
+  outside_rival_near_tie_chair_rows:
+    count: 2
+    followup_set_contains_correct: false
+    proposed_route: defer and send to broader retrieval/backend expansion
+  current_safe_commit_row:
+    count: 1
+    proposed_route: keep commit_selected_candidate
+contract:
+  introduce a held-out validation follow-up objective variant before rerunning second-stage V3
+  route only non-GT local-rival-stronger identity ambiguity to request_identity_confirmation
+  keep outside-cluster near-tie rows deferred because the current follow-up set has no valid target on the held-out rows
+  run semantic-neighbor multiview second-stage objective V3 on the routed request_identity rows
+  compare against current V4 held-out baseline commit/success/wrong/no-valid 1/1/0/0
+promotion_gate:
+  no GT for action
+  stage2 request coverage 100 percent for routed rows
+  wrong-goal commit rate 0
+  no-valid commit rate 0
+  integrated success commits must improve over current V4 baseline
+  unresolved outside-near-tie rows must be explicitly counted as broader-retrieval failures, not hidden as identity failures
+```
+
+Facts:
+
+```text
+The current scene-disjoint held-out V4 artifact has no request_identity_confirmation rows, so V3 cannot be validated on it without a follow-up objective routing change or a different held-out substrate.
+Two held-out sofa rows have correct candidates in the follow-up set but are blocked by local rival ambiguity.
+Two held-out chair rows have no correct candidate in the follow-up set and should not be forced into identity confirmation.
+```
+
+Agent inference:
+
+```text
+The next implementation should be a narrow follow-up objective variant, not a broader detector rerun.
+The held-out test should check whether V3 adds safe utility on local-rival ambiguity while preserving V4's no-wrong/no-valid safety.
+Broader retrieval/backend expansion should start from the no-correct outside-near-tie rows after the V3 held-out identity route is tested.
+```
+
+Held-out V5 local-rival route and V3 validation:
+
+```text
+date_checked: 2026-05-21
+code_change:
+  followup_analyzer: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_external_candidate_followup_evidence.py
+  integrated_summary: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/summarize_followup_v2_stage2.py
+  job_wrapper: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/v4_semantic_neighbor_stage2_validation.sh
+followup_v5_output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v5_local_rival_route
+stage2_output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_v5_stage2_semantic_neighbor_v3_heldout
+tmux: h001-heldout-v5-v3-20260521-010455
+status_note: tmux job failed only at integrated_summary because validation_scope used a new disallowed label; integrated summary was recovered with validation_scope heldout_validation
+v5_followup_result:
+  action_counts:
+    followup_evidence_v1_commit_selected_candidate: 1
+    followup_evidence_v1_request_identity_confirmation: 2
+    followup_evidence_v1_defer: 2
+  routed_reason:
+    request_identity_confirmation_after_local_rival_stronger: 2
+  retained_defer_reason:
+    defer_identity_selected_outside_rival_near_tie: 2
+  wrong_goal_commit_rate: 0.0
+  no_valid_commit_rate: 0.0
+  uses_gt_for_action: false
+stage2_v3_result:
+  request_rows: 2
+  plan_rows: 16
+  frame_rows: 16
+  rendered_heading_count: 168
+  detector_candidate_association_rate: 0.25
+  detector_box_rate: 1.0
+  sam2_mask_rate: 1.0
+  action_counts:
+    second_stage_identity_v1_request_further_identity_confirmation: 2
+  reason_counts:
+    request_further_identity_confirmation_strong_rival_supported: 2
+integrated_result:
+  terminal_commit_success_wrong_no_valid: 1/1/0/0
+  stage2_request_coverage: 2/2
+  passes_integrated_safety_gate: true
+  passes_integrated_stage2_full: false
+  passes_integrated_full_gate: false
+  utility_proof_passed: false
+```
+
+Facts:
+
+```text
+V5 routes only local-rival-stronger rows to second-stage identity; outside-near-tie rows remain deferred.
+The held-out second-stage rows are both sofa rows.
+Correct sofa candidates are present in the candidate set, but the targeted correct semantic-neighbor candidate remains weak after second-stage observation.
+Wrong selected/rival sofa candidates remain strong, so objective V3 correctly refuses to commit.
+The stricter integrated summary now requires stage2 full gate when stage2 requests exist; this prevents counting an unchanged follow-up commit as second-stage utility proof.
+```
+
+Agent inference:
+
+```text
+The V5 routing contract is safe, but it does not add held-out utility.
+The held-out failure is not terminal arbitration; it is evidence acquisition and target selection for sofa-like repeated objects.
+The next method step should diagnose whether the correct sofa candidates fail because semantic-neighbor rank targets the wrong correct instance, standoff geometry misses the object surface, or detector-depth association cannot separate adjacent sofa nodes.
+```
+
+Held-out sofa second-stage failure diagnostic:
+
+```text
+date_checked: 2026-05-21
+diagnostic_script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/diagnose_heldout_sofa_stage2_failure.py
+output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/heldout_sofa_stage2_failure_diagnostic_v1
+rows: 2
+failure_mode_counts:
+  correct_target_not_strong_in_own_view: 2
+  viewpoint_geometry_correct_target_out_of_fov_or_behind: 2
+  target_selection_left_stronger_correct_candidate_as_context: 2
+  wrong_selected_or_rival_remains_strong: 2
+targeted_correct_candidate: vlmaps:export:sofa:spatial_nms:5
+untargeted_stronger_correct_candidate: vlmaps:export:sofa:spatial_nms:9
+targeted_correct_own_association:
+  associated_count: 0
+  visible_count: 0
+  projection_status_counts:
+    out_of_fov: 47
+    behind_camera: 18
+wrong_selected_candidate:
+  candidate_id: vlmaps:export:sofa:spatial_nms:2
+  S_ext: about 0.799
+  own_view_strong_depth_evidence: true
+wrong_rival_candidate:
+  candidate_id: vlmaps:export:sofa:spatial_nms:6
+  S_ext: about 0.805
+  second_stage_strong_depth_evidence: true
+```
+
+Facts:
+
+```text
+The correct sofa candidate is not absent from the candidate set.
+The current semantic-neighbor target selection does target one correct sofa candidate, but that candidate is never visible in its own target observations.
+A stronger correct sofa candidate remains only as context and receives no own-view target observations.
+Detector boxes and masks exist, so the immediate failure is not detector absence.
+```
+
+Agent inference:
+
+```text
+The strongest evidence points to viewpoint geometry plus partial target-selection failure, not terminal arbitration.
+The next implementation should expand second-stage targets for local-rival ambiguity to include additional high-scoring correct-capable context candidates by non-GT score/rank, and revise candidate-facing viewpoint geometry so the target point is visible before detector-depth association is trusted.
+```
+
+Held-out local-rival target expansion and grounded geometry revision:
+
+```text
+date_checked: 2026-05-21
+planner_update: local_rival_expanded target selection
+point_update: grounded_position candidate point mode
+geometry_check_script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/check_stage2_projection_geometry.py
+plan_smoke_output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_plan_smoke
+projection_check_output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/stage2_projection_geometry_v5_local_rival_expanded_grounded_check
+baseline_projection_check: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/stage2_projection_geometry_v5_local_rival_v3_position_check
+```
+
+Facts:
+
+```text
+The previous V5/V3 plan had projection visible rate 4/16 = 0.25.
+The previous semantic_neighbor_1_standoff target was out of FOV on 12/12 projection-only checks.
+The expanded grounded plan has projection visible rate 20/22 = 0.909.
+The expanded grounded plan targets both held-out sofa branches with:
+  selected_standoff: 2 rows
+  semantic_neighbor_1_standoff: 6 rows
+  rival_1_standoff: 2 rows
+  local_context_1_standoff: 6 rows
+  local_context_2_standoff: 6 rows
+The local_context_1 target is vlmaps:export:sofa:spatial_nms:9 on both held-out sofa branches.
+The grounded point mode changes the problematic correct sofa point from y ~= 4.76 to y ~= 1.46 by using position.xz plus visit/floor y + 0.8 when position-vs-visit vertical gap exceeds 2.0m.
+```
+
+Agent inference:
+
+```text
+This revision directly addresses the two supported failure mechanisms: the stronger correct context candidate is now actively observed, and the lower-floor correct sofa target is no longer projected above the camera FOV.
+This is still only a geometry/substrate smoke. Detector-backed association and second-stage objective utility must be rerun before claiming held-out recovery.
+```
+
+Held-out local-rival expanded grounded detector validation:
+
+```text
+date_checked: 2026-05-21
+tmux: h001-heldout-local-rival-grounded-retry-20260521-015542
+status: completed
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/heldout-local-rival-expanded-grounded-retry-20260521-015542.log
+status_file: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/heldout_local_rival_expanded_grounded_job_status_20260521-015542.json
+integrated_summary: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_v5_stage2_local_rival_expanded_grounded_v1/external_candidate_followup_v5_stage2_local_rival_expanded_grounded_summary.json
+diagnostic: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/local_rival_grounded_result_diagnostic_v1/local_rival_grounded_diagnostic_summary.json
+```
+
+Facts:
+
+```text
+stage2_plan_rows: 22
+stage2_frame_rows: 22
+rendered_heading_count: 238
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 1.0
+stage2_request_coverage_rate: 1.0
+stage2_actions:
+  second_stage_identity_v1_request_further_identity_confirmation: 2
+terminal_commit_success_wrong_no_valid: 1 / 1 / 0 / 0
+passes_integrated_safety_gate: true
+passes_integrated_full_gate: false
+utility_proof_passed: false
+uses_gt_for_action: false
+```
+
+Diagnostic facts:
+
+```text
+failure_mode_counts:
+  correct_evidence_recovered: 2
+  correct_local_context_tied_but_not_arbitrated: 2
+  score_saturation_multiple_strong_candidates: 2
+  selected_wrong_remains_strong: 2
+  wrong_rivals_remain_strong: 2
+  semantic_arbitration_semantic_neighbor_strict_advantage_too_small: 2
+  terminal_objective_remains_defer: 2
+```
+
+Agent inference:
+
+```text
+Grounded target geometry solved the detector-association substrate problem for the held-out sofa rows.
+The remaining failure is not candidate visibility; it is terminal identity arbitration under detector-score saturation.
+The current V3 objective can arbitrate only via semantic-neighbor evidence, so the correct local-context candidate is not eligible even when it is tied for the best detector score and strong in its own view.
+The next revision should be a local-context arbitration design, not another viewpoint geometry patch.
+```
+
+Broader retrieval/backend expansion design for no-correct follow-up rows:
+
+```text
+date_checked: 2026-05-21
+design_script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/design_broader_retrieval_backend.py
+output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/broader_retrieval_backend_design_v1
+rows: 2
+failure_mode_counts:
+  current_followup_set_missing_correct: 2
+  v4_external_set_missing_correct: 2
+  current_artifact_top20_missing_correct: 2
+  backend_recall_failure_not_detector_association: 2
+recommendation:
+  new_backend_or_dense_export_recall_probe: 2
+```
+
+Facts:
+
+```text
+The two no-correct rows are held-out chair rows in scene y9hTuugGdiq.
+For both rows, the current follow-up set, V4 external set, and artifact_semantic_top20 contain no correct candidate.
+This means expanding only within the current spatial_nms_p97_k20 candidate artifact is not enough.
+```
+
+Agent inference:
+
+```text
+No-correct chair rows are backend recall failures, not second-stage identity failures.
+The correct next probe is a dense non-GT candidate recall probe: lower VLMaps score percentile, raise max_candidates beyond 20, compare raw grid/component export before spatial NMS, or test an object-node backend with less aggressive suppression.
+GT can be used only after candidate generation to measure recall@K, not to choose candidates.
+```
+
+Local-context arbitration design for detector-saturated repeated objects:
+
+```text
+date_checked: 2026-05-21
+design_script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/design_local_context_arbitration.py
+input_rows: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_evidence_v3/external_candidate_second_stage_identity_evidence_rows.jsonl
+output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/local_context_arbitration_design_v1
+docker_image: research3/habitat-h001:20260508-calib-artifacts
+rows: 2
+```
+
+Facts:
+
+```text
+current_v3:
+  commit/success/wrong/no_valid: 0 / 0 / 0 / 0
+selected_direct_strong_own_view:
+  commit/success/wrong/no_valid: 2 / 0 / 2 / 0
+local_context_unique_own_view_advantage:
+  commit/success/wrong/no_valid: 2 / 2 / 0 / 0
+oracle_best_correct:
+  commit/success/wrong/no_valid: 2 / 2 / 0 / 0
+uses_gt_for_action: false for the proposed local-context rule
+uses_gt_for_analysis: true
+```
+
+Guard shape:
+
+```text
+eligible candidate role: local_context
+required evidence: positive support, second-stage strong depth, own-view strong depth, no visit-position-only evidence
+tie condition: within S_ext gap 0.02 from the best strong tied candidate
+own evidence minimum: strict >= 5, mask >= 8, visible >= 10
+advantage over selected: strict >= 3, mask >= 6, visible >= 8
+advantage over other local contexts: strict >= 3, mask >= 6
+advantage over best non-local tied candidate: strict >= 2, mask >= 4
+```
+
+Representative row facts:
+
+```text
+winner: vlmaps:export:sofa:spatial_nms:9
+winner role: local_context
+winner own strict/mask: 7 / 14
+selected: vlmaps:export:sofa:spatial_nms:2
+selected own strict/mask: 3 / 3
+best non-local tied candidate: vlmaps:export:sofa:spatial_nms:5
+best non-local own strict/mask: 5 / 7
+strict/mask advantage over selected: 4 / 11
+strict/mask advantage over best non-local: 2 / 7
+```
+
+Agent inference:
+
+```text
+The held-out sofa rows are not solved by selecting the currently observed selected candidate; selected-direct is explicitly unsafe on both rows.
+The current evidence supports a role-conditioned arbitration rule: when detector scores saturate across repeated-object candidates, a local-context candidate can win only if its own-view evidence is uniquely stronger than the selected candidate, other local contexts, and the best non-local tied candidate.
+This is still design evidence, not a paper claim. The next step is to implement the same rule as a fixed objective diagnostic replay and verify the integrated held-out gate before any first_eval replacement rerun or policy-scale comparison.
+```
+
+Local-context arbitration objective V4 held-out replay:
+
+```text
+date_checked: 2026-05-21
+implementation: analyze_external_candidate_second_stage_identity_evidence.py --objective-version v4
+stage2_evidence_output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_evidence_v4
+integrated_output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_v5_stage2_local_context_v4_heldout
+integrated_summary: external_candidate_followup_v5_stage2_local_context_v4_summary.json
+validation_scope: heldout_validation
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Facts:
+
+```text
+stage2_action_counts:
+  second_stage_identity_v1_commit_arbitrated_candidate: 2
+stage2_reason_counts:
+  commit_arbitrated_identity_local_context_strong_tie: 2
+stage2_commit_success_wrong_no_valid: 2 / 2 / 0 / 0
+stage2_detector_box_rate: 1.0
+stage2_sam2_mask_rate: 1.0
+stage2_candidate_association_rate: 1.0
+stage2_full_gate: true
+
+integrated_terminal_rows: 5
+integrated_terminal_action_counts:
+  followup_evidence_v1_commit_selected_candidate: 1
+  second_stage_identity_v1_commit_arbitrated_candidate: 2
+  followup_evidence_v1_defer: 2
+integrated_commit_success_wrong_no_valid: 3 / 3 / 0 / 0
+integrated_commit_rate: 0.6
+integrated_success_commit_rate: 0.6
+integrated_wrong_goal_commit_rate: 0.0
+integrated_full_gate: true
+```
+
+Committed stage2 rows:
+
+```text
+external_candidate:13 -> vlmaps:export:sofa:spatial_nms:9
+external_candidate:9 -> vlmaps:export:sofa:spatial_nms:9
+local_guard_reason: commit_local_context_unique_own_view_advantage
+```
+
+Agent inference:
+
+```text
+This is the first scene-disjoint held-out positive signal for the local-rival sofa failure path.
+It supports the method principle that active re-observation should not only raise or lower confidence, but should expose which semantic-map candidate has locally stronger instance evidence under score saturation.
+This still does not close the whole first_eval path: the two held-out chair rows are no-correct backend recall failures and remain deferred. A dense non-GT backend recall probe is the next task before broader first_eval or policy-scale validation.
+```
+
+Dense backend recall probe for no-correct chair rows:
+
+```text
+date_checked: 2026-05-21
+probe_script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/probe_dense_backend_recall.py
+available_artifact_output: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/dense_backend_recall_probe_available_artifacts_v1
+long_job_script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_backend_recall_y9h_chair.sh
+long_job_tmux: h001-dense-backend-y9h-chair-20260521-030146
+long_job_output: /tmp/research3-runs/h001_dense_backend_recall_y9h_chair_v1
+long_job_status: /tmp/research3-runs/h001_dense_backend_recall_y9h_chair_v1/job_status.json
+long_job_log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/dense-backend-recall-y9h-chair-20260521-030146.log
+```
+
+Facts:
+
+```text
+no_correct_rows:
+  HM3D ObjectNav v2:val:y9hTuugGdiq:17:4:chair
+  HM3D ObjectNav v2:val:y9hTuugGdiq:16:3:chair
+tested_available_artifacts:
+  replacement_spatial_p97_k20: recovered 0 / 2
+  first_eval_spatial_p97_k20: recovered 0 / 2
+  first_eval_spatial_k20: recovered 0 / 2
+  first_eval_random256_k20: recovered 0 / 2
+  first_eval_random256_k10: recovered 0 / 2
+episode_recovered_by_any_available_artifact_rate: 0.0
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Completed dense re-export job:
+
+```text
+job_status: completed
+summary: /tmp/research3-runs/h001_dense_backend_recall_y9h_chair_v1/recall_probe/dense_backend_recall_probe_summary.json
+candidate_generation_variants:
+  spatial_nms_p95_k100_d10: recovered 2 / 2, recall@5 1.0, candidate_count 100
+  spatial_nms_p90_k200_d5: recovered 2 / 2, recall@5 1.0, candidate_count 200
+  components_p90_min1_k200: recovered 2 / 2, recall@5 1.0, candidate_count 200
+  components_p80_min1_k200: recovered 2 / 2, recall@5 1.0, candidate_count 200
+episode_recovered_by_any_artifact_rate: 1.0
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+selected_first_backend_revision: spatial_nms_p95_k100_d10
+```
+
+Fixed dense backend artifact:
+
+```text
+artifact: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/all_scenes_aligned.jsonl
+metadata: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/artifact_metadata.json
+verification_summary: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/verification/recall_probe/dense_backend_recall_probe_summary.json
+rows: 1
+candidates: 100
+docker_verification:
+  recovered_rows: 2 / 2
+  recall@5: 1.0
+  uses_gt_for_action: false
+```
+
+Detector observation result:
+
+```text
+plan_smoke: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/plan_smoke
+plan_smoke_triggered_rows: 2 / 2
+plan_smoke_plan_rows: 12
+plan_smoke_skipped_rows: 0
+tmux: h001-dense-fixed-detector-y9h-chair-20260521-031417
+output: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/dense-backend-fixed-detector-y9h-chair-20260521-031417.log
+status: completed
+detector_rows: 12
+rendered_heading_count: 36
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.0
+evidence_actions:
+  external_evidence_v1_defer: 2
+evidence_gate:
+  safety: true
+  full: false
+uses_gt_for_action: false
+```
+
+Detector association diagnostic:
+
+```text
+script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/diagnose_detector_association.py
+output: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/detector_association_diagnostic_v1
+rows: 36
+association_rate: 0.0
+visible_rows: 20
+inside_mask_rows: 12
+visible_inside_mask_unassociated_rows: 12
+depth_mismatch_rows: 18
+median_depth_error_m: 3.94
+dominant_failure: visible_inside_mask_but_depth_or_association_rejects
+uses_gt_for_action: false
+uses_gt_for_analysis: false
+```
+
+Dense association repair design:
+
+```text
+script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/design_dense_association_repair.py
+output: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_v1/dense_association_repair_design_v1
+tested_variants:
+  current_mask_depth_1_0
+  mask_depth_1_5
+  mask_depth_2_0
+  mask_depth_2_5
+  mask_depth_3_0
+  mask_no_depth
+  box_no_depth
+selected_variant: mask_depth_2_0
+association_depth_tolerance_m: 2.0
+reason: smallest tested depth tolerance that recovers both held-out chair episodes, passes association-rate gate 0.20, and supports no wrong candidate under GT analysis labels
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Depth2 repair job:
+
+```text
+tmux: h001-dense-fixed-detector-depth2-y9h-chair-20260521-034718
+output: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/dense-backend-fixed-detector-depth2-y9h-chair-20260521-034718.log
+association_depth_tolerance_m: 2.0
+status: completed
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.5
+detector_substrate_gate: true
+evidence_actions:
+  external_evidence_v1_commit_candidate: 2
+built_in_evidence_gate:
+  safety: false
+  full: false
+failure_reason: dense candidate correctness labels are not attached to branch rows, so built-in no-valid/success fields cannot evaluate this diagnostic correctly
+```
+
+Depth2 post-hoc commit evaluation:
+
+```text
+script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/evaluate_dense_repair_commit.py
+output: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1/dense_repair_commit_evaluation_v1
+rows: 2
+commit_rows: 2
+success_commit_rows: 2
+wrong_goal_commit_rows: 0
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_status: not_a_paper_claim
+```
+
+Dense terminal arbitration diagnostic:
+
+```text
+script: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/diagnose_dense_terminal_arbitration.py
+output: /tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1/dense_terminal_arbitration_diagnostic_v1
+rows: 2
+commit_rows: 2
+action_recompute_match_rate: 1.0
+selected_posthoc_correct_rate: 1.0
+first_external_posthoc_correct_rate: 1.0
+selected_correct_improvement_over_first: 0.0
+wrong_positive_support_row_rate: 0.0
+same_goal_evidence_selection_rate: 1.0
+terminal_arbitration_class_counts:
+  same_goal_evidence_selection_not_wrong_repair: 2
+decision:
+  local_terminal_arbitration_promising: true
+  wrong_repair_utility_proven: false
+  generalization_ready: false
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Terminal diagnostic contract:
+
+```text
+contract: hypothesis/CAND-01/H001_uncertainty-reobservation/07_evaluation_contract.md
+section: Fixed Dense Backend Terminal Diagnostic Contract
+scope: local two-row chair diagnostic
+allowed_claim: fixed dense backend plus depth2 association can recover these held-out chair commits under post-hoc GT analysis labels
+blocked_claims:
+  first_eval ObjectNav improvement
+  policy-scale comparison
+  cross-scene/category association_depth_tolerance_m=2.0 generality
+action_label_boundary:
+  uses_gt_for_action: false
+  uses_gt_for_analysis: true
+label_plumbing_note: built-in no-valid/safety fields are invalid when dense branch rows do not carry evaluation-only candidate_correct labels
+generalization_decision: do_not_generalize_yet
+terminal_arbitration_decision: local same-goal evidence selection, not wrong-goal repair proof
+next_gate: design independent dense validation with wrong/ambiguous positive-support candidates
+broader_gate: independent scene/category association-depth validation before any first_eval or policy-scale use
+```
+
+Agent inference:
+
+```text
+The currently materialized candidate artifacts cannot recover the two no-correct chair rows.
+This strengthens the interpretation that these rows are semantic-map backend recall failures, not detector association or identity arbitration failures.
+The dense re-export result shows that less aggressive non-GT candidate generation can recover correct chair candidates before detector observation.
+Choose spatial_nms_p95_k100_d10 first because it preserves the same row-level recovery as the 200-candidate variants while halving detector observation cost in this diagnostic.
+The fixed artifact now closes the candidate-recall substrate for this narrow held-out chair diagnostic.
+The detector job confirms a new bottleneck: open-vocabulary boxes and masks are available, but candidate-to-mask/depth association fails for dense chair candidates.
+The association diagnostic points to point-height/depth/viewpoint geometry mismatch rather than detector box or mask absence.
+The repair design supports a depth-tolerance repair before grounded_position or broader viewpoint geometry reruns.
+The depth2 repair recovers detector association and produces correct commits under post-hoc recall-label analysis.
+This is a local diagnostic only. The evaluation-label contract and scope limit are now fixed so built-in gates do not mix missing labels with true no-valid commits.
+Do not generalize association_depth_tolerance_m=2.0 beyond these two chair rows yet. The broader first_eval replacement association-variant diagnostic shows that relaxed depth matching increases association coverage, but associated-count evidence remains a weak correctness signal and creates new wrong-goal risk.
+The terminal arbitration diagnostic is locally promising but not a utility proof: the selected candidate and first external candidate are both post-hoc correct, and all positive-support candidates are correct. The next validation should look for independent dense rows where wrong candidates also receive positive support.
+```
+
 ## User Decision Needed
 
 - Whether `habitat-h001` should use a minimal Habitat runtime first or reuse an existing baseline repository.
