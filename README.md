@@ -19,6 +19,21 @@
 
 > semantic uncertainty가 active SLAM/navigation utility로 작동해서 ObjectNav 같은 navigation task에서 wrong-goal visit과 wasted path를 줄이고, 확장 단계에서는 map/pose consistency까지 개선할 수 있는지 검증한다.
 
+## Current Status
+
+### 사실
+
+- Date checked: 2026-05-22
+- Current gate: independent dense conflict validation for H001.
+- `h001_dense_conflict_v1` manifest and recall gate are implemented and Docker-verified.
+- Existing-artifact recall smoke passed on the primary dense-conflict rows, but the final `spatial_nms_p95_k100_d10` dense backend artifact has not been generated.
+- Current blocker: host NVIDIA runtime. Docker GPU startup fails until host `nvidia-smi` and Docker `--gpus all` work again.
+- Cross-machine recovery and Drive backup paths are documented in [docs/reproducibility.md](docs/reproducibility.md).
+
+### 에이전트 추론
+
+The next research step is not detector launch. The correct sequence is NVIDIA runtime recovery, frozen-row dense artifact generation, final dense recall gate, and only then detector/association/terminal arbitration on the conflict rows.
+
 ## Key Documents
 
 - Literature overview: [literature/README.md](literature/README.md)
@@ -46,6 +61,26 @@ hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/
 ```
 
 Current data paths, checkpoint paths, Docker images, and reproduction commands are summarized in [docs/reproducibility.md](docs/reproducibility.md).
+
+## Local Assets
+
+Canonical local paths:
+
+```text
+local_dataset/data
+local_dataset/models
+local_dataset/runs
+```
+
+Compatibility symlinks:
+
+```text
+/tmp/research3-data
+/tmp/research3-models
+/tmp/research3-runs
+```
+
+Large datasets, model checkpoints, run artifacts, Docker image archives, paper PDFs, and credentials are intentionally not GitHub source-of-truth.
 
 ## Repository Rule
 

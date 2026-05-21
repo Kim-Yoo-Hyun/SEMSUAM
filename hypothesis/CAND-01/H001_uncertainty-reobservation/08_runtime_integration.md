@@ -14,6 +14,9 @@ This is an implementation plan, not an experiment result.
 - Runtime scripts and Dockerfiles are stored under `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/`.
 - Smoke tests and paper-body implementation experiments must run in Docker.
 - The root repository is connected to Git remote `https://github.com/Kim-Yoo-Hyun/SSLAM.git`.
+- Canonical local roots are `local_dataset/data`, `local_dataset/models`, and `local_dataset/runs`.
+- `/tmp/research3-data`, `/tmp/research3-models`, and `/tmp/research3-runs` are compatibility symlinks to the canonical local roots.
+- Google Drive backup paths, restore checks, and no-Drive rebuild commands are centralized in `docs/reproducibility.md`.
 
 ## Paper Claims
 
@@ -10273,12 +10276,19 @@ Implementation status:
 ```text
 manifest_builder: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/build_dense_conflict_manifest.py
 recall_gate: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/probe_dense_conflict_recall.py
+dense_artifact_job: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_conflict_candidate_artifact.sh
+scene_specs: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/dense_conflict_v1_scenes.txt
 manifest: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_v1.json
 manifest_verify: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_v1.verify.json
 manifest_verify_ok: true
 manifest_rows: 8
 existing_artifact_recall_smoke: /tmp/research3-runs/h001_dense_conflict_recall_gate_existing_artifact_smoke_v1
 existing_artifact_recall_smoke_result: primary 6/6 with correct candidate, recall@20 1.0, gate pass
+dense_artifact_first_launch: h001-dense-conflict-artifact-20260521-175656
+dense_artifact_first_launch_status: failed at Docker GPU init before scene export
+host_gpu_blocker: nvidia kernel module 580.126.09 but user-space library 580.159.03
+reproducibility_doc: docs/reproducibility.md
+drive_backup_manifest: docs/reproducibility.md#google-drive-backup-manifest
 ```
 
 Target row sources:
@@ -10306,12 +10316,13 @@ Implementation sequence:
 1. create manifests/h001_dense_conflict_v1.json from the frozen row list [done]
 2. verify manifest with Docker split_manifest verify [done]
 3. implement and smoke-test dense recall gate on existing artifact [done]
-4. generate dense non-GT candidate pools with spatial_nms_p95_k100_d10 first
-5. run final dense recall gate before any detector job
-6. run GroundingDINO + SAM2 only if final recall gate passes
-7. evaluate strict 1.0m, depth2, no-depth mask, and grounded-position association variants
-8. attach GT labels only in evaluation_labels.jsonl after action selection
-9. compare defer_only, first_external, score_only_best, strict_depth_terminal, depth2_terminal, grounded_position_terminal, and proposed_conflict_arbitration
+4. restore host NVIDIA runtime if `nvidia-smi` reports driver/library mismatch
+5. generate dense non-GT candidate pools with spatial_nms_p95_k100_d10 first
+6. run final dense recall gate before any detector job
+7. run GroundingDINO + SAM2 only if final recall gate passes
+8. evaluate strict 1.0m, depth2, no-depth mask, and grounded-position association variants
+9. attach GT labels only in evaluation_labels.jsonl after action selection
+10. compare defer_only, first_external, score_only_best, strict_depth_terminal, depth2_terminal, grounded_position_terminal, and proposed_conflict_arbitration
 ```
 
 Promotion gate:

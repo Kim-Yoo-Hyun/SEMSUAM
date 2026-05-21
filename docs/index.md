@@ -20,7 +20,7 @@
 | Literature | [literature.md](literature.md) | [literature/](../literature/README.md) | field map, paper registry, contribution candidate 관리 |
 | Hypothesis | [hypothesis.md](hypothesis.md) | [hypothesis/](../hypothesis/README.md) | candidate를 검증 가능한 hypothesis와 first probe로 압축 |
 | Paper | [paper.md](paper.md) | `summary.md`, H001 documents | novelty gate, top-tier framing, paper-ready claim 판단 |
-| Reproducibility | [reproducibility.md](reproducibility.md) | H001 runtime outputs under `/tmp/research3-*` | 데이터, checkpoint, Docker, 재현 명령, artifact/evaluation 요약 |
+| Reproducibility | [reproducibility.md](reproducibility.md) | `local_dataset/{data,models,runs}` with `/tmp/research3-*` compatibility symlinks | 데이터, checkpoint, Docker, Drive 백업 경로, 재현 명령, artifact/evaluation 요약 |
 | Dense Conflict Validation | [workflow-20260521-dense-conflict.md](../hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260521-dense-conflict.md) | H001 runtime workflow | wrong/ambiguous positive-support dense validation 설계 |
 | Stage 1 Smoke Test | [workflow-20260507-smoke.md](../hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260507-smoke.md) | H001 runtime workflow | `VLMaps` / Habitat smoke test |
 | HM3D-OVON | [workflow-20260507-ovon.md](../hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260507-ovon.md) | H001 runtime workflow | HM3D-OVON episode 확보와 mount smoke test |
@@ -32,6 +32,8 @@
 - 현재 primary candidate는 [CAND-01.md](../literature/CAND-01.md)의 `Semantic Uncertainty as Active SLAM/Navigation Utility for Adaptive ObjectNav`이다.
 - 현재 active hypothesis는 [H001_uncertainty-reobservation](../hypothesis/CAND-01/H001_uncertainty-reobservation/README.md)에 있다.
 - 최종 연구 방향은 Step 5까지 포함한다.
+- 현재 implementation gate는 independent dense conflict validation이며, host NVIDIA runtime 복구 전까지 final dense artifact generation은 blocked다.
+- Google Drive 백업 후보와 Drive 없이 재생성하는 절차는 [reproducibility.md](reproducibility.md)의 `Google Drive Backup Manifest`, `Restore from Drive`, `Rebuild Without Drive`를 따른다.
 
 ### 에이전트 추론
 

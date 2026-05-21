@@ -6,7 +6,7 @@
 
 ### 사실
 
-- Date checked: 2026-05-21
+- Date checked: 2026-05-22
 - Primary hypothesis: `H001_uncertainty-reobservation`
 - Runtime root: `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/`
 - Local dataset root: `local_dataset/`
@@ -28,7 +28,7 @@
 
 ### 사실
 
-Date checked: 2026-05-21
+Date checked: 2026-05-22
 
 `git check-ignore -v` 결과, 아래 필수 재현 파일들은 `.gitignore`에 의해 막히지 않는다.
 
@@ -73,7 +73,7 @@ checkpoints/
 
 ### 사실
 
-Date checked: 2026-05-21
+Date checked: 2026-05-22
 
 Current local footprint:
 
@@ -105,16 +105,226 @@ Verification: ls -ld, readlink, du -sh, git check-ignore, Docker check_hm3d.py, 
 Status: completed
 ```
 
-### Drive 보존 권장
+### Google Drive Backup Manifest
 
-| Asset | Current path / pattern | Why preserve |
-| --- | --- | --- |
-| HM3D scene assets | `local_dataset/data/versioned_data/hm3d-0.2/hm3d` | 재다운로드 가능하지만 Matterport credential, license, 시간이 필요하고 현재 42GB로 가장 큰 필수 dataset |
-| ObjectNav HM3D v2 episodes | `local_dataset/data/datasets/objectnav/hm3d/v2` | 재다운로드 가능하지만 HM3D scene assets와 함께 보존하면 새 컴퓨터 복구가 빠름 |
-| Checkpoints / model cache | `local_dataset/models` | 재다운로드 가능하지만 exact offline detector/VLMaps 재현을 위해 보존 권장 |
-| Main Docker images | `research3/habitat-h001:20260508-calib-artifacts`, `research3/openvocab-perception:20260513-v3c-gdino-sam2`, `research3/vlmaps-hm3d:20260508-timmfix`, `research3/vlmaps-text:20260508` | Dockerfile로 재빌드 가능하지만 dependency drift와 setup 시간을 줄이기 위해 `docker save` 백업 권장 |
-| Key run evidence snapshots | `local_dataset/runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1`, `local_dataset/runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1`, `local_dataset/runs/h001_dense_backend_recall_y9h_chair_v1`, `local_dataset/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1` | 재생성 가능하지만 detector/GPU 작업과 dense `VLMaps` re-export 비용이 있으므로 현재 논문 evidence trace로 보존 권장 |
-| Paper PDFs with annotations or access constraints | `literature/**/paper.pdf`, `*.pdf` | metadata/link는 repo에 남지만, paywall/annotation이 있으면 재확보가 어려울 수 있음 |
+Date checked: 2026-05-22
+
+아래 항목은 GitHub에 올리지 않는 local-only asset이다. 순수 재현성만 놓고 보면 대부분 다시 받을 수 있지만, 다른 컴퓨터에서 빠르게 같은 실험 상태를 복구하려면 Drive 보존 우선순위가 높다.
+
+#### 1순위: 데이터셋
+
+```text
+local_dataset/data/versioned_data/hm3d-0.2/hm3d/
+local_dataset/data/datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/
+```
+
+보존 이유:
+
+- `HM3D` scene assets는 현재 약 `42G`이며 Matterport credential, license 동의, 다운로드 시간이 필요하다.
+- `ObjectNav HM3D v2` episodes는 현재 약 `250M`으로 작지만 scene assets와 함께 있어야 evaluation harness가 바로 동작한다.
+- `local_dataset/data/scene_datasets/hm3d`는 위 `hm3d` 폴더로 향하는 symlink라서 별도 업로드 대상이 아니다. 새 컴퓨터에서는 아래 `Restore from Drive` 절차로 다시 만든다.
+
+#### 2순위: checkpoint / model cache
+
+```text
+local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/
+local_dataset/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt
+local_dataset/models/vlmaps/lseg/checkpoints/demo_e200.ckpt
+local_dataset/models/.cache/clip/ViT-B-32.pt
+```
+
+보존 이유:
+
+- `GroundingDINO + SAM2`는 현재 detector evidence path의 핵심이다.
+- `VLMaps / LSeg` checkpoint와 `CLIP` cache는 dense backend와 semantic map artifact 재생성 비용을 줄인다.
+- 현재 확인된 대용량 model files:
+
+```text
+local_dataset/models/vlmaps/lseg/checkpoints/demo_e200.ckpt
+local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/pytorch_model.bin
+local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/model.safetensors
+local_dataset/models/.cache/clip/ViT-B-32.pt
+local_dataset/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt
+```
+
+#### 3순위: 현재 evidence snapshot
+
+```text
+local_dataset/runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/
+local_dataset/runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/
+local_dataset/runs/h001_dense_backend_recall_y9h_chair_v1/
+local_dataset/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1/
+local_dataset/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/
+local_dataset/runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/
+local_dataset/runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/
+local_dataset/runs/h001_v3_fresh_validation_policy_spatial_nms_p97_k20_v1/
+```
+
+보존 이유:
+
+- 재생성은 가능하지만 detector GPU run, `VLMaps` dense re-export, failure taxonomy 분석을 다시 거쳐야 한다.
+- 논문 주장으로 아직 확정된 evidence는 아니지만, novelty 판단과 다음 gate 설계의 provenance로 중요하다.
+- `local_dataset/runs/h001_dense_conflict_artifacts_spatial_nms_p95_k100_d10_v1/`는 현재 `status: failed`이고 크기도 작으므로 Drive 1순위가 아니다. NVIDIA runtime 복구 후 재생성한다.
+
+#### 4순위: Docker image export
+
+아래 image들은 Dockerfile/setup script로 재빌드 가능하지만, dependency drift와 setup 시간을 줄이려면 Drive에 `docker save` archive를 보존한다.
+
+```text
+research3/habitat-h001:20260508-calib-artifacts
+research3/openvocab-perception:20260513-v3c-gdino-sam2
+research3/vlmaps-hm3d:20260508-timmfix
+research3/vlmaps-text:20260508
+```
+
+Archive command:
+
+```bash
+docker save \
+  research3/habitat-h001:20260508-calib-artifacts \
+  research3/openvocab-perception:20260513-v3c-gdino-sam2 \
+  research3/vlmaps-hm3d:20260508-timmfix \
+  research3/vlmaps-text:20260508 \
+  | gzip > local_dataset/research3-docker-images-20260522.tar.gz
+```
+
+Drive upload target:
+
+```text
+local_dataset/research3-docker-images-20260522.tar.gz
+```
+
+#### Optional
+
+```text
+literature/**/paper.pdf
+*.pdf
+```
+
+보존 이유:
+
+- metadata와 link는 repo에 남지만, annotation이 있거나 접근 제한이 있는 PDF는 Drive에 보존한다.
+
+#### Do Not Upload
+
+```text
+*token*
+*secret*
+*credential*
+*.pem
+*.key
+*.netrc
+.env
+.env.*
+```
+
+Credential은 GitHub와 Drive 연구 백업에 넣지 않는다. Matterport, Hugging Face, 기타 provider credential은 각 provider나 password manager에서 별도 관리한다.
+
+### Restore from Drive
+
+새 컴퓨터에서 Drive snapshot을 사용할 때는 repo clone 뒤 아래 형태로 복구한다.
+
+```bash
+cd /home/yoohyun/research3
+mkdir -p local_dataset/data/versioned_data/hm3d-0.2
+mkdir -p local_dataset/data/datasets/objectnav/hm3d/v2
+mkdir -p local_dataset/models
+mkdir -p local_dataset/runs
+
+# Drive에서 받은 폴더를 위 Google Drive Backup Manifest의 동일한 상대 경로로 배치한다.
+
+mkdir -p local_dataset/data/scene_datasets
+ln -sfn ../versioned_data/hm3d-0.2/hm3d local_dataset/data/scene_datasets/hm3d
+ln -sfn /home/yoohyun/research3/local_dataset/data /tmp/research3-data
+ln -sfn /home/yoohyun/research3/local_dataset/models /tmp/research3-models
+ln -sfn /home/yoohyun/research3/local_dataset/runs /tmp/research3-runs
+```
+
+Docker image archive를 보존한 경우:
+
+```bash
+gunzip -c local_dataset/research3-docker-images-20260522.tar.gz | docker load
+```
+
+복구 검증:
+
+```bash
+python hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/check_hm3d.py local_dataset/data
+
+docker run --rm \
+  -v /tmp/research3-data:/data:ro \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/hm3d-download:20260507 \
+  python /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/check_hm3d.py /data
+
+docker run --rm \
+  -v /tmp/research3-models:/models:ro \
+  research3/openvocab-perception:20260513-v3c-gdino-sam2 \
+  bash -lc 'test -d /models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny && test -f /models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt'
+
+find local_dataset/runs -maxdepth 2 -name '*summary.json' | wc -l
+```
+
+### Rebuild Without Drive
+
+Drive snapshot 없이도 아래 순서로 재현 가능하다. 단, dataset credential과 GPU/NVIDIA runtime은 별도 준비가 필요하고, detector output은 bitwise 동일성을 보장하지 않는다.
+
+1. Clone repo and create local paths:
+
+```bash
+cd /home/yoohyun
+git clone git@github.com:Kim-Yoo-Hyun/SSLAM.git research3
+cd /home/yoohyun/research3
+mkdir -p local_dataset/data local_dataset/models local_dataset/runs
+ln -sfn /home/yoohyun/research3/local_dataset/data /tmp/research3-data
+ln -sfn /home/yoohyun/research3/local_dataset/models /tmp/research3-models
+ln -sfn /home/yoohyun/research3/local_dataset/runs /tmp/research3-runs
+```
+
+2. Restore datasets:
+
+```bash
+export MATTERPORT_TOKEN_ID='<token-id>'
+export MATTERPORT_TOKEN_SECRET='<token-secret>'
+
+ts=$(date +%Y%m%d-%H%M%S)
+tmux new-session -d -s "h001-hm3d-restore-${ts}" \
+  "cd /home/yoohyun/research3 && \
+   TS=${ts} \
+   DATA_ROOT=/tmp/research3-data \
+   bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/hm3d_restore.sh"
+```
+
+3. Restore model checkpoints:
+
+```bash
+bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/openvocab_perception_v3c_groundingdino_sam2_setup.sh
+```
+
+4. Build required Docker image if it was not loaded from Drive:
+
+```bash
+docker build \
+  -f hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/Dockerfile.habitat-h001 \
+  -t research3/habitat-h001:20260508-calib-artifacts \
+  hypothesis/CAND-01/H001_uncertainty-reobservation/runtime
+```
+
+5. Verify before running experiments:
+
+```bash
+python hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/check_hm3d.py /tmp/research3-data
+nvidia-smi
+docker run --rm --gpus all --entrypoint nvidia-smi research3/habitat-h001:20260508-calib-artifacts
+```
+
+6. Regenerate artifacts and evaluations using the job scripts in `Reproduction Commands` and the current `TODO.md`. Current blocker is the NVIDIA runtime recovery followed by:
+
+```bash
+ts=$(date +%Y%m%d-%H%M%S)
+tmux new-session -d -s "h001-dense-conflict-artifact-${ts}" \
+  "cd /home/yoohyun/research3 && TS=${ts} bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_conflict_candidate_artifact.sh"
+```
 
 ### 재생성 가능
 
@@ -372,6 +582,46 @@ git checkout of this repo at /home/yoohyun/research3
 ```
 
 Host Python package 설치는 재현 경로가 아니다. 필요한 Python dependency는 Docker image 안에서 관리한다.
+
+### NVIDIA Runtime Recovery Checklist
+
+Use this checklist when a GPU job fails before container startup. Do not treat this as experiment evidence.
+
+Current known failure on 2026-05-21:
+
+```text
+nvidia-smi: Failed to initialize NVML: Driver/library version mismatch
+kernel_module: 580.126.09
+user_space_library: 580.159.03
+docker_gpu_error: open /run/nvidia-persistenced/socket: no such file or directory
+```
+
+Check commands:
+
+```bash
+nvidia-smi
+cat /proc/driver/nvidia/version
+modinfo nvidia | sed -n '1,20p'
+dpkg -l | rg 'nvidia-driver|libnvidia|nvidia-utils|libnvidia-container'
+systemctl is-active nvidia-persistenced || true
+docker run --rm --gpus all --entrypoint nvidia-smi research3/habitat-h001:20260508-calib-artifacts
+```
+
+Recovery rules:
+
+- If host `nvidia-smi` fails, do not launch Docker GPU jobs.
+- If kernel module and user-space library versions differ, reboot is the safest recovery path after driver updates.
+- Do not unload NVIDIA kernel modules while other containers or desktop processes may be using `/dev/nvidia*`.
+- Restarting `nvidia-persistenced` is only meaningful after driver/library versions match.
+- Resume the exact recorded tmux command after both host `nvidia-smi` and Docker `--gpus all` succeed.
+
+Dense conflict resume command:
+
+```bash
+ts=$(date +%Y%m%d-%H%M%S)
+tmux new-session -d -s "h001-dense-conflict-artifact-${ts}" \
+  "cd /home/yoohyun/research3 && TS=${ts} bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_conflict_candidate_artifact.sh"
+```
 
 ### 사용 중인 Image
 
@@ -692,6 +942,7 @@ result: detector substrate pass, follow-up evidence safety/full gate fail
 | Depth2 generalization decision | `hypothesis/CAND-01/H001_uncertainty-reobservation/07_evaluation_contract.md` | do not generalize yet | local chair diagnostic supports `mask_depth_2_0`, but broader `/tmp/research3-runs/h001_first_eval_replacement_detector_v3c_association_variants_v1/summary.json` does not: `mask_depth_2p0` association `0.49`, associated-count AUC `0.520`, selected-correct delta `-0.21`, new wrong-goals `6`; `box_or_mask_depth_2p0` association `0.56`, AUC `0.549`, delta `-0.14`, new wrong-goals `4`; both detector calibration gates fail |
 | Dense terminal arbitration diagnostic | `/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1/dense_terminal_arbitration_diagnostic_v1/dense_terminal_arbitration_summary.json` | completed, local promising but not utility proof | added `diagnose_dense_terminal_arbitration.py`; Docker `py_compile` and diagnostic run passed; commits `2/2`, action recompute match `1.0`, selected post-hoc correct `1.0`, first external post-hoc correct `1.0`, selected-correct improvement over first `0.0`, wrong positive-support row rate `0.0`, same-goal evidence selection rate `1.0`; next validation should target wrong/ambiguous positive-support candidates |
 | Independent dense conflict validation manifest / recall gate | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_v1.json` | implemented, Docker verified | added `build_dense_conflict_manifest.py` and `probe_dense_conflict_recall.py`; manifest verify output `manifests/h001_dense_conflict_v1.verify.json` has `ok true`, `rows 8`, `unique_episode_keys 8`; existing-artifact recall gate smoke `/tmp/research3-runs/h001_dense_conflict_recall_gate_existing_artifact_smoke_v1` passes on primary rows with `6/6` correct candidates and recall@20 `1.0`; this is gate-code validation, not final dense backend evidence |
+| Dense conflict `spatial_nms_p95_k100_d10` artifact job | `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_conflict_candidate_artifact.sh` | blocked by host GPU runtime | scene spec `manifests/dense_conflict_v1_scenes.txt`; first launch `h001-dense-conflict-artifact-20260521-175656`; log `runtime/logs/dense-conflict-artifact-p95-k100-d10-20260521-175656.log`; failed before scene export because Docker `--gpus all` cannot initialize NVIDIA runtime; `nvidia-smi` reports driver/library mismatch: kernel module `580.126.09`, user-space library `580.159.03`; resume after host driver/runtime is fixed |
 
 ### 에이전트 추론
 
@@ -728,7 +979,7 @@ result: detector substrate pass, follow-up evidence safety/full gate fail
 - V4 request-identity bottleneck diagnostic 기준으로 first-stage selected direct commit은 wrong-goal `3/7`이라 안전하지 않다. Existing second-stage identity objective V2는 success `2/7`, wrong-goal `0/7`의 nonzero safe utility를 만든다.
 - V4 + second-stage identity V2 terminal diagnostic은 same V4 separate-split substrate에서 local integrated full gate를 통과했다. 그러나 `validation_scope v4_fixed_terminal_diagnostic`이라 `utility_proof_passed false`로 기록한다.
 - Dense terminal arbitration diagnostic은 two-row `y9hTuugGdiq/chair` local diagnostic에서 positive였지만 all positive-support candidates가 post-hoc correct라 wrong-goal repair proof가 아니다.
-- Independent dense conflict validation design은 `runtime/workflow-20260521-dense-conflict.md`에 고정했다. `manifests/h001_dense_conflict_v1.json`과 dense recall gate는 Docker 검증을 통과했다. 다음 implementation blocker는 frozen rows에 맞춘 `spatial_nms_p95_k100_d10` dense candidate artifact 생성과 final recall gate이며, detector scoring은 그 이후에만 진행한다.
+- Independent dense conflict validation design은 `runtime/workflow-20260521-dense-conflict.md`에 고정했다. `manifests/h001_dense_conflict_v1.json`과 dense recall gate는 Docker 검증을 통과했다. `spatial_nms_p95_k100_d10` artifact job wrapper도 준비했지만, host NVIDIA driver/library mismatch로 첫 launch가 실패했다. 다음 blocker는 host NVIDIA runtime 복구 후 artifact job resume과 final recall gate이며, detector scoring은 그 이후에만 진행한다.
 
 ### 에이전트 추론
 

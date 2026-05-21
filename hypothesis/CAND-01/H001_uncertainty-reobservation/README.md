@@ -31,13 +31,14 @@ Active diagnostic. H001 remains a hypothesis, not a paper-ready claim.
 - 6-12 month schedule: `15_schedule.md`
 - Reproducibility entrypoint: `../../../docs/reproducibility.md`
 - Dense conflict validation workflow: `runtime/workflow-20260521-dense-conflict.md`
-- Current next implementation target: generate the frozen-row dense conflict candidate artifact with `spatial_nms_p95_k100_d10` and run the final recall gate before any detector job
+- Cross-machine backup/restore: `../../../docs/reproducibility.md#google-drive-backup-manifest`
+- Current next implementation target: restore host NVIDIA runtime, then resume the frozen-row dense conflict candidate artifact job with `spatial_nms_p95_k100_d10`
 
 ## Latest Gate
 
 ### 사실
 
-- Date checked: 2026-05-21
+- Date checked: 2026-05-22
 - `risk_validation_v1` and `v3_fresh_validation_v1` candidate coverage gates pass with non-GT `artifact_jsonl` candidates.
 - V4 external evidence on `risk_validation_v1` passes the current external evidence gate with `commit_rate 0.20`, `success_commit_rate 0.20`, and wrong-goal commit `0.00`.
 - V4 routes unresolved semantic uncertainty into `request_identity_confirmation` and `request_expanded_retrieval`.
@@ -49,10 +50,13 @@ Active diagnostic. H001 remains a hypothesis, not a paper-ready claim.
 - Primary target rows are six scene/category rows from `v3_fresh_validation_v1` with correct and wrong positive-support candidates on all rows; secondary repeated-object stress rows are two `y9hTuugGdiq/sofa` rows.
 - `h001_dense_conflict_v1` manifest verify passed with `8` rows and no duplicate episode keys.
 - Existing-artifact recall gate smoke passed on primary rows with `6/6` correct candidates and recall@20 `1.0`; this is gate validation only, not final dense backend evidence.
+- Frozen-row dense artifact job wrapper exists, but first launch failed before scene export because host NVIDIA runtime reports driver/library mismatch.
+- Google Drive backup paths and no-Drive rebuild procedures are documented in `../../../docs/reproducibility.md`.
+- Canonical local asset roots are `local_dataset/data`, `local_dataset/models`, and `local_dataset/runs`; `/tmp/research3-data`, `/tmp/research3-models`, and `/tmp/research3-runs` are compatibility symlinks.
 
 ### 에이전트 추론
 
-The current method shape is more contribution-aligned than detector-based re-ranking because semantic uncertainty is being converted into an active observation request. It is still not paper-ready. The next gate is final dense candidate generation plus recall validation for the frozen conflict rows, followed only then by detector/association/terminal arbitration. This must pass before any `first_eval` replacement rerun or policy-scale comparison.
+The current method shape is more contribution-aligned than detector-based re-ranking because semantic uncertainty is being converted into an active observation request. It is still not paper-ready. The next gate is final dense candidate generation plus recall validation for the frozen conflict rows, followed only then by detector/association/terminal arbitration. This is blocked by host NVIDIA runtime until `nvidia-smi` and Docker `--gpus all` work again.
 
 ## Pre-Schedule Verification Check
 

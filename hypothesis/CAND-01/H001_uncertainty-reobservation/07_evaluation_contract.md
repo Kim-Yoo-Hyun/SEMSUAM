@@ -433,7 +433,7 @@ excluded_from_promotion: the previous two y9hTuugGdiq/chair dense diagnostic row
 Manifest / gate implementation status:
 
 ```text
-date_checked: 2026-05-21
+date_checked: 2026-05-22
 manifest_rows: 8
 verify_ok: true
 duplicate_episode_keys: 0
@@ -442,6 +442,9 @@ primary_recall_smoke_rows_with_correct: 6 / 6
 primary_recall_smoke_recall_at_20: 1.0
 primary_recall_smoke_passes_gate: true
 paper_claim_status: gate_only_not_policy_claim
+dense_artifact_job: runtime/jobs/dense_conflict_candidate_artifact.sh
+dense_artifact_status: blocked_by_host_nvidia_runtime
+dense_artifact_failed_launch: h001-dense-conflict-artifact-20260521-175656
 ```
 
 Primary independent set:
@@ -507,6 +510,15 @@ evaluation_labels.jsonl
 ### Stop Conditions
 
 Stop before detector scoring if dense candidate generation does not pass the recall gate. Stop before policy-scale integration if wrong-positive support exists but terminal arbitration cannot commit safely. Stop before any `first_eval` claim if only the secondary `sofa` stress rows pass.
+
+Current execution blocker:
+
+```text
+host_nvidia_runtime: blocked
+reason: host nvidia-smi reports driver/library mismatch
+next_action: restore host NVIDIA runtime, rerun dense artifact job, then run final recall gate
+detector_launch: blocked until dense recall gate passes
+```
 
 ### 에이전트 추론
 

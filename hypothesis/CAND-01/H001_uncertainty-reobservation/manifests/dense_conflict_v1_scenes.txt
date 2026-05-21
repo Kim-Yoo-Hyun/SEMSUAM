@@ -1,0 +1,5 @@
+# scene_key|scene_id|scene_rel|seed
+DYehNKdT76V|hm3d_v0.2/val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb|val/00843-DYehNKdT76V/DYehNKdT76V.basis.glb|202605211
+HY1NcmCgn3n|hm3d_v0.2/val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb|val/00894-HY1NcmCgn3n/HY1NcmCgn3n.basis.glb|202605212
+7MXmsvcQjpJ|hm3d_v0.2/val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb|val/00823-7MXmsvcQjpJ/7MXmsvcQjpJ.basis.glb|202605213
+y9hTuugGdiq|hm3d_v0.2/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.glb|val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.glb|202605214

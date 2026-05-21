@@ -9,10 +9,11 @@
 
 ## Now
 
-- [ ] generate frozen-row dense conflict candidate artifact with `spatial_nms_p95_k100_d10` and run final recall gate before detector/association
+- [ ] restore host NVIDIA runtime, then resume frozen-row dense conflict candidate artifact job with `spatial_nms_p95_k100_d10`
 
 ## Next
 
+- [ ] run final dense conflict recall gate after candidate artifact generation completes
 - [ ] run dense conflict detector/association validation only after dense recall gate passes
 - [ ] rerun first_eval replacement detector/objective validation only after the evidence objective is category-agnostic or property-conditioned and has a fixed safety gate
 - [ ] run fixed-rule category-best detector objective validation only after detector artifact association gate passes
@@ -20,7 +21,7 @@
 - [ ] keep policy-scale comparison blocked until detector-objective held-out gate passes
 - [ ] `postview_evidence_v2` policy-scale comparison remains blocked until a scorer diagnostic gate passes
 - [ ] `postview_evidence_v2.1` relaxed_visit rescoring은 v3 scorer plan 이후 필요할 때만 재검토
-- [ ] real-world deploy용 hardware-specific plan은 사용자 장비 정보가 확정되면 작성
+- [ ] real-world deploy용 hardware-specific workflow는 실제 장비가 확정되면 작성
 
 ## Running
 
@@ -28,6 +29,10 @@
 
 ## Recently Completed
 
+- [x] updated top-level and H001 Markdown docs to latest state: `README.md`, `summary.md`, `docs/index.md`, H001 `README.md`, `07_evaluation_contract.md`, and `08_runtime_integration.md` now reflect the current dense-conflict blocker, canonical `local_dataset/` paths, Google Drive backup/restore, and no-Drive rebuild status
+- [x] documented Google Drive backup paths and rebuild/restore procedures in `docs/reproducibility.md`: prioritized `HM3D`/`ObjectNav HM3D v2`, `GroundingDINO + SAM2`, `VLMaps / LSeg`, `CLIP`, key H001 evidence snapshots, and optional Docker image export; recorded Drive restore checks and no-Drive rebuild flow
+- [x] documented non-data gates while GPU/data job is blocked: added expected dense conflict failure taxonomy and simpler-alternative / ablation table to `runtime/workflow-20260521-dense-conflict.md`; added NVIDIA runtime recovery checklist to `docs/reproducibility.md`; expanded `03_feasibility.md` with representative real-world hardware tiers using current official source references, while keeping hardware-specific workflow blocked until actual equipment is known
+- [x] implemented frozen-row dense conflict candidate artifact job wrapper and scene spec: added `manifests/dense_conflict_v1_scenes.txt` and `runtime/jobs/dense_conflict_candidate_artifact.sh`; `bash -n` and scene-spec validation passed; first tmux launch `h001-dense-conflict-artifact-20260521-175656` failed immediately at Docker GPU init because host NVIDIA runtime is mismatched (`nvidia-smi` reports kernel module `580.126.09` vs user-space `580.159.03`), so no final dense artifact was produced
 - [x] implemented and Docker-verified `h001_dense_conflict_v1` manifest and dense recall gate: added `build_dense_conflict_manifest.py` and `probe_dense_conflict_recall.py`; manifest verify passed with `8` rows, `8` unique episode keys, and `0` errors; existing-artifact recall smoke `/tmp/research3-runs/h001_dense_conflict_recall_gate_existing_artifact_smoke_v1` passed primary gate with `6/6` correct candidates and recall@20 `1.0`; next step is final dense candidate generation for the frozen rows, not detector launch yet
 - [x] designed independent dense conflict validation with wrong/ambiguous positive-support candidates; added `runtime/workflow-20260521-dense-conflict.md`, updated `07_evaluation_contract.md`, `08_runtime_integration.md`, `docs/index.md`, `docs/reproducibility.md`, `summary.md`, and H001 README; fixed primary target rows as six `v3_fresh_validation_v1` rows with correct+wrong positive support and kept previous `y9hTuugGdiq/chair` dense rows as regression sanity only
 - [x] moved `/tmp/research3-data`, `/tmp/research3-models`, and `/tmp/research3-runs` into `local_dataset/{data,models,runs}`; recreated `/tmp/research3-{data,models,runs}` as compatibility symlinks; normalized local permissions; verified `du -sh`, `readlink`, `git check-ignore`, Docker `check_hm3d.py`, `/runs` mount, and `/models` mount; log `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/local-dataset-migration-20260521-053204.log`

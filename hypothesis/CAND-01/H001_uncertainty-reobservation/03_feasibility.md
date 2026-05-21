@@ -292,14 +292,59 @@ Recommended fallback order:
 - Real-world validation is a later system validation stage, not the current first probe.
 - Hardware-specific planning requires robot platform, RGB-D / LiDAR sensor, compute device, ROS availability, and ground-truth source.
 - Possible GT sources: motion capture, AprilTag map, LiDAR SLAM reference, calibrated object-position map, or manually verified event labels.
+- Date checked for representative hardware references: 2026-05-22.
+
+Representative source facts:
+
+| Component | Official reference fact | Link |
+| --- | --- | --- |
+| `TurtleBot 4` | ROS 2 learning/research platform with `OAK-D`, 2D LiDAR, IMU, wheel odometry, and ROS topics | https://clearpathrobotics.com/turtlebot-4/ |
+| `Jackal UGV` | mobile base with payload and user power for custom sensor stacks | https://docs.clearpathrobotics.com/docs_robots/outdoor_robots/jackal/user_manual_jackal/ |
+| `NVIDIA Jetson AGX Orin` | edge AI/robotics compute; AGX Orin series lists up to 275 TOPS | https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-orin/ |
+| `OAK-D Pro` | stereo depth, IMU, IR/dot projector, on-device CV/AI pipeline | https://docs.luxonis.com/hardware/products/OAK-D%20Pro |
+| `Intel RealSense D455` | stereo depth camera; official spec lists 0.6m-6m range and 1280x720 up to 90 FPS | https://www.intel.de/content/www/de/de/products/sku/205847/intel-realsense-depth-camera-d455/specifications.html |
+| `Hokuyo UST-10LX` | 2D LiDAR with 270 degree field of view, 10m range, ROS1/ROS2 compatibility | https://www.hokuyo-usa.com/products/lidar-sensors/ust-10lx |
+| `Ouster OS0` | short-range 3D LiDAR; official page lists 90 degree vertical FoV and high point-rate options | https://ouster.com/products/os0-lidar-sensor |
+| `OptiTrack PrimeX 13` | motion-capture camera with 240 FPS capture for external GT setups | https://optitrack.com/cameras/primex-13 |
 
 ### 에이전트 추론
 
 Real-world validation should test whether the same failure decomposition appears outside simulation: candidate uncertainty, explicit commit, wrong-goal visit, wasted path, and pose/map-side consistency. It should not replace simulator evidence unless simulator data becomes unusable.
 
+### Representative Hardware Configurations
+
+These are research setup templates, not purchase decisions.
+
+| Tier | Purpose | Representative setup | What it can validate | Main limitation |
+| --- | --- | --- | --- | --- |
+| `RW0_ros2_minimal` | small indoor proof-of-concept | `TurtleBot 4` Standard, built-in `OAK-D Pro`, built-in 2D LiDAR, Raspberry Pi 4, optional external workstation | wrong-goal visit, wasted path, active re-observation logging in a controlled room | onboard compute is weak for full detector/segmenter stack |
+| `RW1_semantic_nav` | paper-style indoor semantic navigation | `Jackal UGV` or similar differential mobile base, `OAK-D Pro` or `Intel RealSense D455`, `Hokuyo UST-10LX`, `NVIDIA Jetson AGX Orin` or onboard x86+GPU, ROS 2 | semantic uncertainty trigger, re-observation viewpoint choice, wrong-goal commit reduction | object GT and repeatability require careful scene setup |
+| `RW2_semantic_slam` | Step 4-5 SLAM/map consistency | `Jackal UGV`, RGB-D/stereo camera, `Ouster OS0` or comparable 3D LiDAR, wheel odometry/IMU, Jetson/onboard PC, external GT | semantic map update, pose graph connectivity, map consistency, localization failure | expensive and heavier calibration burden |
+| `RW3_gt_lab` | high-confidence evaluation | any above platform plus `OptiTrack` or calibrated `AprilTag` map and surveyed object positions | `ATE/RPE`, object-position error, event-level wrong-goal labels | lab infrastructure and calibration time |
+
+### Recommended First Real-World POC
+
+### 에이전트 추론
+
+Use `RW1_semantic_nav` if hardware can be chosen freely:
+
+- mobile base: `Jackal UGV`-class platform or equivalent ROS 2 differential-drive base with enough payload for sensors and compute;
+- perception: one forward RGB-D/stereo sensor, preferably `OAK-D Pro` or `Intel RealSense D455`;
+- localization / safety: 2D LiDAR such as `Hokuyo UST-10LX` for navigation and obstacle safety;
+- compute: `NVIDIA Jetson AGX Orin` or a tethered workstation if foundation-model perception is too heavy onboard;
+- GT: `AprilTag` map for low-cost first validation, `OptiTrack` for stronger `ATE/RPE`;
+- environment: one indoor lab room with 5-10 movable object instances and repeated distractors, e.g. chairs, plants, sofas, monitors, boxes.
+
+Minimum publishable real-world role:
+
+- confirm that the same failure taxonomy appears outside simulator;
+- report event-level metrics: wrong-goal commit, wasted path, re-observation count, unresolved-risk rate;
+- report pose/map-side metric only if GT or a stable SLAM reference exists;
+- keep real-world result as proof-of-concept unless it has enough repeated trials and calibrated GT.
+
 ### 사용자 판단 필요
 
-- Confirm robot, camera / RGB-D / LiDAR, compute, ROS / ROS 2 availability, and GT setup.
+- Confirm actual robot, camera / RGB-D / LiDAR, compute, ROS / ROS 2 availability, and GT setup.
 - Decide whether real-world validation is required for the first submission or reserved for thesis/journal extension.
 
 ## Gate
