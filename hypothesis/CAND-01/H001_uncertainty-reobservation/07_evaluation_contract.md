@@ -411,6 +411,107 @@ Therefore, the next validation should target independent rows with one of these 
 - multiple repeated-object candidates receive strong detector/depth support;
 - current strict association fails but `2.0m` depth association creates a candidate conflict.
 
+## Independent Dense Conflict Validation Contract
+
+### 사실
+
+Design workflow:
+
+```text
+workflow: runtime/workflow-20260521-dense-conflict.md
+planned_output: /tmp/research3-runs/h001_dense_conflict_validation_v1
+manifest: manifests/h001_dense_conflict_v1.json
+manifest_verify: manifests/h001_dense_conflict_v1.verify.json
+manifest_status: implemented and Docker-verified
+recall_gate_script: runtime/h001_runtime/probe_dense_conflict_recall.py
+existing_artifact_recall_smoke: /tmp/research3-runs/h001_dense_conflict_recall_gate_existing_artifact_smoke_v1
+primary_source_rows: /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_evidence/external_candidate_second_stage_identity_evidence_rows.jsonl
+secondary_stress_rows: /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_evidence_v4/external_candidate_second_stage_identity_evidence_rows.jsonl
+excluded_from_promotion: the previous two y9hTuugGdiq/chair dense diagnostic rows
+```
+
+Manifest / gate implementation status:
+
+```text
+date_checked: 2026-05-21
+manifest_rows: 8
+verify_ok: true
+duplicate_episode_keys: 0
+primary_recall_smoke_artifact: v3_fresh_spatial_p97_k20
+primary_recall_smoke_rows_with_correct: 6 / 6
+primary_recall_smoke_recall_at_20: 1.0
+primary_recall_smoke_passes_gate: true
+paper_claim_status: gate_only_not_policy_claim
+```
+
+Primary independent set:
+
+```text
+rows: 6
+scenes: DYehNKdT76V, HY1NcmCgn3n, 7MXmsvcQjpJ
+queries: chair, plant
+rows_with_correct_and_wrong_positive_support: 6 / 6
+rows_with_wrong_positive_support: 6 / 6
+rows_with_selected_wrong_positive_support: 3 / 6
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Secondary repeated-object stress set:
+
+```text
+rows: 2
+scene: y9hTuugGdiq
+query: sofa
+rows_with_correct_and_wrong_positive_support: 2 / 2
+role: stress/control only, not promotion by itself
+```
+
+### Evaluation Boundary
+
+The validation may use existing GT-labeled evidence only to select conflict cases and to compute post-hoc evaluation labels. The implementation must still generate dense candidates, detector evidence, association variants, and terminal actions without action-time GT labels.
+
+Evaluation-only labels must be stored separately from action rows, preferably as:
+
+```text
+evaluation_labels.jsonl
+```
+
+### Required Comparisons
+
+| Comparison | Purpose |
+| --- | --- |
+| `defer_only` | confirms utility over safe non-commit |
+| `first_external` | tests dense retrieval order |
+| `score_only_best` | rejects detector-score-only novelty |
+| `strict_mask_depth_1_0` | current association baseline |
+| `mask_depth_2_0` | local chair repair ablation, not default |
+| `mask_no_depth` | tests whether depth is necessary |
+| `grounded_position_*` | tests point-height / geometry repair alternative |
+| `proposed_conflict_arbitration` | final conflict-aware terminal policy |
+
+### Promotion Gate
+
+| Gate | Required threshold |
+| --- | --- |
+| primary rows | at least `6` |
+| dense recall | correct candidate recovered on at least `4 / 6` primary rows and recall@20 at least `0.50` |
+| detector substrate | detector box rate at least `0.80`, SAM2 mask rate at least `0.80` |
+| association substrate | candidate association rate at least `0.30` |
+| conflict substrate | at least `3` primary rows have both correct and wrong positive-support candidates after dense observation |
+| safety | wrong-goal commit, no-valid commit, and visit-position-only commit rates all `0.0` |
+| utility | at least `2 / 6` successful primary commits and at least `2` row selected-correct improvement over `first_external` |
+| simpler alternatives | wrong-goal rate is no worse than all simpler alternatives |
+| generality | at least `3` primary scenes and `2` primary query categories are reported |
+
+### Stop Conditions
+
+Stop before detector scoring if dense candidate generation does not pass the recall gate. Stop before policy-scale integration if wrong-positive support exists but terminal arbitration cannot commit safely. Stop before any `first_eval` claim if only the secondary `sofa` stress rows pass.
+
+### 에이전트 추론
+
+This validation is the correct next top-tier gate because it tests the actual novelty risk: detector/segmenter support is not enough when wrong objects are also supported. A positive result would support conflict-aware active-observation utility, not merely denser candidate generation or relaxed depth association.
+
 ## Random Baseline Gate
 
 `SemanticOnly` must pass at least two of:

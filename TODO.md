@@ -9,11 +9,11 @@
 
 ## Now
 
-- [ ] design independent dense validation with wrong/ambiguous positive-support candidates
+- [ ] generate frozen-row dense conflict candidate artifact with `spatial_nms_p95_k100_d10` and run final recall gate before detector/association
 
 ## Next
 
-- [ ] implement independent dense validation only after the validation design has fixed target rows, gates, and no-GT action boundary
+- [ ] run dense conflict detector/association validation only after dense recall gate passes
 - [ ] rerun first_eval replacement detector/objective validation only after the evidence objective is category-agnostic or property-conditioned and has a fixed safety gate
 - [ ] run fixed-rule category-best detector objective validation only after detector artifact association gate passes
 - [ ] write policy-scale integration contract only after robust held-out detector-objective gate passes
@@ -28,6 +28,10 @@
 
 ## Recently Completed
 
+- [x] implemented and Docker-verified `h001_dense_conflict_v1` manifest and dense recall gate: added `build_dense_conflict_manifest.py` and `probe_dense_conflict_recall.py`; manifest verify passed with `8` rows, `8` unique episode keys, and `0` errors; existing-artifact recall smoke `/tmp/research3-runs/h001_dense_conflict_recall_gate_existing_artifact_smoke_v1` passed primary gate with `6/6` correct candidates and recall@20 `1.0`; next step is final dense candidate generation for the frozen rows, not detector launch yet
+- [x] designed independent dense conflict validation with wrong/ambiguous positive-support candidates; added `runtime/workflow-20260521-dense-conflict.md`, updated `07_evaluation_contract.md`, `08_runtime_integration.md`, `docs/index.md`, `docs/reproducibility.md`, `summary.md`, and H001 README; fixed primary target rows as six `v3_fresh_validation_v1` rows with correct+wrong positive support and kept previous `y9hTuugGdiq/chair` dense rows as regression sanity only
+- [x] moved `/tmp/research3-data`, `/tmp/research3-models`, and `/tmp/research3-runs` into `local_dataset/{data,models,runs}`; recreated `/tmp/research3-{data,models,runs}` as compatibility symlinks; normalized local permissions; verified `du -sh`, `readlink`, `git check-ignore`, Docker `check_hm3d.py`, `/runs` mount, and `/models` mount; log `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/local-dataset-migration-20260521-053204.log`
+- [x] classified ignored local assets for Drive preservation, regeneration, and non-regenerable/risky cases; recorded regenerable dataset/checkpoint/Docker/artifact paths and commands in `docs/reproducibility.md`; current local footprint is `local_dataset/data 42G`, `local_dataset/models 5.8G`, `local_dataset/runs 3.6G`
 - [x] updated latest reproducibility state and audited `.gitignore` for cross-machine reproduction: `docs/reproducibility.md` now records source-of-truth files, local-only data/model/run/checkpoint/PDF policy, Docker image portability priority, and `git check-ignore` result; essential docs/manifests/Dockerfiles/runtime scripts/job scripts are not blocked by `.gitignore`
 - [x] analyzed terminal arbitration on dense backend detector evidence under local diagnostic scope: added `diagnose_dense_terminal_arbitration.py`; Docker compile and diagnostic run passed; output `/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1/dense_terminal_arbitration_diagnostic_v1`; commits `2/2`, selected post-hoc correct `1.0`, first external post-hoc correct `1.0`, selected-correct improvement over first `0.0`, wrong positive-support row rate `0.0`, same-goal evidence selection rate `1.0`; local promising but not wrong-goal repair utility proof
 - [x] decided not to generalize `association_depth_tolerance_m=2.0` beyond the two held-out chair rows yet: local `mask_depth_2_0` is positive, but broader 100-row association-variant evidence shows relaxed depth matching improves coverage without reliable correctness and adds new wrong-goal risk; documented decision in `07_evaluation_contract.md`, `08_runtime_integration.md`, `docs/reproducibility.md`, and `summary.md`

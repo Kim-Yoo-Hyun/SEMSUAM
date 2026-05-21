@@ -9,14 +9,16 @@
 - Date checked: 2026-05-21
 - Primary hypothesis: `H001_uncertainty-reobservation`
 - Runtime root: `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/`
-- Data root: `/tmp/research3-data`
-- Run artifact root: `/tmp/research3-runs`
-- Model root: `/tmp/research3-models`
+- Local dataset root: `local_dataset/`
+- Data root: `local_dataset/data` (`/tmp/research3-data` compatibility symlink)
+- Run artifact root: `local_dataset/runs` (`/tmp/research3-runs` compatibility symlink)
+- Model root: `local_dataset/models` (`/tmp/research3-models` compatibility symlink)
 - Logs: `logs/`
 - Host Python은 문서/사전 점검에만 사용한다. Smoke test와 논문 본문용 실험은 Docker 기반으로 실행한다.
 - 개인 credential은 repo에 저장하지 않는다.
 - 다른 컴퓨터 재현을 위한 GitHub source-of-truth는 code, Dockerfile, job script, manifest, workflow 문서, reproducibility 문서다.
-- 대용량 dataset, checkpoint, Docker image layer, `/tmp/research3-runs` artifact는 GitHub source-of-truth가 아니다. 이 문서의 다운로드/빌드/검증 명령으로 복구한다.
+- 대용량 dataset, checkpoint, Docker image layer, `local_dataset/runs` artifact는 GitHub source-of-truth가 아니다. 이 문서의 다운로드/빌드/검증 명령으로 복구한다.
+- `/tmp/research3-data`, `/tmp/research3-models`, `/tmp/research3-runs`는 기존 Docker command 호환을 위해 `local_dataset/` 아래 canonical path로 연결된 symlink다.
 
 ### 에이전트 추론
 
@@ -48,6 +50,7 @@ hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_backend_rec
 `.gitignore`가 의도적으로 막는 항목:
 
 ```text
+local_dataset/
 data/
 runs/
 models/
@@ -63,12 +66,160 @@ checkpoints/
 
 주의할 점:
 
-- 일부 `runtime/logs/*.log`는 현재 `.gitignore`에 막히지 않는다. 다만 재현 필수 정보는 log가 아니라 이 문서와 각 workflow 문서의 command/result summary에 기록한다.
+- `runtime/logs/*.log`는 로컬 실행 로그로 취급하고 `.gitignore`에서 제외한다. 재현 필수 정보는 log가 아니라 이 문서와 각 workflow 문서의 command/result summary에 기록한다.
 - 새 컴퓨터로 옮길 때는 repo 파일만으로 data/checkpoint/Docker image가 자동 포함되지 않는다. 아래 Data, Checkpoints, Docker 섹션에 따라 별도로 복구한다.
+
+## Ignored Local Asset Policy
+
+### 사실
+
+Date checked: 2026-05-21
+
+Current local footprint:
+
+```text
+local_dataset/data:   42G
+local_dataset/models: 5.8G
+local_dataset/runs:   3.6G
+```
+
+`.gitignore` intentionally excludes `local_dataset/`, data, runs, models, checkpoints, paper PDFs, large archives/arrays/model files, and credentials.
+
+Compatibility symlinks:
+
+```text
+/tmp/research3-data   -> /home/yoohyun/research3/local_dataset/data
+/tmp/research3-models -> /home/yoohyun/research3/local_dataset/models
+/tmp/research3-runs   -> /home/yoohyun/research3/local_dataset/runs
+```
+
+Local dataset migration:
+
+```text
+Date: 2026-05-21
+Working directory: /home/yoohyun/research3
+Command shape: Docker root container moved /tmp/research3-{data,models,runs} into local_dataset/{data,models,runs}, then recreated /tmp compatibility symlinks
+Log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/local-dataset-migration-20260521-053204.log
+Expected files: local_dataset/data, local_dataset/models, local_dataset/runs, /tmp/research3-data symlink, /tmp/research3-models symlink, /tmp/research3-runs symlink
+Verification: ls -ld, readlink, du -sh, git check-ignore, Docker check_hm3d.py, Docker /runs mount smoke, Docker /models mount smoke
+Status: completed
+```
+
+### Drive 보존 권장
+
+| Asset | Current path / pattern | Why preserve |
+| --- | --- | --- |
+| HM3D scene assets | `local_dataset/data/versioned_data/hm3d-0.2/hm3d` | 재다운로드 가능하지만 Matterport credential, license, 시간이 필요하고 현재 42GB로 가장 큰 필수 dataset |
+| ObjectNav HM3D v2 episodes | `local_dataset/data/datasets/objectnav/hm3d/v2` | 재다운로드 가능하지만 HM3D scene assets와 함께 보존하면 새 컴퓨터 복구가 빠름 |
+| Checkpoints / model cache | `local_dataset/models` | 재다운로드 가능하지만 exact offline detector/VLMaps 재현을 위해 보존 권장 |
+| Main Docker images | `research3/habitat-h001:20260508-calib-artifacts`, `research3/openvocab-perception:20260513-v3c-gdino-sam2`, `research3/vlmaps-hm3d:20260508-timmfix`, `research3/vlmaps-text:20260508` | Dockerfile로 재빌드 가능하지만 dependency drift와 setup 시간을 줄이기 위해 `docker save` 백업 권장 |
+| Key run evidence snapshots | `local_dataset/runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1`, `local_dataset/runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1`, `local_dataset/runs/h001_dense_backend_recall_y9h_chair_v1`, `local_dataset/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1` | 재생성 가능하지만 detector/GPU 작업과 dense `VLMaps` re-export 비용이 있으므로 현재 논문 evidence trace로 보존 권장 |
+| Paper PDFs with annotations or access constraints | `literature/**/paper.pdf`, `*.pdf` | metadata/link는 repo에 남지만, paywall/annotation이 있으면 재확보가 어려울 수 있음 |
+
+### 재생성 가능
+
+| Asset | Regeneration path |
+| --- | --- |
+| HM3D / ObjectNav HM3D v2 | `HM3D / ObjectNav Download` 섹션의 `hm3d_restore.sh`와 `check_hm3d.py` 사용 |
+| HM3D-OVON | `HM3D-OVON Download` 섹션의 `curl --continue-at -` 명령과 `check_ovon.py` 사용 |
+| `GroundingDINO + SAM2` checkpoints | `GroundingDINO + SAM2` 섹션의 `openvocab_perception_v3c_groundingdino_sam2_setup.sh` 사용 |
+| `OWL-ViT` checkpoint | `OWL-ViT` 섹션의 `openvocab_perception_owlvit_setup.sh` 사용. 현재 main path는 아니므로 낮은 우선순위 |
+| `VLMaps / LSeg` checkpoint | `VLMaps / LSeg` 섹션의 `run_vlmaps_map.py --download-checkpoint` 경로 사용 |
+| Docker images | `Docker` 섹션의 Dockerfile build 또는 setup scripts 사용. 빠른 이전은 `docker save` / `docker load` 사용 |
+| Candidate artifacts / detector artifacts / evaluation outputs | `Reproduction Commands`와 `Artifact / Evaluation Summary`의 command, job script, output path를 사용해 재실행 |
+| Logs | 재생성 가능. 논문 증거는 full log가 아니라 command, config, output path, summary JSON으로 추적한다 |
+| Paper PDFs | 가능하면 `literature/PAPER.md`와 각 paper folder metadata link에서 재다운로드. annotation이 있으면 Drive 보존 |
+
+### 재생성이 불가능하거나 위험한 것
+
+| Asset | Policy |
+| --- | --- |
+| Credential / token / secret | GitHub와 Drive 연구 백업에 넣지 않는다. Matterport, Hugging Face, 기타 provider에서 별도 관리한다 |
+| Exact historical GPU detector outputs | 재실행은 가능하지만 bitwise 동일성은 보장하지 않는다. 논문 evidence로 쓰는 핵심 output은 summary JSON과 함께 Drive snapshot 보존 권장 |
+| Manual annotation or hand-edited local-only files | 발견되면 repo 문서 또는 작은 metadata file로 승격한다. 대용량 원본은 Drive에 보존한다 |
+| Paywalled or annotated paper PDFs | metadata는 repo에 남기고 PDF/annotation은 개인 Drive에 보존한다 |
+
+### 재생성 명령 요약
+
+Dataset:
+
+```bash
+export MATTERPORT_TOKEN_ID='<token-id>'
+export MATTERPORT_TOKEN_SECRET='<token-secret>'
+
+ts=$(date +%Y%m%d-%H%M%S)
+tmux new-session -d -s "h001-hm3d-restore-${ts}" \
+  "cd /home/yoohyun/research3 && \
+   TS=${ts} \
+   DATA_ROOT=/tmp/research3-data \
+   bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/hm3d_restore.sh"
+```
+
+Models:
+
+```bash
+bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/openvocab_perception_v3c_groundingdino_sam2_setup.sh
+bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/openvocab_perception_owlvit_setup.sh
+```
+
+Main Docker images:
+
+```bash
+docker build \
+  -f hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/Dockerfile.habitat-h001 \
+  -t research3/habitat-h001:20260508-calib-artifacts \
+  hypothesis/CAND-01/H001_uncertainty-reobservation/runtime
+
+bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/openvocab_perception_v3c_groundingdino_sam2_setup.sh
+```
+
+Key dense diagnostic reruns:
+
+```bash
+bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_backend_recall_y9h_chair.sh
+
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /tmp/research3-runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.diagnose_dense_terminal_arbitration \
+    --evidence-rows /runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1/external_candidate_evidence/external_candidate_evidence_rows.jsonl \
+    --recall-rows /runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v1/verification/recall_probe/dense_backend_recall_probe_rows.jsonl \
+    --out-root /runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1/dense_terminal_arbitration_diagnostic_v1
+```
+
+### 에이전트 추론
+
+다른 컴퓨터 이전 시 최소 실전 백업은 다음 조합이다.
+
+```text
+1. GitHub repo
+2. local_dataset/data
+3. local_dataset/models
+4. docker save로 만든 main image tar.gz
+5. 핵심 local_dataset/runs evidence snapshot
+```
+
+시간이 부족하면 `1`, `2`, `3`, main Docker images만 먼저 보존한다. `local_dataset/runs` 전체는 재생성 가능하지만, 현재 novelty 판단의 근거가 되는 key snapshot은 Drive에 남기는 편이 안전하다.
 
 ## Data
 
 ### 위치
+
+Canonical host path:
+
+```text
+local_dataset/data/
+  scene_datasets/hm3d/
+  datasets/objectnav/hm3d/v2/
+  datasets/ovon/hm3d/
+```
+
+Compatibility host path:
 
 ```text
 /tmp/research3-data/
@@ -140,6 +291,18 @@ docker run --rm \
 ## Checkpoints
 
 ### 위치
+
+Canonical host path:
+
+```text
+local_dataset/models/
+  openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/
+  openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt
+  openvocab/owlvit/google_owlvit-base-patch32/
+  vlmaps/lseg/checkpoints/demo_e200.ckpt
+```
+
+Compatibility host path:
 
 ```text
 /tmp/research3-models/
@@ -528,6 +691,7 @@ result: detector substrate pass, follow-up evidence safety/full gate fail
 | Fixed dense backend terminal diagnostic contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/07_evaluation_contract.md` | scope fixed | section `Fixed Dense Backend Terminal Diagnostic Contract`; allows only local two-row chair diagnostic interpretation; blocks `first_eval`, policy-scale, and cross-scene/category `association_depth_tolerance_m=2.0` claims until evaluation-label plumbing, independent validation, simpler-alternative comparison, and safety/utility gates pass |
 | Depth2 generalization decision | `hypothesis/CAND-01/H001_uncertainty-reobservation/07_evaluation_contract.md` | do not generalize yet | local chair diagnostic supports `mask_depth_2_0`, but broader `/tmp/research3-runs/h001_first_eval_replacement_detector_v3c_association_variants_v1/summary.json` does not: `mask_depth_2p0` association `0.49`, associated-count AUC `0.520`, selected-correct delta `-0.21`, new wrong-goals `6`; `box_or_mask_depth_2p0` association `0.56`, AUC `0.549`, delta `-0.14`, new wrong-goals `4`; both detector calibration gates fail |
 | Dense terminal arbitration diagnostic | `/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1/dense_terminal_arbitration_diagnostic_v1/dense_terminal_arbitration_summary.json` | completed, local promising but not utility proof | added `diagnose_dense_terminal_arbitration.py`; Docker `py_compile` and diagnostic run passed; commits `2/2`, action recompute match `1.0`, selected post-hoc correct `1.0`, first external post-hoc correct `1.0`, selected-correct improvement over first `0.0`, wrong positive-support row rate `0.0`, same-goal evidence selection rate `1.0`; next validation should target wrong/ambiguous positive-support candidates |
+| Independent dense conflict validation manifest / recall gate | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_v1.json` | implemented, Docker verified | added `build_dense_conflict_manifest.py` and `probe_dense_conflict_recall.py`; manifest verify output `manifests/h001_dense_conflict_v1.verify.json` has `ok true`, `rows 8`, `unique_episode_keys 8`; existing-artifact recall gate smoke `/tmp/research3-runs/h001_dense_conflict_recall_gate_existing_artifact_smoke_v1` passes on primary rows with `6/6` correct candidates and recall@20 `1.0`; this is gate-code validation, not final dense backend evidence |
 
 ### 에이전트 추론
 
@@ -563,6 +727,8 @@ result: detector substrate pass, follow-up evidence safety/full gate fail
 - Follow-up evidence V4로 `selected_local_cluster_margin`을 fixed non-GT objective로 구현했다. Explicit-candidate held-out diagnostic은 full gate를 통과했지만, separate `v3_fresh_validation_v1`은 safety만 통과하고 utility는 만들지 못했다.
 - V4 request-identity bottleneck diagnostic 기준으로 first-stage selected direct commit은 wrong-goal `3/7`이라 안전하지 않다. Existing second-stage identity objective V2는 success `2/7`, wrong-goal `0/7`의 nonzero safe utility를 만든다.
 - V4 + second-stage identity V2 terminal diagnostic은 same V4 separate-split substrate에서 local integrated full gate를 통과했다. 그러나 `validation_scope v4_fixed_terminal_diagnostic`이라 `utility_proof_passed false`로 기록한다.
+- Dense terminal arbitration diagnostic은 two-row `y9hTuugGdiq/chair` local diagnostic에서 positive였지만 all positive-support candidates가 post-hoc correct라 wrong-goal repair proof가 아니다.
+- Independent dense conflict validation design은 `runtime/workflow-20260521-dense-conflict.md`에 고정했다. `manifests/h001_dense_conflict_v1.json`과 dense recall gate는 Docker 검증을 통과했다. 다음 implementation blocker는 frozen rows에 맞춘 `spatial_nms_p95_k100_d10` dense candidate artifact 생성과 final recall gate이며, detector scoring은 그 이후에만 진행한다.
 
 ### 에이전트 추론
 
@@ -573,3 +739,5 @@ Follow-up evidence V4는 이 후보를 실제 analyzer objective로 고정했고
 V4 request-identity bottleneck diagnostic 결과, 바로 가능한 안전한 utility 회복 경로는 second-stage identity objective V2를 V4 terminal decision에 통합하는 것이다. 다만 이것은 `2/7` 회복에 그치며, selected-wrong `plant` rows는 correct candidate가 follow-up set에는 있어도 strong detector/depth support를 받지 못하므로 broader retrieval 또는 candidate-viewpoint revision이 별도 필요하다. Category-level goal-region commit은 현재 GT wrong-goal label과 충돌하는 row가 있어 paper metric contract를 바꾸지 않는 한 main path로 쓰지 않는다.
 
 V4 terminal diagnostic과 semantic-neighbor detector-backed run은 이 통합 경로가 local method contract로는 안전하다는 것을 확인했다. Multiview semantic-neighbor acquisition은 correct candidate evidence를 strong으로 만들었지만, wrong selected/rival candidates도 strong이라 objective V2는 여전히 defer한다. 다음 작업은 broader retrieval보다 먼저 semantic-prior strong-tie arbitration objective를 설계하는 것이다.
+
+최신 dense path 기준으로는, 같은-goal correct cluster에서 성공한 local chair diagnostic을 확장 주장으로 쓰지 않는다. 다음 검증은 correct/wrong candidates가 동시에 positive support를 받는 independent conflict rows에서 dense backend recall, detector association, terminal arbitration을 순서대로 분리해 확인하는 것이다.

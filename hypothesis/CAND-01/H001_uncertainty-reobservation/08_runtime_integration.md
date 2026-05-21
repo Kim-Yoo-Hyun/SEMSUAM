@@ -10258,6 +10258,84 @@ Do not generalize association_depth_tolerance_m=2.0 beyond these two chair rows 
 The terminal arbitration diagnostic is locally promising but not a utility proof: the selected candidate and first external candidate are both post-hoc correct, and all positive-support candidates are correct. The next validation should look for independent dense rows where wrong candidates also receive positive support.
 ```
 
+Independent dense conflict validation design:
+
+```text
+date_checked: 2026-05-21
+workflow: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260521-dense-conflict.md
+contract: hypothesis/CAND-01/H001_uncertainty-reobservation/07_evaluation_contract.md#independent-dense-conflict-validation-contract
+planned_output: /tmp/research3-runs/h001_dense_conflict_validation_v1
+status: manifest and recall gate implemented; dense backend artifact not yet generated for final validation
+```
+
+Implementation status:
+
+```text
+manifest_builder: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/build_dense_conflict_manifest.py
+recall_gate: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/probe_dense_conflict_recall.py
+manifest: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_v1.json
+manifest_verify: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_v1.verify.json
+manifest_verify_ok: true
+manifest_rows: 8
+existing_artifact_recall_smoke: /tmp/research3-runs/h001_dense_conflict_recall_gate_existing_artifact_smoke_v1
+existing_artifact_recall_smoke_result: primary 6/6 with correct candidate, recall@20 1.0, gate pass
+```
+
+Target row sources:
+
+```text
+primary_independent_source:
+  /tmp/research3-runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_evidence/external_candidate_second_stage_identity_evidence_rows.jsonl
+primary_rows: 6
+primary_scenes: DYehNKdT76V, HY1NcmCgn3n, 7MXmsvcQjpJ
+primary_queries: chair, plant
+primary_correct_and_wrong_positive_support: 6 / 6
+primary_selected_wrong_positive_support: 3 / 6
+
+secondary_stress_source:
+  /tmp/research3-runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_evidence_v4/external_candidate_second_stage_identity_evidence_rows.jsonl
+secondary_rows: 2
+secondary_scene: y9hTuugGdiq
+secondary_query: sofa
+secondary_correct_and_wrong_positive_support: 2 / 2
+```
+
+Implementation sequence:
+
+```text
+1. create manifests/h001_dense_conflict_v1.json from the frozen row list [done]
+2. verify manifest with Docker split_manifest verify [done]
+3. implement and smoke-test dense recall gate on existing artifact [done]
+4. generate dense non-GT candidate pools with spatial_nms_p95_k100_d10 first
+5. run final dense recall gate before any detector job
+6. run GroundingDINO + SAM2 only if final recall gate passes
+7. evaluate strict 1.0m, depth2, no-depth mask, and grounded-position association variants
+8. attach GT labels only in evaluation_labels.jsonl after action selection
+9. compare defer_only, first_external, score_only_best, strict_depth_terminal, depth2_terminal, grounded_position_terminal, and proposed_conflict_arbitration
+```
+
+Promotion gate:
+
+```text
+primary_rows >= 6
+primary_correct_recall >= 4 / 6
+recall@20 >= 0.50
+detector_box_rate >= 0.80
+sam2_mask_rate >= 0.80
+candidate_association_rate >= 0.30
+correct_and_wrong_positive_support_rows >= 3
+wrong_goal_commit_rate == 0.0
+no_valid_commit_rate == 0.0
+success_commit_rows >= 2 / 6
+selected_correct_improvement_over_first >= 2 rows
+```
+
+Agent inference:
+
+```text
+This is the next implementation gate because it tests whether dense active-observation evidence can arbitrate conflicts when wrong candidates also receive positive support. It prevents the method from being promoted on same-goal correct-cluster rows or on detector-score-only evidence.
+```
+
 ## User Decision Needed
 
 - Whether `habitat-h001` should use a minimal Habitat runtime first or reuse an existing baseline repository.

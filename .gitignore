@@ -34,6 +34,7 @@ env/
 *.netrc
 
 # Research data / generated artifacts
+local_dataset/
 data/
 datasets/
 runs/
@@ -70,3 +71,4 @@ literature/**/paper.pdf
 hypothesis/**/runtime/.cache/
 hypothesis/**/runtime/runs/
 hypothesis/**/runtime/data/
+hypothesis/**/runtime/logs/*.log

@@ -30,23 +30,29 @@ Active diagnostic. H001 remains a hypothesis, not a paper-ready claim.
 - Runtime integration, candidate backend, artifact generation, calibration commands: `08_runtime_integration.md`
 - 6-12 month schedule: `15_schedule.md`
 - Reproducibility entrypoint: `../../../docs/reproducibility.md`
-- Current next implementation target: prepare full follow-up detector/evidence validation job for `ExternalCandidateFollowupObservation`
+- Dense conflict validation workflow: `runtime/workflow-20260521-dense-conflict.md`
+- Current next implementation target: generate the frozen-row dense conflict candidate artifact with `spatial_nms_p95_k100_d10` and run the final recall gate before any detector job
 
 ## Latest Gate
 
 ### 사실
 
-- Date checked: 2026-05-18
+- Date checked: 2026-05-21
 - `risk_validation_v1` and `v3_fresh_validation_v1` candidate coverage gates pass with non-GT `artifact_jsonl` candidates.
 - V4 external evidence on `risk_validation_v1` passes the current external evidence gate with `commit_rate 0.20`, `success_commit_rate 0.20`, and wrong-goal commit `0.00`.
 - V4 routes unresolved semantic uncertainty into `request_identity_confirmation` and `request_expanded_retrieval`.
 - `ExternalCandidateFollowupObservation` planner produced `28` `risk_validation_v1` follow-up rows with `0` skipped rows.
 - Follow-up detector smoke passed on `4` rows with detector box rate `1.00`, SAM2 mask rate `1.00`, and candidate association rate `0.75`.
 - Follow-up evidence analyzer smoke passed safety with wrong-goal/no-valid commit rates `0.00`, but full gate failed because strong depth-associated follow-up evidence rate was `0.00`.
+- Fixed dense backend terminal diagnostic is locally positive on two `y9hTuugGdiq/chair` rows, but it is not wrong-goal repair proof because all positive-support dense candidates are post-hoc correct.
+- Independent dense conflict validation is designed in `runtime/workflow-20260521-dense-conflict.md`.
+- Primary target rows are six scene/category rows from `v3_fresh_validation_v1` with correct and wrong positive-support candidates on all rows; secondary repeated-object stress rows are two `y9hTuugGdiq/sofa` rows.
+- `h001_dense_conflict_v1` manifest verify passed with `8` rows and no duplicate episode keys.
+- Existing-artifact recall gate smoke passed on primary rows with `6/6` correct candidates and recall@20 `1.0`; this is gate validation only, not final dense backend evidence.
 
 ### 에이전트 추론
 
-The current method shape is more contribution-aligned than detector-based re-ranking because semantic uncertainty is being converted into an active observation request. It is still not paper-ready; the next gate is a full follow-up detector/evidence validation job before any `first_eval` replacement rerun or policy-scale comparison.
+The current method shape is more contribution-aligned than detector-based re-ranking because semantic uncertainty is being converted into an active observation request. It is still not paper-ready. The next gate is final dense candidate generation plus recall validation for the frozen conflict rows, followed only then by detector/association/terminal arbitration. This must pass before any `first_eval` replacement rerun or policy-scale comparison.
 
 ## Pre-Schedule Verification Check
 

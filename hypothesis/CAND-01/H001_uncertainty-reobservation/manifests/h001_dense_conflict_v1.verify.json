@@ -1,0 +1,14 @@
+{
+  "duplicate_episode_keys": [],
+  "errors": [],
+  "manifest_schema_version": "h001.split_manifest.v1",
+  "ok": true,
+  "rows": 8,
+  "scene_assets_checked": 4,
+  "sim_scene_checks": [],
+  "source_files_loaded": 4,
+  "split_counts": {
+    "dense_conflict_v1": 8
+  },
+  "unique_episode_keys": 8
+}
