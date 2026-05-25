@@ -1,0 +1,36 @@
+{
+  "schema_version": "h001.terminal_guard_config.v1",
+  "date_frozen": "2026-05-24",
+  "guard_name": "strict_depth_consistency_v1",
+  "applies_to": "dense_conflict_generalization_v1",
+  "source_design_summary": "local_dataset/runs/h001_dense_conflict_generalization_terminal_guard_design_v1/terminal_guard_design_summary.json",
+  "params": {
+    "max_depth_error_m": 0.33,
+    "max_semantic_rank": 5,
+    "min_all_positive_support_margin": 0.0,
+    "min_associated_heading_count": 2,
+    "min_box_hit_count": 0,
+    "min_mask_hit_count": 2,
+    "min_support_score": 0.0,
+    "min_visible_count": 0
+  },
+  "action_inputs_allowed": [
+    "candidate_id",
+    "semantic_rank",
+    "semantic_score",
+    "associated_heading_count",
+    "box_hit_count",
+    "mask_hit_count",
+    "visible_count",
+    "detector_score_max",
+    "min_depth_error_m",
+    "positive_support",
+    "support_score"
+  ],
+  "evaluation_labels_allowed_for_action": false,
+  "notes": [
+    "This config freezes the same-split guard design before terminal validation.",
+    "Evaluation labels must be joined only after action decisions are written.",
+    "This config is not a paper-facing method claim."
+  ]
+}

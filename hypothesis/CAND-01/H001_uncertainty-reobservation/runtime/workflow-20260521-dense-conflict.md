@@ -99,7 +99,10 @@ Implemented files:
 ```text
 runtime/h001_runtime/build_dense_conflict_manifest.py
 runtime/h001_runtime/probe_dense_conflict_recall.py
+runtime/h001_runtime/analyze_dense_conflict_validation.py
+runtime/h001_runtime/design_dense_conflict_generalization.py
 runtime/jobs/dense_conflict_candidate_artifact.sh
+runtime/jobs/dense_conflict_validation_from_source.sh
 manifests/h001_dense_conflict_v1.json
 manifests/h001_dense_conflict_v1.verify.json
 manifests/dense_conflict_v1_scenes.txt
@@ -157,13 +160,16 @@ failed_stage: candidate_artifact_generation
 Host GPU blocker:
 
 ```text
+status: resolved_on_2026-05-23
 nvidia-smi: Failed to initialize NVML: Driver/library version mismatch
 kernel_module: 580.126.09
 user_space_library: 580.159.03
 docker_gpu_error: failed to fulfil mount request: open /run/nvidia-persistenced/socket: no such file or directory
+recovered_driver: 580.159.03
+docker_gpu_smoke: passed with research3/habitat-h001:20260508-calib-artifacts
 ```
 
-Resume command after host NVIDIA runtime is fixed:
+Resume attempt after host NVIDIA runtime was fixed:
 
 ```bash
 ts=$(date +%Y%m%d-%H%M%S)
@@ -171,17 +177,534 @@ tmux new-session -d -s "h001-dense-conflict-artifact-${ts}" \
   "cd /home/yoohyun/research3 && TS=${ts} bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_conflict_candidate_artifact.sh"
 ```
 
-Completion check:
+This attempt failed on 2026-05-23 because `/tmp/research3-data` had become a stale empty directory rather than the expected compatibility symlink.
 
-```bash
-cat /tmp/research3-runs/h001_dense_conflict_artifacts_spatial_nms_p95_k100_d10_v1/pipeline_status.json
-cat /tmp/research3-runs/h001_dense_conflict_artifacts_spatial_nms_p95_k100_d10_v1/coverage_check.json
-cat /tmp/research3-runs/h001_dense_conflict_recall_gate_spatial_nms_p95_k100_d10_v1/dense_conflict_recall_summary.json
+Canonical relaunch:
+
+```text
+tmux_session: h001-dense-conflict-artifact-canonical-20260523-140845
+status: completed_but_recall_gate_failed
+working_directory: /home/yoohyun/research3
+command: TS=20260523-140845 DATA_ROOT=/home/yoohyun/research3/local_dataset/data RUNS_ROOT=/home/yoohyun/research3/local_dataset/runs MODEL_ROOT=/home/yoohyun/research3/local_dataset/models bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_conflict_candidate_artifact.sh
+log: runtime/logs/dense-conflict-artifact-p95-k100-d10-20260523-140845.log
+artifact_out: local_dataset/runs/h001_dense_conflict_artifacts_spatial_nms_p95_k100_d10_v1
+recall_out: local_dataset/runs/h001_dense_conflict_recall_gate_spatial_nms_p95_k100_d10_v1
+```
+
+Final recall result:
+
+```text
+status: completed_but_recall_gate_failed
+artifact: spatial_nms_p95_k100_d10
+rows: 8
+primary_rows: 6
+primary_rows_with_correct: 3 / 6
+primary_recall_at_20: 0.5
+required_primary_rows_with_correct: 4 / 6
+detector_job_allowed: false
+next_step: revise dense candidate generation before detector scoring
+```
+
+Revised dense candidate generation:
+
+```text
+tmux_session: h001-dense-conflict-artifact-p90-k200-d5-20260523-150036
+status: completed_but_recall_gate_failed
+artifact: spatial_nms_p90_k200_d5
+command: TOP_PERCENTILE=90.0 MAX_CANDIDATES=200 SPATIAL_NMS_MIN_DISTANCE_CELLS=5.0 with canonical DATA_ROOT/RUNS_ROOT/MODEL_ROOT
+artifact_out: local_dataset/runs/h001_dense_conflict_artifacts_spatial_nms_p90_k200_d5_v1
+recall_out: local_dataset/runs/h001_dense_conflict_recall_gate_spatial_nms_p90_k200_d5_v1
+reason: p95_k100_d10 missed all three primary 7MXmsvcQjpJ/plant selected-wrong rows
+```
+
+Final recall result:
+
+```text
+artifact_generation_status: completed
+rows: 24
+candidate_count: 4800
+finite_position_candidates: 4241
+primary_rows: 6
+primary_rows_with_correct: 3 / 6
+primary_recall_at_20: 0.5
+required_primary_rows_with_correct: 4 / 6
+detector_job_allowed: false
 ```
 
 ### 에이전트 추론
 
-The current blocker is host environment, not dense-conflict harness logic. Do not launch detector/association validation until the dense artifact job completes and `dense_conflict_recall_summary.json` passes the primary recall gate.
+The host GPU blocker is resolved. The p95 and p90 dense re-export substrates both miss the same three `7MXmsvcQjpJ/plant` selected-wrong primary rows, so detector/association validation remains blocked for those re-export substrates. The existing selected `v3_fresh_spatial_p97_k20` substrate is a separate path: it passed the final primary recall gate and can be used for detector/association validation if the scope is explicitly limited to that selected artifact.
+
+### Selected Artifact Detector/Association Validation
+
+```text
+recall_output: local_dataset/runs/h001_dense_conflict_recall_gate_v3_fresh_spatial_p97_k20_primary_final_v1
+validation_output: local_dataset/runs/h001_dense_conflict_validation_v3_fresh_spatial_p97_k20_primary_v1
+source_detector_evidence: local_dataset/runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_evidence
+script: runtime/h001_runtime/analyze_dense_conflict_validation.py
+wrapper: runtime/jobs/dense_conflict_validation_from_source.sh
+```
+
+Result:
+
+```text
+primary_rows: 6
+recall_rows_with_correct: 6 / 6
+recall_at_20: 1.0
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.8
+rows_with_correct_and_wrong_positive_support: 6 / 6
+commit / success / wrong / no_valid: 5 / 5 / 0 / 0
+selected_correct_improvement_over_source_selected_rows: 3
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+passes_dense_conflict_validation_gate: true
+```
+
+This unblocks detector/association validation for the selected `v3_fresh_spatial_p97_k20` primary diagnostic only. It does not unblock the failed p95/p90 dense re-export substrates and it is not yet a full policy-scale claim.
+
+### Secondary Stress Validation
+
+```text
+recall_output: local_dataset/runs/h001_dense_conflict_recall_gate_first_eval_replacement_spatial_p97_k20_secondary_v1
+validation_output: local_dataset/runs/h001_dense_conflict_validation_first_eval_replacement_spatial_p97_k20_secondary_v1
+source_detector_evidence: local_dataset/runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_evidence_v4
+source_detector_summary: local_dataset/runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_detector/summary.json
+```
+
+Result:
+
+```text
+secondary_rows: 2
+recall_rows_with_correct: 2 / 2
+recall_at_20: 1.0
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 1.0
+rows_with_correct_and_wrong_positive_support: 2 / 2
+commit / success / wrong / no_valid: 2 / 2 / 0 / 0
+selected_correct_improvement_over_source_selected_rows: 2
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+passes_dense_conflict_validation_gate: true
+```
+
+The secondary result is still stress-test evidence, not generalization evidence, because it contains only two repeated-object `sofa` rows from one scene. The next step should design a broader split rather than tune thresholds on these rows.
+
+### Broader Generalization Split Design
+
+Design output:
+
+```text
+local_dataset/runs/h001_dense_conflict_generalization_design_v1/dense_conflict_generalization_design_summary.json
+```
+
+Current evidence summary:
+
+```text
+sources: v3_fresh_primary, first_eval_heldout_secondary, risk_validation_identity_smoke
+rows: 10
+scenes: 5
+queries: 3
+rows_with_correct_and_wrong_positive_support: 8
+source_selected_wrong_rows: 5
+success_commit_rows: 7
+wrong_goal_commit_rows: 0
+uses_gt_for_action: false
+```
+
+Selected next path:
+
+```text
+selected_next: scene_disjoint_first_eval_style
+minimum_rows: 20
+minimum_scenes: 5
+minimum_queries: 3
+minimum_selected_wrong_rows: 6
+minimum_rows_with_correct_and_wrong_positive_support: 12
+```
+
+Rationale:
+
+- `scene_disjoint_first_eval_style` keeps the same HM3D ObjectNav task family and existing wrong-goal / wasted-path evaluation connection.
+- Additional repeated-object rows should be included as a stress slice, not used as the main promotion gate.
+- HM3D-OVON should be deferred until ObjectNav dense-conflict generalization is stable because it adds language/open-vocabulary confounds.
+
+### Frozen Generalization Manifest And Recall Gate
+
+Generalization manifest:
+
+```text
+script: runtime/h001_runtime/build_dense_conflict_generalization_manifest.py
+manifest: manifests/h001_dense_conflict_generalization_v1.json
+verify: manifests/h001_dense_conflict_generalization_v1.verify.json
+source_manifest: manifests/h001_first_eval_replacement_v1.json
+source_coverage_decisions: local_dataset/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl
+source_candidate_artifact: local_dataset/runs/h001_first_eval_replacement_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl
+excluded_scene_keys: y9hTuugGdiq
+status: frozen_pending_recall_gate
+```
+
+Manifest facts:
+
+```text
+rows: 20
+scenes: 9
+queries: 6
+rows_with_correct_and_wrong_candidates: 20 / 20
+source_selected_wrong_rows: 16
+NoReobserve wrong-goal rows with correct present: 16
+max_rows_per_scene: 3
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Recall gate:
+
+```text
+output: local_dataset/runs/h001_dense_conflict_recall_gate_generalization_v1
+artifact: first_eval_replacement_spatial_nms_p97_k20
+primary_rows: 20
+primary_rows_with_correct: 20 / 20
+recall_at_20: 1.0
+recall_at_5: 0.85
+first_correct_rank_min: 1
+first_correct_rank_max: 9
+passes_dense_recall_gate: true
+detector_job_allowed: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Detector substrate job:
+
+```text
+wrapper: runtime/jobs/dense_conflict_generalization_detector_substrate.sh
+tmux_session: h001-dense-conflict-generalization-detector-20260523-170533
+output: local_dataset/runs/h001_dense_conflict_generalization_detector_substrate_v1
+log: runtime/logs/dense-conflict-generalization-detector-substrate-20260523-170533.log
+status: completed
+summary: local_dataset/runs/h001_dense_conflict_generalization_detector_substrate_v1/generalization_detector_substrate_summary.json
+frame_rows: 20
+rendered_heading_count: 125
+detector_rows: 20
+detector_box_rate: 0.85
+sam2_mask_rate: 0.85
+candidate_association_rate: 0.35
+associated_rows: 7
+passes_detector_substrate_gate: true
+uses_gt_for_action: false
+```
+
+### 에이전트 추론
+
+The generalization split is now frozen, its non-GT candidate recall substrate passes, and detector substrate passes under the fixed detector/mask/association thresholds. This still does not prove terminal arbitration utility because only `7/20` rows have candidate association and the next step must keep GT correctness labels evaluation-only.
+
+### Terminal Evidence Extraction Design
+
+Evidence extraction output:
+
+```text
+script: runtime/h001_runtime/extract_dense_conflict_generalization_evidence.py
+output: local_dataset/runs/h001_dense_conflict_generalization_terminal_evidence_v1
+action_evidence: action_evidence_rows.jsonl
+evaluation_labels: evaluation_labels.jsonl
+policy_diagnostics: terminal_policy_diagnostic_rows.jsonl
+summary: terminal_arbitration_design_summary.json
+```
+
+Facts:
+
+```text
+action_evidence_rows: 20
+evaluation_label_rows: 55
+associated_rows: 7
+unassociated_rows: 13
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+terminal_validation_ready: true
+terminal_utility_claim_allowed: false
+```
+
+Policy diagnostic:
+
+| Variant | Commits | Success commits | Wrong-goal commits | Interpretation |
+| --- | ---: | ---: | ---: | --- |
+| `defer_only` | 0 / 20 | 0 | 0 | safe lower bound, no utility |
+| `semantic_top_if_supported` | 7 / 20 | 1 | 6 | unsafe semantic-top baseline |
+| `first_associated` | 7 / 20 | 1 | 6 | unsafe association-order baseline |
+| `support_score_best` | 7 / 20 | 3 | 4 | detector support helps but remains unsafe |
+| `proposed_conservative_v0` | 7 / 20 | 3 | 4 | not promotable |
+
+V0 wrong commit rows:
+
+```text
+HM3D ObjectNav v2:val:5cdEh9F2hJL:14:2:toilet
+HM3D ObjectNav v2:val:mL8ThkuaVTM:2:4:bed
+HM3D ObjectNav v2:val:mL8ThkuaVTM:18:0:bed
+HM3D ObjectNav v2:val:CrMo8WxCyVb:1:2:toilet
+```
+
+### 에이전트 추론
+
+The extraction path is now clean enough for a validation script because action-time evidence and evaluation labels are separated. The current terminal rule is not clean enough for a method claim: support-score selection still commits wrong candidates on `4/7` associated rows. The next implementation should design a stricter arbitration guard from these failure rows before running a validation gate.
+
+### Terminal Guard Design
+
+Guard design output:
+
+```text
+script: runtime/h001_runtime/design_dense_conflict_terminal_guard.py
+output: local_dataset/runs/h001_dense_conflict_generalization_terminal_guard_design_v1
+summary: terminal_guard_design_summary.json
+fixed_guard_rows: terminal_guard_diagnostic_rows.jsonl
+sweep_rows: terminal_guard_sweep_rows.jsonl
+```
+
+Selected guard:
+
+```text
+guard_name: strict_depth_consistency_v1
+max_depth_error_m: 0.33
+min_associated_heading_count: 2
+min_mask_hit_count: 2
+max_semantic_rank: 5
+uses_gt_for_action: false
+```
+
+Diagnostic result:
+
+| Variant | Commits | Success commits | Wrong-goal commits | Status |
+| --- | ---: | ---: | ---: | --- |
+| `strict_depth_consistency_v1` | 3 / 20 | 3 | 0 | fixed-rule validation candidate |
+| `rank1_depth_consistency_v1` | 1 / 20 | 1 | 0 | too conservative |
+| `support_only_conservative_depth_v1` | 4 / 20 | 3 | 1 | unsafe |
+
+### 사실
+
+`strict_depth_consistency_v1` blocks the four v0 wrong-commit rows and keeps nonzero success commits on the same diagnostic split. The selected commits are two `CrMo8WxCyVb/bed` rows and one `svBbv1Pavdk/plant` row.
+
+### 에이전트 추론
+
+Support score and support margin are insufficient because high-support candidates can still be wrong. Depth-consistent detector association is the safer next action guard, but this is same-split design evidence. It must be frozen before any validation run and cannot be described as a paper-facing method result yet.
+
+### Fixed Rule Terminal Validation
+
+Frozen guard config:
+
+```text
+config: manifests/h001_dense_conflict_terminal_guard_v1.json
+guard_name: strict_depth_consistency_v1
+date_frozen: 2026-05-24
+```
+
+Validation output:
+
+```text
+script: runtime/h001_runtime/validate_dense_conflict_terminal_arbitration.py
+output: local_dataset/runs/h001_dense_conflict_generalization_terminal_validation_v1
+summary: terminal_validation_summary.json
+decision_rows: terminal_validation_decision_rows.jsonl
+evaluated_rows: terminal_validation_evaluated_rows.jsonl
+```
+
+Validation result:
+
+```text
+action_evidence_forbidden_key_count: 0
+stable_metric_match_design: true
+local_fixed_rule_validation_passed: true
+rows: 20
+associated_rows: 7
+commit/success/wrong: 3 / 3 / 0
+associated_commit/success/wrong: 3 / 3 / 0
+uses_gt_for_action: false
+paper_claim_status: same_split_fixed_rule_validation_not_method_claim
+```
+
+### 에이전트 추론
+
+The frozen guard reproduced the design metrics with decision rows written before evaluation labels were joined. This is a useful harness milestone, but it remains same-split validation. The next research step should define an independent terminal validation split or source artifact before any policy-scale claim.
+
+### Independent Terminal Validation Contract
+
+Contract:
+
+```text
+contract: manifests/h001_dense_conflict_terminal_independent_v1.json
+guard_config: manifests/h001_dense_conflict_terminal_guard_v1.json
+primary_source: dense_conflict_v1_v3_fresh_primary
+secondary_stress_source: dense_conflict_v1_first_eval_replacement_sofa_stress
+paper_claim_status: validation_contract_only_not_method_claim
+```
+
+Primary evidence profile:
+
+```text
+output: local_dataset/runs/h001_dense_conflict_independent_terminal_evidence_profile_v1
+rows: 6
+associated_rows: 6
+unassociated_rows: 0
+scenes: 7MXmsvcQjpJ, DYehNKdT76V, HY1NcmCgn3n
+queries: chair, plant
+action_evidence_forbidden_key_count: 0
+naive_support_score_best_success_wrong: 2 / 4
+```
+
+Secondary stress profile:
+
+```text
+output: local_dataset/runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1
+rows: 2
+associated_rows: 2
+unassociated_rows: 0
+scene: y9hTuugGdiq
+query: sofa
+action_evidence_forbidden_key_count: 0
+naive_support_score_best_success_wrong: 0 / 2
+```
+
+Predeclared validation gate:
+
+```text
+primary_wrong_goal_commit_rows: 0
+primary_no_label_commit_rows: 0
+primary_success_commit_rows_minimum: 1
+primary_commit_rows_minimum: 1
+secondary_stress_wrong_goal_commit_rows: 0
+report_associated_and_unassociated_rows_separately: true
+paper_claim_allowed_after_pass: false
+```
+
+Failure taxonomy:
+
+| Failure code | Interpretation |
+| --- | --- |
+| `guard_wrong_commit_depth_consistent_wrong_instance` | wrong candidate satisfies strict depth, association-count, and mask-count constraints |
+| `guard_over_defer_no_success` | guard is safe but inert on fully associated primary rows |
+| `correct_candidate_blocked_by_association` | correct candidate is present but blocked by association, mask, or depth constraints |
+| `association_coverage_failure` | detector/association substrate fails before terminal arbitration |
+| `evaluation_label_plumbing_failure` | committed candidate has no evaluation label |
+| `source_independence_violation` | validation rows overlap with design scenes or source split |
+| `stress_slice_wrong_commit` | repeated-object stress rows produce wrong commits |
+
+### 에이전트 추론
+
+The `v3_fresh_validation_v1` primary source is the smallest currently available independent source because it is scene-disjoint from `dense_conflict_generalization_v1`, uses a different source split, and already has `6/6` associated action-evidence rows. The two `sofa` rows should be reported as a repeated-object stress slice, not as the primary promotion gate.
+
+### Independent Terminal Validation Result
+
+Runner update:
+
+```text
+script: runtime/h001_runtime/validate_dense_conflict_terminal_arbitration.py
+change: add metric_gate_mode=none and contract-style gates for independent validation
+guard threshold change: none
+```
+
+Primary validation:
+
+```text
+output: local_dataset/runs/h001_dense_conflict_independent_terminal_validation_v1
+validation_scope: dense_conflict_independent_v1_primary
+rows: 6
+associated_rows: 6
+commit/success/wrong: 6 / 2 / 4
+no_label_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+terminal_validation_gate_passed: false
+failure_taxonomy: guard_wrong_commit_depth_consistent_wrong_instance = 4
+uses_gt_for_action: false
+```
+
+Secondary stress validation:
+
+```text
+output: local_dataset/runs/h001_dense_conflict_secondary_terminal_validation_v1
+validation_scope: dense_conflict_independent_v1_secondary_stress
+rows: 2
+associated_rows: 2
+commit/success/wrong: 2 / 0 / 2
+no_label_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+terminal_validation_gate_passed: false
+failure_taxonomy: stress_slice_wrong_commit = 2
+uses_gt_for_action: false
+```
+
+Wrong-commit pattern:
+
+```text
+DYehNKdT76V / chair: selected rank 2, depth error 0.006m, support 0.932
+7MXmsvcQjpJ / plant: selected rank 1, depth error 0.102m, support 0.915, repeated across 3 rows
+y9hTuugGdiq / sofa: selected rank 3, depth error 0.119m, support 0.922, repeated across 2 stress rows
+```
+
+### 에이전트 추론
+
+`strict_depth_consistency_v1` is rejected as an independent terminal arbitration rule. The negative result is useful because the action/evaluation separation held (`forbidden_key_count = 0`), so the failure is not label leakage; it is a mechanism failure where wrong instances can be depth-consistent, detector-associated, and high-support. The next revision should not be a threshold tweak on this validation split. It should diagnose why wrong object instances receive stronger action-time evidence and derive a more general arbitration principle, such as instance identity separation, local rival comparison, or observation utility that requests additional views instead of committing.
+
+### Failure Diagnosis and Revision Contract
+
+Diagnostic output:
+
+```text
+script: runtime/h001_runtime/diagnose_dense_conflict_terminal_failures.py
+output: local_dataset/runs/h001_dense_conflict_terminal_failure_diagnostic_v1
+rows: terminal_failure_diagnostic_rows.jsonl
+summary: terminal_failure_diagnostic_summary.json
+revision_contract: mechanism_revision_contract.json
+```
+
+Failure mechanism summary:
+
+```text
+rows: 8
+wrong_goal_commit_rows: 6
+success_commit_rows: 2
+wrong_primary_mechanism_counts:
+  repeated_wrong_instance_selected_by_saturated_support: 5
+  guard_cannot_arbitrate_between_eligible_correct_and_wrong: 1
+wrong_mechanism_tag_counts:
+  correct_candidate_present: 6
+  correct_candidate_positive_support_present: 6
+  wrong_candidate_passes_frozen_guard: 6
+  wrong_support_score_ge_correct: 6
+  support_score_saturated: 6
+  detector_score_tie_or_wrong_advantage: 6
+  wrong_semantic_rank_as_good_or_better: 6
+  same_wrong_candidate_repeated_across_episodes: 5
+```
+
+Revision contract:
+
+```text
+revision_name: rival_identity_confirmation_v1
+status: design_contract_not_implemented
+rejected_rule: strict_depth_consistency_v1
+failure_mechanism: depth-consistent detector support is not instance-discriminative
+principle: treat dense same-category positive support as identity ambiguity
+```
+
+Proposed actions:
+
+- `commit_candidate` only for unique multi-axis support.
+- `request_rival_identity_confirmation` when multiple same-category candidates pass guard.
+- `defer_or_expand_retrieval` when correct evidence is blocked by association.
+
+Simpler alternatives to ablate:
+
+| Alternative | Expected failure |
+| --- | --- |
+| `support_margin_only` | fails when wrong and correct support scores are saturated or tied |
+| `depth_margin_only` | fails when wrong instance is also depth-consistent or depth-better |
+| `semantic_top_only` | fails when semantic rank points to a wrong instance |
+| `defer_all_ambiguous` | safe but inert, loses successful terminal commits |
+
+### 에이전트 추론
+
+The next method should be derived from rival identity ambiguity, not from another threshold sweep on this failed split. The implementation target is a diagnostic `rival_identity_confirmation_v1` policy that converts saturated same-category evidence into an active observation request, then tests whether the request is explanatory and whether any commit remains safe. Any paper-facing claim still requires a fresh or predeclared validation split.
 
 ### Step 1: Freeze Row Manifest
 
@@ -358,10 +881,10 @@ per-category failure table recorded
 
 ## Output Contract
 
-Planned output root:
+Current selected-artifact output root:
 
 ```text
-/tmp/research3-runs/h001_dense_conflict_validation_v1
+local_dataset/runs/h001_dense_conflict_validation_v3_fresh_spatial_p97_k20_primary_v1
 ```
 
 Expected files:

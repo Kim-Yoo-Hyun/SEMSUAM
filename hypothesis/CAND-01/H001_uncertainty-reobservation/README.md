@@ -32,13 +32,13 @@ Active diagnostic. H001 remains a hypothesis, not a paper-ready claim.
 - Reproducibility entrypoint: `../../../docs/reproducibility.md`
 - Dense conflict validation workflow: `runtime/workflow-20260521-dense-conflict.md`
 - Cross-machine backup/restore: `../../../docs/reproducibility.md#google-drive-backup-manifest`
-- Current next implementation target: restore host NVIDIA runtime, then resume the frozen-row dense conflict candidate artifact job with `spatial_nms_p95_k100_d10`
+- Current next implementation target: diagnose independent terminal validation failures and define a mechanism-level arbitration revision without threshold tuning on the failed split
 
 ## Latest Gate
 
 ### 사실
 
-- Date checked: 2026-05-22
+- Date checked: 2026-05-25
 - `risk_validation_v1` and `v3_fresh_validation_v1` candidate coverage gates pass with non-GT `artifact_jsonl` candidates.
 - V4 external evidence on `risk_validation_v1` passes the current external evidence gate with `commit_rate 0.20`, `success_commit_rate 0.20`, and wrong-goal commit `0.00`.
 - V4 routes unresolved semantic uncertainty into `request_identity_confirmation` and `request_expanded_retrieval`.
@@ -49,14 +49,29 @@ Active diagnostic. H001 remains a hypothesis, not a paper-ready claim.
 - Independent dense conflict validation is designed in `runtime/workflow-20260521-dense-conflict.md`.
 - Primary target rows are six scene/category rows from `v3_fresh_validation_v1` with correct and wrong positive-support candidates on all rows; secondary repeated-object stress rows are two `y9hTuugGdiq/sofa` rows.
 - `h001_dense_conflict_v1` manifest verify passed with `8` rows and no duplicate episode keys.
-- Existing-artifact recall gate smoke passed on primary rows with `6/6` correct candidates and recall@20 `1.0`; this is gate validation only, not final dense backend evidence.
+- Final canonical recall gate for the existing `v3_fresh_spatial_p97_k20` primary substrate passed with `6/6` rows containing a correct candidate and recall@20 `1.0`.
 - Frozen-row dense artifact job wrapper exists, but first launch failed before scene export because host NVIDIA runtime reports driver/library mismatch.
+- Host/Docker NVIDIA runtime recovered on 2026-05-23. A default `/tmp` resume attempt failed because `/tmp/research3-data` was a stale empty directory.
+- Canonical-path relaunch `h001-dense-conflict-artifact-canonical-20260523-140845` completed, but final recall gate failed: primary rows with correct candidate `3/6`, recall@20 `0.5`, required rows with correct `4/6`.
+- Revised dense candidate generation `h001-dense-conflict-artifact-p90-k200-d5-20260523-150036` completed with `24` rows and `4800` candidates, but final recall gate also failed: primary rows with correct candidate `3/6`, recall@20 `0.5`, required rows with correct `4/6`.
+- Dense conflict detector/association validation was materialized from the existing `v3_fresh` second-stage evidence at `local_dataset/runs/h001_dense_conflict_validation_v3_fresh_spatial_p97_k20_primary_v1`. The primary diagnostic passes with detector box `1.0`, SAM2 mask `1.0`, candidate association `0.8`, rows with correct+wrong positive support `6/6`, commit/success/wrong/no-valid `5/5/0/0`, selected-correct improvement over source-selected `3`, and `uses_gt_for_action false`.
+- Secondary-stress held-out `sofa` validation was materialized at `local_dataset/runs/h001_dense_conflict_validation_first_eval_replacement_spatial_p97_k20_secondary_v1`. It passes with recall rows with correct `2/2`, recall@20 `1.0`, detector box/SAM2/candidate association `1.0/1.0/1.0`, commit/success/wrong/no-valid `2/2/0/0`, selected-correct improvement over source-selected `2`, and `uses_gt_for_action false`.
+- Broader split design was materialized at `local_dataset/runs/h001_dense_conflict_generalization_design_v1/dense_conflict_generalization_design_summary.json`. It selects `scene_disjoint_first_eval_style` as the next path, keeps repeated-object rows as a stress slice, and defers HM3D-OVON until ObjectNav generalization is stable.
+- `dense_conflict_generalization_v1` was frozen at `manifests/h001_dense_conflict_generalization_v1.json` with `20` rows, `9` scenes, `6` queries, correct+wrong candidate rows `20/20`, source-selected-wrong rows `16`, NoReobserve wrong-goal rows `16`, and `uses_gt_for_action false`.
+- Generalization recall gate passed at `local_dataset/runs/h001_dense_conflict_recall_gate_generalization_v1`: rows with correct `20/20`, recall@20 `1.0`, recall@5 `0.85`, first correct rank `1-9`, detector job allowed by recall gate.
+- Detector substrate job for the frozen split completed in tmux `h001-dense-conflict-generalization-detector-20260523-170533`; output root is `local_dataset/runs/h001_dense_conflict_generalization_detector_substrate_v1`. Detector rows `20`, frame rows `20`, rendered headings `125`, detector box rate `0.85`, SAM2 mask rate `0.85`, candidate association rate `0.35`, associated rows `7`, substrate gate passed, and `uses_gt_for_action false`.
+- Terminal evidence extraction was implemented with `runtime/h001_runtime/extract_dense_conflict_generalization_evidence.py`. Output `local_dataset/runs/h001_dense_conflict_generalization_terminal_evidence_v1` has action evidence rows `20`, evaluation label rows `55`, associated/unassociated rows `7/13`, action evidence forbidden key count `0`, and `uses_gt_for_action false`.
+- Terminal policy design diagnostic rejects the current v0 rules: `semantic_top_if_supported` and `first_associated` commit `7/20` with `6` wrong-goal commits, while `support_score_best` and `proposed_conservative_v0` commit `7/20` with `3` success and `4` wrong-goal commits.
+- Terminal guard design was implemented with `runtime/h001_runtime/design_dense_conflict_terminal_guard.py`. Docker output `local_dataset/runs/h001_dense_conflict_generalization_terminal_guard_design_v1` selects `strict_depth_consistency_v1`: `max_depth_error_m 0.33`, `min_associated_heading_count 2`, `min_mask_hit_count 2`, `max_semantic_rank 5`; same diagnostic split commit/success/wrong is `3/3/0`, associated commit rate is `3/7`, and `uses_gt_for_action false`.
+- Frozen guard config was added at `manifests/h001_dense_conflict_terminal_guard_v1.json`, and fixed-rule validation was implemented with `runtime/h001_runtime/validate_dense_conflict_terminal_arbitration.py`. Docker output `local_dataset/runs/h001_dense_conflict_generalization_terminal_validation_v1` has action evidence forbidden key count `0`, stable metric match to design `true`, local fixed-rule validation pass `true`, commit/success/wrong `3/3/0`, associated commit/success/wrong `3/3/0`, and `uses_gt_for_action false`.
+- Independent terminal validation contract was frozen at `manifests/h001_dense_conflict_terminal_independent_v1.json`. The primary independent profile `local_dataset/runs/h001_dense_conflict_independent_terminal_evidence_profile_v1` has rows `6`, associated rows `6`, scenes `3`, queries `2`, action evidence forbidden key count `0`, and naive `support_score_best` success/wrong `2/4`. The secondary stress profile `local_dataset/runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1` has rows `2`, associated rows `2`, and naive success/wrong `0/2`.
+- Independent terminal validation failed without threshold changes. Primary output `local_dataset/runs/h001_dense_conflict_independent_terminal_validation_v1` has commit/success/wrong `6/2/4`, no-label commits `0`, forbidden action keys `0`, and `terminal_validation_gate_passed false`. Secondary stress output `local_dataset/runs/h001_dense_conflict_secondary_terminal_validation_v1` has commit/success/wrong `2/0/2` and `terminal_validation_gate_passed false`.
 - Google Drive backup paths and no-Drive rebuild procedures are documented in `../../../docs/reproducibility.md`.
 - Canonical local asset roots are `local_dataset/data`, `local_dataset/models`, and `local_dataset/runs`; `/tmp/research3-data`, `/tmp/research3-models`, and `/tmp/research3-runs` are compatibility symlinks.
 
 ### 에이전트 추론
 
-The current method shape is more contribution-aligned than detector-based re-ranking because semantic uncertainty is being converted into an active observation request. It is still not paper-ready. The next gate is final dense candidate generation plus recall validation for the frozen conflict rows, followed only then by detector/association/terminal arbitration. This is blocked by host NVIDIA runtime until `nvidia-smi` and Docker `--gpus all` work again.
+The current method shape is more contribution-aligned than detector-based re-ranking because semantic uncertainty is being converted into an active observation request. It is still not paper-ready. The detector/association blocker is lifted for the selected primary and secondary diagnostic substrates, and the broader frozen split now passes candidate recall plus detector substrate. `strict_depth_consistency_v1` reproduced the same-split safety-positive result, but independent validation rejects it because wrong instances can still satisfy strict depth and support constraints. The next step is failure-row diagnosis and a mechanism-level arbitration revision, not threshold tuning on this failed split.
 
 ## Pre-Schedule Verification Check
 

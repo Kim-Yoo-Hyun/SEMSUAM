@@ -32,12 +32,22 @@
 - 현재 primary candidate는 [CAND-01.md](../literature/CAND-01.md)의 `Semantic Uncertainty as Active SLAM/Navigation Utility for Adaptive ObjectNav`이다.
 - 현재 active hypothesis는 [H001_uncertainty-reobservation](../hypothesis/CAND-01/H001_uncertainty-reobservation/README.md)에 있다.
 - 최종 연구 방향은 Step 5까지 포함한다.
-- 현재 implementation gate는 independent dense conflict validation이며, host NVIDIA runtime 복구 전까지 final dense artifact generation은 blocked다.
+- 현재 implementation gate는 independent dense conflict validation이다. `spatial_nms_p95_k100_d10`과 `spatial_nms_p90_k200_d5` dense re-export recall gate는 모두 primary `3/6`으로 실패했다.
+- 기존 selected substrate인 `v3_fresh_spatial_p97_k20`은 final primary recall gate `6/6`, recall@20 `1.0`으로 통과했고, detector/association validation도 `local_dataset/runs/h001_dense_conflict_validation_v3_fresh_spatial_p97_k20_primary_v1`에서 통과했다.
+- Secondary-stress held-out `sofa` validation도 `local_dataset/runs/h001_dense_conflict_validation_first_eval_replacement_spatial_p97_k20_secondary_v1`에서 통과했다.
+- Broader split design은 `local_dataset/runs/h001_dense_conflict_generalization_design_v1/dense_conflict_generalization_design_summary.json`에 기록됐고, `scene_disjoint_first_eval_style`로 `manifests/h001_dense_conflict_generalization_v1.json`을 freeze했다.
+- Frozen `dense_conflict_generalization_v1`은 `20` rows, `9` scenes, `6` queries, correct+wrong candidate rows `20/20`, source-selected-wrong rows `16`, NoReobserve wrong-goal rows `16`이며, recall gate `local_dataset/runs/h001_dense_conflict_recall_gate_generalization_v1`에서 rows with correct `20/20`, recall@20 `1.0`으로 통과했다.
+- Generalization detector substrate job은 `local_dataset/runs/h001_dense_conflict_generalization_detector_substrate_v1`에서 완료됐고 detector box rate `0.85`, SAM2 mask rate `0.85`, candidate association rate `0.35`로 substrate gate를 통과했다.
+- Terminal evidence extraction output `local_dataset/runs/h001_dense_conflict_generalization_terminal_evidence_v1`은 action evidence와 evaluation labels를 분리했고 forbidden action key count `0`으로 통과했다. 다만 `proposed_conservative_v0`는 `7/20` commit 중 `4` wrong-goal commit을 만들어 reject 상태다.
+- Terminal guard design output `local_dataset/runs/h001_dense_conflict_generalization_terminal_guard_design_v1`은 `strict_depth_consistency_v1`을 다음 fixed-rule 후보로 제안한다. 같은 diagnostic split 기준 commit/success/wrong은 `3/3/0`, associated commit rate는 `3/7`, `uses_gt_for_action false`다.
+- Fixed-rule terminal validation output `local_dataset/runs/h001_dense_conflict_generalization_terminal_validation_v1`은 action/evaluation 분리 흐름을 재검증했고, forbidden action key count `0`, commit/success/wrong `3/3/0`, associated commit/success/wrong `3/3/0`을 기록했다. Paper claim status는 `same_split_fixed_rule_validation_not_method_claim`이다.
+- Independent terminal validation contract `manifests/h001_dense_conflict_terminal_independent_v1.json`은 primary `v3_fresh_validation_v1` source를 선택한다. Primary profile은 `6/6` associated rows, `3` scenes, `2` queries이고, secondary repeated-object stress profile은 `2/2` associated rows다.
+- Independent validation은 `strict_depth_consistency_v1`을 reject했다. Primary output `local_dataset/runs/h001_dense_conflict_independent_terminal_validation_v1`은 commit/success/wrong `6/2/4`, secondary stress output `local_dataset/runs/h001_dense_conflict_secondary_terminal_validation_v1`은 `2/0/2`다. 두 결과 모두 forbidden action key count `0`이고 `uses_gt_for_action false`다.
 - Google Drive 백업 후보와 Drive 없이 재생성하는 절차는 [reproducibility.md](reproducibility.md)의 `Google Drive Backup Manifest`, `Restore from Drive`, `Rebuild Without Drive`를 따른다.
 
 ### 에이전트 추론
 
-Step 1-3은 ObjectNav first probe이고, Step 4-5는 같은 H001 안에서 SLAM uncertainty와 map/pose consistency 평가로 확장한다. 별도 hypothesis를 미리 만들지 않고, positive signal이 확인되면 full experiment contract로 승격한다.
+Step 1-3은 ObjectNav first probe이고, Step 4-5는 같은 H001 안에서 SLAM uncertainty와 map/pose consistency 평가로 확장한다. Primary와 secondary-stress dense-conflict diagnostic은 positive signal이고, frozen generalization split의 recall 및 detector substrate도 통과했다. 하지만 independent terminal validation은 `strict_depth_consistency_v1`이 wrong instance를 막지 못한다는 negative result를 만들었다. 다음 단계는 threshold tuning이 아니라 wrong-commit row diagnosis와 mechanism-level arbitration revision이다.
 
 ## Entry Order
 

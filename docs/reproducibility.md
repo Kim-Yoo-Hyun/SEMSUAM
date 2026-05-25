@@ -6,19 +6,19 @@
 
 ### 사실
 
-- Date checked: 2026-05-22
+- Date checked: 2026-05-23
 - Primary hypothesis: `H001_uncertainty-reobservation`
 - Runtime root: `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/`
 - Local dataset root: `local_dataset/`
-- Data root: `local_dataset/data` (`/tmp/research3-data` compatibility symlink)
-- Run artifact root: `local_dataset/runs` (`/tmp/research3-runs` compatibility symlink)
-- Model root: `local_dataset/models` (`/tmp/research3-models` compatibility symlink)
+- Data root: `local_dataset/data`
+- Run artifact root: `local_dataset/runs`
+- Model root: `local_dataset/models`
 - Logs: `logs/`
 - Host Python은 문서/사전 점검에만 사용한다. Smoke test와 논문 본문용 실험은 Docker 기반으로 실행한다.
 - 개인 credential은 repo에 저장하지 않는다.
 - 다른 컴퓨터 재현을 위한 GitHub source-of-truth는 code, Dockerfile, job script, manifest, workflow 문서, reproducibility 문서다.
 - 대용량 dataset, checkpoint, Docker image layer, `local_dataset/runs` artifact는 GitHub source-of-truth가 아니다. 이 문서의 다운로드/빌드/검증 명령으로 복구한다.
-- `/tmp/research3-data`, `/tmp/research3-models`, `/tmp/research3-runs`는 기존 Docker command 호환을 위해 `local_dataset/` 아래 canonical path로 연결된 symlink다.
+- `/tmp/research3-data`, `/tmp/research3-models`, `/tmp/research3-runs`는 기존 Docker command 호환용 path다. 2026-05-23 재부팅 뒤 `/tmp/research3-data`가 stale empty directory가 된 것이 확인되어, 현재 long-running job은 canonical `local_dataset/` path를 직접 사용한다.
 
 ### 에이전트 추론
 
@@ -28,7 +28,7 @@
 
 ### 사실
 
-Date checked: 2026-05-22
+Date checked: 2026-05-23
 
 `git check-ignore -v` 결과, 아래 필수 재현 파일들은 `.gitignore`에 의해 막히지 않는다.
 
@@ -85,12 +85,23 @@ local_dataset/runs:   3.6G
 
 `.gitignore` intentionally excludes `local_dataset/`, data, runs, models, checkpoints, paper PDFs, large archives/arrays/model files, and credentials.
 
-Compatibility symlinks:
+Intended compatibility symlinks:
 
 ```text
 /tmp/research3-data   -> /home/yoohyun/research3/local_dataset/data
 /tmp/research3-models -> /home/yoohyun/research3/local_dataset/models
 /tmp/research3-runs   -> /home/yoohyun/research3/local_dataset/runs
+```
+
+Current compatibility note:
+
+```text
+date_checked: 2026-05-23
+/tmp/research3-data: stale empty directory after reboot; do not use for active jobs until normalized
+/tmp/research3-models: regular directory with runtime cache
+/tmp/research3-runs: regular directory with failed retry output
+current_active_job: uses canonical local_dataset paths directly
+next_cleanup: normalize /tmp/research3-data back to canonical local_dataset/data symlink when sudo/root cleanup is available
 ```
 
 Local dataset migration:
@@ -158,13 +169,18 @@ local_dataset/runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_v
 local_dataset/runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/
 local_dataset/runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/
 local_dataset/runs/h001_v3_fresh_validation_policy_spatial_nms_p97_k20_v1/
+local_dataset/runs/h001_dense_conflict_recall_gate_v3_fresh_spatial_p97_k20_primary_final_v1/
+local_dataset/runs/h001_dense_conflict_validation_v3_fresh_spatial_p97_k20_primary_v1/
+local_dataset/runs/h001_dense_conflict_recall_gate_first_eval_replacement_spatial_p97_k20_secondary_v1/
+local_dataset/runs/h001_dense_conflict_validation_first_eval_replacement_spatial_p97_k20_secondary_v1/
+local_dataset/runs/h001_dense_conflict_generalization_design_v1/
 ```
 
 보존 이유:
 
 - 재생성은 가능하지만 detector GPU run, `VLMaps` dense re-export, failure taxonomy 분석을 다시 거쳐야 한다.
 - 논문 주장으로 아직 확정된 evidence는 아니지만, novelty 판단과 다음 gate 설계의 provenance로 중요하다.
-- `local_dataset/runs/h001_dense_conflict_artifacts_spatial_nms_p95_k100_d10_v1/`는 현재 `status: failed`이고 크기도 작으므로 Drive 1순위가 아니다. NVIDIA runtime 복구 후 재생성한다.
+- `local_dataset/runs/h001_dense_conflict_artifacts_spatial_nms_p95_k100_d10_v1/`와 `local_dataset/runs/h001_dense_conflict_artifacts_spatial_nms_p90_k200_d5_v1/`는 final recall gate를 통과하지 못한 re-export substrate이므로 Drive 1순위가 아니다. 필요하면 기록된 command로 재생성한다.
 
 #### 4순위: Docker image export
 
@@ -587,13 +603,23 @@ Host Python package 설치는 재현 경로가 아니다. 필요한 Python depen
 
 Use this checklist when a GPU job fails before container startup. Do not treat this as experiment evidence.
 
-Current known failure on 2026-05-21:
+Historical failure on 2026-05-21:
 
 ```text
 nvidia-smi: Failed to initialize NVML: Driver/library version mismatch
 kernel_module: 580.126.09
 user_space_library: 580.159.03
 docker_gpu_error: open /run/nvidia-persistenced/socket: no such file or directory
+```
+
+Recovered status on 2026-05-23:
+
+```text
+host_nvidia_smi: passed
+driver: 580.159.03
+kernel_module: 580.159.03
+nvidia_persistenced: active
+docker_gpu_smoke: passed with research3/habitat-h001:20260508-calib-artifacts
 ```
 
 Check commands:
@@ -615,13 +641,235 @@ Recovery rules:
 - Restarting `nvidia-persistenced` is only meaningful after driver/library versions match.
 - Resume the exact recorded tmux command after both host `nvidia-smi` and Docker `--gpus all` succeed.
 
-Dense conflict resume command:
+Dense conflict canonical resume command:
 
 ```bash
 ts=$(date +%Y%m%d-%H%M%S)
-tmux new-session -d -s "h001-dense-conflict-artifact-${ts}" \
-  "cd /home/yoohyun/research3 && TS=${ts} bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_conflict_candidate_artifact.sh"
+tmux new-session -d -s "h001-dense-conflict-artifact-canonical-${ts}" \
+  "cd /home/yoohyun/research3 && TS=${ts} DATA_ROOT=/home/yoohyun/research3/local_dataset/data RUNS_ROOT=/home/yoohyun/research3/local_dataset/runs MODEL_ROOT=/home/yoohyun/research3/local_dataset/models bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_conflict_candidate_artifact.sh"
 ```
+
+Dense conflict selected-artifact validation command:
+
+```bash
+TS=$(date +%Y%m%d-%H%M%S) \
+RUNS_ROOT=/home/yoohyun/research3/local_dataset/runs \
+bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_conflict_validation_from_source.sh
+```
+
+Dense conflict secondary-stress validation can be regenerated with the same analyzer after producing secondary recall rows:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.probe_dense_conflict_recall \
+    --data-root /data \
+    --manifest /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_v1.json \
+    --manifest-split dense_conflict_v1 \
+    --roles secondary_stress \
+    --candidate-artifact first_eval_replacement_spatial_p97_k20=/runs/h001_first_eval_replacement_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl \
+    --out-root /runs/h001_dense_conflict_recall_gate_first_eval_replacement_spatial_p97_k20_secondary_v1
+
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.analyze_dense_conflict_validation \
+    --manifest /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_v1.json \
+    --source-evidence-rows /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_evidence_v4/external_candidate_second_stage_identity_evidence_rows.jsonl \
+    --recall-rows /runs/h001_dense_conflict_recall_gate_first_eval_replacement_spatial_p97_k20_secondary_v1/dense_conflict_recall_rows.jsonl \
+    --recall-summary /runs/h001_dense_conflict_recall_gate_first_eval_replacement_spatial_p97_k20_secondary_v1/dense_conflict_recall_summary.json \
+    --detector-summary /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_detector/summary.json \
+    --out-root /runs/h001_dense_conflict_validation_first_eval_replacement_spatial_p97_k20_secondary_v1 \
+    --source-name first_eval_heldout_local_context_v4 \
+    --roles secondary_stress \
+    --min-primary-rows 2 \
+    --min-rows-with-correct-wrong-positive-support 2 \
+    --min-success-commit-rows 2 \
+    --min-selected-correct-improvement-rows 2 \
+    --min-correct-commit-with-wrong-positive-rows 2
+```
+
+Dense conflict broader split design:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.design_dense_conflict_generalization \
+    --source v3_fresh_primary=/runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_evidence/external_candidate_second_stage_identity_evidence_rows.jsonl \
+    --source first_eval_heldout_secondary=/runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_evidence_v4/external_candidate_second_stage_identity_evidence_rows.jsonl \
+    --source risk_validation_identity_smoke=/runs/h001_risk_validation_pair_objective_v4b_external_candidate_detector_v2_holdout_v1/external_candidate_followup_identity_stage2_evidence_smoke/external_candidate_second_stage_identity_evidence_rows.jsonl \
+    --out-root /runs/h001_dense_conflict_generalization_design_v1
+```
+
+Dense conflict terminal guard design:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.design_dense_conflict_terminal_guard \
+    --action-evidence /runs/h001_dense_conflict_generalization_terminal_evidence_v1/action_evidence_rows.jsonl \
+    --evaluation-labels /runs/h001_dense_conflict_generalization_terminal_evidence_v1/evaluation_labels.jsonl \
+    --out-root /runs/h001_dense_conflict_generalization_terminal_guard_design_v1
+```
+
+Dense conflict fixed terminal validation:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.validate_dense_conflict_terminal_arbitration \
+    --action-evidence /runs/h001_dense_conflict_generalization_terminal_evidence_v1/action_evidence_rows.jsonl \
+    --evaluation-labels /runs/h001_dense_conflict_generalization_terminal_evidence_v1/evaluation_labels.jsonl \
+    --guard-config /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_terminal_guard_v1.json \
+    --out-root /runs/h001_dense_conflict_generalization_terminal_validation_v1
+```
+
+Dense conflict independent terminal evidence profiles:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.extract_dense_conflict_generalization_evidence \
+    --manifest /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_v1.json \
+    --manifest-split dense_conflict_v1 \
+    --candidate-artifact /runs/h001_v3_fresh_validation_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl \
+    --frame-summary /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_detector/frame_summary.jsonl \
+    --detector-associations /runs/h001_v3_fresh_validation_pair_objective_v4b_external_candidate_detector_v1/external_candidate_followup_identity_stage2_semantic_neighbor_multiview_v3_full_detector/detector_candidate_associations.jsonl \
+    --recall-rows /runs/h001_dense_conflict_recall_gate_v3_fresh_spatial_p97_k20_primary_final_v1/dense_conflict_recall_rows.jsonl \
+    --out-root /runs/h001_dense_conflict_independent_terminal_evidence_profile_v1 \
+    --max-candidates-per-row 6
+
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.extract_dense_conflict_generalization_evidence \
+    --manifest /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_v1.json \
+    --manifest-split dense_conflict_v1 \
+    --candidate-artifact /runs/h001_first_eval_replacement_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl \
+    --frame-summary /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_detector/frame_summary.jsonl \
+    --detector-associations /runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_identity_stage2_v5_local_rival_expanded_grounded_detector/detector_candidate_associations.jsonl \
+    --recall-rows /runs/h001_dense_conflict_recall_gate_first_eval_replacement_spatial_p97_k20_secondary_v1/dense_conflict_recall_rows.jsonl \
+    --out-root /runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1 \
+    --max-candidates-per-row 6
+```
+
+Independent terminal contract:
+
+```bash
+jq . hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_terminal_independent_v1.json >/dev/null
+```
+
+Current independent profile summary:
+
+| Artifact | Status | Rows | Associated rows | Notes |
+| --- | --- | ---: | ---: | --- |
+| `local_dataset/runs/h001_dense_conflict_independent_terminal_evidence_profile_v1` | contract source | 6 | 6 | primary independent source, scenes `7MXmsvcQjpJ`, `DYehNKdT76V`, `HY1NcmCgn3n`, queries `chair`, `plant`; naive `support_score_best` success/wrong `2/4` |
+| `local_dataset/runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1` | stress source | 2 | 2 | repeated-object `sofa` stress slice in `y9hTuugGdiq`; naive success/wrong `0/2` |
+
+Dense conflict independent terminal validation:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.validate_dense_conflict_terminal_arbitration \
+    --action-evidence /runs/h001_dense_conflict_independent_terminal_evidence_profile_v1/action_evidence_rows.jsonl \
+    --evaluation-labels /runs/h001_dense_conflict_independent_terminal_evidence_profile_v1/evaluation_labels.jsonl \
+    --guard-config /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_terminal_guard_v1.json \
+    --out-root /runs/h001_dense_conflict_independent_terminal_validation_v1 \
+    --validation-scope dense_conflict_independent_v1_primary \
+    --metric-gate-mode none \
+    --min-commit-rows 1 \
+    --min-success-commit-rows 1 \
+    --max-wrong-goal-commit-rows 0 \
+    --max-no-label-commit-rows 0 \
+    --paper-claim-status independent_terminal_validation_not_method_claim
+
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.validate_dense_conflict_terminal_arbitration \
+    --action-evidence /runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/action_evidence_rows.jsonl \
+    --evaluation-labels /runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/evaluation_labels.jsonl \
+    --guard-config /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_terminal_guard_v1.json \
+    --out-root /runs/h001_dense_conflict_secondary_terminal_validation_v1 \
+    --validation-scope dense_conflict_independent_v1_secondary_stress \
+    --metric-gate-mode none \
+    --min-commit-rows 0 \
+    --min-success-commit-rows 0 \
+    --max-wrong-goal-commit-rows 0 \
+    --max-no-label-commit-rows 0 \
+    --paper-claim-status secondary_stress_validation_not_method_claim
+```
+
+Independent validation result:
+
+| Artifact | Gate | Commit / Success / Wrong | Failure taxonomy |
+| --- | --- | --- | --- |
+| `local_dataset/runs/h001_dense_conflict_independent_terminal_validation_v1` | failed | `6 / 2 / 4` | `guard_wrong_commit_depth_consistent_wrong_instance = 4` |
+| `local_dataset/runs/h001_dense_conflict_secondary_terminal_validation_v1` | failed | `2 / 0 / 2` | `stress_slice_wrong_commit = 2` |
+
+Both validation outputs have `action_evidence_forbidden_key_count = 0`, `no_label_commit_rows = 0`, and `uses_gt_for_action = false`. The result rejects `strict_depth_consistency_v1` as an independent terminal arbitration rule.
 
 ### 사용 중인 Image
 
@@ -941,8 +1189,17 @@ result: detector substrate pass, follow-up evidence safety/full gate fail
 | Fixed dense backend terminal diagnostic contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/07_evaluation_contract.md` | scope fixed | section `Fixed Dense Backend Terminal Diagnostic Contract`; allows only local two-row chair diagnostic interpretation; blocks `first_eval`, policy-scale, and cross-scene/category `association_depth_tolerance_m=2.0` claims until evaluation-label plumbing, independent validation, simpler-alternative comparison, and safety/utility gates pass |
 | Depth2 generalization decision | `hypothesis/CAND-01/H001_uncertainty-reobservation/07_evaluation_contract.md` | do not generalize yet | local chair diagnostic supports `mask_depth_2_0`, but broader `/tmp/research3-runs/h001_first_eval_replacement_detector_v3c_association_variants_v1/summary.json` does not: `mask_depth_2p0` association `0.49`, associated-count AUC `0.520`, selected-correct delta `-0.21`, new wrong-goals `6`; `box_or_mask_depth_2p0` association `0.56`, AUC `0.549`, delta `-0.14`, new wrong-goals `4`; both detector calibration gates fail |
 | Dense terminal arbitration diagnostic | `/tmp/research3-runs/h001_dense_backend_fixed_spatial_nms_p95_k100_d10_y9h_chair_detector_depth2_v1/dense_terminal_arbitration_diagnostic_v1/dense_terminal_arbitration_summary.json` | completed, local promising but not utility proof | added `diagnose_dense_terminal_arbitration.py`; Docker `py_compile` and diagnostic run passed; commits `2/2`, action recompute match `1.0`, selected post-hoc correct `1.0`, first external post-hoc correct `1.0`, selected-correct improvement over first `0.0`, wrong positive-support row rate `0.0`, same-goal evidence selection rate `1.0`; next validation should target wrong/ambiguous positive-support candidates |
-| Independent dense conflict validation manifest / recall gate | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_v1.json` | implemented, Docker verified | added `build_dense_conflict_manifest.py` and `probe_dense_conflict_recall.py`; manifest verify output `manifests/h001_dense_conflict_v1.verify.json` has `ok true`, `rows 8`, `unique_episode_keys 8`; existing-artifact recall gate smoke `/tmp/research3-runs/h001_dense_conflict_recall_gate_existing_artifact_smoke_v1` passes on primary rows with `6/6` correct candidates and recall@20 `1.0`; this is gate-code validation, not final dense backend evidence |
-| Dense conflict `spatial_nms_p95_k100_d10` artifact job | `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_conflict_candidate_artifact.sh` | blocked by host GPU runtime | scene spec `manifests/dense_conflict_v1_scenes.txt`; first launch `h001-dense-conflict-artifact-20260521-175656`; log `runtime/logs/dense-conflict-artifact-p95-k100-d10-20260521-175656.log`; failed before scene export because Docker `--gpus all` cannot initialize NVIDIA runtime; `nvidia-smi` reports driver/library mismatch: kernel module `580.126.09`, user-space library `580.159.03`; resume after host driver/runtime is fixed |
+| Independent dense conflict validation manifest / recall gate | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_v1.json` | implemented, Docker verified | added `build_dense_conflict_manifest.py` and `probe_dense_conflict_recall.py`; manifest verify output `manifests/h001_dense_conflict_v1.verify.json` has `ok true`, `rows 8`, `unique_episode_keys 8`; final selected-artifact primary recall output `local_dataset/runs/h001_dense_conflict_recall_gate_v3_fresh_spatial_p97_k20_primary_final_v1` passes with `6/6` correct candidates and recall@20 `1.0` |
+| Dense conflict `spatial_nms_p95_k100_d10` artifact job | `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_conflict_candidate_artifact.sh` | completed, recall gate fail | canonical relaunch `h001-dense-conflict-artifact-canonical-20260523-140845`; artifact generation completed with `24` rows, `2400` candidates, and `1451` finite-position candidates; final recall gate failed with primary rows with correct `3/6`, recall@20 `0.5`, required rows with correct `4/6`; detector job remains blocked for this substrate |
+| Dense conflict `spatial_nms_p90_k200_d5` artifact job | `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/dense_conflict_candidate_artifact.sh` | completed, recall gate fail | tmux `h001-dense-conflict-artifact-p90-k200-d5-20260523-150036`; artifact generation completed with `24` rows, `4800` candidates, and `4241` finite-position candidates; final recall gate failed with primary rows with correct `3/6`, recall@20 `0.5`, required rows with correct `4/6`; detector job remains blocked for this substrate |
+| Dense conflict selected-artifact detector/association validation | `local_dataset/runs/h001_dense_conflict_validation_v3_fresh_spatial_p97_k20_primary_v1/dense_terminal_arbitration_summary.json` | primary diagnostic pass | added `analyze_dense_conflict_validation.py` and `runtime/jobs/dense_conflict_validation_from_source.sh`; materializes existing `v3_fresh` second-stage detector/association evidence; primary rows `6`, detector box `1.0`, SAM2 mask `1.0`, candidate association `0.8`, correct+wrong positive support `6/6`, commit/success/wrong/no-valid `5/5/0/0`, selected-correct improvement over source-selected `3`, `uses_gt_for_action false`; detector/association blocked is lifted only for selected `v3_fresh_spatial_p97_k20` diagnostic substrate |
+| Dense conflict secondary-stress validation | `local_dataset/runs/h001_dense_conflict_validation_first_eval_replacement_spatial_p97_k20_secondary_v1/dense_terminal_arbitration_summary.json` | secondary diagnostic pass | held-out `sofa` local-context stress rows; recall output `local_dataset/runs/h001_dense_conflict_recall_gate_first_eval_replacement_spatial_p97_k20_secondary_v1` has rows with correct `2/2` and recall@20 `1.0`; detector box/SAM2/candidate association `1.0/1.0/1.0`, correct+wrong positive support `2/2`, commit/success/wrong/no-valid `2/2/0/0`, selected-correct improvement over source-selected `2`, `uses_gt_for_action false`; too small for paper-ready generalization |
+| Dense conflict broader split design | `local_dataset/runs/h001_dense_conflict_generalization_design_v1/dense_conflict_generalization_design_summary.json` | design complete | added `design_dense_conflict_generalization.py`; current evidence summary has `10` rows, `5` scenes, `3` queries, `8` correct+wrong positive-support rows, `5` source-selected-wrong rows, success commits `7`, wrong-goal commits `0`; recommends `scene_disjoint_first_eval_style`; next manifest contract is `dense_conflict_generalization_v1` with at least `20` rows, `5` scenes, `3` queries, `6` selected-wrong rows, and `12` correct+wrong positive-support rows |
+| Dense conflict generalization manifest / recall gate | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_generalization_v1.json` and `local_dataset/runs/h001_dense_conflict_recall_gate_generalization_v1/dense_conflict_recall_summary.json` | frozen, recall pass | added `build_dense_conflict_generalization_manifest.py`; manifest has `20` rows, `9` scenes, `6` queries, correct+wrong candidate rows `20/20`, source-selected-wrong rows `16`, NoReobserve wrong-goal rows `16`, `uses_gt_for_action false`; recall gate on `first_eval_replacement_spatial_nms_p97_k20` has rows with correct `20/20`, recall@20 `1.0`, recall@5 `0.85`, first correct rank `1-9`, detector job allowed |
+| Dense conflict generalization detector substrate job | `local_dataset/runs/h001_dense_conflict_generalization_detector_substrate_v1/generalization_detector_substrate_summary.json` | completed, substrate pass | added `runtime/jobs/dense_conflict_generalization_detector_substrate.sh`; tmux `h001-dense-conflict-generalization-detector-20260523-170533`; log `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/dense-conflict-generalization-detector-substrate-20260523-170533.log`; detector rows `20`, frame rows `20`, rendered headings `125`, detector box rate `0.85`, SAM2 mask rate `0.85`, candidate association rate `0.35`, associated rows `7`, substrate gate passed, `uses_gt_for_action false`; policy diagnostic on this hard split has success `0.2` and wrong-goal visit `0.8` |
+| Dense conflict generalization terminal evidence extraction | `local_dataset/runs/h001_dense_conflict_generalization_terminal_evidence_v1/terminal_arbitration_design_summary.json` | design gate pass, terminal v0 fail | added `extract_dense_conflict_generalization_evidence.py`; outputs `action_evidence_rows.jsonl`, `evaluation_labels.jsonl`, and `terminal_policy_diagnostic_rows.jsonl`; action evidence rows `20`, evaluation label rows `55`, associated/unassociated rows `7/13`, forbidden action key count `0`, `uses_gt_for_action false`; `proposed_conservative_v0` commits `7/20` with `3` success and `4` wrong-goal commits, so terminal arbitration validation remains blocked pending safer guard design |
+| Dense conflict generalization terminal guard design | `local_dataset/runs/h001_dense_conflict_generalization_terminal_guard_design_v1/terminal_guard_design_summary.json` | design gate pass, validation candidate | added `design_dense_conflict_terminal_guard.py`; selected `strict_depth_consistency_v1` with `max_depth_error_m 0.33`, `min_associated_heading_count 2`, `min_mask_hit_count 2`, `max_semantic_rank 5`; same diagnostic split commit/success/wrong `3/3/0`, associated commit rate `3/7`, `uses_gt_for_action false`; this is same-split guard design and not a paper-facing method claim |
+| Dense conflict generalization fixed terminal validation | `local_dataset/runs/h001_dense_conflict_generalization_terminal_validation_v1/terminal_validation_summary.json` | same-split validation pass | added `manifests/h001_dense_conflict_terminal_guard_v1.json` and `validate_dense_conflict_terminal_arbitration.py`; action evidence forbidden key count `0`, stable metric match design `true`, local fixed-rule validation pass `true`, rows `20`, associated rows `7`, commit/success/wrong `3/3/0`, associated commit/success/wrong `3/3/0`, `uses_gt_for_action false`; paper claim status remains `same_split_fixed_rule_validation_not_method_claim` |
 
 ### 에이전트 추론
 
@@ -979,7 +1236,7 @@ result: detector substrate pass, follow-up evidence safety/full gate fail
 - V4 request-identity bottleneck diagnostic 기준으로 first-stage selected direct commit은 wrong-goal `3/7`이라 안전하지 않다. Existing second-stage identity objective V2는 success `2/7`, wrong-goal `0/7`의 nonzero safe utility를 만든다.
 - V4 + second-stage identity V2 terminal diagnostic은 same V4 separate-split substrate에서 local integrated full gate를 통과했다. 그러나 `validation_scope v4_fixed_terminal_diagnostic`이라 `utility_proof_passed false`로 기록한다.
 - Dense terminal arbitration diagnostic은 two-row `y9hTuugGdiq/chair` local diagnostic에서 positive였지만 all positive-support candidates가 post-hoc correct라 wrong-goal repair proof가 아니다.
-- Independent dense conflict validation design은 `runtime/workflow-20260521-dense-conflict.md`에 고정했다. `manifests/h001_dense_conflict_v1.json`과 dense recall gate는 Docker 검증을 통과했다. `spatial_nms_p95_k100_d10` artifact job wrapper도 준비했지만, host NVIDIA driver/library mismatch로 첫 launch가 실패했다. 다음 blocker는 host NVIDIA runtime 복구 후 artifact job resume과 final recall gate이며, detector scoring은 그 이후에만 진행한다.
+- Independent dense conflict validation design은 `runtime/workflow-20260521-dense-conflict.md`에 고정했다. `manifests/h001_dense_conflict_v1.json`과 dense recall gate는 Docker 검증을 통과했다. Host/Docker NVIDIA runtime은 2026-05-23에 복구됐다. `spatial_nms_p95_k100_d10`과 `spatial_nms_p90_k200_d5` final recall gate는 모두 실패했다. Selected `v3_fresh_spatial_p97_k20` primary substrate와 held-out `sofa` secondary-stress substrate는 recall과 detector/association validation을 통과했다. Broader `dense_conflict_generalization_v1`도 candidate recall과 detector substrate gate를 통과했고, frozen `strict_depth_consistency_v1` validation은 same-split 기준 v0 wrong commits를 막았다. 다음 blocker는 independent terminal validation split/source artifact 설계다.
 
 ### 에이전트 추론
 

@@ -284,6 +284,6 @@ If GT is weak, present real-world results as qualitative or diagnostic only. Do 
 
 ## Immediate Next Task
 
-Complete `random256_k10_v1` candidate-budget recovery verification and apply the coverage decision tree in `04_first_experiment.md`.
+Diagnose independent terminal validation failures for frozen `strict_depth_consistency_v1`.
 
-If the coverage gate passes, run the predeclared calibration policy comparison and interpret it with `07_evaluation_contract.md`. If it fails, write a second recovery decision note before changing scenes, candidate extraction, queries, or trajectories.
+The contract is `manifests/h001_dense_conflict_terminal_independent_v1.json`. Primary validation failed with commit/success/wrong `6/2/4`; secondary stress failed with `2/0/2`. Do not tune thresholds on this failed split. The next task is to inspect wrong-commit rows, identify why wrong instances satisfy depth-consistent support, and propose a mechanism-level arbitration revision before any policy-scale evaluation.

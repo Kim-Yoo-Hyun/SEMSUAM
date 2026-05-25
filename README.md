@@ -23,16 +23,29 @@
 
 ### 사실
 
-- Date checked: 2026-05-22
+- Date checked: 2026-05-23
 - Current gate: independent dense conflict validation for H001.
 - `h001_dense_conflict_v1` manifest and recall gate are implemented and Docker-verified.
-- Existing-artifact recall smoke passed on the primary dense-conflict rows, but the final `spatial_nms_p95_k100_d10` dense backend artifact has not been generated.
-- Current blocker: host NVIDIA runtime. Docker GPU startup fails until host `nvidia-smi` and Docker `--gpus all` work again.
+- Host NVIDIA runtime was recovered on 2026-05-23.
+- `spatial_nms_p95_k100_d10` and revised `spatial_nms_p90_k200_d5` dense re-export artifacts both failed the final recall gate with primary rows with correct candidate `3/6`; detector/association validation remains blocked for those re-export substrates.
+- The existing selected substrate `v3_fresh_spatial_p97_k20` passed the final primary recall gate with `6/6` rows and recall@20 `1.0`.
+- Dense conflict detector/association validation was materialized from the existing `v3_fresh` second-stage evidence at `local_dataset/runs/h001_dense_conflict_validation_v3_fresh_spatial_p97_k20_primary_v1`; primary gate passed with detector box `1.0`, SAM2 mask `1.0`, candidate association `0.8`, commit/success/wrong/no-valid `5/5/0/0`, and `uses_gt_for_action false`.
+- Secondary-stress held-out `sofa` validation also passed at `local_dataset/runs/h001_dense_conflict_validation_first_eval_replacement_spatial_p97_k20_secondary_v1`; recall rows with correct `2/2`, detector box/SAM2/candidate association `1.0/1.0/1.0`, commit/success/wrong/no-valid `2/2/0/0`, and `uses_gt_for_action false`.
+- Broader split design output `local_dataset/runs/h001_dense_conflict_generalization_design_v1/dense_conflict_generalization_design_summary.json` selects `scene_disjoint_first_eval_style` as the next paper-facing path.
+- Frozen `dense_conflict_generalization_v1` manifest is implemented at `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_generalization_v1.json`: `20` rows, `9` scenes, `6` queries, correct+wrong candidate rows `20/20`, source-selected-wrong rows `16`, NoReobserve wrong-goal rows `16`, and `uses_gt_for_action false`.
+- Generalization recall gate passed at `local_dataset/runs/h001_dense_conflict_recall_gate_generalization_v1`: rows with correct `20/20`, recall@20 `1.0`, recall@5 `0.85`.
+- Generalization detector substrate passed at `local_dataset/runs/h001_dense_conflict_generalization_detector_substrate_v1`: detector box rate `0.85`, SAM2 mask rate `0.85`, candidate association rate `0.35`, associated rows `7/20`, and `uses_gt_for_action false`.
+- Terminal evidence extraction passed GT separation at `local_dataset/runs/h001_dense_conflict_generalization_terminal_evidence_v1`: action evidence rows `20`, evaluation label rows `55`, associated/unassociated rows `7/13`, forbidden action key count `0`, and `uses_gt_for_action false`.
+- Terminal arbitration v0 is unsafe. `proposed_conservative_v0` commits `7/20` with `3` success and `4` wrong-goal commits.
+- `strict_depth_consistency_v1` guard design was Docker-verified at `local_dataset/runs/h001_dense_conflict_generalization_terminal_guard_design_v1`: commit/success/wrong `3/3/0` on the same diagnostic split, associated commit rate `3/7`, and `uses_gt_for_action false`. This is a fixed-rule validation candidate, not a paper claim.
+- Fixed-rule terminal validation was Docker-verified at `local_dataset/runs/h001_dense_conflict_generalization_terminal_validation_v1`: action evidence forbidden key count `0`, commit/success/wrong `3/3/0`, associated commit/success/wrong `3/3/0`, and `uses_gt_for_action false`. It remains same-split validation, so independent validation is still required before a paper-facing utility claim.
+- Independent terminal validation contract is frozen at `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_terminal_independent_v1.json`: primary `v3_fresh_validation_v1` source has `6/6` associated rows across `3` scenes and `2` queries; secondary `sofa` stress source has `2/2` associated rows.
+- Independent validation rejects `strict_depth_consistency_v1`: primary output `local_dataset/runs/h001_dense_conflict_independent_terminal_validation_v1` has commit/success/wrong `6/2/4`; secondary stress output `local_dataset/runs/h001_dense_conflict_secondary_terminal_validation_v1` has `2/0/2`. Both have forbidden action key count `0` and `uses_gt_for_action false`.
 - Cross-machine recovery and Drive backup paths are documented in [docs/reproducibility.md](docs/reproducibility.md).
 
 ### 에이전트 추론
 
-The next research step is not detector launch. The correct sequence is NVIDIA runtime recovery, frozen-row dense artifact generation, final dense recall gate, and only then detector/association/terminal arbitration on the conflict rows.
+The detector/association blocker is lifted for the selected primary and secondary diagnostic substrates, and the broader frozen split now passes candidate recall plus detector substrate. The independent result is a useful negative result: strict depth-consistent support is not sufficient because wrong instances can also be detector-associated and depth-consistent. The next research step is failure-row diagnosis and a mechanism-level arbitration revision, not policy-scale evaluation.
 
 ## Key Documents
 
@@ -72,7 +85,7 @@ local_dataset/models
 local_dataset/runs
 ```
 
-Compatibility symlinks:
+Compatibility paths:
 
 ```text
 /tmp/research3-data
@@ -81,6 +94,8 @@ Compatibility symlinks:
 ```
 
 Large datasets, model checkpoints, run artifacts, Docker image archives, paper PDFs, and credentials are intentionally not GitHub source-of-truth.
+
+2026-05-23 note: `/tmp/research3-data` was observed as a stale empty directory after reboot, so active jobs should use canonical `local_dataset/` paths until `/tmp` compatibility paths are normalized.
 
 ## Repository Rule
 

@@ -1,0 +1,60 @@
+{
+  "action_gt_rows": [],
+  "contract_summary": {
+    "checks": {
+      "maximum_rows_per_scene": true,
+      "minimum_no_reobserve_wrong_goal_rows": true,
+      "minimum_queries": true,
+      "minimum_rows": true,
+      "minimum_rows_with_correct_and_wrong_candidates": true,
+      "minimum_scenes": true,
+      "minimum_source_selected_wrong_rows": true
+    },
+    "class_counts": {
+      "correct_and_wrong_positive_selected_correct": 4,
+      "wrong_goal_baseline_selected_wrong_correct_present": 16
+    },
+    "missing_to_contract": {
+      "no_reobserve_wrong_goal_rows": 0,
+      "queries": 0,
+      "rows": 0,
+      "rows_with_correct_and_wrong_candidates": 0,
+      "scenes": 0,
+      "source_selected_wrong_rows": 0
+    },
+    "no_reobserve_wrong_goal_rows": 16,
+    "passes_contract": true,
+    "queries": 6,
+    "query_counts": {
+      "bed": 6,
+      "chair": 1,
+      "plant": 6,
+      "sofa": 4,
+      "toilet": 2,
+      "tv_monitor": 1
+    },
+    "rows": 20,
+    "rows_with_correct_and_wrong_candidates": 20,
+    "scene_counts": {
+      "5cdEh9F2hJL": 2,
+      "CrMo8WxCyVb": 3,
+      "TEEsavR23oF": 2,
+      "eF36g7L6Z9M": 2,
+      "h1zeeAwLh9Z": 2,
+      "mL8ThkuaVTM": 3,
+      "p53SfW6mjZe": 2,
+      "svBbv1Pavdk": 2,
+      "wcojb4TFT35": 2
+    },
+    "scenes": 9,
+    "source_selected_wrong_rows": 16
+  },
+  "detector_job_allowed": false,
+  "duplicate_episode_keys": [],
+  "manifest": "dense_conflict_generalization_v1",
+  "manifest_status": "frozen_pending_recall_gate",
+  "next_gate": "run non-GT candidate recall gate on this frozen manifest; detector/association validation remains blocked until that gate passes",
+  "ok": true,
+  "rows": 20,
+  "unique_episode_keys": 20
+}
