@@ -1,0 +1,44 @@
+{
+  "contract_name": "rival_identity_generalization_v1",
+  "duplicate_episode_keys": [],
+  "manifest_status": "frozen",
+  "ok": true,
+  "paper_claim_allowed": false,
+  "request_queries": 2,
+  "request_rows": 6,
+  "request_scenes": 3,
+  "source_freeze_gate": {
+    "action_evidence_forbidden_key_count": 0,
+    "checks": {
+      "action_evidence_forbidden_key_count": true,
+      "excluded_scene_overlap": true,
+      "minimum_request_queries": true,
+      "minimum_request_rows": true,
+      "minimum_request_scenes": true,
+      "no_gt_for_action": true
+    },
+    "excluded_scene_overlap": [],
+    "gt_action_rows": [],
+    "passed": true,
+    "query_counts": {
+      "bed": 4,
+      "toilet": 2
+    },
+    "request_queries": 2,
+    "request_rows": 6,
+    "request_scenes": 3,
+    "required": {
+      "action_evidence_forbidden_key_count": 0,
+      "excluded_scene_overlap": 0,
+      "minimum_request_queries": 2,
+      "minimum_request_rows": 6,
+      "minimum_request_scenes": 3
+    },
+    "scene_counts": {
+      "5cdEh9F2hJL": 1,
+      "CrMo8WxCyVb": 3,
+      "mL8ThkuaVTM": 2
+    }
+  },
+  "uses_gt_for_action": false
+}

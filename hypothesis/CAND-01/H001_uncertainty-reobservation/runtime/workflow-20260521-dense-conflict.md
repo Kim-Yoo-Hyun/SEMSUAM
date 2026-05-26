@@ -706,6 +706,772 @@ Simpler alternatives to ablate:
 
 The next method should be derived from rival identity ambiguity, not from another threshold sweep on this failed split. The implementation target is a diagnostic `rival_identity_confirmation_v1` policy that converts saturated same-category evidence into an active observation request, then tests whether the request is explanatory and whether any commit remains safe. Any paper-facing claim still requires a fresh or predeclared validation split.
 
+### Rival Identity Diagnostic Policy
+
+Diagnostic output:
+
+```text
+script: runtime/h001_runtime/analyze_dense_conflict_rival_identity_policy.py
+output: local_dataset/runs/h001_dense_conflict_rival_identity_policy_v1
+rows: rival_identity_policy_rows.jsonl
+summary: rival_identity_policy_summary.json
+```
+
+Policy rule:
+
+```text
+commit_candidate:
+  exactly one positive-support candidate passes strict_depth_consistency_v1
+  and that candidate is semantic rank 1
+request_rival_identity_confirmation:
+  multiple guard-eligible same-category candidates exist
+  or the only guard-eligible candidate is not semantic rank 1
+defer_or_expand_retrieval:
+  no positive-support candidate exists
+```
+
+Comparison result:
+
+| Policy | Commit | Success | Wrong | Request | Diagnostic gate |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `strict_depth_consistency_v1` | 8 | 2 | 6 | 0 | fail |
+| `support_margin_only` | 8 | 2 | 6 | 0 | fail |
+| `depth_margin_only` | 8 | 2 | 6 | 0 | fail |
+| `semantic_top_only` | 8 | 2 | 6 | 0 | fail |
+| `defer_all_ambiguous` | 0 | 0 | 0 | 8 | fail: inert |
+| `rival_identity_confirmation_v1` | 2 | 2 | 0 | 6 | pass diagnostic |
+
+Against `strict_depth_consistency_v1`, `rival_identity_confirmation_v1` keeps the same number of successful commits (`2`), removes all wrong-goal commits (`-6`), and converts six ambiguous rows into identity-confirmation requests. The result is still diagnostic-only. The later fresh-source observation/detector/analyzer path was executed, but the fixed post-observation rule failed because two single-candidate `toilet` false positives were committed as wrong goals.
+
+### 에이전트 추론
+
+This result supports the mechanism-level direction: semantic uncertainty should produce an active identity-confirmation request when same-category rivals are not separable by existing detector/depth support. It also now has a clear boundary: single-candidate object-existence false positives should not be treated as solved by the same rival-identity commit rule. The next step is not policy-scale evaluation. It is failure-taxonomy refinement before any rule revision.
+
+### Rival Identity Observation Contract
+
+Contract:
+
+```text
+manifest: manifests/h001_rival_identity_observation_v1.json
+contract_name: rival_identity_observation_v1
+request_rows: 6
+primary_request_rows: 4
+secondary_stress_request_rows: 2
+planner_name: rival_identity_pair_probe_v1
+paper_claim_status: not_allowed_until_actual_observation_and_fresh_or_predeclared_validation
+```
+
+Observation contract:
+
+- Always include the focus candidate from `rival_identity_confirmation_v1`.
+- Include guard-eligible rivals first.
+- For unique guard-eligible but non-semantic-top cases, include semantic/support rivals.
+- Use non-GT `visit_position`, `position`, semantic score/rank, detector score, support, mask/box/association counts, and depth consistency only.
+- Do not use `evaluation_only_candidate_correct`, recall rank, GT object position, GT geodesic distance, success label, or wrong-goal label.
+
+Expected outputs:
+
+```text
+rival_identity_observation_plan.jsonl
+rival_identity_frame_summary.jsonl
+rival_identity_detector_associations.jsonl
+rival_identity_post_observation_evidence.jsonl
+rival_identity_observation_validation_summary.json
+```
+
+Predeclared gates:
+
+```text
+minimum_plan_gate:
+  request_rows: 6
+  primary_request_rows: 4
+  secondary_stress_request_rows: 2
+  planned_rows_minimum: 6
+  action_evidence_forbidden_key_count: 0
+detector_substrate_gate:
+  detector_box_rate_minimum: 0.80
+  sam2_mask_rate_minimum: 0.80
+  candidate_association_rate_minimum: 0.50
+post_observation_gate:
+  wrong_goal_commit_rows: 0
+  no_label_commit_rows: 0
+  new_primary_success_commit_rows_minimum: 1
+  resolved_request_rows_minimum: 1
+  secondary_stress_wrong_goal_commit_rows: 0
+```
+
+Failure taxonomy:
+
+| Failure code | Interpretation |
+| --- | --- |
+| `observation_plan_missing_target` | planner fails to create focus/rival observations from non-GT geometry |
+| `detector_substrate_failure` | rendered observations exist but detector/mask/association evidence is insufficient |
+| `identity_evidence_non_discriminative` | same-category rival evidence remains saturated after observation |
+| `unsafe_post_observation_commit` | post-observation rule commits to a wrong candidate |
+| `safe_but_inert` | no wrong commits, but no request rows are resolved |
+| `label_plumbing_failure` | committed candidate has no evaluation label |
+| `source_independence_violation` | contract is changed or tuned using evaluation labels from this failed split |
+
+### Rival Identity Observation Plan Smoke
+
+#### 사실
+
+```text
+script: runtime/h001_runtime/plan_rival_identity_observation.py
+contract: manifests/h001_rival_identity_observation_v1.json
+output: local_dataset/runs/h001_rival_identity_pair_probe_plan_v1
+plan: rival_identity_observation_plan.jsonl
+summary: rival_identity_observation_plan_summary.json
+request_rows: 6
+planned_request_rows: 6
+plan_rows: 19
+skipped_rows: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+plan_smoke_passed: true
+```
+
+Docker verification:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.plan_rival_identity_observation \
+    --contract /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_identity_observation_v1.json \
+    --runs-root /runs \
+    --workspace-root /workspace \
+    --out-root /runs/h001_rival_identity_pair_probe_plan_v1 \
+    --run-id h001_rival_identity_pair_probe_v1
+```
+
+The planner consumes only the frozen request rows and action-time candidate evidence. It uses non-GT candidate `visit_position` / `position` to create focus and rival observation rows; evaluation labels are not loaded.
+
+#### 에이전트 추론
+
+The minimum plan gate is passed and produced a detector-ready candidate artifact. Detector/SAM2 association should not be launched until the detector substrate job contract records the exact command, logs, expected files, and verification gate.
+
+### Rival Identity Frame Export Smoke
+
+#### 사실
+
+```text
+renderer: runtime/h001_runtime/export_postview_frames_v2.py
+plan_output: local_dataset/runs/h001_rival_identity_pair_probe_plan_v1
+candidate_artifact: local_dataset/runs/h001_rival_identity_pair_probe_plan_v1/rival_identity_candidate_artifact.jsonl
+frame_output: local_dataset/runs/h001_rival_identity_pair_probe_frames_v1
+frames: postview_frames_v2.jsonl
+contract_alias: rival_identity_frame_summary.jsonl
+rows_requested: 19
+rows_exported: 19
+rendered_heading_count: 142
+rgb_files: 142
+depth_files: 142
+unique_scenes: 3
+candidate_point_field: grounded_position
+uses_gt_for_action: false
+nonblank_rgb_sanity: pass
+```
+
+Docker command:
+
+```bash
+docker run --rm --gpus all --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.export_postview_frames_v2 \
+    --data-root /data \
+    --viewpoint-decisions /runs/h001_rival_identity_pair_probe_plan_v1/rival_identity_observation_plan.jsonl \
+    --candidate-artifact /runs/h001_rival_identity_pair_probe_plan_v1/rival_identity_candidate_artifact.jsonl \
+    --out-root /runs/h001_rival_identity_pair_probe_frames_v1 \
+    --policy RivalIdentityPairProbe \
+    --max-decisions 0 \
+    --semantic-tie-band 0.0 \
+    --max-candidates-per-decision 5 \
+    --yaw-offsets=-30,0,30 \
+    --dedupe-degrees 10 \
+    --candidate-point-field grounded_position \
+    --width 160 \
+    --height 120 \
+    --camera-height 1.5 \
+    --hfov 90.0
+```
+
+The first attempt without `--gpus all` failed at Habitat EGL context creation. This is an environment/runtime requirement for rendering, not a detector result.
+
+#### 에이전트 추론
+
+The active observation plan is now renderable across the three request scenes. The next step is to write the detector substrate job contract with exact command, log path, expected files, and substrate gates before launching `GroundingDINO + SAM2`.
+
+### Rival Identity Detector Substrate Job Contract
+
+#### 사실
+
+```text
+script: runtime/jobs/rival_identity_pair_probe_detector_substrate.sh
+status: completed
+frames: local_dataset/runs/h001_rival_identity_pair_probe_frames_v1/rival_identity_frame_summary.jsonl
+candidate_artifact: local_dataset/runs/h001_rival_identity_pair_probe_plan_v1/rival_identity_candidate_artifact.jsonl
+output: local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1
+detector_output: local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/detector_v3c
+log_template: runtime/logs/rival-identity-detector-substrate-<timestamp>.log
+status_file: local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/job_status.json
+image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+device: cuda
+candidate_point_field: grounded_position
+query_template: "{query}"
+box_threshold: 0.10
+text_threshold: 0.10
+association_depth_tolerance_m: 1.0
+expected_frame_rows: 19
+```
+
+Expected files:
+
+```text
+local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/detector_v3c/summary.json
+local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/detector_v3c/detector_candidate_associations.jsonl
+local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/rival_identity_detector_associations.jsonl
+local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/rival_identity_detector_frame_summary.jsonl
+local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/rival_identity_detector_substrate_summary.json
+```
+
+Launch command:
+
+```bash
+ts=$(date +%Y%m%d-%H%M%S)
+tmux new-session -d -s h001-rival-identity-detector-${ts} \
+  "cd /home/yoohyun/research3 && TS=${ts} bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/rival_identity_pair_probe_detector_substrate.sh"
+```
+
+Verification command:
+
+```bash
+cat local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/job_status.json
+cat local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/rival_identity_detector_substrate_summary.json
+```
+
+Pre-launch checks already passed:
+
+```text
+bash -n: pass
+frame_rows: 19
+candidate_artifact_rows: 3
+rival_identity_request_id_trace_rows: 19
+```
+
+Detector substrate gate:
+
+```text
+detector_rows == 19
+detector_box_rate >= 0.80
+sam2_mask_rate >= 0.80
+candidate_association_rate >= 0.50
+uses_gt_for_action == false
+```
+
+The wrapper copies detector associations to the contract-level alias `rival_identity_detector_associations.jsonl` and writes a gate summary to `rival_identity_detector_substrate_summary.json`.
+
+#### 에이전트 추론
+
+This contract keeps the next GPU-heavy detector job reproducible and inspectable. The job should be launched as a background `tmux` task; while it runs, do not continuously monitor unless a dependent task needs the result.
+
+#### Launch Status
+
+```text
+launched_at: 2026-05-26 01:20:36 KST
+tmux_session: h001-rival-identity-detector-20260526-012036
+command: TS=20260526-012036 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/rival_identity_pair_probe_detector_substrate.sh
+status_file: local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/job_status.json
+status_at_launch_check: running
+stage_at_launch_check: detector_mask_scoring
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/rival-identity-detector-substrate-20260526-012036.log
+completion_status: completed
+completed_stage: completed
+```
+
+#### Detector Substrate Result
+
+```text
+output: local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/rival_identity_detector_substrate_summary.json
+detector_rows: 19
+detector_box_rate: 0.8421
+sam2_mask_rate: 0.8421
+candidate_association_rate: 0.6316
+rows_with_candidate_association: 12
+associated_candidate_heading_count: 57
+uses_gt_for_action: false
+passes_detector_substrate_gate: true
+paper_claim_allowed: false
+```
+
+The detector substrate gate passed. This does not establish ObjectNav utility; it only unblocks post-observation evidence construction and validation against the frozen request rows.
+
+### Rival Identity Post-observation Evidence Contract
+
+#### 사실
+
+```text
+status: analyzer_run_diagnostic_passed
+evidence_input: local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/rival_identity_detector_associations.jsonl
+plan_input: local_dataset/runs/h001_rival_identity_pair_probe_plan_v1/rival_identity_observation_plan.jsonl
+primary_label_input: local_dataset/runs/h001_dense_conflict_independent_terminal_evidence_profile_v1/evaluation_labels.jsonl
+secondary_label_input: local_dataset/runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/evaluation_labels.jsonl
+evidence_output: local_dataset/runs/h001_rival_identity_pair_probe_post_observation_v1/rival_identity_post_observation_evidence.jsonl
+decision_output: local_dataset/runs/h001_rival_identity_pair_probe_post_observation_v1/rival_identity_post_observation_decisions.jsonl
+summary_output: local_dataset/runs/h001_rival_identity_pair_probe_post_observation_v1/rival_identity_observation_validation_summary.json
+```
+
+Action-time evidence may use detector association, target viewpoint, candidate geometry, semantic/support, and request metadata. It must not use evaluation labels, recall rank, GT object position, GT geodesic distance, or success/wrong labels. Evaluation labels are joined only after decisions are written. The label join key is `(episode_key, candidate_id)`, and the request join key is `rival_identity_request_id`.
+
+Frozen per-candidate evidence fields:
+
+```text
+post_associated_heading_count
+post_own_associated_heading_count
+post_cross_associated_heading_count
+post_best_box_score
+post_min_depth_error_m
+post_own_target_role_count
+post_cross_target_role_count
+post_identity_margin
+```
+
+Frozen decision rule:
+
+```text
+strong_identity_evidence(candidate) =
+  post_own_associated_heading_count >= 2
+  and post_own_associated_heading_count > post_cross_associated_heading_count
+  and post_identity_margin >= 2
+
+if exactly one candidate has strong_identity_evidence:
+  action = commit_candidate
+  selected_candidate_id = that candidate
+else:
+  action = defer_unresolved_identity
+  selected_candidate_id = null
+```
+
+Rule constraints:
+
+- No category-specific branch for `chair`, `plant`, `sofa`, or other query names.
+- No fallback commit to semantic top when post-observation evidence is absent or non-discriminative.
+- No threshold sweep on the six request rows after evaluation labels are joined.
+- If a committed candidate has no label, count it as `no_label_commit_rows` and classify as `label_plumbing_failure`.
+
+Post-observation validation metrics:
+
+```text
+request_rows
+resolved_request_rows
+commit_rows
+success_commit_rows
+wrong_goal_commit_rows
+no_label_commit_rows
+new_primary_success_commit_rows
+primary_wrong_goal_commit_rows
+secondary_stress_wrong_goal_commit_rows
+defer_unresolved_identity_rows
+identity_evidence_non_discriminative_rows
+post_observation_no_candidate_support_rows
+post_observation_cross_view_aliasing_rows
+```
+
+Failure taxonomy additions:
+
+| Failure code | Interpretation |
+| --- | --- |
+| `post_observation_no_candidate_support` | no candidate gets own-view detector association after active observation |
+| `post_observation_cross_view_aliasing` | a candidate is associated mainly from another candidate's target view |
+| `post_observation_multiple_strong_candidates` | more than one candidate satisfies the strong identity rule |
+| `post_observation_margin_too_small` | own-view support exists but is not separated from the nearest rival |
+| `post_observation_safe_defer` | no commit is made because the evidence is weak or ambiguous |
+
+#### 에이전트 추론
+
+This contract turns the detector substrate into a falsifiable active-observation test. A positive result requires at least one newly resolved primary request without wrong-goal or no-label commits. A negative result is still useful if it separates detector substrate failure, cross-view aliasing, insufficient margin, and safe-but-inert deferral.
+
+### Rival Identity Post-observation Analyzer Smoke
+
+#### 사실
+
+```text
+script: runtime/h001_runtime/analyze_rival_identity_post_observation.py
+output: local_dataset/runs/h001_rival_identity_pair_probe_post_observation_v1
+summary: rival_identity_observation_validation_summary.json
+evidence_rows: rival_identity_post_observation_evidence.jsonl
+decision_rows: rival_identity_post_observation_decisions.jsonl
+evaluated_rows: rival_identity_post_observation_evaluated.jsonl
+request_rows: 6
+evidence_rows_count: 19
+decision_rows_count: 6
+commit_rows: 1
+success_commit_rows: 1
+wrong_goal_commit_rows: 0
+no_label_commit_rows: 0
+new_primary_success_commit_rows: 1
+secondary_stress_wrong_goal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+post_observation_gate_passed: true
+```
+
+Docker command:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.analyze_rival_identity_post_observation \
+    --detector-associations /runs/h001_rival_identity_pair_probe_detector_substrate_v1/rival_identity_detector_associations.jsonl \
+    --plan /runs/h001_rival_identity_pair_probe_plan_v1/rival_identity_observation_plan.jsonl \
+    --primary-evaluation-labels /runs/h001_dense_conflict_independent_terminal_evidence_profile_v1/evaluation_labels.jsonl \
+    --secondary-evaluation-labels /runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/evaluation_labels.jsonl \
+    --out-root /runs/h001_rival_identity_pair_probe_post_observation_v1
+```
+
+Per-request outcome:
+
+| Request | Query | Role | Action | Result |
+| --- | --- | --- | --- | --- |
+| `rival_identity:0` | `chair` | primary | commit `vlmaps:export:chair:spatial_nms:2` | success |
+| `rival_identity:1` | `plant` | primary | defer | `post_observation_no_candidate_support` |
+| `rival_identity:2` | `plant` | primary | defer | `post_observation_no_candidate_support` |
+| `rival_identity:3` | `plant` | primary | defer | `post_observation_no_candidate_support` |
+| `rival_identity:4` | `sofa` | secondary_stress | defer | `post_observation_cross_view_aliasing` |
+| `rival_identity:5` | `sofa` | secondary_stress | defer | `post_observation_cross_view_aliasing` |
+
+#### 에이전트 추론
+
+This is the first positive end-to-end diagnostic for the active identity-confirmation path: the frozen rule resolves one primary wrong-goal request without introducing wrong-goal or no-label commits. It is still not a paper-facing utility claim because the request rows are a small diagnostic set derived from the failed independent validation. The next step should be a fresh or predeclared validation split for the same frozen analyzer, not policy-scale integration.
+
+### Rival Identity Fresh Validation Source Design
+
+#### 사실
+
+Selected source:
+
+```text
+source_name: rival_identity_generalization_v1
+parent_split: dense_conflict_generalization_v1
+parent_manifest: manifests/h001_dense_conflict_generalization_v1.json
+action_evidence: local_dataset/runs/h001_dense_conflict_generalization_terminal_evidence_v1/action_evidence_rows.jsonl
+evaluation_labels: local_dataset/runs/h001_dense_conflict_generalization_terminal_evidence_v1/evaluation_labels.jsonl
+design_probe: local_dataset/runs/h001_rival_identity_generalization_policy_design_probe_v1
+scope: primary rows only
+selection_rule: apply frozen rival_identity_confirmation_v1 to action-time evidence and keep request_rival_identity_confirmation rows
+label_use_for_selection: forbidden
+```
+
+Freshness rule:
+
+- Exclude local diagnostic scenes already used by `rival_identity_pair_probe_v1`: `DYehNKdT76V`, `7MXmsvcQjpJ`, `y9hTuugGdiq`.
+- Do not include the secondary `y9hTuugGdiq/sofa` stress rows in the fresh source; those rows were already used in the diagnostic analyzer smoke.
+- Do not filter rows by `evaluation_only_candidate_correct`, success, or wrong-goal label.
+
+Design probe command:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.analyze_dense_conflict_rival_identity_policy \
+    --guard-config /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_terminal_guard_v1.json \
+    --primary-action-evidence /runs/h001_dense_conflict_generalization_terminal_evidence_v1/action_evidence_rows.jsonl \
+    --primary-evaluation-labels /runs/h001_dense_conflict_generalization_terminal_evidence_v1/evaluation_labels.jsonl \
+    --secondary-action-evidence /runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/action_evidence_rows.jsonl \
+    --secondary-evaluation-labels /runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/evaluation_labels.jsonl \
+    --out-root /runs/h001_rival_identity_generalization_policy_design_probe_v1
+```
+
+Primary-only design probe result:
+
+```text
+parent_rows: 20
+parent_scenes: 9
+parent_queries: bed, chair, plant, sofa, toilet, tv_monitor
+selected_request_rows: 6
+selected_request_scenes: 5cdEh9F2hJL, CrMo8WxCyVb, mL8ThkuaVTM
+selected_request_queries: bed, toilet
+request_reason_counts:
+  request_identity_no_guard_eligible_positive_candidates: 4
+  request_identity_unique_guard_eligible_not_semantic_top: 2
+strict_depth_consistency_v1 primary commit/success/wrong: 3 / 3 / 0
+rival_identity_confirmation_v1 primary commit/success/wrong/request: 1 / 1 / 0 / 6
+```
+
+Predeclared request rows for the next miner:
+
+| Episode | Scene | Query | Reason |
+| --- | --- | --- | --- |
+| `HM3D ObjectNav v2:val:CrMo8WxCyVb:24:2:bed` | `CrMo8WxCyVb` | `bed` | `request_identity_unique_guard_eligible_not_semantic_top` |
+| `HM3D ObjectNav v2:val:5cdEh9F2hJL:14:2:toilet` | `5cdEh9F2hJL` | `toilet` | `request_identity_no_guard_eligible_positive_candidates` |
+| `HM3D ObjectNav v2:val:CrMo8WxCyVb:22:5:bed` | `CrMo8WxCyVb` | `bed` | `request_identity_unique_guard_eligible_not_semantic_top` |
+| `HM3D ObjectNav v2:val:mL8ThkuaVTM:2:4:bed` | `mL8ThkuaVTM` | `bed` | `request_identity_no_guard_eligible_positive_candidates` |
+| `HM3D ObjectNav v2:val:mL8ThkuaVTM:18:0:bed` | `mL8ThkuaVTM` | `bed` | `request_identity_no_guard_eligible_positive_candidates` |
+| `HM3D ObjectNav v2:val:CrMo8WxCyVb:1:2:toilet` | `CrMo8WxCyVb` | `toilet` | `request_identity_no_guard_eligible_positive_candidates` |
+
+Source-freeze gate:
+
+```text
+request_rows >= 6
+request_scenes >= 3
+request_queries >= 2
+overlap_with_previous_diagnostic_scenes == 0
+action_evidence_forbidden_key_count == 0
+uses_gt_for_action == false
+manifest_status == frozen_before_observation_planning
+```
+
+Source-freeze implementation result:
+
+```text
+source_miner: runtime/h001_runtime/build_rival_identity_generalization_manifest.py
+source_output: local_dataset/runs/h001_rival_identity_generalization_source_v1
+manifest: manifests/h001_rival_identity_generalization_v1.json
+verify: manifests/h001_rival_identity_generalization_v1.verify.json
+manifest_status: frozen
+verify_ok: true
+request_rows: 6
+request_scenes: 3
+request_queries: 2
+excluded_scene_overlap: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+```
+
+Source miner command:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.build_rival_identity_generalization_manifest \
+    --action-evidence /runs/h001_dense_conflict_generalization_terminal_evidence_v1/action_evidence_rows.jsonl \
+    --evaluation-labels /runs/h001_dense_conflict_generalization_terminal_evidence_v1/evaluation_labels.jsonl \
+    --guard-config /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_terminal_guard_v1.json \
+    --out-manifest /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_identity_generalization_v1.json \
+    --verify-out /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_identity_generalization_v1.verify.json \
+    --out-root /runs/h001_rival_identity_generalization_source_v1
+```
+
+Planner smoke result:
+
+```text
+planner_output: local_dataset/runs/h001_rival_identity_generalization_plan_v1
+request_rows: 6
+planned_request_rows: 6
+plan_rows: 12
+skipped_rows: 0
+candidate_artifact_rows: 4
+candidate_artifact_candidates: 7
+plan_gate: true
+uses_gt_for_action: false
+```
+
+Planner smoke command:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.plan_rival_identity_observation \
+    --contract /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_identity_generalization_v1.json \
+    --runs-root /runs \
+    --workspace-root /workspace \
+    --out-root /runs/h001_rival_identity_generalization_plan_v1 \
+    --run-id h001_rival_identity_generalization_v1
+```
+
+Frame export smoke result:
+
+```text
+frame_output: local_dataset/runs/h001_rival_identity_generalization_frames_v1
+frames: rival_identity_frame_summary.jsonl
+rows_requested: 12
+rows_exported: 12
+rendered_heading_count: 72
+rgb_files: 72
+depth_files: 72
+unique_scenes: 3
+candidate_point_field: grounded_position
+nonblank_rgb_sanity: pass
+uses_gt_for_action: false
+```
+
+Frame export command:
+
+```bash
+docker run --rm --gpus all --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.export_postview_frames_v2 \
+    --data-root /data \
+    --viewpoint-decisions /runs/h001_rival_identity_generalization_plan_v1/rival_identity_observation_plan.jsonl \
+    --candidate-artifact /runs/h001_rival_identity_generalization_plan_v1/rival_identity_candidate_artifact.jsonl \
+    --out-root /runs/h001_rival_identity_generalization_frames_v1 \
+    --policy RivalIdentityPairProbe \
+    --max-decisions 0 \
+    --semantic-tie-band 0.0 \
+    --max-candidates-per-decision 5 \
+    --yaw-offsets=-30,0,30 \
+    --dedupe-degrees 10 \
+    --candidate-point-field grounded_position \
+    --width 160 \
+    --height 120 \
+    --camera-height 1.5 \
+    --hfov 90.0
+```
+
+Detector/SAM2 substrate launch:
+
+```text
+tmux_session: h001-rival-identity-generalization-detector-20260526-102744
+status: completed
+output: local_dataset/runs/h001_rival_identity_generalization_detector_substrate_v1
+log: runtime/logs/rival-identity-generalization-detector-substrate-20260526-102744.log
+expected_files:
+  detector_v3c/summary.json
+  detector_v3c/detector_candidate_associations.jsonl
+  rival_identity_detector_associations.jsonl
+  rival_identity_detector_substrate_summary.json
+detector_rows: 12
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 1.0
+associated_candidate_heading_count: 84
+detector_substrate_gate: true
+uses_gt_for_action: false
+verification_command:
+  cat local_dataset/runs/h001_rival_identity_generalization_detector_substrate_v1/job_status.json
+  cat local_dataset/runs/h001_rival_identity_generalization_detector_substrate_v1/rival_identity_detector_substrate_summary.json
+```
+
+Launch command:
+
+```bash
+TS=20260526-102744
+tmux new-session -d -s h001-rival-identity-generalization-detector-${TS} \
+  "cd /home/yoohyun/research3 && \
+  TS=${TS} \
+  PLAN_OUT=/home/yoohyun/research3/local_dataset/runs/h001_rival_identity_generalization_plan_v1 \
+  FRAMES=/home/yoohyun/research3/local_dataset/runs/h001_rival_identity_generalization_frames_v1/rival_identity_frame_summary.jsonl \
+  FRAME_EXPORT_SUMMARY=/home/yoohyun/research3/local_dataset/runs/h001_rival_identity_generalization_frames_v1/summary.json \
+  CANDIDATE_ARTIFACT=/home/yoohyun/research3/local_dataset/runs/h001_rival_identity_generalization_plan_v1/rival_identity_candidate_artifact.jsonl \
+  OUT=/home/yoohyun/research3/local_dataset/runs/h001_rival_identity_generalization_detector_substrate_v1 \
+  DETECTOR_OUT=/home/yoohyun/research3/local_dataset/runs/h001_rival_identity_generalization_detector_substrate_v1/detector_v3c \
+  EXPECTED_FRAME_ROWS=12 \
+  MAX_FRAMES=12 \
+  LOG=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/rival-identity-generalization-detector-substrate-${TS}.log \
+  STATUS=/home/yoohyun/research3/local_dataset/runs/h001_rival_identity_generalization_detector_substrate_v1/job_status.json \
+  bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/rival_identity_pair_probe_detector_substrate.sh"
+```
+
+Fresh-source post-observation analyzer result:
+
+```text
+output: local_dataset/runs/h001_rival_identity_generalization_post_observation_v1
+request_rows: 6
+evidence_rows: 12
+decision_rows: 6
+commit/success/wrong/no-label: 4 / 2 / 2 / 0
+new_primary_success_commit_rows: 2
+resolved_request_rows: 4
+wrong_goal_commit_rows: 2
+failure_taxonomy_counts:
+  none: 2
+  post_observation_cross_view_aliasing: 2
+  unsafe_post_observation_commit: 2
+post_observation_gate_passed: false
+uses_gt_for_action: false
+```
+
+Wrong commits:
+
+| Request | Episode | Query | Selected candidate | Failure |
+| --- | --- | --- | --- | --- |
+| `rival_identity:1` | `HM3D ObjectNav v2:val:5cdEh9F2hJL:14:2:toilet` | `toilet` | `vlmaps:export:toilet:spatial_nms:0` | single false-positive focus candidate |
+| `rival_identity:5` | `HM3D ObjectNav v2:val:CrMo8WxCyVb:1:2:toilet` | `toilet` | `vlmaps:export:toilet:spatial_nms:0` | single false-positive focus candidate |
+
+#### 에이전트 추론
+
+The failed `toilet` rows are not rival-identity ambiguity: each plan contains only the focus candidate, and strong own-view detector association confirms the candidate as a visible object-like detection while the post-join ObjectNav label marks it wrong. This suggests that `request_identity_no_guard_eligible_positive_candidates` mixes two mechanisms: rival identity ambiguity and object-existence false positive. The next revision should first split these mechanisms in the failure taxonomy before changing thresholds.
+
+Fresh validation gate after observation:
+
+```text
+wrong_goal_commit_rows == 0
+no_label_commit_rows == 0
+new_primary_success_commit_rows >= 1
+resolved_request_rows >= 1
+action_evidence_forbidden_key_count == 0
+uses_gt_for_action == false
+```
+
+Promotion beyond this source requires a larger source:
+
+```text
+request_rows >= 20
+request_scenes >= 5
+request_queries >= 3
+at least one non-furniture or small-object query
+same frozen analyzer and thresholds
+failure taxonomy reported for all unresolved rows
+```
+
+#### 에이전트 추론
+
+`rival_identity_generalization_v1` was the right next source because it is a frozen scene-disjoint ObjectNav dense-conflict split and did not reuse the local diagnostic scenes. The result is a useful negative fresh validation: the substrate is strong, but the post-observation commit rule is unsafe when a request has no real rival and the only focus candidate is a false positive.
+
+### 에이전트 추론
+
+The contract keeps this step tied to active perception rather than another terminal arbitration threshold. The broader validation failed in an informative way, so the next implementation should diagnose mechanism categories first. In particular, `request_identity_no_guard_eligible_positive_candidates` should not be treated as the same problem as dense rival identity ambiguity until the taxonomy separates object-existence false positives from same-category rival disambiguation.
+
 ### Step 1: Freeze Row Manifest
 
 Create a manifest only when implementation starts:

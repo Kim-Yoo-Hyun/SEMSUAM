@@ -871,6 +871,87 @@ Independent validation result:
 
 Both validation outputs have `action_evidence_forbidden_key_count = 0`, `no_label_commit_rows = 0`, and `uses_gt_for_action = false`. The result rejects `strict_depth_consistency_v1` as an independent terminal arbitration rule.
 
+Dense conflict terminal failure diagnosis:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.diagnose_dense_conflict_terminal_failures \
+    --guard-config /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_terminal_guard_v1.json \
+    --primary-action-evidence /runs/h001_dense_conflict_independent_terminal_evidence_profile_v1/action_evidence_rows.jsonl \
+    --primary-evaluation-labels /runs/h001_dense_conflict_independent_terminal_evidence_profile_v1/evaluation_labels.jsonl \
+    --primary-evaluated-rows /runs/h001_dense_conflict_independent_terminal_validation_v1/terminal_validation_evaluated_rows.jsonl \
+    --secondary-action-evidence /runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/action_evidence_rows.jsonl \
+    --secondary-evaluation-labels /runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/evaluation_labels.jsonl \
+    --secondary-evaluated-rows /runs/h001_dense_conflict_secondary_terminal_validation_v1/terminal_validation_evaluated_rows.jsonl \
+    --out-root /runs/h001_dense_conflict_terminal_failure_diagnostic_v1
+```
+
+Failure diagnosis result:
+
+| Artifact | Status | Key result |
+| --- | --- | --- |
+| `local_dataset/runs/h001_dense_conflict_terminal_failure_diagnostic_v1/terminal_failure_diagnostic_summary.json` | completed | wrong rows `6`; `repeated_wrong_instance_selected_by_saturated_support 5`; `guard_cannot_arbitrate_between_eligible_correct_and_wrong 1`; support-score saturation on all wrong rows |
+| `local_dataset/runs/h001_dense_conflict_terminal_failure_diagnostic_v1/mechanism_revision_contract.json` | design contract | `rival_identity_confirmation_v1`; treat dense same-category positive support as identity ambiguity; request rival identity confirmation rather than terminal commit |
+
+Dense conflict rival identity diagnostic policy:
+
+```bash
+docker run --rm --ipc=host \
+  --user "$(id -u):$(id -g)" \
+  -e HOME=/tmp \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.analyze_dense_conflict_rival_identity_policy \
+    --guard-config /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_dense_conflict_terminal_guard_v1.json \
+    --primary-action-evidence /runs/h001_dense_conflict_independent_terminal_evidence_profile_v1/action_evidence_rows.jsonl \
+    --primary-evaluation-labels /runs/h001_dense_conflict_independent_terminal_evidence_profile_v1/evaluation_labels.jsonl \
+    --secondary-action-evidence /runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/action_evidence_rows.jsonl \
+    --secondary-evaluation-labels /runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/evaluation_labels.jsonl \
+    --out-root /runs/h001_dense_conflict_rival_identity_policy_v1
+```
+
+Policy diagnostic result:
+
+| Policy | Commit / Success / Wrong | Request rows | Status |
+| --- | --- | ---: | --- |
+| `rival_identity_confirmation_v1` | `2 / 2 / 0` | 6 | local diagnostic pass |
+| `strict_depth_consistency_v1` | `8 / 2 / 6` | 0 | fail |
+| `support_margin_only` | `8 / 2 / 6` | 0 | fail |
+| `depth_margin_only` | `8 / 2 / 6` | 0 | fail |
+| `semantic_top_only` | `8 / 2 / 6` | 0 | fail |
+| `defer_all_ambiguous` | `0 / 0 / 0` | 8 | safe but inert |
+
+Artifact: `local_dataset/runs/h001_dense_conflict_rival_identity_policy_v1/rival_identity_policy_summary.json`.
+
+Active observation contract:
+
+```bash
+jq . hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_identity_observation_v1.json >/dev/null
+```
+
+Contract summary:
+
+| Field | Value |
+| --- | --- |
+| Contract | `rival_identity_observation_v1` |
+| Manifest | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_identity_observation_v1.json` |
+| Request rows | `6` |
+| Planner | `rival_identity_pair_probe_v1` |
+| Detector gate | box/SAM2/association `>= 0.80 / 0.80 / 0.50` |
+| Post-observation gate | wrong-goal `0`, no-label `0`, newly resolved primary request `>= 1` |
+
 ### 사용 중인 Image
 
 ```text
@@ -1200,6 +1281,21 @@ result: detector substrate pass, follow-up evidence safety/full gate fail
 | Dense conflict generalization terminal evidence extraction | `local_dataset/runs/h001_dense_conflict_generalization_terminal_evidence_v1/terminal_arbitration_design_summary.json` | design gate pass, terminal v0 fail | added `extract_dense_conflict_generalization_evidence.py`; outputs `action_evidence_rows.jsonl`, `evaluation_labels.jsonl`, and `terminal_policy_diagnostic_rows.jsonl`; action evidence rows `20`, evaluation label rows `55`, associated/unassociated rows `7/13`, forbidden action key count `0`, `uses_gt_for_action false`; `proposed_conservative_v0` commits `7/20` with `3` success and `4` wrong-goal commits, so terminal arbitration validation remains blocked pending safer guard design |
 | Dense conflict generalization terminal guard design | `local_dataset/runs/h001_dense_conflict_generalization_terminal_guard_design_v1/terminal_guard_design_summary.json` | design gate pass, validation candidate | added `design_dense_conflict_terminal_guard.py`; selected `strict_depth_consistency_v1` with `max_depth_error_m 0.33`, `min_associated_heading_count 2`, `min_mask_hit_count 2`, `max_semantic_rank 5`; same diagnostic split commit/success/wrong `3/3/0`, associated commit rate `3/7`, `uses_gt_for_action false`; this is same-split guard design and not a paper-facing method claim |
 | Dense conflict generalization fixed terminal validation | `local_dataset/runs/h001_dense_conflict_generalization_terminal_validation_v1/terminal_validation_summary.json` | same-split validation pass | added `manifests/h001_dense_conflict_terminal_guard_v1.json` and `validate_dense_conflict_terminal_arbitration.py`; action evidence forbidden key count `0`, stable metric match design `true`, local fixed-rule validation pass `true`, rows `20`, associated rows `7`, commit/success/wrong `3/3/0`, associated commit/success/wrong `3/3/0`, `uses_gt_for_action false`; paper claim status remains `same_split_fixed_rule_validation_not_method_claim` |
+| Dense conflict independent terminal validation | `local_dataset/runs/h001_dense_conflict_independent_terminal_validation_v1/terminal_validation_summary.json` and `local_dataset/runs/h001_dense_conflict_secondary_terminal_validation_v1/terminal_validation_summary.json` | independent validation fail | primary commit/success/wrong `6/2/4`, secondary stress `2/0/2`, forbidden action key count `0`, no-label commits `0`, `uses_gt_for_action false`; rejects `strict_depth_consistency_v1` as independent terminal arbitration rule |
+| Dense conflict terminal failure diagnosis | `local_dataset/runs/h001_dense_conflict_terminal_failure_diagnostic_v1/terminal_failure_diagnostic_summary.json` | mechanism fixed, revision contract defined | added `diagnose_dense_conflict_terminal_failures.py`; wrong rows `6`, `repeated_wrong_instance_selected_by_saturated_support 5`, `guard_cannot_arbitrate_between_eligible_correct_and_wrong 1`; `mechanism_revision_contract.json` defines `rival_identity_confirmation_v1` as design-only next diagnostic policy |
+| Dense conflict rival identity policy diagnostic | `local_dataset/runs/h001_dense_conflict_rival_identity_policy_v1/rival_identity_policy_summary.json` | local diagnostic pass | added `analyze_dense_conflict_rival_identity_policy.py`; `rival_identity_confirmation_v1` commit/success/wrong `2/2/0`, request rows `6`, diagnostic pass `true`; support/depth/semantic-top simpler alternatives keep `6` wrong-goal commits, while `defer_all_ambiguous` has `0` success commits; paper claim remains blocked until actual requested observations are evaluated |
+| Dense conflict rival identity observation contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_identity_observation_v1.json` | frozen, plan gate passed | freezes six `request_rival_identity_confirmation` rows; planner `rival_identity_pair_probe_v1`; detector substrate gate box/SAM2/association `0.80/0.80/0.50`; post-observation gate requires wrong-goal `0`, no-label `0`, newly resolved primary request `>=1`, secondary stress wrong-goal `0`; paper claim remains blocked |
+| Dense conflict rival identity observation plan smoke | `local_dataset/runs/h001_rival_identity_pair_probe_plan_v1/rival_identity_observation_plan_summary.json` | Docker plan smoke pass | added `plan_rival_identity_observation.py`; output plan rows `19`, request rows `6`, planned request rows `6`, skipped rows `0`, action evidence forbidden key count `0`, `uses_gt_for_action false`; also writes `rival_identity_candidate_artifact.jsonl` with `3` artifact rows and `10` candidates |
+| Dense conflict rival identity frame export smoke | `local_dataset/runs/h001_rival_identity_pair_probe_frames_v1/summary.json` | Docker frame smoke pass | renderer `export_postview_frames_v2.py`; rows requested/exported `19/19`, rendered headings `142`, RGB/depth files `142/142`, unique scenes `3`, candidate point field `grounded_position`, nonblank RGB sanity pass, `uses_gt_for_action false`; output alias `rival_identity_frame_summary.jsonl`; Habitat EGL render required Docker `--gpus all` |
+| Dense conflict rival identity detector substrate job | `local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/rival_identity_detector_substrate_summary.json` | completed, substrate gate pass | tmux `h001-rival-identity-detector-20260526-012036`; log `runtime/logs/rival-identity-detector-substrate-20260526-012036.log`; detector rows `19`, detector box `0.8421`, SAM2 mask `0.8421`, candidate association `0.6316`, rows with association `12/19`, associated candidate heading count `57`, `uses_gt_for_action false`; diagnostic analyzer result recorded below |
+| Dense conflict rival identity post-observation contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/07_evaluation_contract.md` and `runtime/workflow-20260521-dense-conflict.md` | frozen, analyzer run | freezes action/evaluation separation, label join key `(episode_key, candidate_id)`, own-view versus cross-view detector evidence fields, and fixed commit/defer rule; analyzer result is recorded below |
+| Dense conflict rival identity post-observation analyzer | `local_dataset/runs/h001_rival_identity_pair_probe_post_observation_v1/rival_identity_observation_validation_summary.json` | Docker diagnostic gate pass | added `analyze_rival_identity_post_observation.py`; evidence rows `19`, decision rows `6`, commit/success/wrong/no-label `1/1/0/0`, new primary success `1`, secondary stress wrong-goal `0`, action evidence forbidden key count `0`, `uses_gt_for_action false`; failure taxonomy `none 1`, `post_observation_no_candidate_support 3`, `post_observation_cross_view_aliasing 2`; paper claim remains blocked because fresh-source validation later failed |
+| Dense conflict rival identity fresh source design | `local_dataset/runs/h001_rival_identity_generalization_policy_design_probe_v1/rival_identity_policy_summary.json` | source criteria fixed | selects `rival_identity_generalization_v1` from frozen `dense_conflict_generalization_v1` primary action evidence; parent rows `20`, request rows `6`, request scenes `3`, request queries `2`; excludes prior diagnostic scenes `DYehNKdT76V`, `7MXmsvcQjpJ`, `y9hTuugGdiq`; label-based selection is forbidden |
+| Dense conflict rival identity fresh source manifest | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_identity_generalization_v1.json` and `local_dataset/runs/h001_rival_identity_generalization_source_v1/source_summary.json` | frozen, source gate pass | added `build_rival_identity_generalization_manifest.py`; Docker `py_compile` and source freeze run passed; verify `manifests/h001_rival_identity_generalization_v1.verify.json` reports `ok true`; request rows `6`, request scenes `3`, request queries `2`, excluded-scene overlap `0`, action evidence forbidden key count `0`, `uses_gt_for_action false` |
+| Dense conflict rival identity fresh plan smoke | `local_dataset/runs/h001_rival_identity_generalization_plan_v1/rival_identity_observation_plan_summary.json` | Docker plan smoke pass | reused `plan_rival_identity_observation.py` on frozen fresh manifest; request rows `6`, planned request rows `6`, plan rows `12`, skipped rows `0`, candidate artifact rows/candidates `4/7`, plan gate `true`, `uses_gt_for_action false`; downstream frame, detector, and analyzer results are recorded below |
+| Dense conflict rival identity fresh frame smoke | `local_dataset/runs/h001_rival_identity_generalization_frames_v1/summary.json` | Docker frame smoke pass | patched `export_postview_frames_v2.py` to write `rival_identity_frame_summary.jsonl` alias for rival-identity rows; rows requested/exported `12/12`, rendered headings `72`, RGB/depth files `72/72`, unique scenes `3`, candidate point field `grounded_position`, nonblank RGB sanity pass, `uses_gt_for_action false`; downstream detector substrate passed |
+| Dense conflict rival identity fresh detector substrate job | `local_dataset/runs/h001_rival_identity_generalization_detector_substrate_v1/rival_identity_detector_substrate_summary.json` | completed, substrate gate pass | tmux `h001-rival-identity-generalization-detector-20260526-102744`; detector rows `12`, detector box `1.0`, SAM2 mask `1.0`, candidate association `1.0`, rows with association `12`, associated candidate heading count `84`, `uses_gt_for_action false`; detector substrate gate passed |
+| Dense conflict rival identity fresh post-observation analyzer | `local_dataset/runs/h001_rival_identity_generalization_post_observation_v1/rival_identity_observation_validation_summary.json` | completed, gate fail | same frozen analyzer and thresholds as diagnostic; request/evidence/decision rows `6/12/6`; commit/success/wrong/no-label `4/2/2/0`; new primary success `2`, resolved rows `4`, action evidence forbidden key count `0`, `uses_gt_for_action false`; gate failed on wrong-goal commits from two single-candidate `toilet` false positives |
 
 ### 에이전트 추론
 
@@ -1236,7 +1332,7 @@ result: detector substrate pass, follow-up evidence safety/full gate fail
 - V4 request-identity bottleneck diagnostic 기준으로 first-stage selected direct commit은 wrong-goal `3/7`이라 안전하지 않다. Existing second-stage identity objective V2는 success `2/7`, wrong-goal `0/7`의 nonzero safe utility를 만든다.
 - V4 + second-stage identity V2 terminal diagnostic은 same V4 separate-split substrate에서 local integrated full gate를 통과했다. 그러나 `validation_scope v4_fixed_terminal_diagnostic`이라 `utility_proof_passed false`로 기록한다.
 - Dense terminal arbitration diagnostic은 two-row `y9hTuugGdiq/chair` local diagnostic에서 positive였지만 all positive-support candidates가 post-hoc correct라 wrong-goal repair proof가 아니다.
-- Independent dense conflict validation design은 `runtime/workflow-20260521-dense-conflict.md`에 고정했다. `manifests/h001_dense_conflict_v1.json`과 dense recall gate는 Docker 검증을 통과했다. Host/Docker NVIDIA runtime은 2026-05-23에 복구됐다. `spatial_nms_p95_k100_d10`과 `spatial_nms_p90_k200_d5` final recall gate는 모두 실패했다. Selected `v3_fresh_spatial_p97_k20` primary substrate와 held-out `sofa` secondary-stress substrate는 recall과 detector/association validation을 통과했다. Broader `dense_conflict_generalization_v1`도 candidate recall과 detector substrate gate를 통과했고, frozen `strict_depth_consistency_v1` validation은 same-split 기준 v0 wrong commits를 막았다. 다음 blocker는 independent terminal validation split/source artifact 설계다.
+- Independent dense conflict validation design은 `runtime/workflow-20260521-dense-conflict.md`에 고정했다. `manifests/h001_dense_conflict_v1.json`과 dense recall gate는 Docker 검증을 통과했다. Host/Docker NVIDIA runtime은 2026-05-23에 복구됐다. `spatial_nms_p95_k100_d10`과 `spatial_nms_p90_k200_d5` final recall gate는 모두 실패했다. Selected `v3_fresh_spatial_p97_k20` primary diagnostic과 held-out `sofa` secondary-stress diagnostic은 recall과 detector/association gate를 통과했다. Broader `dense_conflict_generalization_v1`도 candidate recall과 detector substrate gate를 통과했다. Frozen `strict_depth_consistency_v1` validation은 same-split 기준 v0 wrong commits를 막았지만 independent validation에서 reject됐다. Failure diagnosis는 saturated same-category rival ambiguity를 dominant mechanism으로 고정했다. `rival_identity_confirmation_v1` diagnostic policy는 local gate를 통과했고, active observation/evaluation contract, plan smoke, frame export smoke, detector substrate gate, post-observation evidence/validation contract, analyzer smoke, fresh-source design, fresh-source freeze, fresh-source planner smoke, fresh-source frame smoke, and fresh-source detector substrate도 통과했다. 그러나 fresh-source post-observation gate는 wrong-goal commit `2`로 실패했다. 다음 blocker는 unsafe `toilet` commit failure diagnosis다.
 
 ### 에이전트 추론
 

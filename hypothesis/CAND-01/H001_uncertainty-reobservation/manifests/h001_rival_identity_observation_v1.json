@@ -1,0 +1,216 @@
+{
+  "schema_version": "h001.rival_identity_observation_contract.v1",
+  "date_frozen": "2026-05-25",
+  "contract_name": "rival_identity_observation_v1",
+  "policy_source": {
+    "policy_name": "rival_identity_confirmation_v1",
+    "policy_summary": "local_dataset/runs/h001_dense_conflict_rival_identity_policy_v1/rival_identity_policy_summary.json",
+    "policy_rows": "local_dataset/runs/h001_dense_conflict_rival_identity_policy_v1/rival_identity_policy_rows.jsonl",
+    "diagnostic_result": {
+      "diagnostic_passed": true,
+      "commit_success_wrong": "2 / 2 / 0",
+      "request_rival_identity_confirmation_rows": 6,
+      "strict_depth_consistency_v1_commit_success_wrong": "8 / 2 / 6",
+      "defer_all_ambiguous_commit_success_wrong": "0 / 0 / 0",
+      "action_evidence_forbidden_key_count": 0,
+      "uses_gt_for_action": false
+    }
+  },
+  "request_rows": [
+    {
+      "role": "primary",
+      "episode_key": "HM3D ObjectNav v2:val:DYehNKdT76V:22:4:chair",
+      "scene_key": "DYehNKdT76V",
+      "query": "chair",
+      "request_reason": "request_identity_multiple_guard_eligible_rivals",
+      "focus_candidate_id": "vlmaps:export:chair:spatial_nms:1",
+      "rival_candidate_ids": [
+        "vlmaps:export:chair:spatial_nms:2",
+        "vlmaps:export:chair:spatial_nms:0",
+        "vlmaps:export:chair:spatial_nms:1"
+      ]
+    },
+    {
+      "role": "primary",
+      "episode_key": "HM3D ObjectNav v2:val:7MXmsvcQjpJ:26:0:plant",
+      "scene_key": "7MXmsvcQjpJ",
+      "query": "plant",
+      "request_reason": "request_identity_multiple_guard_eligible_rivals",
+      "focus_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "rival_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:1"
+      ]
+    },
+    {
+      "role": "primary",
+      "episode_key": "HM3D ObjectNav v2:val:7MXmsvcQjpJ:5:2:plant",
+      "scene_key": "7MXmsvcQjpJ",
+      "query": "plant",
+      "request_reason": "request_identity_multiple_guard_eligible_rivals",
+      "focus_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "rival_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:1"
+      ]
+    },
+    {
+      "role": "primary",
+      "episode_key": "HM3D ObjectNav v2:val:7MXmsvcQjpJ:23:3:plant",
+      "scene_key": "7MXmsvcQjpJ",
+      "query": "plant",
+      "request_reason": "request_identity_multiple_guard_eligible_rivals",
+      "focus_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "rival_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:1"
+      ]
+    },
+    {
+      "role": "secondary_stress",
+      "episode_key": "HM3D ObjectNav v2:val:y9hTuugGdiq:11:1:sofa",
+      "scene_key": "y9hTuugGdiq",
+      "query": "sofa",
+      "request_reason": "request_identity_unique_guard_eligible_not_semantic_top",
+      "focus_candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+      "rival_candidate_ids": [
+        "vlmaps:export:sofa:spatial_nms:2",
+        "vlmaps:export:sofa:spatial_nms:5",
+        "vlmaps:export:sofa:spatial_nms:6",
+        "vlmaps:export:sofa:spatial_nms:7",
+        "vlmaps:export:sofa:spatial_nms:9"
+      ]
+    },
+    {
+      "role": "secondary_stress",
+      "episode_key": "HM3D ObjectNav v2:val:y9hTuugGdiq:5:4:sofa",
+      "scene_key": "y9hTuugGdiq",
+      "query": "sofa",
+      "request_reason": "request_identity_unique_guard_eligible_not_semantic_top",
+      "focus_candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+      "rival_candidate_ids": [
+        "vlmaps:export:sofa:spatial_nms:2",
+        "vlmaps:export:sofa:spatial_nms:5",
+        "vlmaps:export:sofa:spatial_nms:6",
+        "vlmaps:export:sofa:spatial_nms:7",
+        "vlmaps:export:sofa:spatial_nms:9"
+      ]
+    }
+  ],
+  "source_evidence": {
+    "primary_action_evidence": "local_dataset/runs/h001_dense_conflict_independent_terminal_evidence_profile_v1/action_evidence_rows.jsonl",
+    "primary_evaluation_labels": "local_dataset/runs/h001_dense_conflict_independent_terminal_evidence_profile_v1/evaluation_labels.jsonl",
+    "secondary_action_evidence": "local_dataset/runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/action_evidence_rows.jsonl",
+    "secondary_evaluation_labels": "local_dataset/runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/evaluation_labels.jsonl",
+    "guard_config": "manifests/h001_dense_conflict_terminal_guard_v1.json"
+  },
+  "observation_contract": {
+    "planner_name": "rival_identity_pair_probe_v1",
+    "purpose": "Convert dense same-category rival ambiguity into active re-observation evidence, not a terminal commit.",
+    "allowed_action_time_inputs": [
+      "candidate_id",
+      "query",
+      "scene_key",
+      "episode_key",
+      "candidate position",
+      "candidate visit_position",
+      "semantic_rank",
+      "semantic_score",
+      "support_score",
+      "detector_score_max",
+      "associated_heading_count",
+      "mask_hit_count",
+      "box_hit_count",
+      "visible_count",
+      "min_depth_error_m",
+      "positive_support",
+      "request_reason",
+      "rival_candidate_ids"
+    ],
+    "forbidden_action_time_inputs": [
+      "evaluation_only_candidate_correct",
+      "evaluation_only_recall_rank",
+      "GT object position",
+      "GT geodesic distance",
+      "success label",
+      "wrong-goal label"
+    ],
+    "target_selection": {
+      "always_include_focus_candidate": true,
+      "include_guard_eligible_rivals_first": true,
+      "include_semantic_or_support_rivals_for_unique_guard_candidate": true,
+      "max_rivals_per_request": 4,
+      "max_target_candidates_per_request": 5,
+      "deduplicate_candidate_ids": true
+    },
+    "viewpoint_policy": {
+      "minimum": "Use each target candidate's non-GT visit_position if available and render a heading toward the target candidate position.",
+      "preferred": "Choose pair-probe viewpoints that can observe both focus and rival candidates when their visit_position/position geometry supports it.",
+      "fallback": "If pair-probe geometry is unavailable, render candidate-centric observations for focus and each rival separately.",
+      "gt_usage_allowed": false
+    },
+    "expected_outputs": [
+      "rival_identity_observation_plan.jsonl",
+      "rival_identity_frame_summary.jsonl",
+      "rival_identity_detector_associations.jsonl",
+      "rival_identity_post_observation_evidence.jsonl",
+      "rival_identity_observation_validation_summary.json"
+    ]
+  },
+  "evaluation_contract": {
+    "scope": "diagnostic_only_until_fresh_or_predeclared_validation",
+    "minimum_plan_gate": {
+      "request_rows": 6,
+      "primary_request_rows": 4,
+      "secondary_stress_request_rows": 2,
+      "planned_rows_minimum": 6,
+      "action_evidence_forbidden_key_count": 0
+    },
+    "detector_substrate_gate": {
+      "detector_box_rate_minimum": 0.80,
+      "sam2_mask_rate_minimum": 0.80,
+      "candidate_association_rate_minimum": 0.50,
+      "if_failed": "classify as observation/detector substrate failure, not arbitration failure"
+    },
+    "post_observation_gate": {
+      "wrong_goal_commit_rows": 0,
+      "no_label_commit_rows": 0,
+      "new_primary_success_commit_rows_minimum": 1,
+      "resolved_request_rows_minimum": 1,
+      "secondary_stress_wrong_goal_commit_rows": 0
+    },
+    "required_baselines": [
+      "strict_depth_consistency_v1",
+      "rival_identity_confirmation_v1_without_observation",
+      "support_margin_only",
+      "depth_margin_only",
+      "semantic_top_only",
+      "defer_all_ambiguous"
+    ],
+    "metrics": [
+      "wrong_goal_commit_rows",
+      "success_commit_rows",
+      "request_identity_confirmation_rows",
+      "resolved_request_rows",
+      "new_success_commit_rows_from_request",
+      "detector_box_rate",
+      "sam2_mask_rate",
+      "candidate_association_rate",
+      "no_label_commit_rows"
+    ]
+  },
+  "failure_taxonomy": {
+    "observation_plan_missing_target": "The planner fails to create observations for focus or rival candidates using non-GT candidate geometry.",
+    "detector_substrate_failure": "Rendered observations exist but detector/mask/association evidence is insufficient.",
+    "identity_evidence_non_discriminative": "Post-observation evidence remains saturated across same-category rivals.",
+    "unsafe_post_observation_commit": "The post-observation rule commits to a wrong candidate.",
+    "safe_but_inert": "The rule avoids wrong commits but resolves no request rows.",
+    "label_plumbing_failure": "A committed candidate has no evaluation label; fix evaluation join before interpreting results.",
+    "source_independence_violation": "The contract is changed or tuned using evaluation labels from this failed split."
+  },
+  "interpretation": {
+    "fact": "This contract freezes the six diagnostic request rows before implementing an observation planner.",
+    "agent_inference": "The next useful step is to test whether active re-observation can create discriminative identity evidence for dense same-category rivals.",
+    "paper_claim_status": "not_allowed_until_actual_observation_and_fresh_or_predeclared_validation"
+  }
+}

@@ -40,8 +40,30 @@ def write_json(path: Path, data: Dict[str, Any]) -> None:
 
 
 def passthrough_fields(row: Dict[str, Any]) -> Dict[str, Any]:
-    prefixes = ("pair_", "arbitration_", "external_", "followup_", "source_objective_", "source_followup_", "second_stage_")
-    return {key: value for key, value in row.items() if key.startswith(prefixes)}
+    prefixes = (
+        "pair_",
+        "arbitration_",
+        "external_",
+        "followup_",
+        "source_objective_",
+        "source_followup_",
+        "second_stage_",
+        "rival_identity_",
+        "focus_",
+        "target_",
+    )
+    keys = {
+        "contract_name",
+        "planner_name",
+        "request_index",
+        "request_reason",
+        "role",
+        "scene_key",
+        "source_name",
+        "target_index",
+        "viewpoint_source",
+    }
+    return {key: value for key, value in row.items() if key.startswith(prefixes) or key in keys}
 
 
 def ordered_unique(values: Iterable[Any]) -> List[str]:

@@ -603,6 +603,403 @@ paper_claim_status: design_only_until_fresh_or_predeclared_validation
 
 The next implementation may use this contract as a diagnostic policy, but must still avoid `evaluation_only_candidate_correct`, recall rank, GT position, or GT geodesic distance in action-time inputs.
 
+Rival identity diagnostic policy result:
+
+```text
+output: local_dataset/runs/h001_dense_conflict_rival_identity_policy_v1
+diagnostic_passed: true
+action_evidence_forbidden_key_count: 0
+rival_identity_confirmation_v1:
+  commit/success/wrong: 2 / 2 / 0
+  request_rival_identity_confirmation_rows: 6
+  primary_success_commit_rows: 2
+  primary_wrong_goal_commit_rows: 0
+  secondary_wrong_goal_commit_rows: 0
+strict_depth_consistency_v1:
+  commit/success/wrong: 8 / 2 / 6
+defer_all_ambiguous:
+  commit/success/wrong: 0 / 0 / 0
+```
+
+This passes the local diagnostic gate because it preserves nonzero primary success while removing wrong-goal commits. It does not pass a paper-facing utility gate. The later fresh-source validation completed the observation, detector, and analyzer path, but failed the post-observation gate because two single-candidate `toilet` false positives were committed as wrong goals.
+
+Active observation contract:
+
+```text
+contract: manifests/h001_rival_identity_observation_v1.json
+contract_name: rival_identity_observation_v1
+request_rows: 6
+primary_request_rows: 4
+secondary_stress_request_rows: 2
+planner_name: rival_identity_pair_probe_v1
+```
+
+Minimum implementation gates:
+
+```text
+planned_rows_minimum >= 6
+action_evidence_forbidden_key_count == 0
+detector_box_rate >= 0.80
+sam2_mask_rate >= 0.80
+candidate_association_rate >= 0.50
+wrong_goal_commit_rows == 0
+no_label_commit_rows == 0
+new_primary_success_commit_rows >= 1
+resolved_request_rows >= 1
+secondary_stress_wrong_goal_commit_rows == 0
+```
+
+Plan smoke result:
+
+```text
+script: runtime/h001_runtime/plan_rival_identity_observation.py
+output: local_dataset/runs/h001_rival_identity_pair_probe_plan_v1
+request_rows: 6
+planned_request_rows: 6
+plan_rows: 19
+skipped_rows: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+plan_smoke_passed: true
+```
+
+This satisfies only the minimum plan gate. Frame export, detector association, and post-observation validation remain required before any utility claim.
+
+Frame export smoke result:
+
+```text
+renderer: runtime/h001_runtime/export_postview_frames_v2.py
+output: local_dataset/runs/h001_rival_identity_pair_probe_frames_v1
+rows_requested: 19
+rows_exported: 19
+rendered_heading_count: 142
+rgb_files: 142
+depth_files: 142
+unique_scenes: 3
+candidate_point_field: grounded_position
+uses_gt_for_action: false
+nonblank_rgb_sanity: pass
+```
+
+This satisfies only the renderability gate. Detector/SAM2 association and post-observation validation remain required before any utility claim.
+
+Detector substrate job contract:
+
+```text
+script: runtime/jobs/rival_identity_pair_probe_detector_substrate.sh
+status: completed
+frames: local_dataset/runs/h001_rival_identity_pair_probe_frames_v1/rival_identity_frame_summary.jsonl
+candidate_artifact: local_dataset/runs/h001_rival_identity_pair_probe_plan_v1/rival_identity_candidate_artifact.jsonl
+output: local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1
+expected_frame_rows: 19
+candidate_point_field: grounded_position
+query_template: "{query}"
+box_threshold: 0.10
+text_threshold: 0.10
+association_depth_tolerance_m: 1.0
+detector_box_rate_minimum: 0.80
+sam2_mask_rate_minimum: 0.80
+candidate_association_rate_minimum: 0.50
+```
+
+Pre-launch verification:
+
+```text
+bash -n: pass
+frame_rows: 19
+candidate_artifact_rows: 3
+rival_identity_request_id_trace_rows: 19
+```
+
+Detector substrate result:
+
+```text
+output: local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/rival_identity_detector_substrate_summary.json
+detector_rows: 19
+detector_box_rate: 0.8421
+sam2_mask_rate: 0.8421
+candidate_association_rate: 0.6316
+rows_with_candidate_association: 12
+associated_candidate_heading_count: 57
+uses_gt_for_action: false
+passes_detector_substrate_gate: true
+```
+
+Passing this substrate gate is not a utility claim; it only allows post-observation evidence and validation to be evaluated.
+
+Post-observation evidence/validation contract:
+
+```text
+status: analyzer_run_diagnostic_passed
+evidence_input: local_dataset/runs/h001_rival_identity_pair_probe_detector_substrate_v1/rival_identity_detector_associations.jsonl
+plan_input: local_dataset/runs/h001_rival_identity_pair_probe_plan_v1/rival_identity_observation_plan.jsonl
+primary_label_input: local_dataset/runs/h001_dense_conflict_independent_terminal_evidence_profile_v1/evaluation_labels.jsonl
+secondary_label_input: local_dataset/runs/h001_dense_conflict_secondary_terminal_evidence_profile_v1/evaluation_labels.jsonl
+evidence_output: local_dataset/runs/h001_rival_identity_pair_probe_post_observation_v1/rival_identity_post_observation_evidence.jsonl
+decision_output: local_dataset/runs/h001_rival_identity_pair_probe_post_observation_v1/rival_identity_post_observation_decisions.jsonl
+summary_output: local_dataset/runs/h001_rival_identity_pair_probe_post_observation_v1/rival_identity_observation_validation_summary.json
+```
+
+Evidence/action separation:
+
+- Action-time evidence may use `rival_identity_request_id`, `episode_key`, `query`, `role`, `request_reason`, `focus_candidate_id`, `rival_candidate_ids`, candidate geometry, semantic/support fields, target viewpoint metadata, detector box score, mask projection, depth agreement, and `associated_to_candidate`.
+- Action-time evidence must not use `evaluation_only_candidate_correct`, `evaluation_only_selected_correct`, `evaluation_only_wrong_goal_commit`, `evaluation_only_success_commit`, recall rank, GT object position, GT geodesic distance, or any success/wrong label.
+- Evaluation labels are joined only after `rival_identity_post_observation_decisions.jsonl` is written.
+- Label join key is `(episode_key, candidate_id)`.
+- Request join key is `rival_identity_request_id`; fallback validation should also require `(episode_key, query, role)` to match.
+
+Frozen post-observation evidence fields per `(rival_identity_request_id, candidate_id)`:
+
+```text
+post_associated_heading_count: count(associated_to_candidate)
+post_own_associated_heading_count: count(associated_to_candidate and candidate_id == target_candidate_id)
+post_cross_associated_heading_count: count(associated_to_candidate and candidate_id != target_candidate_id)
+post_best_box_score: max(best_box_score)
+post_min_depth_error_m: min(depth_error_m)
+post_own_target_role_count: count(unique target roles where candidate_id == target_candidate_id and associated_to_candidate)
+post_cross_target_role_count: count(unique target roles where candidate_id != target_candidate_id and associated_to_candidate)
+post_identity_margin: post_own_associated_heading_count - max(other candidates' post_own_associated_heading_count)
+```
+
+Frozen decision rule:
+
+```text
+strong_identity_evidence(candidate) =
+  post_own_associated_heading_count >= 2
+  and post_own_associated_heading_count > post_cross_associated_heading_count
+  and post_identity_margin >= 2
+
+if exactly one candidate has strong_identity_evidence:
+  action = commit_candidate
+  selected_candidate_id = that candidate
+else:
+  action = defer_unresolved_identity
+  selected_candidate_id = null
+```
+
+Rule constraints:
+
+- No category-specific branch for `chair`, `plant`, `sofa`, or other query names.
+- No fallback commit to semantic top when post-observation evidence is absent or non-discriminative.
+- No threshold sweep on the six request rows after evaluation labels are joined.
+- If a committed candidate has no label, count it as `no_label_commit_rows` and classify as `label_plumbing_failure`, not as success.
+
+Validation metrics:
+
+```text
+request_rows
+resolved_request_rows
+commit_rows
+success_commit_rows
+wrong_goal_commit_rows
+no_label_commit_rows
+new_primary_success_commit_rows
+primary_wrong_goal_commit_rows
+secondary_stress_wrong_goal_commit_rows
+defer_unresolved_identity_rows
+identity_evidence_non_discriminative_rows
+post_observation_no_candidate_support_rows
+post_observation_cross_view_aliasing_rows
+```
+
+Additional failure taxonomy:
+
+| Failure code | Interpretation |
+| --- | --- |
+| `post_observation_no_candidate_support` | no candidate gets own-view detector association after active observation |
+| `post_observation_cross_view_aliasing` | a candidate is associated mainly from another candidate's target view |
+| `post_observation_multiple_strong_candidates` | more than one candidate satisfies the strong identity rule |
+| `post_observation_margin_too_small` | own-view support exists but is not separated from the nearest rival |
+| `post_observation_safe_defer` | no commit is made because the evidence is weak or ambiguous |
+
+This contract is implemented by `runtime/h001_runtime/analyze_rival_identity_post_observation.py`. It must not be changed based on the post-join success/wrong labels from the six diagnostic request rows.
+
+Post-observation analyzer Docker smoke result:
+
+```text
+script: runtime/h001_runtime/analyze_rival_identity_post_observation.py
+output: local_dataset/runs/h001_rival_identity_pair_probe_post_observation_v1
+summary: rival_identity_observation_validation_summary.json
+request_rows: 6
+evidence_rows: 19
+decision_rows: 6
+commit_rows: 1
+success_commit_rows: 1
+wrong_goal_commit_rows: 0
+no_label_commit_rows: 0
+new_primary_success_commit_rows: 1
+secondary_stress_wrong_goal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+post_observation_gate_passed: true
+```
+
+Failure taxonomy result:
+
+```text
+none: 1
+post_observation_no_candidate_support: 3
+post_observation_cross_view_aliasing: 2
+```
+
+The single commit is `DYehNKdT76V/chair` selecting `vlmaps:export:chair:spatial_nms:2`, which is a post-join success label. The three `7MXmsvcQjpJ/plant` primary rows defer because post-observation detector support does not associate to the candidates. The two `y9hTuugGdiq/sofa` stress rows defer because cross-view aliasing remains stronger than a safe identity margin.
+
+Required baselines:
+
+- `strict_depth_consistency_v1`
+- `rival_identity_confirmation_v1_without_observation`
+- `support_margin_only`
+- `depth_margin_only`
+- `semantic_top_only`
+- `defer_all_ambiguous`
+
+This result remains diagnostic-only. A paper-facing utility claim is blocked until the same frozen analyzer is evaluated on a fresh or predeclared validation source.
+
+Fresh/predeclared validation source design:
+
+```text
+source_name: rival_identity_generalization_v1
+parent_split: dense_conflict_generalization_v1
+parent_manifest: manifests/h001_dense_conflict_generalization_v1.json
+action_evidence: local_dataset/runs/h001_dense_conflict_generalization_terminal_evidence_v1/action_evidence_rows.jsonl
+evaluation_labels: local_dataset/runs/h001_dense_conflict_generalization_terminal_evidence_v1/evaluation_labels.jsonl
+design_probe: local_dataset/runs/h001_rival_identity_generalization_policy_design_probe_v1
+scope: primary rows only
+exclude_previous_diagnostic_scenes: DYehNKdT76V, 7MXmsvcQjpJ, y9hTuugGdiq
+selection_rule: run frozen rival_identity_confirmation_v1 on action-time evidence and keep rows with action == request_rival_identity_confirmation
+label_use_for_selection: forbidden
+```
+
+Design probe facts:
+
+```text
+parent_rows: 20
+parent_scenes: 9
+parent_queries: bed, chair, plant, sofa, toilet, tv_monitor
+selected_request_rows: 6
+selected_request_scenes: 5cdEh9F2hJL, CrMo8WxCyVb, mL8ThkuaVTM
+selected_request_queries: bed, toilet
+request_reason_counts:
+  request_identity_no_guard_eligible_positive_candidates: 4
+  request_identity_unique_guard_eligible_not_semantic_top: 2
+primary strict_depth_consistency_v1 on design probe:
+  commit/success/wrong: 3 / 3 / 0
+primary rival_identity_confirmation_v1 on design probe:
+  commit/success/wrong/request: 1 / 1 / 0 / 6
+```
+
+Source-freeze result:
+
+```text
+source_miner: runtime/h001_runtime/build_rival_identity_generalization_manifest.py
+source_output: local_dataset/runs/h001_rival_identity_generalization_source_v1
+manifest: manifests/h001_rival_identity_generalization_v1.json
+verify: manifests/h001_rival_identity_generalization_v1.verify.json
+manifest_status: frozen
+verify_ok: true
+request_rows: 6
+request_scenes: 3
+request_queries: 2
+overlap_with_previous_diagnostic_scenes: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+```
+
+Planner smoke result:
+
+```text
+planner_output: local_dataset/runs/h001_rival_identity_generalization_plan_v1
+request_rows: 6
+planned_request_rows: 6
+plan_rows: 12
+skipped_rows: 0
+candidate_artifact_rows: 4
+candidate_artifact_candidates: 7
+plan_gate: true
+uses_gt_for_action: false
+```
+
+Frame export smoke result:
+
+```text
+frame_output: local_dataset/runs/h001_rival_identity_generalization_frames_v1
+frames: rival_identity_frame_summary.jsonl
+rows_requested: 12
+rows_exported: 12
+rendered_heading_count: 72
+rgb_files: 72
+depth_files: 72
+unique_scenes: 3
+candidate_point_field: grounded_position
+nonblank_rgb_sanity: pass
+uses_gt_for_action: false
+```
+
+Detector/SAM2 substrate job status:
+
+```text
+tmux_session: h001-rival-identity-generalization-detector-20260526-102744
+status: completed
+frames: local_dataset/runs/h001_rival_identity_generalization_frames_v1/rival_identity_frame_summary.jsonl
+candidate_artifact: local_dataset/runs/h001_rival_identity_generalization_plan_v1/rival_identity_candidate_artifact.jsonl
+output: local_dataset/runs/h001_rival_identity_generalization_detector_substrate_v1
+log: runtime/logs/rival-identity-generalization-detector-substrate-20260526-102744.log
+expected_frame_rows: 12
+detector_rows: 12
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 1.0
+associated_candidate_heading_count: 84
+detector_substrate_gate: true
+uses_gt_for_action: false
+```
+
+Fresh-source post-observation analyzer result:
+
+```text
+output: local_dataset/runs/h001_rival_identity_generalization_post_observation_v1
+request_rows: 6
+evidence_rows: 12
+decision_rows: 6
+commit/success/wrong/no-label: 4 / 2 / 2 / 0
+new_primary_success_commit_rows: 2
+resolved_request_rows: 4
+failure_taxonomy_counts:
+  none: 2
+  post_observation_cross_view_aliasing: 2
+  unsafe_post_observation_commit: 2
+post_observation_gate_passed: false
+uses_gt_for_action: false
+```
+
+Fresh validation gates after observation:
+
+```text
+wrong_goal_commit_rows == 0
+no_label_commit_rows == 0
+new_primary_success_commit_rows >= 1
+resolved_request_rows >= 1
+action_evidence_forbidden_key_count == 0
+uses_gt_for_action == false
+```
+
+Gate interpretation:
+
+- 사실: The frozen analyzer resolves two `bed` requests successfully and defers two ambiguous `bed` requests, but commits wrong goals on two `toilet` requests.
+- 에이전트 추론: These failures are not dense same-category rival ambiguity. Both failed `toilet` rows have only one focus candidate in the observation plan, strong own-view detector association, and post-join labels mark that candidate as wrong. The failure mechanism is closer to object-existence false positive than rival-identity arbitration.
+- 사용자 판단 필요: Decide whether `request_identity_no_guard_eligible_positive_candidates` should remain in the rival-identity branch or be routed to a separate object-existence validation branch.
+
+Promotion gate beyond this first fresh source:
+
+```text
+request_rows >= 20
+request_scenes >= 5
+request_queries >= 3
+at least one non-furniture or small-object query
+same frozen analyzer and thresholds
+failure taxonomy reported for all unresolved rows
+```
+
 ### Generalization Decision
 
 #### 사실
