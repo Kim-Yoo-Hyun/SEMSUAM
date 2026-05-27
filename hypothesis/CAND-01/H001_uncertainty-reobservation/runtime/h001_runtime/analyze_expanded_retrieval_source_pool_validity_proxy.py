@@ -216,6 +216,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     target_evidence_rows = 0
     target_evidence_proxy_evidence_rows = 0
     target_evidence_proxy_backend_rows = 0
+    detector_proxy_request_rows = 0
 
     for row in candidate_rows:
         action = action_rows.get(action_key(row))
@@ -238,6 +239,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         }
         proxy_is_backend = decision["proxy_route"] == "request_backend_retrieval_revision_proxy"
         proxy_is_evidence = decision["detector_evidence_allowed_by_proxy"] is True
+        detector_proxy_request_rows += int(proxy_is_evidence)
         target_backend_rows += int(target_is_backend)
         target_backend_proxy_backend_rows += int(target_is_backend and proxy_is_backend)
         target_backend_proxy_evidence_rows += int(target_is_backend and proxy_is_evidence)
@@ -277,26 +279,42 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
 
     source_pool_validity_proxy_recall = ratio(target_backend_proxy_backend_rows, target_backend_rows)
     evidence_allowed_target_recall = ratio(target_evidence_proxy_evidence_rows, target_evidence_rows)
+    has_analysis_targets = bool(guard_rows)
+    analysis_target_gate_passed = (
+        source_pool_validity_proxy_recall == 1.0
+        and evidence_allowed_target_recall == 1.0
+        and target_backend_proxy_evidence_rows == 0
+        and target_evidence_proxy_backend_rows == 0
+    )
+    action_only_detector_gate_passed = (
+        len(out_rows) == len(candidate_rows)
+        and missing_action_rows == 0
+        and consumed_forbidden_rows == 0
+        and detector_proxy_request_rows >= int(args.min_detector_proxy_request_rows)
+    )
     proxy_gate = {
         "all_candidate_rows_processed": len(out_rows) == len(candidate_rows),
         "missing_action_rows": missing_action_rows,
         "no_consumed_forbidden_keys": consumed_forbidden_rows == 0,
-        "source_pool_validity_proxy_gate_passed": source_pool_validity_proxy_recall == 1.0,
-        "evidence_allowed_target_recall_passed": evidence_allowed_target_recall == 1.0,
+        "has_analysis_targets": has_analysis_targets,
+        "source_pool_validity_proxy_gate_passed": (source_pool_validity_proxy_recall == 1.0)
+        if has_analysis_targets
+        else None,
+        "evidence_allowed_target_recall_passed": (evidence_allowed_target_recall == 1.0)
+        if has_analysis_targets
+        else None,
         "no_backend_target_escalated_to_evidence": target_backend_proxy_evidence_rows == 0,
         "no_evidence_target_blocked_as_backend": target_evidence_proxy_backend_rows == 0,
+        "detector_proxy_request_rows_min_pass": detector_proxy_request_rows >= int(args.min_detector_proxy_request_rows),
+        "action_only_detector_gate_passed": action_only_detector_gate_passed,
+        "analysis_target_gate_passed": analysis_target_gate_passed if has_analysis_targets else None,
         "no_terminal_commit_allowed": True,
         "uses_gt_for_action": False,
         "paper_claim_allowed": False,
     }
     proxy_gate["proxy_ready_for_detector_gate"] = (
-        proxy_gate["all_candidate_rows_processed"] is True
-        and proxy_gate["missing_action_rows"] == 0
-        and proxy_gate["no_consumed_forbidden_keys"] is True
-        and proxy_gate["source_pool_validity_proxy_gate_passed"] is True
-        and proxy_gate["evidence_allowed_target_recall_passed"] is True
-        and proxy_gate["no_backend_target_escalated_to_evidence"] is True
-        and proxy_gate["no_evidence_target_blocked_as_backend"] is True
+        action_only_detector_gate_passed
+        and (analysis_target_gate_passed if has_analysis_targets else True)
         and proxy_gate["no_terminal_commit_allowed"] is True
     )
 
@@ -314,6 +332,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         "target_evidence_rows": target_evidence_rows,
         "target_evidence_proxy_evidence_rows": target_evidence_proxy_evidence_rows,
         "target_evidence_proxy_backend_rows": target_evidence_proxy_backend_rows,
+        "detector_proxy_request_rows": detector_proxy_request_rows,
         "source_pool_validity_proxy_recall": source_pool_validity_proxy_recall,
         "evidence_allowed_target_recall": evidence_allowed_target_recall,
         "consumed_forbidden_rows": consumed_forbidden_rows,
@@ -324,6 +343,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
             "max_score_ge_091_count_for_invalid": args.max_score_ge_091_count_for_invalid,
             "min_top_score_uncertainty": args.min_top_score_uncertainty,
             "max_top2_gap_for_invalid": args.max_top2_gap_for_invalid,
+            "min_detector_proxy_request_rows": args.min_detector_proxy_request_rows,
         },
         "interpretation": {
             "facts": (
@@ -332,7 +352,9 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
             "inference": (
                 "On the current diagnostic rows, a low absolute top score plus saturated top candidates "
                 "separates source-pool no-valid rows from evidence-eligible rows. This is a diagnostic "
-                "gate, not a paper-facing claim; it needs fresh/predeclared validation."
+                "gate, not a paper-facing claim. On fresh sources without analysis-only guard labels, "
+                "the gate only checks action-time processing, forbidden-key separation, and detector-row "
+                "availability."
             ),
         },
         "output_files": {
@@ -361,6 +383,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-score-ge-091-count-for-invalid", type=int, default=0)
     parser.add_argument("--min-top-score-uncertainty", type=float, default=0.09)
     parser.add_argument("--max-top2-gap-for-invalid", type=float, default=0.001)
+    parser.add_argument("--min-detector-proxy-request-rows", type=int, default=1)
     return parser.parse_args()
 
 

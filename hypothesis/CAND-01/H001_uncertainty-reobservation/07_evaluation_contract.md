@@ -271,6 +271,25 @@ Do not tune switch gates on held-out `first_eval`.
 - Source-pool proxy evidence targets blocked as backend: `0`
 - Source-pool proxy consumed forbidden rows: `0`
 - Source-pool `proxy_ready_for_detector_gate`: `true`
+- Detector evidence contract: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_detector_evidence_v1.json`
+- Detector plan output: `local_dataset/runs/h001_expanded_retrieval_detector_plan_v1`
+- Detector plan rows: `42`
+- Detector planned request rows: `6`
+- Detector plan rows per request min/max: `5/8`
+- Detector zero/near-standoff rows: `0/0`
+- Detector fallback rows: `0`
+- Detector plan consumed forbidden action fields: `0`
+- Detector frame output: `local_dataset/runs/h001_expanded_retrieval_detector_frames_v1`
+- Detector frame rows/headings: `42/168`
+- Detector nonblank dropped rows / removed blank headings: `0/0`
+- Detector/SAM2 substrate output: `local_dataset/runs/h001_expanded_retrieval_detector_substrate_v1`
+- Detector/SAM2 substrate job status: `completed`
+- Detector box / SAM2 mask rates: `1.0 / 1.0`
+- Candidate association rate: `0.0714`
+- Rows with candidate association: `3/42`
+- Detector substrate gate: `false`
+- Projection status counts: `out_of_fov 134`, `visible 34`
+- Depth check counts: `consistent 6`, `depth_mismatch 28`, `out_of_fov 134`
 - `uses_gt_for_action`: `false`
 - `uses_gt_for_analysis`: `true`
 - `paper_claim_allowed`: `false`
@@ -284,7 +303,149 @@ This guard defines target behavior, not an action-time method. The first non-GT 
 - whether evidence acquisition is allowed;
 - whether terminal commit remains blocked.
 
-Current candidate-set score/support/margin/spatial/reachability features were insufficient because both `source_pool_no_valid_candidate` rows were routed to detector evidence rather than backend revision. The source-pool score-shape proxy fixes this diagnostic blocker; fresh/predeclared validation is still required before paper-facing utility claims.
+Current candidate-set score/support/margin/spatial/reachability features were insufficient because both `source_pool_no_valid_candidate` rows were routed to detector evidence rather than backend revision. The source-pool score-shape proxy fixes this diagnostic blocker, and the detector standoff frame gate shows detector frames can be collected without zero-standoff or blank-frame substrate failures. However, the first detector/SAM2 substrate failed candidate association. Failure diagnostic output `local_dataset/runs/h001_expanded_retrieval_detector_failure_diagnostic_v1` accounts for `42` candidate observation rows and `168` heading rows; mechanisms are `projection_never_visible 33`, `mask_overlap_depth_mismatch_only 4`, `associated_success 3`, `visible_projection_no_detector_overlap 1`, and `box_overlap_mask_reject 1`. Detector availability is not the primary blocker. Design output `local_dataset/runs/h001_expanded_retrieval_detector_viewpoint_revision_design_v1` shows all out-of-FOV projections are `x_in_y_above 134`; selected `projection_anchor_height_sweep_v1` recovers `33/33` `projection_never_visible` rows in projection replay. Revised observation/projection smoke passes: plan output `local_dataset/runs/h001_expanded_retrieval_detector_plan_projection_anchor_v1` has plan rows `42`, planned request rows `6`, and fixed offsets `[0.0, 0.4, 0.8, 1.2, 1.6]`; detector-free projection smoke `local_dataset/runs/h001_expanded_retrieval_detector_projection_anchor_smoke_v1` has visible rows `42/42`. Fixed-anchor detector/SAM2 rerun `local_dataset/runs/h001_expanded_retrieval_detector_substrate_projection_anchor_v1` passes with candidate association rate `0.7381` and associated rows `31/42`. Fresh/predeclared validation source freeze, source-pool proxy, detector plan/frame, projection smoke, detector/SAM2 substrate, detector evidence diagnostic, and ambiguity-aware objective contract gates pass on the small frozen fresh source. Paper-scale source freeze, planner compatibility, source-pool proxy, projection-anchor detector observation plan, upper-anchor frame/projection smoke, detector/SAM2 substrate, detector evidence diagnostic, ambiguity objective application, local-context planner smoke, and local-context frame/projection smoke now pass. Paper-scale evidence is all `multi_strong_saturated_ambiguity`, so the next gate is local-context detector/SAM2 substrate before post-observation evaluation; paper-facing utility claims still require post-observation evaluation and simpler-alternative comparison.
+
+Fresh expanded-retrieval detector substrate:
+
+```text
+job: h001-fresh-expanded-detector-20260527-173955
+output: local_dataset/runs/h001_expanded_retrieval_fresh_validation_detector_substrate_projection_anchor_v1
+status: completed
+detector_rows: 51
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.6078
+rows_with_candidate_association: 31 / 51
+associated_candidate_heading_count: 68
+projection_anchor_selected_offset_counts:
+  0.0: 8
+  1.2: 12
+  1.6: 184
+passes_detector_substrate_gate: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+Ambiguity-aware expanded-retrieval objective contract:
+
+```text
+contract: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_ambiguity_objective_v1.json
+output: local_dataset/runs/h001_expanded_retrieval_ambiguity_objective_contract_v1
+status: completed
+request_rows: 6
+route_coverage: 1.0
+objective_action_counts:
+  request_local_context_disambiguation: 5
+  request_rank_challenge_confirmation: 1
+terminal_commit_rows: 0
+contract_gate_passed: true
+larger_source_allowed_after_contract: true
+terminal_objective_allowed: false
+paper_claim_allowed: false
+```
+
+사실: The contract consumes detector evidence topology only, routes all fresh diagnostic request rows, and produces no terminal commit.
+
+에이전트 추론: This is the correct transition point from small fresh diagnostic to a larger source freeze. It is not a utility proof because no terminal task outcome is claimed.
+
+Paper-scale expanded-retrieval source:
+
+```text
+manifest: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_paper_scale_v1.json
+source_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_source_v1
+source_rows: 23
+source_scenes: 10
+source_queries: 6
+excluded_scene_overlap: 0
+action_evidence_forbidden_key_count: 0
+paper_scale_gate_passed: true
+planner_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_plan_v1
+candidate_set_rows: 23
+planner_plan_rows: 230
+planner_skipped_rows: 0
+source_pool_proxy_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_source_pool_validity_proxy_v1
+proxy_route_counts:
+  request_backend_retrieval_revision_proxy: 2
+  request_detector_guarded_observation_proxy: 21
+proxy_ready_for_detector_gate: true
+detector_plan_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_plan_projection_anchor_v1
+detector_proxy_request_rows: 21
+planned_request_rows: 21
+detector_plan_rows: 162
+detector_skipped_rows: 48
+detector_skipped_reason: standoff_navmesh_required
+plan_rows_per_request: 5-10
+target_distance_from_viewpoint_m: 1.6335 / 1.7503 / 1.8053
+viewpoint_source_counts:
+  standoff_navmesh: 162
+zero_standoff_rows: 0
+near_standoff_rows: 0
+fallback_rows: 0
+rotation_fallback_rows: 0
+detector_plan_gate_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+사실: The larger source is frozen from nonterminal `defer_expanded_retrieval_needed` decisions and is scene-disjoint from the small fresh source used to define the ambiguity contract.
+
+Paper-scale expanded-retrieval frame/projection gate:
+
+```text
+initial_frame_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_frames_projection_anchor_v1
+initial_frame_rows: 162 / 162
+initial_rendered_heading_count: 648
+initial_nonblank_rows: 162 / 162
+initial_removed_blank_heading_count: 0
+initial_projection_smoke_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_projection_anchor_smoke_v1
+initial_projection_anchor_visible_rows: 153 / 162
+initial_projection_anchor_visible_rate: 0.9444
+initial_projection_gate_passed: false
+initial_failure_slice: bxsVRursffK / plant
+initial_failure_axis: x_in_y_above
+
+upper_anchor_plan_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_plan_projection_anchor_upper_v1
+upper_anchor_offsets_m: [0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4]
+upper_anchor_frame_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_frames_projection_anchor_upper_v1
+upper_anchor_frame_rows: 162 / 162
+upper_anchor_rendered_heading_count: 648
+upper_anchor_nonblank_rows: 162 / 162
+upper_anchor_removed_blank_heading_count: 0
+upper_anchor_projection_smoke_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_projection_anchor_upper_smoke_v1
+upper_anchor_projection_visible_rows: 162 / 162
+upper_anchor_missing_candidate_rows: 0
+upper_anchor_projection_gate_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+사실: The upper-anchor repair changes only the fixed projection anchor offsets carried by the plan/frame metadata; it does not change request rows, standoff viewpoints, source-pool proxy routing, or GT separation.
+
+에이전트 추론: This is now large enough for a detector/evidence falsification gate, but still not a terminal ObjectNav utility proof. The detector substrate and detector evidence diagnostic have since passed; the remaining question is whether local-context re-observation can resolve the multi-strong ambiguity safely.
+
+Fresh detector evidence diagnostic:
+
+```text
+output: local_dataset/runs/h001_expanded_retrieval_fresh_validation_detector_evidence_diagnostic_v1
+status: completed
+request_rows: 6
+candidate_rows: 51
+associated_request_rate: 1.0
+strong_request_rate: 1.0
+multi_strong_request_rate: 0.8333
+lower_rank_only_association_rate: 0.5
+evidence_topology_counts:
+  multi_strong_saturated_ambiguity: 5
+  single_strong_lower_rank: 1
+terminal_objective_risk_counts:
+  multi_candidate_detector_ambiguity: 5
+  source_top_challenged_by_lower_rank_evidence: 1
+diagnostic_gate_passed: true
+objective_design_allowed: true
+terminal_objective_allowed: false
+paper_scale_gate_passed: false
+paper_claim_allowed: false
+```
 
 ## Fixed Dense Backend Terminal Diagnostic Contract
 
@@ -1673,10 +1834,387 @@ expanded_retrieval_source_pool_proxy_backend_escalated_to_evidence: 0
 expanded_retrieval_source_pool_proxy_evidence_blocked_as_backend: 0
 expanded_retrieval_source_pool_proxy_consumed_forbidden_rows: 0
 expanded_retrieval_source_pool_proxy_ready_for_detector_gate: true
+expanded_retrieval_detector_contract: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_detector_evidence_v1.json
+expanded_retrieval_detector_plan: local_dataset/runs/h001_expanded_retrieval_detector_plan_v1
+expanded_retrieval_detector_plan_rows: 42
+expanded_retrieval_detector_planned_request_rows: 6
+expanded_retrieval_detector_plan_rows_per_request_min_max: 5 / 8
+expanded_retrieval_detector_zero_near_standoff_rows: 0 / 0
+expanded_retrieval_detector_fallback_rows: 0
+expanded_retrieval_detector_consumed_forbidden_action_fields: 0
+expanded_retrieval_detector_frame_output: local_dataset/runs/h001_expanded_retrieval_detector_frames_v1
+expanded_retrieval_detector_frame_rows_headings: 42 / 168
+expanded_retrieval_detector_nonblank_dropped_removed: 0 / 0
+expanded_retrieval_detector_substrate: local_dataset/runs/h001_expanded_retrieval_detector_substrate_v1
+expanded_retrieval_detector_job_status: completed
+expanded_retrieval_detector_box_sam2_rates: 1.0 / 1.0
+expanded_retrieval_detector_candidate_association_rate: 0.0714
+expanded_retrieval_detector_rows_with_candidate_association: 3 / 42
+expanded_retrieval_detector_substrate_gate: false
+expanded_retrieval_detector_projection_status_counts:
+  out_of_fov: 134
+  visible: 34
+expanded_retrieval_detector_depth_check_counts:
+  consistent: 6
+  depth_mismatch: 28
+  out_of_fov: 134
 paper_claim_allowed: false
 ```
 
-에이전트 추론: The independent evidence shows a strict-safe/inert versus loose-nontrivial/unsafe tradeoff. Therefore, `goal_validity_arbitration_v1` is rejected as a paper-facing utility rule, and the next implementation should be branch-specific active evidence acquisition rather than threshold tuning. `goal_validity_revision_v2` is a routing contract only: it does not claim terminal ObjectNav utility. The first branch-specific planner is `discriminative_rival_view_planner_v1`, because cross-view aliasing is the largest route. v2 passes the frame/nonblank and detector substrate gates after rejecting geometry-only common pair views, but the first pair-role evidence analyzer fails. Failure taxonomy suggests candidate-set expansion before another discriminative-view revision. The `request_expanded_retrieval` planner gate, label-join diagnostic, candidate-set guard design, proxy feature extraction, and source-pool validity proxy pass on current diagnostic evidence. The result is useful but still not paper-facing: it recovers valid candidates in `6/8` rows, has no rank-band selection misses, and separates the two source-pool no-valid rows without GT action inputs, but this proxy must be validated on a fresh/predeclared source. The next gate is expanded-retrieval frame/detector evidence for proxy detector-eligible rows.
+에이전트 추론: The independent evidence shows a strict-safe/inert versus loose-nontrivial/unsafe tradeoff. Therefore, `goal_validity_arbitration_v1` is rejected as a paper-facing utility rule, and the next implementation should be branch-specific active evidence acquisition rather than threshold tuning. `goal_validity_revision_v2` is a routing contract only: it does not claim terminal ObjectNav utility. The first branch-specific planner is `discriminative_rival_view_planner_v1`, because cross-view aliasing is the largest route. v2 passes the frame/nonblank and detector substrate gates after rejecting geometry-only common pair views, but the first pair-role evidence analyzer fails. Failure taxonomy suggests candidate-set expansion before another discriminative-view revision. The `request_expanded_retrieval` planner gate, label-join diagnostic, candidate-set guard design, proxy feature extraction, source-pool validity proxy, and standoff frame gate pass on current diagnostic evidence. The detector/SAM2 run shows category detections and masks are available, but candidate projection/association fails. The next gate is association failure taxonomy, not threshold or terminal objective tuning.
+Expanded-retrieval detector association diagnostic:
+
+```text
+output: local_dataset/runs/h001_expanded_retrieval_detector_failure_diagnostic_v1
+candidate_observation_rows: 42
+association_heading_rows: 168
+candidate_association_rate: 0.0714
+failure_mechanism_counts:
+  projection_never_visible: 33
+  mask_overlap_depth_mismatch_only: 4
+  associated_success: 3
+  visible_projection_no_detector_overlap: 1
+  box_overlap_mask_reject: 1
+detector_available_rows: 42
+threshold_tuning_allowed: false
+viewpoint_revision_required: true
+association_depth_revision_required: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The independent evidence shows a strict-safe/inert versus loose-nontrivial/unsafe tradeoff. Therefore, `goal_validity_arbitration_v1` is rejected as a paper-facing utility rule, and the next implementation should be branch-specific active evidence acquisition rather than threshold tuning. `goal_validity_revision_v2` is a routing contract only: it does not claim terminal ObjectNav utility. The first branch-specific planner is `discriminative_rival_view_planner_v1`, because cross-view aliasing is the largest route. v2 passes the frame/nonblank and detector substrate gates after rejecting geometry-only common pair views, but the first pair-role evidence analyzer fails. Failure taxonomy suggests candidate-set expansion before another discriminative-view revision. The `request_expanded_retrieval` planner gate, label-join diagnostic, candidate-set guard design, proxy feature extraction, source-pool validity proxy, and standoff frame gate pass on current diagnostic evidence. The detector/SAM2 run shows category detections and masks are available, but candidate projection/association fails primarily through out-of-FOV candidate projections. Viewpoint/projection revision is now implemented and smoked, so the next gate is detector/SAM2 association rerun with fixed anchors, not threshold or terminal objective tuning.
+
+Expanded-retrieval viewpoint/projection revision design:
+
+```text
+contract: manifests/h001_expanded_retrieval_detector_viewpoint_revision_v1.json
+design_output: local_dataset/runs/h001_expanded_retrieval_detector_viewpoint_revision_design_v1
+selected_revision: projection_anchor_height_sweep_v1
+projection_anchor_height_offsets_m: [0.0, 0.4, 0.8, 1.2, 1.6]
+out_of_fov_axis_counts:
+  x_in_y_above: 134
+projection_never_visible_recovery:
+  offsets_0_0_to_0_8: 29 / 33
+  offsets_0_0_to_1_6: 33 / 33
+rejected_next_step:
+  detector_threshold_tuning
+  yaw_widen_only
+  terminal_objective_tuning
+deferred:
+  depth_tolerance_relaxation
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The selected revision treats the semantic-map object anchor as uncertain in vertical image projection while keeping the mobility/viewpoint substrate fixed. This is closer to the research thesis than threshold tuning because it converts a semantic-map uncertainty failure into an active evidence/acquisition contract. The projection-anchor revised plan/evidence path has now passed smoke, so detector/SAM2 can be rerun under the fixed-anchor rule.
+
+Expanded-retrieval revised projection-anchor implementation smoke:
+
+```text
+plan_output: local_dataset/runs/h001_expanded_retrieval_detector_plan_projection_anchor_v1
+plan_schema: h001.expanded_retrieval_detector_observation_plan.v2
+planner: expanded_retrieval_detector_standoff_projection_anchor_v1
+plan_rows: 42
+planned_request_rows: 6
+projection_anchor_height_offsets_m: [0.0, 0.4, 0.8, 1.2, 1.6]
+plan_gate: true
+full_projection_smoke: local_dataset/runs/h001_expanded_retrieval_detector_projection_anchor_smoke_v1
+projection_anchor_visible_rows: 42 / 42
+projection_anchor_visible_rate: 1.0
+frame_passthrough_smoke: local_dataset/runs/h001_expanded_retrieval_detector_projection_anchor_frame_passthrough_smoke_v1
+frame_revision_metadata_rows: 2 / 2
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This smoke proves the fixed projection anchors are available to the observation/evidence path and recover frame-level visibility before detector/SAM2 scoring. By itself, it does not prove detector association or ObjectNav utility.
+
+Expanded-retrieval fixed-anchor detector/SAM2 substrate rerun:
+
+```text
+job: h001-expanded-retrieval-detector-anchor-20260527-163608
+output: local_dataset/runs/h001_expanded_retrieval_detector_substrate_projection_anchor_v1
+status: completed
+detector_rows: 42
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.7381
+rows_with_candidate_association: 31 / 42
+associated_candidate_heading_count: 96
+projection_anchor_selected_offset_counts:
+  0.0: 21
+  0.4: 3
+  0.8: 13
+  1.2: 9
+  1.6: 122
+passes_detector_substrate_gate: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: Fixed projection anchors repair the detector substrate association gate on diagnostic evidence without detector threshold, depth-tolerance, or terminal-objective tuning. This is still not a paper-facing utility claim; the next required gate is a fresh/predeclared validation source.
+
+Expanded-retrieval fresh/predeclared source freeze:
+
+```text
+router_output: local_dataset/runs/h001_expanded_retrieval_fresh_validation_router_v1
+source_output: local_dataset/runs/h001_expanded_retrieval_fresh_validation_source_v1
+manifest: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_fresh_validation_v1.json
+verify_ok: true
+request_expanded_retrieval_rows: 6
+request_scenes: 2
+request_queries: 4
+excluded_scene_overlap: 0
+action_evidence_forbidden_key_count: 0
+missing_action_evidence_rows: 0
+uses_gt_for_action: false
+paper_scale_gate: false
+planner_compatibility_output: local_dataset/runs/h001_expanded_retrieval_fresh_validation_plan_v1
+planner_candidate_set_rows: 6
+planner_plan_rows: 60
+planner_skipped_rows: 0
+paper_claim_allowed: false
+```
+
+사실: The frozen fresh source is scene-disjoint from the projection-anchor diagnostic detector plan and passes branch-source gates, but it is below the paper-scale gate of `20` rows and `5` scenes.
+
+에이전트 추론: This source is useful for falsifying whether the fixed-anchor branch generalizes beyond the repair diagnostic. It is not large enough to support a paper-facing utility claim by itself; a positive result should trigger a larger source freeze.
+
+Expanded-retrieval fresh-source proxy, plan, and frame gates:
+
+```text
+source_pool_proxy_output: local_dataset/runs/h001_expanded_retrieval_fresh_validation_source_pool_validity_proxy_v1
+proxy_route_counts:
+  request_detector_guarded_observation_proxy: 6
+detector_proxy_request_rows: 6
+proxy_ready_for_detector_gate: true
+detector_plan_output: local_dataset/runs/h001_expanded_retrieval_fresh_validation_detector_plan_projection_anchor_v1
+planned_request_rows: 6
+plan_rows: 51
+plan_rows_per_request: 7-10
+skipped_rows: 9
+skipped_reason: standoff_navmesh_required
+zero_standoff_rows: 0
+near_standoff_rows: 0
+fallback_rows: 0
+target_distance_from_viewpoint_m: 1.7417 / 1.7506 / 1.7975
+frame_output: local_dataset/runs/h001_expanded_retrieval_fresh_validation_detector_frames_projection_anchor_v1
+frame_rows: 51
+rendered_heading_count: 204
+nonblank_rows: 51 / 51
+removed_blank_heading_count: 0
+projection_smoke_output: local_dataset/runs/h001_expanded_retrieval_fresh_validation_detector_projection_anchor_smoke_v1
+projection_anchor_visible_rows: 51 / 51
+frame_revision_metadata_rows: 51 / 51
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+사실: The frozen fresh source now has detector-eligible proxy rows, navmesh standoff plan rows, rendered nonblank frames, visible projection anchors, a completed detector/SAM2 substrate pass, a completed detector evidence diagnostic, and a completed ambiguity-aware objective contract. Detector rows are `51`; detector box/SAM2 rates are `1.0/1.0`; candidate association rate is `0.6078`; evidence diagnostic topology is `multi_strong_saturated_ambiguity 5` and `single_strong_lower_rank 1`; objective contract route coverage is `1.0`; terminal commit rows are `0`; action counts are `request_local_context_disambiguation 5` and `request_rank_challenge_confirmation 1`; `uses_gt_for_action false`; `paper_claim_allowed false`. The paper-scale source has request rows `23`, scenes `10`, queries `6`, planner rows `230`, `21` detector-eligible proxy rows, and detector observation plan rows `162`.
+
+에이전트 추론: The paper-scale substrate and evidence gates now pass, but the result is not a terminal utility proof because every detector-supported request is still multi-strong saturated. Local-context planner, frame/projection smoke, and detector/SAM2 substrate now pass under the frozen no-GT-action contract. The post-observation evaluation failed safety, so the next falsification step is failure diagnosis before any threshold or objective revision.
+
+Paper-scale detector/evidence and local-context disambiguation contract:
+
+```text
+detector_substrate_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_substrate_projection_anchor_upper_v1
+detector_rows: 162
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.8272
+rows_with_candidate_association: 134 / 162
+associated_candidate_heading_count: 378
+detector_substrate_gate_passed: true
+
+detector_evidence_diagnostic_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_evidence_diagnostic_upper_v1
+request_rows: 21
+candidate_rows: 162
+association_heading_rows: 648
+associated_request_rate: 1.0
+strong_request_rate: 1.0
+multi_strong_request_rate: 1.0
+evidence_topology:
+  multi_strong_saturated_ambiguity: 21
+terminal_objective_risk:
+  multi_candidate_detector_ambiguity: 21
+diagnostic_gate_passed: true
+paper_scale_gate_passed: true
+
+ambiguity_objective_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_ambiguity_objective_upper_v1
+objective_action:
+  request_local_context_disambiguation: 21
+terminal_commit_rows: 0
+contract_gate_passed: true
+
+local_context_contract: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_disambiguation_v1.json
+planner_name: expanded_retrieval_local_context_disambiguation_v1
+planned_request_rows_minimum: 18 / 21
+terminal_objective: local_context_unique_own_view_advantage only
+direct_detector_score_commit_allowed: false
+source_top_if_associated_commit_allowed: false
+wrong_goal_commit_rate_maximum: 0.0
+success_commit_rows_minimum: 2
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+사실: The local-context contract freezes candidate selection, forbidden action inputs, nonzero utility gates, and simpler alternatives before implementation.
+
+에이전트 추론: The contract keeps the novelty centered on semantic uncertainty as active evidence routing. A positive result must show that local context resolves repeated-object ambiguity better than score-only or source-top shortcuts, not merely that detector evidence exists.
+
+Local-context planner smoke:
+
+```text
+planner: runtime/h001_runtime/plan_expanded_retrieval_local_context_disambiguation.py
+output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1
+request/planned_request_rows: 21 / 21
+planned_request_coverage: 1.0
+plan_rows: 113
+skipped_rows: 3
+plan_rows_per_request_min/max: 2 / 6
+viewpoint_source:
+  standoff_navmesh: 113
+zero/near/fallback/rotation_fallback_rows: 0 / 0 / 0 / 0
+consumed/output_forbidden_action_fields: 0 / 0
+uses_gt_for_action: false
+planner_gate_passed: true
+paper_claim_allowed: false
+```
+
+사실: Planner smoke is a substrate gate only. It allows the next frame/projection smoke but does not allow terminal utility or paper claims.
+
+Local-context frame/projection smoke:
+
+```text
+frame_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1
+projection_smoke_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_projection_smoke_v1
+frame_rows: 113 / 113
+rendered_heading_count: 1285
+nonblank_rows: 113 / 113
+removed_blank_heading_count: 0
+projection_visible_rows: 113 / 113
+projection_visible_rate: 1.0
+missing_candidate_rows: 0
+frame_revision_metadata_rows: 113
+uses_gt_for_action: false
+projection_smoke_gate_passed: true
+paper_claim_allowed: false
+```
+
+사실: Frame/projection smoke is a detector-substrate prerequisite only. It allows the next detector/SAM2 substrate job but does not allow terminal utility or paper claims.
+
+Local-context detector/SAM2 and post-observation evaluation:
+
+```text
+detector_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1
+detector_rows: 113
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.9204
+rows_with_candidate_association: 104 / 113
+detector_substrate_gate_passed: true
+
+post_observation_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_post_observation_v1
+request/evidence_rows: 21 / 113
+strong_own_view_request_rows: 19 / 21
+proposed_variant: proposed_local_context_unique_own_view_advantage
+proposed_commit/success/wrong/no_valid: 10 / 3 / 7 / 3
+post_observation_gate_passed: false
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+Simpler alternatives on the same frozen rows:
+
+```text
+defer_all: commit/success/wrong/no_valid = 0 / 0 / 0 / 0
+semantic_top: commit/success/wrong/no_valid = 21 / 11 / 10 / 4
+source_top_if_associated: commit/success/wrong/no_valid = 18 / 9 / 9 / 3
+detector_score_best: commit/success/wrong/no_valid = 21 / 6 / 15 / 4
+own_support_best: commit/success/wrong/no_valid = 21 / 9 / 12 / 4
+local_context_only_best: commit/success/wrong/no_valid = 15 / 5 / 10 / 4
+```
+
+사실: The detector substrate gate passes, but the terminal post-observation gate fails because wrong-goal and no-valid commit rows exceed the frozen maximum of `0`.
+
+에이전트 추론: Local own-view detector/SAM2 evidence is not sufficient as ObjectNav goal validity evidence in this split. The result strengthens the novelty argument only if the next revision can explain why own-view evidence fails and derive a safer mechanism from that failure taxonomy. Threshold tuning from joined labels remains blocked.
+
+Local-context failure diagnosis:
+
+```text
+diagnostic_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_failure_diagnostic_v1
+proposed_request_rows: 21
+proposed_commit_rows: 10
+proposed_success_commit_rows: 3
+proposed_wrong_goal_commit_rows: 7
+selected_role_counts:
+  detector_strong_candidate: 2
+  detector_strong_rival: 7
+  source_top: 1
+diagnostic_tag_counts:
+  selected_detector_strong_role: 9
+  wrong_commit: 7
+  wrong_candidate_stronger_own_view_than_best_correct: 4
+  best_correct_not_strong_own_view: 4
+  own_view_support_prefers_wrong_over_weak_correct: 4
+  source_pool_no_valid_candidate: 3
+  wrong_commit_without_correct_planned_candidate: 3
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+사실: The failure diagnosis separates no-valid source-pool rows from wrong-instance arbitration rows. Most committed candidates selected by the proposed rule are detector-strong roles, not local-context-added candidates.
+
+에이전트 추론: A revised contract must not be "raise the own-view threshold." It must first route no-valid pool failures away from terminal commitment and then require evidence that distinguishes goal validity from category/object visibility when detector-strong wrong instances outscore weak correct candidates.
+
+Revised local-context objective contract:
+
+```text
+manifest: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_revision_v1.json
+verify: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_revision_v1.verify.json
+status: frozen_design_contract_before_implementation
+objective_name: goal_validity_guarded_local_context_v1
+guard_order:
+  1. pool_validity_guard_v2
+  2. wrong_instance_arbitration_guard_v1
+blocked_shortcuts: semantic_top, source_top_if_associated, detector_score_best, own_support_best, local_context_only_best
+wrong_goal_commit_rows_maximum_after_label_join: 0
+no_valid_commit_rows_maximum_after_label_join: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+사실: The revised contract is a design contract, not a positive utility result. It freezes the next analyzer target and label-separation gates before implementation.
+
+에이전트 추론: The next analyzer should first prove that the candidate pool is action-time valid enough to arbitrate. If that is unresolved, the method should request backend retrieval repair or defer instead of committing a detector-strong repeated object.
+
+Revised local-context analyzer result:
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_local_context_revision.py
+output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1
+request/evidence/decision/evaluated_rows: 21 / 113 / 168 / 168
+action_evidence_forbidden_key_count: 0
+goal_validity_guarded_local_context_v1 commit/success/wrong/no_valid: 0 / 0 / 0 / 0
+revision action counts:
+  request_goal_validity_confirmation: 12
+  defer_instance_arbitration_unresolved: 9
+pool_validity_status:
+  passed: 21
+instance_arbitration_status:
+  unresolved: 21
+revision_substrate_gate_passed: true
+revision_utility_gate_passed: false
+paper_claim_allowed: false
+```
+
+사실: The revised analyzer is Docker-run and safe against wrong/no-valid commits on the frozen paper-scale local-context rows.
+
+에이전트 추론: The result is safe but inert. It supports the failure mechanism that own-view category evidence is not enough for ObjectNav goal validity, but it does not yet support a utility claim over `defer_all`.
 
 ### Generalization Decision
 

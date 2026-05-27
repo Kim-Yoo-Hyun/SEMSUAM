@@ -1,0 +1,179 @@
+{
+  "schema_version": "h001.expanded_retrieval_ambiguity_objective_contract.v1",
+  "contract_name": "expanded_retrieval_ambiguity_objective_v1",
+  "date_checked": "2026-05-27",
+  "status": "design_contract_only",
+  "source": {
+    "fresh_validation_manifest": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_fresh_validation_v1.json",
+    "fresh_detector_substrate": "local_dataset/runs/h001_expanded_retrieval_fresh_validation_detector_substrate_projection_anchor_v1/expanded_retrieval_detector_substrate_summary.json",
+    "fresh_detector_evidence_diagnostic": "local_dataset/runs/h001_expanded_retrieval_fresh_validation_detector_evidence_diagnostic_v1/expanded_retrieval_detector_evidence_diagnostic_summary.json",
+    "terminal_commit_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "diagnostic_facts": {
+    "request_rows": 6,
+    "candidate_rows": 51,
+    "associated_request_rate": 1.0,
+    "strong_request_rate": 1.0,
+    "multi_strong_request_rate": 0.8333,
+    "lower_rank_only_association_rate": 0.5,
+    "evidence_topology_counts": {
+      "multi_strong_saturated_ambiguity": 5,
+      "single_strong_lower_rank": 1
+    },
+    "terminal_objective_allowed": false,
+    "paper_scale_gate_passed": false
+  },
+  "design_principle": {
+    "fact": "Fresh detector evidence is available on all request rows, but the evidence mostly supports multiple candidates or a lower-rank candidate rather than a unique source-top goal.",
+    "agent_inference": "Detector evidence should be used as an ambiguity topology and active evidence router, not as a terminal ObjectNav commit signal."
+  },
+  "allowed_action_inputs": [
+    "rival_identity_request_id",
+    "episode_key",
+    "scene_key",
+    "query",
+    "candidate_id",
+    "expanded_candidate_rank",
+    "target_semantic_rank",
+    "target_semantic_score",
+    "target_support_score",
+    "source_pool_proxy_route",
+    "source_pool_saturated",
+    "detector_support_class",
+    "evidence_score",
+    "strict_association_heading_rows",
+    "projection/depth/mask support counts",
+    "evidence_topology",
+    "terminal_objective_risk"
+  ],
+  "forbidden_action_inputs": [
+    "candidate_correct",
+    "selected_for_goal",
+    "wrong_goal_visit",
+    "success label",
+    "GT object id",
+    "GT goal id",
+    "oracle distance to goal",
+    "post-join evaluation labels",
+    "threshold tuning from joined labels"
+  ],
+  "route_rules": [
+    {
+      "evidence_topology": "multi_strong_saturated_ambiguity",
+      "objective_action": "request_local_context_disambiguation",
+      "objective_reason": "multiple_detector_supported_candidates_require_local_context",
+      "terminal_commit_allowed": false,
+      "required_next_evidence": [
+        "local spatial context around detector-supported candidates",
+        "candidate-to-candidate separation or duplicate-goal grouping",
+        "viewpoint that can compare source top, best lower-rank, and nearby detector-supported candidates"
+      ]
+    },
+    {
+      "evidence_topology": "single_strong_lower_rank",
+      "objective_action": "request_rank_challenge_confirmation",
+      "objective_reason": "lower_rank_detector_evidence_challenges_source_top",
+      "terminal_commit_allowed": false,
+      "required_next_evidence": [
+        "source-top negative or weak-evidence confirmation",
+        "lower-rank candidate own-view confirmation",
+        "candidate-validity check before any source-top replacement"
+      ]
+    },
+    {
+      "evidence_topology": "single_strong_source_top",
+      "objective_action": "request_goal_validity_confirmation",
+      "objective_reason": "source_top_supported_but_goal_identity_unproven",
+      "terminal_commit_allowed": false,
+      "required_next_evidence": [
+        "goal-validity confirmation independent of category visibility",
+        "wrong-goal distractor check"
+      ]
+    },
+    {
+      "evidence_topology": "multi_associated_with_source_top",
+      "objective_action": "request_local_context_disambiguation",
+      "objective_reason": "source_top_is_supported_but_not_unique",
+      "terminal_commit_allowed": false,
+      "required_next_evidence": [
+        "local context arbitration among associated candidates"
+      ]
+    },
+    {
+      "evidence_topology": "multi_associated_lower_rank_only",
+      "objective_action": "request_rank_challenge_confirmation",
+      "objective_reason": "multiple_lower_rank_candidates_challenge_source_top",
+      "terminal_commit_allowed": false,
+      "required_next_evidence": [
+        "rank-challenge confirmation",
+        "backend/source-pool validity audit"
+      ]
+    },
+    {
+      "evidence_topology": "weak_detector_evidence_only",
+      "objective_action": "request_additional_viewpoint_or_defer",
+      "objective_reason": "weak_detector_evidence_is_not_commit_evidence",
+      "terminal_commit_allowed": false,
+      "required_next_evidence": [
+        "additional viewpoint or defer"
+      ]
+    },
+    {
+      "evidence_topology": "no_detector_evidence",
+      "objective_action": "request_backend_or_viewpoint_revision",
+      "objective_reason": "detector_evidence_unavailable",
+      "terminal_commit_allowed": false,
+      "required_next_evidence": [
+        "backend retrieval revision",
+        "viewpoint revision"
+      ]
+    }
+  ],
+  "blocked_decisions": [
+    "commit_best_detector_evidence_candidate",
+    "commit_source_top_if_any_detector_association",
+    "switch_to_lower_rank_candidate_from_detector_score_only",
+    "tune_detector_score_threshold_from_diagnostic_labels",
+    "tune_depth_threshold_from_joined_correctness_labels"
+  ],
+  "simpler_alternative_decisions": [
+    {
+      "alternative": "best_detector_score_commit",
+      "decision": "reject",
+      "reason": "Fresh diagnostic has multi-strong evidence on 5/6 request rows, so best-score commit would force a choice inside unresolved ambiguity."
+    },
+    {
+      "alternative": "source_top_if_associated",
+      "decision": "reject",
+      "reason": "Source top is not strong in the fresh diagnostic request rows that need arbitration."
+    },
+    {
+      "alternative": "lower_rank_switch",
+      "decision": "reject_as_terminal_rule",
+      "reason": "Lower-rank detector evidence challenges the source top but does not by itself prove ObjectNav goal validity."
+    },
+    {
+      "alternative": "defer_all",
+      "decision": "baseline_only",
+      "reason": "Safe but cannot demonstrate active uncertainty utility."
+    }
+  ],
+  "diagnostic_gate": {
+    "min_request_rows": 6,
+    "required_route_coverage": 1.0,
+    "terminal_commit_rows": 0,
+    "must_report_topology_counts": true,
+    "must_report_simpler_alternatives": true,
+    "uses_gt_for_action": false
+  },
+  "promotion_gate": {
+    "next_source_min_request_rows": 20,
+    "next_source_min_scenes": 5,
+    "next_source_min_queries": 3,
+    "terminal_commit_rows_before_fresh_validation": 0,
+    "must_freeze_contract_before_larger_source": true,
+    "paper_claim_allowed": false
+  },
+  "paper_claim_allowed": false
+}

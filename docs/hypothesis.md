@@ -21,17 +21,18 @@ Hypothesis 관련 산출물은 루트의 `hypothesis/` 폴더에 저장한다.
 Hypothesis 작업을 시작하는 에이전트는 아래 순서로 읽는다. 없는 파일은 건너뛰고, 있는 파일의 최신 내용을 우선한다.
 
 1. `AGENTS.md`
-2. `TODO.md`
-3. `docs/index.md`
-4. `docs/literature.md`
-5. `docs/hypothesis.md`
-6. `literature/README.md`
-7. `literature/PAPER.md`
-8. `literature/Contribution Candidates.md`
-9. `literature/CAND-01.md`
-10. `hypothesis/README.md`
-11. 대상 candidate folder의 `README.md`
-12. 대상 hypothesis folder의 `README.md`
+2. `README.md`
+3. `TODO.md`
+4. `docs/index.md`
+5. `docs/literature.md`
+6. `docs/hypothesis.md`
+7. `literature/README.md`
+8. `literature/PAPER.md`
+9. `literature/Contribution Candidates.md`
+10. `literature/CAND-01.md`
+11. `hypothesis/README.md`
+12. 대상 candidate folder의 `README.md`
+13. 대상 hypothesis folder의 `README.md`
 
 ## Phase Gate
 

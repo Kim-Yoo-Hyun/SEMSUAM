@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "date_checked": "2026-05-28",
+  "manifest": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_revision_v1.json",
+  "checks": {
+    "json_parse": true,
+    "separates_no_valid_pool_failure": true,
+    "separates_wrong_instance_arbitration": true,
+    "forbids_gt_for_action": true,
+    "blocks_detector_score_shortcut": true,
+    "blocks_threshold_tuning_from_joined_labels": true,
+    "requires_simpler_alternatives": true
+  },
+  "verification_command": "python -m json.tool hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_revision_v1.json >/dev/null"
+}

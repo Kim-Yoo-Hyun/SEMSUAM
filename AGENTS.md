@@ -6,10 +6,37 @@
 
 에이전트는 이 파일을 먼저 읽은 뒤 아래 순서로 현재 작업 맥락을 확인한다.
 
-1. `TODO.md`
-2. `docs/index.md`
-3. `docs/paper.md`
-4. Current hypothesis or workflow document
+1. `README.md`
+2. `TODO.md`
+3. `docs/index.md`
+4. `docs/paper.md`
+5. Current hypothesis or workflow document
+
+## Document Responsibilities
+
+- `AGENTS.md`는 repo-level project instruction이다. 세부 실험 기록을 담지 않고 작업 규칙, 파일 책임, novelty 기준, Docker/reproducibility 원칙만 정의한다.
+- 루트 `README.md`는 repo 전체의 현재 상태와 핵심 파일 안내를 제공한다. 긴 실험 결과, dataset log, paper summary를 중복해서 쓰지 않는다.
+- `TODO.md`는 `Now`, `Next`, `Running`, `Recently Completed`만 관리한다. 긴 설명은 가까운 workflow 문서나 local README에 둔다.
+- `docs/index.md`는 전체 문서 지도다. 세부 연구 판단이나 실험 로그를 길게 보관하지 않는다.
+- `docs/literature.md`는 문헌 조사 workflow와 작성 규칙을 관리한다. 문헌 조사 결과와 cross-paper synthesis는 `literature/README.md`에 둔다.
+- `docs/hypothesis.md`는 hypothesis 검증 workflow와 promotion 기준을 관리한다. 실제 hypothesis 상태는 `hypothesis/README.md`와 각 hypothesis 폴더에 둔다.
+- `docs/paper.md`는 paper framing, novelty, reviewer-defense 기준을 관리한다. 논문 관련 판단은 이 문서를 우선 적용한다.
+- `docs/reproducibility.md`는 데이터, checkpoint, Docker, artifact, 재현 명령, 백업/복구 기준을 관리한다. 실험 재현이나 artifact 관련 판단은 이 문서를 우선 적용한다.
+- 각 폴더의 `README.md`는 해당 폴더의 local entry point다.
+- `literature/README.md`는 문헌 조사 결과의 field map, trend synthesis, cross-paper insight, open question을 관리한다.
+- `hypothesis/README.md`는 hypothesis index와 active gate를 관리한다.
+- `paper/README.md`는 paper workspace가 실제로 필요해질 때 만들고, 파일 역할, 읽는 순서, 업데이트 규칙을 관리한다.
+- 세부 결과나 긴 실험 기록은 `AGENTS.md`나 루트 `README.md`에 쓰지 말고, 해당 workflow 문서 또는 가장 가까운 폴더의 `README`, report, artifact 문서에 기록한다.
+
+## Startup And Update Protocol
+
+- 작업 시작 시 `AGENTS.md`, `README.md`, `TODO.md`, `docs/index.md`를 읽어 현재 연구 상태와 우선순위를 재구성한다.
+- `TODO.md`의 `Now`와 `Next`를 기준으로 현재 할 일을 선택한다.
+- 작업 전에는 관련 `docs/` workflow와 local `README.md`를 읽어 문서 역할을 침범하지 않는지 확인한다.
+- 작업 후에는 변경 내용이 어느 문서의 책임인지 판단해서 가장 가까운 책임 문서에만 업데이트한다.
+- 필요한 경우 `TODO.md`의 `Now`, `Next`, `Recently Completed`를 함께 갱신한다.
+- 논문 본문용 experiment는 Docker 기반 결과만 확정한다.
+- hypothesis-stage smoke test와 paper experiment artifact를 명확히 구분한다.
 
 ## Working Language
 

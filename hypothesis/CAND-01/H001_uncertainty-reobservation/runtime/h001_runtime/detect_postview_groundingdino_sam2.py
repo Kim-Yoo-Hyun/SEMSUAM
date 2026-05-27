@@ -135,6 +135,60 @@ def format_detector_query(query: str, query_template: str) -> str:
     return query_template.format(query=normalized_query)
 
 
+def parse_float_list(text: str) -> List[float]:
+    values = [float(item.strip()) for item in text.split(",") if item.strip()]
+    if not values:
+        raise argparse.ArgumentTypeError("expected at least one comma-separated float")
+    return values
+
+
+def coerce_float_list(value: Any, default: List[float]) -> List[float]:
+    if value is None:
+        return list(default)
+    if isinstance(value, str):
+        return parse_float_list(value)
+    if isinstance(value, list):
+        parsed: List[float] = []
+        for item in value:
+            try:
+                parsed.append(float(item))
+            except (TypeError, ValueError):
+                return list(default)
+        return parsed if parsed else list(default)
+    return list(default)
+
+
+def candidate_anchor_points(
+    candidate: Dict[str, Any],
+    field: str,
+    height_offsets_m: List[float],
+    grounded_point_height_m: float,
+    grounded_point_max_vertical_gap_m: float,
+) -> Tuple[Optional[np.ndarray], List[Dict[str, Any]]]:
+    base_point = candidate_point(
+        candidate,
+        field,
+        grounded_point_height_m,
+        grounded_point_max_vertical_gap_m,
+    )
+    if base_point is None:
+        return None, []
+    anchors = []
+    for offset in height_offsets_m:
+        point = np.asarray(
+            [float(base_point[0]), float(base_point[1]) + float(offset), float(base_point[2])],
+            dtype=np.float64,
+        )
+        anchors.append(
+            {
+                "projection_anchor_height_offset_m": float(offset),
+                "projection_anchor_point": [float(value) for value in point.tolist()],
+                "point": point,
+            }
+        )
+    return base_point, anchors
+
+
 def box_area(box: List[float]) -> float:
     left, top, right, bottom = box
     return max(0.0, right - left) * max(0.0, bottom - top)
@@ -195,6 +249,29 @@ def depth_median_for_mask(depth: Optional[np.ndarray], mask: Optional[np.ndarray
     if valid.size == 0:
         return None
     return float(np.median(valid))
+
+
+def anchor_choice_key(row: Dict[str, Any]) -> Tuple[int, float, float, float, float]:
+    depth = row.get("depth_agreement_m")
+    distance = row.get("box_center_distance_px")
+    score = row.get("best_box_score")
+    if row.get("associated_to_candidate"):
+        bucket = 0
+    elif row.get("projection_status") == "visible" and row.get("projected_pixel_inside_mask"):
+        bucket = 1
+    elif row.get("projection_status") == "visible" and row.get("projected_pixel_inside_box"):
+        bucket = 2
+    elif row.get("projection_status") == "visible":
+        bucket = 3
+    else:
+        bucket = 4
+    return (
+        bucket,
+        float(depth) if depth is not None else math.inf,
+        float(distance) if distance is not None else math.inf,
+        -(float(score) if score is not None else -math.inf),
+        abs(float(row.get("projection_anchor_height_offset_m") or 0.0)),
+    )
 
 
 def detect_boxes(
@@ -351,6 +428,9 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     association_rows: List[Dict[str, Any]] = []
     frame_summaries: List[Dict[str, Any]] = []
     projection_counts: Counter[str] = Counter()
+    projection_anchor_counts: Counter[str] = Counter()
+    projection_anchor_policy_counts: Counter[str] = Counter()
+    projection_anchor_offset_counts: Counter[str] = Counter()
     candidate_selection_counts: Counter[str] = Counter()
     detector_box_counts: List[int] = []
     associated_heading_count = 0
@@ -372,6 +452,15 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         )
         candidate_selection_counts[candidate_selection_source] += 1
         selected_candidate_ids = [str(candidate.get("candidate_id")) for candidate in selected_candidates]
+        frame_anchor_offsets = coerce_float_list(
+            frame.get("revision_projection_anchor_height_offsets_m"),
+            [float(value) for value in args.projection_anchor_height_offsets_m],
+        )
+        frame_anchor_policy = str(
+            frame.get("revision_projection_anchor_policy")
+            or ("single_point_projection" if frame_anchor_offsets == [0.0] else "projection_anchor_height_sweep_v1")
+        )
+        projection_anchor_policy_counts[frame_anchor_policy] += 1
         frame_detector_count = 0
         frame_mask_count = 0
         frame_associated_count = 0
@@ -456,60 +545,105 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
             heading_associations: List[Dict[str, Any]] = []
             for candidate in selected_candidates:
                 candidate_id = str(candidate.get("candidate_id"))
-                point = candidate_point(
+                base_point, anchor_points = candidate_anchor_points(
                     candidate,
                     args.candidate_point_field,
+                    frame_anchor_offsets,
                     float(args.grounded_point_height_m),
                     float(args.grounded_point_max_vertical_gap_m),
                 )
-                projection = (
-                    {"projection_status": "missing_candidate_point", "projected_pixel": None, "camera_forward_m": None}
-                    if point is None
-                    else project_point(
-                        point,
+                anchor_rows: List[Dict[str, Any]] = []
+                if not anchor_points:
+                    anchor_rows.append(
+                        {
+                            "projection_anchor_height_offset_m": None,
+                            "projection_anchor_point": None,
+                            "projected_pixel": None,
+                            "projection_status": "missing_candidate_point",
+                            "camera_forward_m": None,
+                            "depth_check_status": "missing_candidate_point",
+                            "depth_error_m": None,
+                            "best_box_index": None,
+                            "best_box_xyxy": None,
+                            "best_box_score": None,
+                            "projected_pixel_inside_box": False,
+                            "projected_pixel_inside_mask": False,
+                            "box_center_distance_px": None,
+                            "mask_depth_median": None,
+                            "depth_agreement_m": None,
+                            "associated_to_candidate": False,
+                        }
+                    )
+                for anchor in anchor_points:
+                    projection = project_point(
+                        anchor["point"],
                         assets["world_from_camera"],
                         int(assets["width"]),
                         int(assets["height"]),
                         float(assets["hfov"]),
                         float(args.min_projection_depth_m),
                     )
-                )
-                projected_pixel = projection.get("projected_pixel")
-                projection_status = str(projection.get("projection_status"))
-                depth_info = depth_check(
-                    assets["depth"],
-                    projected_pixel,
-                    projection.get("camera_forward_m"),
-                    float(args.depth_tolerance_m),
-                    int(args.depth_window_px),
-                )
-                best_box, inside_box, inside_mask, center_dist = best_box_for_pixel(
-                    projected_pixel,
-                    boxes,
-                    masks_by_box,
-                    float(args.box_padding_px),
-                )
-                best_mask = masks_by_box.get(int(best_box["box_index"])) if best_box else None
-                mask_depth = depth_median_for_mask(assets["depth"], best_mask)
-                projected_depth = projection.get("camera_forward_m")
-                depth_agreement_m = (
-                    None
-                    if mask_depth is None or projected_depth is None
-                    else abs(float(mask_depth) - float(projected_depth))
-                )
-                associated = bool(
-                    best_box is not None
-                    and projection_status == "visible"
-                    and inside_mask
-                    and (
-                        depth_agreement_m is None
-                        or depth_agreement_m <= float(args.association_depth_tolerance_m)
+                    projected_pixel = projection.get("projected_pixel")
+                    projection_status = str(projection.get("projection_status"))
+                    depth_info = depth_check(
+                        assets["depth"],
+                        projected_pixel,
+                        projection.get("camera_forward_m"),
+                        float(args.depth_tolerance_m),
+                        int(args.depth_window_px),
                     )
-                )
+                    best_box, inside_box, inside_mask, center_dist = best_box_for_pixel(
+                        projected_pixel,
+                        boxes,
+                        masks_by_box,
+                        float(args.box_padding_px),
+                    )
+                    best_mask = masks_by_box.get(int(best_box["box_index"])) if best_box else None
+                    mask_depth = depth_median_for_mask(assets["depth"], best_mask)
+                    projected_depth = projection.get("camera_forward_m")
+                    depth_agreement_m = (
+                        None
+                        if mask_depth is None or projected_depth is None
+                        else abs(float(mask_depth) - float(projected_depth))
+                    )
+                    associated = bool(
+                        best_box is not None
+                        and projection_status == "visible"
+                        and inside_mask
+                        and (
+                            depth_agreement_m is None
+                            or depth_agreement_m <= float(args.association_depth_tolerance_m)
+                        )
+                    )
+                    anchor_rows.append(
+                        {
+                            "projection_anchor_height_offset_m": anchor["projection_anchor_height_offset_m"],
+                            "projection_anchor_point": anchor["projection_anchor_point"],
+                            "projected_pixel": projected_pixel,
+                            "projection_status": projection_status,
+                            "camera_forward_m": projection.get("camera_forward_m"),
+                            "depth_check_status": depth_info.get("depth_check_status"),
+                            "depth_error_m": depth_info.get("depth_error_m"),
+                            "best_box_index": best_box.get("box_index") if best_box else None,
+                            "best_box_xyxy": best_box.get("box_xyxy") if best_box else None,
+                            "best_box_score": best_box.get("detector_score") if best_box else None,
+                            "projected_pixel_inside_box": bool(inside_box and projection_status == "visible"),
+                            "projected_pixel_inside_mask": bool(inside_mask and projection_status == "visible"),
+                            "box_center_distance_px": center_dist,
+                            "mask_depth_median": mask_depth,
+                            "depth_agreement_m": depth_agreement_m,
+                            "associated_to_candidate": associated,
+                        }
+                    )
+                selected_anchor = min(anchor_rows, key=anchor_choice_key)
+                associated = bool(selected_anchor.get("associated_to_candidate"))
                 associated_heading_count += int(associated)
-                projected_inside_mask_count += int(bool(inside_mask and projection_status == "visible"))
+                projected_inside_mask_count += int(bool(selected_anchor.get("projected_pixel_inside_mask")))
                 frame_associated_count += int(associated)
-                projection_counts[projection_status] += 1
+                projection_counts[str(selected_anchor.get("projection_status"))] += 1
+                for anchor_row in anchor_rows:
+                    projection_anchor_counts[str(anchor_row.get("projection_status"))] += 1
+                projection_anchor_offset_counts[str(selected_anchor.get("projection_anchor_height_offset_m"))] += 1
                 row = {
                     "schema_version": SCHEMA_VERSION,
                     "decision_id": frame.get("decision_id"),
@@ -523,19 +657,26 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
                     "candidate_rank_before": ranks.get(candidate_id),
                     "candidate_selection_source": candidate_selection_source,
                     "point_field": args.candidate_point_field,
-                    "projected_pixel": projected_pixel,
-                    "projection_status": projection_status,
-                    "camera_forward_m": projection.get("camera_forward_m"),
-                    "depth_check_status": depth_info.get("depth_check_status"),
-                    "depth_error_m": depth_info.get("depth_error_m"),
-                    "best_box_index": best_box.get("box_index") if best_box else None,
-                    "best_box_xyxy": best_box.get("box_xyxy") if best_box else None,
-                    "best_box_score": best_box.get("detector_score") if best_box else None,
-                    "projected_pixel_inside_box": bool(inside_box and projection_status == "visible"),
-                    "projected_pixel_inside_mask": bool(inside_mask and projection_status == "visible"),
-                    "box_center_distance_px": center_dist,
-                    "mask_depth_median": mask_depth,
-                    "depth_agreement_m": depth_agreement_m,
+                    "projection_anchor_policy": frame_anchor_policy,
+                    "projection_anchor_height_offsets_m": frame_anchor_offsets,
+                    "projection_anchor_base_point": None if base_point is None else [float(value) for value in base_point.tolist()],
+                    "projection_anchor_height_offset_m": selected_anchor.get("projection_anchor_height_offset_m"),
+                    "projection_anchor_point": selected_anchor.get("projection_anchor_point"),
+                    "projection_anchor_candidate_count": len(anchor_rows),
+                    "projection_anchor_results": anchor_rows,
+                    "projected_pixel": selected_anchor.get("projected_pixel"),
+                    "projection_status": selected_anchor.get("projection_status"),
+                    "camera_forward_m": selected_anchor.get("camera_forward_m"),
+                    "depth_check_status": selected_anchor.get("depth_check_status"),
+                    "depth_error_m": selected_anchor.get("depth_error_m"),
+                    "best_box_index": selected_anchor.get("best_box_index"),
+                    "best_box_xyxy": selected_anchor.get("best_box_xyxy"),
+                    "best_box_score": selected_anchor.get("best_box_score"),
+                    "projected_pixel_inside_box": bool(selected_anchor.get("projected_pixel_inside_box")),
+                    "projected_pixel_inside_mask": bool(selected_anchor.get("projected_pixel_inside_mask")),
+                    "box_center_distance_px": selected_anchor.get("box_center_distance_px"),
+                    "mask_depth_median": selected_anchor.get("mask_depth_median"),
+                    "depth_agreement_m": selected_anchor.get("depth_agreement_m"),
                     "associated_to_candidate": associated,
                     "uses_gt_for_action": False,
                     **frame_passthrough,
@@ -562,6 +703,8 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
                 "selected_candidate_count": len(selected_candidates),
                 "selected_candidate_ids": selected_candidate_ids,
                 "candidate_selection_source": candidate_selection_source,
+                "projection_anchor_policy": frame_anchor_policy,
+                "projection_anchor_height_offsets_m": frame_anchor_offsets,
                 "detector_box_count": frame_detector_count,
                 "sam2_mask_count": frame_mask_count,
                 "associated_candidate_heading_count": frame_associated_count,
@@ -593,6 +736,8 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         "box_threshold": float(args.box_threshold),
         "text_threshold": float(args.text_threshold),
         "candidate_point_field": str(args.candidate_point_field),
+        "projection_anchor_height_offsets_m": [float(value) for value in args.projection_anchor_height_offsets_m],
+        "projection_anchor_policy_counts": dict(sorted(projection_anchor_policy_counts.items())),
         "grounded_point_height_m": float(args.grounded_point_height_m),
         "grounded_point_max_vertical_gap_m": float(args.grounded_point_max_vertical_gap_m),
         "max_headings_per_frame": int(args.max_headings_per_frame),
@@ -612,6 +757,8 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         "associated_candidate_heading_count": associated_heading_count,
         "projected_pixel_inside_mask_count": projected_inside_mask_count,
         "projection_status_counts": dict(sorted(projection_counts.items())),
+        "projection_anchor_status_counts": dict(sorted(projection_anchor_counts.items())),
+        "projection_anchor_selected_offset_counts": dict(sorted(projection_anchor_offset_counts.items())),
         "detector_box_count_per_heading": {
             "min": min(detector_box_counts) if detector_box_counts else 0,
             "max": max(detector_box_counts) if detector_box_counts else 0,
@@ -652,6 +799,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--grounded-point-height-m", type=float, default=0.8)
     parser.add_argument("--grounded-point-max-vertical-gap-m", type=float, default=2.0)
+    parser.add_argument("--projection-anchor-height-offsets-m", type=parse_float_list, default=[0.0])
     parser.add_argument("--box-threshold", type=float, default=0.15)
     parser.add_argument("--text-threshold", type=float, default=0.15)
     parser.add_argument("--query-template", default="a {query}.")

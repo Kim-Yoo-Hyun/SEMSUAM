@@ -1,0 +1,12 @@
+{
+  "contract_name": "expanded_retrieval_paper_scale_v1",
+  "ok": true,
+  "paper_claim_allowed": false,
+  "paper_scale_gate_passed": true,
+  "request_queries": 6,
+  "request_rows": 23,
+  "request_scenes": 10,
+  "source_freeze_gate_passed": true,
+  "status": "frozen_paper_scale_source",
+  "uses_gt_for_action": false
+}

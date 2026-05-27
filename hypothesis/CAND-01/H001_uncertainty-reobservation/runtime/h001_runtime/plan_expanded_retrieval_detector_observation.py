@@ -16,9 +16,10 @@ from h001_runtime.plan_association_recovery_observation import (
 )
 
 
-SCHEMA_VERSION = "h001.expanded_retrieval_detector_observation_plan.v1"
+SCHEMA_VERSION = "h001.expanded_retrieval_detector_observation_plan.v2"
 POLICY_NAME = "ExpandedRetrievalDetectorObservation"
-PLANNER_NAME = "expanded_retrieval_detector_standoff_v1"
+PLANNER_NAME = "expanded_retrieval_detector_standoff_projection_anchor_v1"
+PROJECTION_ANCHOR_POLICY = "projection_anchor_height_sweep_v1"
 FORBIDDEN_ACTION_KEYS = {
     "candidate_correct",
     "selected_for_goal",
@@ -281,6 +282,11 @@ def make_plan_row(
         "standoff_projection_sane": viewpoint.get("projection_sane"),
         "standoff_viewpoint_yaw_rad": viewpoint.get("yaw"),
         "standoff_score": viewpoint.get("score"),
+        "revision_contract_name": "expanded_retrieval_detector_viewpoint_revision_v1",
+        "revision_projection_anchor_policy": PROJECTION_ANCHOR_POLICY,
+        "revision_projection_anchor_height_offsets_m": [float(value) for value in args.projection_anchor_height_offsets_m],
+        "revision_projection_anchor_source": "fixed_category_agnostic_offsets",
+        "revision_projection_anchor_uses_gt_for_action": False,
         "detector_evidence_allowed_by_proxy": True,
         "terminal_commit_allowed": False,
         "commit_after_reobserve": False,
@@ -466,6 +472,12 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         "fallback_rows": fallback_rows,
         "viewpoint_source_counts": dict(sorted(viewpoint_sources.items())),
         "skipped_reason_counts": dict(sorted(skipped_reasons.items())),
+        "revision_contract_name": "expanded_retrieval_detector_viewpoint_revision_v1",
+        "revision_projection_anchor_policy": PROJECTION_ANCHOR_POLICY,
+        "revision_projection_anchor_height_offsets_m": [
+            float(value) for value in args.projection_anchor_height_offsets_m
+        ],
+        "revision_projection_anchor_uses_gt_for_action": False,
         "candidate_artifact_rows": len(artifact_rows),
         "consumed_forbidden_action_field_count": consumed_forbidden,
         "uses_gt_for_action": False,
@@ -507,6 +519,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-standoff-distance-m", type=float, default=0.75)
     parser.add_argument("--max-standoff-distance-m", type=float, default=3.25)
     parser.add_argument("--require-navmesh-standoff", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument(
+        "--projection-anchor-height-offsets-m",
+        type=parse_float_list,
+        default=[0.0, 0.4, 0.8, 1.2, 1.6],
+    )
     return parser.parse_args()
 
 

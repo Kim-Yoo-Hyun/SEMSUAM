@@ -18,9 +18,9 @@
 
 Paper 관련 작업을 시작하는 에이전트는 아래 순서로 읽는다.
 
-1. `README.md`
-2. `TODO.md`
-3. `AGENTS.md`
+1. `AGENTS.md`
+2. `README.md`
+3. `TODO.md`
 4. `docs/index.md`
 5. `docs/literature.md`
 6. `docs/hypothesis.md`

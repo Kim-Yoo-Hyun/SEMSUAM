@@ -459,8 +459,8 @@ v1_uses_gt_for_action: false
 v1_superseded_reason: detector output did not preserve viewpoint_pair_role for pair-level evidence analysis
 
 v2_session: h001-discriminative-rival-view-detector-v2-20260527-033307
-v2_status: running
-v2_stage: detector_mask_scoring
+v2_status: completed
+v2_stage: completed
 v2_output: local_dataset/runs/h001_discriminative_rival_view_detector_substrate_v2
 v2_log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/discriminative-rival-view-detector-v2-20260527-033307.log
 v2_verification_command:
@@ -727,6 +727,831 @@ paper_claim_allowed: false
 ### 에이전트 추론
 
 The source-pool score-shape proxy uses non-GT action-time candidate evidence to separate the two backend/source-pool failure rows from the six detector-eligible rows on this diagnostic source. This permits the next detector/viewpoint evidence gate for proxy detector-eligible rows, but it is still not a paper-facing method claim because the thresholds were derived after inspecting current diagnostic evidence.
+
+### Expanded Retrieval Detector Evidence Gate
+
+### 사실
+
+```text
+contract: manifests/h001_expanded_retrieval_detector_evidence_v1.json
+planner: runtime/h001_runtime/plan_expanded_retrieval_detector_observation.py
+plan_output: local_dataset/runs/h001_expanded_retrieval_detector_plan_v1
+detector_proxy_request_rows: 6
+planned_request_rows: 6
+plan_rows: 42
+plan_rows_per_request_min/max: 5 / 8
+skipped_rows: 18
+skipped_reason_counts:
+  standoff_navmesh_required: 18
+zero_standoff_rows: 0
+near_standoff_rows: 0
+fallback_rows: 0
+rotation_fallback_rows: 0
+target_distance_from_viewpoint_m_min/mean/max: 1.7499 / 1.7500 / 1.7521
+consumed_forbidden_action_field_count: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+
+frame_output: local_dataset/runs/h001_expanded_retrieval_detector_frames_v1
+frame_rows/headings: 42 / 168
+nonblank_output: local_dataset/runs/h001_expanded_retrieval_detector_frames_v1/nonblank_filter_v1
+dropped_rows: 0
+removed_blank_heading_count: 0
+strict_no_blank_heading_gate_passed: true
+
+detector_job: h001-expanded-retrieval-detector-20260527-141012
+detector_output: local_dataset/runs/h001_expanded_retrieval_detector_substrate_v1
+detector_job_status: completed
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.0714
+rows_with_candidate_association: 3 / 42
+passes_detector_substrate_gate: false
+projection_status_counts:
+  out_of_fov: 134
+  visible: 34
+depth_check_counts:
+  consistent: 6
+  depth_mismatch: 28
+  out_of_fov: 134
+
+failure_diagnostic_output: local_dataset/runs/h001_expanded_retrieval_detector_failure_diagnostic_v1
+failure_diagnostic_gate_passed: true
+failure_mechanism_counts:
+  projection_never_visible: 33
+  mask_overlap_depth_mismatch_only: 4
+  associated_success: 3
+  visible_projection_no_detector_overlap: 1
+  box_overlap_mask_reject: 1
+detector_available_rows: 42
+threshold_tuning_allowed: false
+viewpoint_revision_required: true
+association_depth_revision_required: true
+
+viewpoint_revision_design_output: local_dataset/runs/h001_expanded_retrieval_detector_viewpoint_revision_design_v1
+viewpoint_revision_contract: manifests/h001_expanded_retrieval_detector_viewpoint_revision_v1.json
+selected_revision: projection_anchor_height_sweep_v1
+projection_anchor_height_offsets_m:
+  - 0.0
+  - 0.4
+  - 0.8
+  - 1.2
+  - 1.6
+out_of_fov_axis_counts:
+  x_in_y_above: 134
+projection_never_visible_recovery:
+  offsets_0_0_to_0_8: 29 / 33
+  offsets_0_0_to_1_6: 33 / 33
+
+revised_projection_anchor_plan_output: local_dataset/runs/h001_expanded_retrieval_detector_plan_projection_anchor_v1
+revised_projection_anchor_plan_schema: h001.expanded_retrieval_detector_observation_plan.v2
+revised_projection_anchor_planner: expanded_retrieval_detector_standoff_projection_anchor_v1
+revised_projection_anchor_plan_rows: 42
+revised_projection_anchor_planned_request_rows: 6
+revised_projection_anchor_plan_gate: true
+projection_anchor_smoke_output: local_dataset/runs/h001_expanded_retrieval_detector_projection_anchor_smoke_v1
+projection_anchor_visible_rows: 42 / 42
+projection_anchor_visible_rate: 1.0
+projection_anchor_frame_passthrough_smoke: local_dataset/runs/h001_expanded_retrieval_detector_projection_anchor_frame_passthrough_smoke_v1
+projection_anchor_frame_revision_metadata_rows: 2 / 2
+projection_anchor_smoke_uses_gt_for_action: false
+
+fixed_anchor_detector_rerun_job:
+  status: completed
+  tmux_session: h001-expanded-retrieval-detector-anchor-20260527-163608
+  working_directory: /home/yoohyun/research3
+  output: local_dataset/runs/h001_expanded_retrieval_detector_substrate_projection_anchor_v1
+  log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/expanded-retrieval-detector-anchor-20260527-163608.log
+  status_file: local_dataset/runs/h001_expanded_retrieval_detector_substrate_projection_anchor_v1/job_status.json
+  expected_files:
+    - detector_v3c/summary.json
+    - detector_v3c/detector_candidate_associations.jsonl
+    - expanded_retrieval_detector_associations.jsonl
+    - expanded_retrieval_detector_substrate_summary.json
+  launch_command: >-
+    cd /home/yoohyun/research3 && TS=20260527-163608 ROOT=/home/yoohyun/research3
+    PLAN_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_detector_plan_projection_anchor_v1
+    FRAME_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_detector_frames_v1
+    FRAMES=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_detector_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+    FRAME_ROOT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_detector_frames_v1
+    CANDIDATE_ARTIFACT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_detector_plan_projection_anchor_v1/expanded_retrieval_detector_candidate_artifact.jsonl
+    OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_detector_substrate_projection_anchor_v1
+    EXPECTED_FRAME_ROWS=42 MAX_FRAMES=42 MAX_DEBUG_IMAGES=180 DEVICE=cuda
+    PROJECTION_ANCHOR_HEIGHT_OFFSETS_M=0.0,0.4,0.8,1.2,1.6
+    LOG=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/expanded-retrieval-detector-anchor-20260527-163608.log
+    STATUS=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_detector_substrate_projection_anchor_v1/job_status.json
+    bash /home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_detector_substrate.sh
+  verification_command: >-
+    cat local_dataset/runs/h001_expanded_retrieval_detector_substrate_projection_anchor_v1/job_status.json &&
+    cat local_dataset/runs/h001_expanded_retrieval_detector_substrate_projection_anchor_v1/expanded_retrieval_detector_substrate_summary.json
+  result:
+    detector_rows: 42
+    detector_box_rate: 1.0
+    sam2_mask_rate: 1.0
+    candidate_association_rate: 0.7381
+    rows_with_candidate_association: 31 / 42
+    associated_candidate_heading_count: 96
+    passes_detector_substrate_gate: true
+    uses_gt_for_action: false
+    paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The detector evidence gate now has a geometry-safe frame substrate: only source-pool-valid rows are rendered, each candidate observation uses a navmesh standoff viewpoint, and frame export produces no blank rows or headings. The skipped candidates are navmesh-infeasible under the current standoff policy, not GT-filtered. The first detector/SAM2 substrate failed because candidate projection and depth association were weak despite detector boxes and masks being available. The failure taxonomy shows the dominant blocker is not detector availability but out-of-FOV candidate projection, with a smaller depth-mismatch association path. The design probe shows this is vertical anchor uncertainty rather than horizontal yaw: all out-of-FOV projections are `x_in_y_above`, and a category-agnostic projection-anchor height sweep recovers all `projection_never_visible` rows in replay. Revised plan/projection smoke passes and preserves the revision metadata through a 2-row renderer passthrough smoke. The fixed-anchor detector/SAM2 rerun also passes the substrate gate with candidate association rate `0.7381`, compared with the previous `0.0714`. Terminal commit and paper claims remain blocked. Fresh/predeclared source freeze, fresh detector/SAM2 substrate, fresh detector evidence diagnostic, and ambiguity-aware objective contract pass on a small source. Paper-scale source freeze, planner compatibility, source-pool proxy, detector observation planning, upper-anchor frame/projection smoke, detector/SAM2 substrate, detector evidence diagnostic, ambiguity objective application, local-context contract, local-context planner smoke, and local-context frame/projection smoke now pass; the next step is local-context detector/SAM2 substrate.
+
+### Expanded Retrieval Fresh Validation and Ambiguity Contract
+
+### 사실
+
+```text
+fresh_source_manifest: manifests/h001_expanded_retrieval_fresh_validation_v1.json
+fresh_source_output: local_dataset/runs/h001_expanded_retrieval_fresh_validation_source_v1
+fresh_source_request_rows: 6
+fresh_source_scenes: 2
+fresh_source_queries: 4
+paper_scale_gate_passed: false
+
+fresh_detector_substrate_output: local_dataset/runs/h001_expanded_retrieval_fresh_validation_detector_substrate_projection_anchor_v1
+fresh_detector_rows: 51
+fresh_detector_box_rate: 1.0
+fresh_sam2_mask_rate: 1.0
+fresh_candidate_association_rate: 0.6078
+fresh_rows_with_candidate_association: 31 / 51
+
+fresh_evidence_diagnostic_output: local_dataset/runs/h001_expanded_retrieval_fresh_validation_detector_evidence_diagnostic_v1
+fresh_evidence_topology_counts:
+  multi_strong_saturated_ambiguity: 5
+  single_strong_lower_rank: 1
+terminal_objective_allowed: false
+
+ambiguity_contract: manifests/h001_expanded_retrieval_ambiguity_objective_v1.json
+ambiguity_contract_output: local_dataset/runs/h001_expanded_retrieval_ambiguity_objective_contract_v1
+request_rows: 6
+route_coverage: 1.0
+objective_action_counts:
+  request_local_context_disambiguation: 5
+  request_rank_challenge_confirmation: 1
+terminal_commit_rows: 0
+contract_gate_passed: true
+larger_source_allowed_after_contract: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The fresh-source detector evidence is available but mostly ambiguous. The contract therefore treats detector support as active evidence topology, not as a terminal `ObjectNav` commit rule. This keeps the contribution aligned with semantic uncertainty as active SLAM/navigation utility and permits a larger source freeze without claiming utility yet.
+
+### Expanded Retrieval Paper-Scale Source
+
+### 사실
+
+```text
+paper_scale_manifest: manifests/h001_expanded_retrieval_paper_scale_v1.json
+source_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_source_v1
+source_rows: 23
+source_scenes: 10
+source_queries: 6
+source_filter: defer_expanded_retrieval_needed
+excluded_scene_overlap_with_fresh_source: 0
+action_evidence_forbidden_key_count: 0
+paper_scale_gate_passed: true
+
+planner_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_plan_v1
+candidate_set_rows: 23
+plan_rows: 230
+skipped_rows: 0
+expanded_candidates_per_request: 10
+planner_gate_passed: true
+
+source_pool_proxy_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_source_pool_validity_proxy_v1
+proxy_route_counts:
+  request_backend_retrieval_revision_proxy: 2
+  request_detector_guarded_observation_proxy: 21
+proxy_ready_for_detector_gate: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The paper-scale source is large enough for detector observation and remains nonterminal. Its `21` detector-eligible rows are now planned with the projection-anchor revision before any detector/SAM2 or terminal objective run.
+
+### Expanded Retrieval Paper-Scale Detector Observation and Frame Gate
+
+### 사실
+
+```text
+initial_detector_plan_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_plan_projection_anchor_v1
+detector_proxy_request_rows: 21
+planned_request_rows: 21
+plan_rows: 162
+skipped_rows: 48
+skipped_reason_counts:
+  standoff_navmesh_required: 48
+plan_rows_per_request: 5-10
+target_distance_from_viewpoint_m: 1.6335 / 1.7503 / 1.8053
+viewpoint_source_counts:
+  standoff_navmesh: 162
+zero_standoff_rows: 0
+near_standoff_rows: 0
+fallback_rows: 0
+rotation_fallback_rows: 0
+initial_anchor_offsets_m: [0.0, 0.4, 0.8, 1.2, 1.6]
+
+initial_frame_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_frames_projection_anchor_v1
+initial_frame_rows: 162 / 162
+initial_rendered_heading_count: 648
+initial_nonblank_rows: 162 / 162
+initial_removed_blank_heading_count: 0
+initial_projection_smoke_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_projection_anchor_smoke_v1
+initial_projection_visible_rows: 153 / 162
+initial_projection_gate_passed: false
+initial_failure_slice: bxsVRursffK / plant
+initial_failure_axis: x_in_y_above
+
+upper_anchor_plan_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_plan_projection_anchor_upper_v1
+upper_anchor_offsets_m: [0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4]
+upper_anchor_frame_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_frames_projection_anchor_upper_v1
+upper_anchor_frame_rows: 162 / 162
+upper_anchor_rendered_heading_count: 648
+upper_anchor_nonblank_rows: 162 / 162
+upper_anchor_removed_blank_heading_count: 0
+upper_anchor_projection_smoke_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_projection_anchor_upper_smoke_v1
+upper_anchor_projection_visible_rows: 162 / 162
+upper_anchor_missing_candidate_rows: 0
+upper_anchor_projection_gate_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The initial paper-scale projection failure is a narrow anchor-range failure, not a source-pool or standoff geometry failure. Extending the fixed category-agnostic vertical sweep to `2.4m` repairs the frame substrate while preserving non-GT action inputs. Detector/SAM2 validation is now allowed on the upper-anchor artifact, but terminal utility and paper claims remain blocked.
+
+### Expanded Retrieval Paper-Scale Detector Substrate Job
+
+### 사실
+
+```text
+status: completed
+tmux_session: h001-paper-expanded-detector-upper-20260527-194607
+working_directory: /home/yoohyun/research3
+output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_substrate_projection_anchor_upper_v1
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/paper-scale-expanded-retrieval-detector-substrate-upper-20260527-194607.log
+status_file: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_substrate_projection_anchor_upper_v1/job_status.json
+expected_files:
+  local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_substrate_projection_anchor_upper_v1/detector_v3c/summary.json
+  local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_substrate_projection_anchor_upper_v1/detector_v3c/detector_candidate_associations.jsonl
+  local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_substrate_projection_anchor_upper_v1/expanded_retrieval_detector_associations.jsonl
+  local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_substrate_projection_anchor_upper_v1/expanded_retrieval_detector_substrate_summary.json
+verification_command:
+  cat local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_substrate_projection_anchor_upper_v1/job_status.json &&
+  cat local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_substrate_projection_anchor_upper_v1/expanded_retrieval_detector_substrate_summary.json
+detector_rows: 162
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.8272
+rows_with_candidate_association: 134 / 162
+associated_candidate_heading_count: 378
+passes_detector_substrate_gate: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+Exact launch command:
+
+```bash
+tmux new-session -d -s h001-paper-expanded-detector-upper-20260527-194607 'cd /home/yoohyun/research3 && TS=20260527-194607 ROOT=/home/yoohyun/research3 RUNS_ROOT=/home/yoohyun/research3/local_dataset/runs MODEL_ROOT=/home/yoohyun/research3/local_dataset/models PLAN_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_plan_projection_anchor_upper_v1 FRAME_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_frames_projection_anchor_upper_v1 FRAMES=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_frames_projection_anchor_upper_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl FRAME_ROOT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_frames_projection_anchor_upper_v1 CANDIDATE_ARTIFACT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_plan_projection_anchor_upper_v1/expanded_retrieval_detector_candidate_artifact.jsonl OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_substrate_projection_anchor_upper_v1 DETECTOR_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_substrate_projection_anchor_upper_v1/detector_v3c OPENVOCAB_IMG=research3/openvocab-perception:20260513-v3c-gdino-sam2 DEVICE=cuda MAX_FRAMES=162 EXPECTED_FRAME_ROWS=162 MAX_HEADINGS_PER_FRAME=0 MAX_DETECTOR_BOXES_PER_HEADING=3 MAX_MASKS_PER_HEADING=3 CANDIDATE_POINT_FIELD=grounded_position PROJECTION_ANCHOR_HEIGHT_OFFSETS_M=0.0,0.4,0.8,1.2,1.6,2.0,2.4 BOX_THRESHOLD=0.10 TEXT_THRESHOLD=0.10 ASSOCIATION_DEPTH_TOLERANCE_M=1.0 MIN_DETECTOR_BOX_RATE=0.80 MIN_SAM2_MASK_RATE=0.80 MIN_CANDIDATE_ASSOCIATION_RATE=0.40 MAX_DEBUG_IMAGES=180 LOG=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/paper-scale-expanded-retrieval-detector-substrate-upper-20260527-194607.log STATUS=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_substrate_projection_anchor_upper_v1/job_status.json bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_detector_substrate.sh'
+```
+
+### 에이전트 추론
+
+The upper-anchor detector/SAM2 substrate removes the detector availability and projection-anchor blocker at paper scale. It still does not justify terminal commitment because the follow-up detector evidence diagnostic shows all request rows are multi-strong saturated ambiguity.
+
+### Expanded Retrieval Paper-Scale Detector Evidence and Local-Context Contract
+
+### 사실
+
+```text
+detector_evidence_diagnostic_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_detector_evidence_diagnostic_upper_v1
+request_rows: 21
+candidate_rows: 162
+association_heading_rows: 648
+associated_request_count: 21 / 21
+associated_request_rate: 1.0
+strong_request_rate: 1.0
+multi_strong_request_rate: 1.0
+lower_rank_only_association_rate: 0.2381
+evidence_topology_counts:
+  multi_strong_saturated_ambiguity: 21
+terminal_objective_risk_counts:
+  multi_candidate_detector_ambiguity: 21
+diagnostic_gate_passed: true
+paper_scale_gate_passed: true
+terminal_objective_allowed: false
+uses_gt_for_action: false
+uses_gt_for_analysis: false
+paper_claim_allowed: false
+
+ambiguity_objective_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_ambiguity_objective_upper_v1
+request_rows: 21
+route_coverage: 1.0
+objective_action_counts:
+  request_local_context_disambiguation: 21
+terminal_commit_rows: 0
+contract_gate_passed: true
+larger_source_allowed_after_contract: true
+terminal_objective_allowed: false
+uses_gt_for_action: false
+uses_gt_for_analysis: false
+paper_claim_allowed: false
+
+local_context_contract: manifests/h001_expanded_retrieval_local_context_disambiguation_v1.json
+contract_status: design_contract_only
+planner_name: expanded_retrieval_local_context_disambiguation_v1
+source_filter: objective_action == request_local_context_disambiguation
+planned_request_rows_minimum: 18
+planned_request_coverage_minimum: 0.85
+projection_visible_row_rate_minimum: 0.95
+detector_box_rate_minimum: 0.80
+sam2_mask_rate_minimum: 0.80
+candidate_association_rate_minimum: 0.40
+local_context_evidence_available_rate_minimum: 0.50
+terminal_rule: local_context_unique_own_view_advantage
+wrong_goal_commit_rate_maximum: 0.0
+success_commit_rows_minimum: 2
+direct_detector_score_commit_allowed: false
+source_top_if_associated_commit_allowed: false
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The current paper-scale evidence is positive substrate evidence but negative terminal evidence: detector support is available, yet every request remains multi-candidate ambiguous. The frozen local-context contract turns that negative result into the next active observation step. The next implementation must show whether local context can produce a unique own-view advantage; otherwise the method should stay in defer/request mode rather than becoming a detector-score commit rule.
+
+### Expanded Retrieval Paper-Scale Local-Context Planner Smoke
+
+### 사실
+
+```text
+planner: runtime/h001_runtime/plan_expanded_retrieval_local_context_disambiguation.py
+contract: manifests/h001_expanded_retrieval_local_context_disambiguation_v1.json
+output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1
+summary: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_plan_summary.json
+plan: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_plan.jsonl
+candidate_artifact: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl
+request_rows: 21
+planned_request_rows: 21
+planned_request_coverage: 1.0
+plan_rows: 113
+skipped_rows: 3
+skipped_reason:
+  standoff_navmesh_required: 3
+plan_rows_per_request_min/max: 2 / 6
+viewpoint_source:
+  standoff_navmesh: 113
+candidate_roles:
+  detector_strong_candidate: 19
+  detector_strong_rival: 54
+  local_context_candidate: 20
+  source_top: 11
+  source_top+detector_strong_candidate: 2
+  source_top+detector_strong_rival: 7
+zero_standoff_rows: 0
+near_standoff_rows: 0
+fallback_rows: 0
+rotation_fallback_rows: 0
+nonfinite_candidate_position_rows: 0
+consumed_forbidden_action_field_count: 0
+output_forbidden_action_field_count: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+planner_gate_passed: true
+```
+
+Command:
+
+```bash
+docker run --rm --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.plan_expanded_retrieval_local_context_disambiguation \
+    --contract /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_disambiguation_v1.json \
+    --ambiguity-rows /runs/h001_expanded_retrieval_paper_scale_ambiguity_objective_upper_v1/expanded_retrieval_ambiguity_objective_rows.jsonl \
+    --candidate-set /runs/h001_expanded_retrieval_paper_scale_plan_v1/expanded_retrieval_candidate_set.jsonl \
+    --detector-candidate-rows /runs/h001_expanded_retrieval_paper_scale_detector_evidence_diagnostic_upper_v1/expanded_retrieval_detector_evidence_candidate_rows.jsonl \
+    --out-root /runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1 \
+    --data-root /data \
+    --run-id h001_expanded_retrieval_paper_scale_local_context_plan_v1
+```
+
+### 에이전트 추론
+
+Planner smoke clears the local-context action substrate gate without using joined evaluation labels. This does not prove ObjectNav utility; it only allows the next frame/nonblank/projection smoke on the local-context plan.
+
+### Expanded Retrieval Paper-Scale Local-Context Frame/Projection Smoke
+
+### 사실
+
+```text
+frame_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1
+frame_summary: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1/summary.json
+filtered_frame_summary: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+nonblank_summary: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json
+projection_smoke_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_projection_smoke_v1
+projection_smoke_summary: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_projection_smoke_v1/projection_anchor_smoke_summary.json
+frame_rows: 113 / 113
+rendered_heading_count: 1285
+headings_per_row_min/max: 7 / 17
+unique_scenes: 9
+nonblank_rows: 113 / 113
+removed_blank_heading_count: 0
+strict_no_blank_heading_gate_passed: true
+projection_visible_rows: 113 / 113
+projection_visible_rate: 1.0
+missing_candidate_rows: 0
+frame_revision_metadata_rows: 113
+candidate_selection_source:
+  explicit_candidate_ids: 113
+uses_gt_for_action: false
+paper_claim_allowed: false
+projection_smoke_gate_passed: true
+```
+
+Frame export command:
+
+```bash
+docker run --rm --gpus all --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.export_postview_frames_v2 \
+    --data-root /data \
+    --viewpoint-decisions /runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_plan.jsonl \
+    --candidate-artifact /runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl \
+    --out-root /runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1 \
+    --policy ExpandedRetrievalLocalContextDisambiguation \
+    --candidate-point-field grounded_position \
+    --max-candidates-per-decision 6 \
+    --yaw-offsets=-30,0,30 \
+    --width 160 \
+    --height 120 \
+    --camera-height 1.5 \
+    --hfov 90
+```
+
+Nonblank/projection smoke commands:
+
+```bash
+docker run --rm --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.filter_nonblank_frame_summary \
+    --frame-summary /runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1/rival_identity_frame_summary.jsonl \
+    --frame-root /runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1 \
+    --out-root /runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1/nonblank_filter_v1 \
+    --min-stddev 0.0
+
+docker run --rm --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.smoke_expanded_retrieval_projection_anchor \
+    --frames /runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl \
+    --frame-root /runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1 \
+    --candidate-artifact /runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl \
+    --out-root /runs/h001_expanded_retrieval_paper_scale_local_context_projection_smoke_v1 \
+    --projection-anchor-height-offsets-m 0.0,0.4,0.8,1.2,1.6,2.0,2.4 \
+    --candidate-point-field grounded_position \
+    --max-candidates-per-frame 6 \
+    --expected-rows 113 \
+    --min-visible-row-rate 0.95
+```
+
+### 에이전트 추론
+
+The local-context frame substrate is detector-ready: every planned local-context row rendered, every row kept nonblank, and every target candidate has at least one visible projection anchor. This is still a substrate result, not terminal utility.
+
+### Expanded Retrieval Paper-Scale Local-Context Detector/SAM2 Substrate Job
+
+### 사실
+
+```text
+date_launched: 2026-05-27
+job_status: completed
+tmux_session: h001-paper-local-context-detector-20260527-205216
+working_directory: /home/yoohyun/research3
+image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+device: cuda
+frames: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+frame_root: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1
+candidate_artifact: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl
+output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1
+detector_out: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/detector_v3c
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/paper-scale-local-context-detector-substrate-20260527-205216.log
+status: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/job_status.json
+expected_frame_rows: 113
+expected_policy: ExpandedRetrievalLocalContextDisambiguation
+projection_anchor_height_offsets_m: 0.0,0.4,0.8,1.2,1.6,2.0,2.4
+candidate_point_field: grounded_position
+detector_rows: 113
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.9203539823008849
+rows_with_candidate_association: 104 / 113
+associated_candidate_heading_count: 365
+passes_detector_substrate_gate: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+Expected files:
+
+```text
+local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/detector_v3c/summary.json
+local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/detector_v3c/detector_candidate_associations.jsonl
+local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl
+local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json
+```
+
+Verification command:
+
+```bash
+cat local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/job_status.json
+cat local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json
+```
+
+Launch command:
+
+```bash
+TS=20260527-205216
+tmux new-session -d -s h001-paper-local-context-detector-${TS} \
+  'cd /home/yoohyun/research3 && \
+  TS=20260527-205216 \
+  ROOT=/home/yoohyun/research3 \
+  HYP=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation \
+  RUNS_ROOT=/home/yoohyun/research3/local_dataset/runs \
+  MODEL_ROOT=/home/yoohyun/research3/local_dataset/models \
+  PLAN_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1 \
+  FRAME_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1 \
+  FRAMES=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl \
+  FRAME_ROOT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1 \
+  FRAME_EXPORT_SUMMARY=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1/summary.json \
+  CANDIDATE_ARTIFACT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl \
+  OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1 \
+  DETECTOR_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/detector_v3c \
+  OPENVOCAB_IMG=research3/openvocab-perception:20260513-v3c-gdino-sam2 \
+  DEVICE=cuda \
+  MAX_FRAMES=113 \
+  EXPECTED_FRAME_ROWS=113 \
+  EXPECTED_POLICY=ExpandedRetrievalLocalContextDisambiguation \
+  MAX_HEADINGS_PER_FRAME=0 \
+  MAX_DETECTOR_BOXES_PER_HEADING=3 \
+  MAX_MASKS_PER_HEADING=3 \
+  CANDIDATE_POINT_FIELD=grounded_position \
+  PROJECTION_ANCHOR_HEIGHT_OFFSETS_M=0.0,0.4,0.8,1.2,1.6,2.0,2.4 \
+  BOX_THRESHOLD=0.10 \
+  TEXT_THRESHOLD=0.10 \
+  ASSOCIATION_DEPTH_TOLERANCE_M=1.0 \
+  MIN_DETECTOR_BOX_RATE=0.80 \
+  MIN_SAM2_MASK_RATE=0.80 \
+  MIN_CANDIDATE_ASSOCIATION_RATE=0.40 \
+  MAX_DEBUG_IMAGES=180 \
+  LOG=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/paper-scale-local-context-detector-substrate-20260527-205216.log \
+  STATUS=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/job_status.json \
+  bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_detector_substrate.sh'
+```
+
+### 에이전트 추론
+
+This job clears the detector substrate gate for the local-context branch. It should not be interpreted as terminal navigation utility until post-observation evidence and simpler-alternative comparison pass.
+
+### Expanded Retrieval Paper-Scale Local-Context Post-Observation Evaluation
+
+### 사실
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_local_context_evidence.py
+output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_post_observation_v1
+summary: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_post_observation_v1/expanded_retrieval_local_context_post_observation_summary.json
+plan: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_plan.jsonl
+detector_associations: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl
+evaluation_labels: local_dataset/runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_evaluation_labels.jsonl
+request_rows: 21
+evidence_rows: 113
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.9203539823008849
+strong_own_view_request_rows: 19 / 21
+local_context_candidate_rows: 20
+local_context_candidate_strong_rows: 6
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+Proposed variant:
+
+```text
+variant: proposed_local_context_unique_own_view_advantage
+commit_rows: 10 / 21
+success_commit_rows: 3
+wrong_goal_commit_rows: 7
+no_valid_commit_rows: 3
+success_commit_rate: 0.14285714285714285
+wrong_goal_commit_rate: 0.3333333333333333
+failure_taxonomy:
+  ambiguous_multiple_strong_own_view: 9
+  no_strong_own_view_evidence: 2
+  no_valid_candidate_commit: 3
+  success: 3
+  wrong_instance_selected_by_local_context_evidence: 4
+post_observation_gate_passed: false
+```
+
+Simpler alternatives:
+
+```text
+defer_all: commit/success/wrong/no-valid = 0 / 0 / 0 / 0
+semantic_top: commit/success/wrong/no-valid = 21 / 11 / 10 / 4
+source_top_if_associated: commit/success/wrong/no-valid = 18 / 9 / 9 / 3
+detector_score_best: commit/success/wrong/no-valid = 21 / 6 / 15 / 4
+own_support_best: commit/success/wrong/no-valid = 21 / 9 / 12 / 4
+local_context_only_best: commit/success/wrong/no-valid = 15 / 5 / 10 / 4
+```
+
+Command:
+
+```bash
+docker run --rm --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.analyze_expanded_retrieval_local_context_evidence \
+    --plan /runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_plan.jsonl \
+    --detector-associations /runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl \
+    --detector-summary /runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/detector_v3c/summary.json \
+    --evaluation-labels /runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_evaluation_labels.jsonl \
+    --out-root /runs/h001_expanded_retrieval_paper_scale_local_context_post_observation_v1
+```
+
+### 에이전트 추론
+
+The local-context detector substrate is strong, but terminal local-context commitment is unsafe on the paper-scale rows. This is a useful negative result: own-view detector/SAM2 support still does not equal ObjectNav goal validity in repeated-object scenes, and no-valid source-pool rows remain a separate failure. The next step is failure diagnosis, not threshold tuning or policy-scale promotion.
+
+### Expanded Retrieval Paper-Scale Local-Context Failure Diagnosis
+
+### 사실
+
+```text
+script: runtime/h001_runtime/diagnose_expanded_retrieval_local_context_failures.py
+output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_failure_diagnostic_v1
+summary: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_failure_diagnostic_v1/expanded_retrieval_local_context_failure_summary.json
+rows: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_failure_diagnostic_v1/expanded_retrieval_local_context_failure_rows.jsonl
+proposed_request_rows: 21
+proposed_commit_rows: 10
+proposed_success_commit_rows: 3
+proposed_wrong_goal_commit_rows: 7
+selected_role_counts:
+  detector_strong_candidate: 2
+  detector_strong_rival: 7
+  source_top: 1
+diagnostic_tag_counts:
+  selected_detector_strong_role: 9
+  wrong_commit: 7
+  wrong_candidate_stronger_own_view_than_best_correct: 4
+  best_correct_not_strong_own_view: 4
+  own_view_support_prefers_wrong_over_weak_correct: 4
+  source_pool_no_valid_candidate: 3
+  wrong_commit_without_correct_planned_candidate: 3
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+Command:
+
+```bash
+docker run --rm --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.diagnose_expanded_retrieval_local_context_failures \
+    --evidence-rows /runs/h001_expanded_retrieval_paper_scale_local_context_post_observation_v1/expanded_retrieval_local_context_evidence_rows.jsonl \
+    --evaluated-rows /runs/h001_expanded_retrieval_paper_scale_local_context_post_observation_v1/expanded_retrieval_local_context_evaluated_rows.jsonl \
+    --evaluation-labels /runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_evaluation_labels.jsonl \
+    --out-root /runs/h001_expanded_retrieval_paper_scale_local_context_failure_diagnostic_v1
+```
+
+### 에이전트 추론
+
+There are two separate blockers. First, some source-pool rows have no correct planned candidate, so any terminal commit is invalid regardless of viewpoint evidence. Second, when a correct candidate exists, own-view detector/SAM2 support can be stronger for the wrong repeated instance than for the correct one. The next objective contract must separate no-valid pool repair from wrong-instance arbitration and must not promote detector-score, source-top, own-support, or local-context-only alternatives.
+
+### Expanded Retrieval Paper-Scale Revised Local-Context Objective Contract
+
+### 사실
+
+```text
+manifest: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_revision_v1.json
+verify: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_revision_v1.verify.json
+status: frozen_design_contract_before_implementation
+objective_name: goal_validity_guarded_local_context_v1
+guard_order:
+  1. pool_validity_guard_v2
+  2. wrong_instance_arbitration_guard_v1
+blocked_shortcuts:
+  semantic_top
+  source_top_if_associated
+  detector_score_best
+  own_support_best
+  local_context_only_best
+  local_context_unique_own_view_advantage_without_pool_validity_guard
+expected_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The revised contract turns the negative local-context result into two explicit routes. Rows whose action-time evidence cannot establish a valid candidate pool must request backend retrieval revision or defer. Rows with a valid-looking pool but unresolved repeated-instance identity must request goal-validity confirmation or defer. A terminal commit is allowed only after both guards pass, so own-view category evidence no longer acts as ObjectNav goal-validity evidence by itself.
+
+### Expanded Retrieval Paper-Scale Revised Local-Context Analyzer
+
+### 사실
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_local_context_revision.py
+output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1
+summary: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1/expanded_retrieval_local_context_revision_summary.json
+request/evidence/decision/evaluated_rows: 21 / 113 / 168 / 168
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.9203539823008849
+action_evidence_forbidden_key_count: 0
+goal_validity_guarded_local_context_v1 commit/success/wrong/no_valid: 0 / 0 / 0 / 0
+revision action counts:
+  request_goal_validity_confirmation: 12
+  defer_instance_arbitration_unresolved: 9
+pool_validity_status:
+  passed: 21
+instance_arbitration_status:
+  unresolved: 21
+revision_substrate_gate_passed: true
+revision_utility_gate_passed: false
+paper_claim_allowed: false
+```
+
+Command:
+
+```bash
+docker run --rm --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.analyze_expanded_retrieval_local_context_revision \
+    --contract /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_revision_v1.json \
+    --plan /runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_plan.jsonl \
+    --detector-associations /runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl \
+    --detector-summary /runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/detector_v3c/summary.json \
+    --source-pool-proxy-rows /runs/h001_expanded_retrieval_paper_scale_source_pool_validity_proxy_v1/expanded_retrieval_source_pool_validity_proxy_rows.jsonl \
+    --evaluation-labels /runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_evaluation_labels.jsonl \
+    --out-root /runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1
+```
+
+### 에이전트 추론
+
+The revised analyzer successfully blocks the previous unsafe terminal commits, but it is safe-but-inert. This is not a paper utility result. It shows that the current action-time evidence can route uncertainty to confirmation/defer, but cannot yet convert local-context evidence into safe nonzero `ObjectNav` goal commitment. The next step is route diagnosis, not threshold tuning.
 
 ## Target Row Contract
 
@@ -2608,14 +3433,18 @@ dropped_rows: 0
 removed_blank_heading_count: 0
 row_level_nonblank_gate_passed: true
 strict_no_blank_heading_gate_passed: true
+v2_detector_rows: 38
+v2_detector_box_rate: 1.0
+v2_sam2_mask_rate: 1.0
+v2_candidate_association_rate: 0.8158
 uses_gt_for_action: false
-next_gate: detector/SAM2 substrate
+next_gate: evidence diagnostic
 ```
 
 Navmesh-only standoff detector/SAM2 substrate job launch:
 
 ```text
-status: running
+status: completed
 launched_at: 2026-05-27T01:11:37+09:00
 tmux_session: h001-rival-identity-broader-standoff-navmesh-detector-20260527-011137
 working_directory: /home/yoohyun/research3

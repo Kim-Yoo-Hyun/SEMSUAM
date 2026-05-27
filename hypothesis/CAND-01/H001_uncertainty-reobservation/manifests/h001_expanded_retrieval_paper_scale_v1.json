@@ -1,0 +1,176 @@
+{
+  "action_inputs_allowed": [
+    "strict goal-validity nonterminal decision fields",
+    "action-time candidate evidence fields",
+    "semantic score/rank fields",
+    "candidate position and visit_position fields",
+    "non-GT reachability or navmesh-derived feasibility fields available before evaluation labels"
+  ],
+  "action_inputs_forbidden": [
+    "candidate_correct",
+    "selected_for_goal",
+    "wrong_goal_visit",
+    "success labels",
+    "post-hoc GT object ids",
+    "evaluation labels",
+    "threshold tuning from joined labels"
+  ],
+  "branch_contract": {
+    "candidate_budget": {
+      "max_candidates_per_request": 10,
+      "min_candidates_per_request": 6,
+      "selection_modes": [
+        "semantic_rank_band",
+        "spatial_diversity",
+        "reachability_available_before_labels"
+      ]
+    },
+    "paper_claim_allowed": false,
+    "planner_name": "expanded_retrieval_branch_v1",
+    "required_outputs": [
+      "expanded_retrieval_plan.jsonl",
+      "expanded_retrieval_candidate_set.jsonl",
+      "expanded_retrieval_summary.json"
+    ],
+    "terminal_commit_allowed": false
+  },
+  "contract_name": "expanded_retrieval_paper_scale_v1",
+  "created_at": "2026-05-27T09:40:38.351580+00:00",
+  "date_frozen": "2026-05-27",
+  "diagnostic_gates": {
+    "candidate_set_gate": {
+      "duplicate_candidate_id_rate_max": 0.05,
+      "expanded_candidate_rows_min": 138,
+      "expanded_candidates_per_request_min": 6,
+      "nonfinite_position_rate_max": 0.05,
+      "uses_gt_for_action": false
+    },
+    "paper_scale_gate": {
+      "checks": {
+        "minimum_request_queries": true,
+        "minimum_request_rows": true,
+        "minimum_request_scenes": true
+      },
+      "passed": true,
+      "required": {
+        "minimum_request_queries": 3,
+        "minimum_request_rows": 20,
+        "minimum_request_scenes": 5
+      }
+    },
+    "source_gate": {
+      "action_evidence_forbidden_key_count": 0,
+      "request_rows_min": 20,
+      "uses_gt_for_action": false
+    }
+  },
+  "interpretation": {
+    "agent_inference": "A planner-compatible result can validate whether expanded retrieval has enough scene-diverse nonterminal evidence for detector observation planning, but paper-facing ObjectNav utility remains blocked.",
+    "fact": "This contract freezes paper-scale branch rows after the ambiguity-aware objective contract passed.",
+    "paper_claim_status": "not_allowed_until_larger_source_detector_and_objective_validation_pass"
+  },
+  "motivation": {
+    "agent_inference": [
+      "The larger source tests whether ambiguity routing scales beyond the small fresh diagnostic source.",
+      "This is a source-freeze and planner-compatibility gate, not a terminal ObjectNav utility claim."
+    ],
+    "facts": [
+      "The ambiguity-aware expanded-retrieval objective contract passed on the smaller fresh diagnostic source.",
+      "This manifest freezes nonterminal strict goal-validity decisions whose next action is expanded retrieval.",
+      "Terminal commitment remains disabled in this paper-scale source contract."
+    ]
+  },
+  "next_steps": [
+    "run expanded retrieval planner on this frozen source",
+    "run source-pool validity proxy on the frozen candidate set",
+    "build projection-anchor detector observation plan only for detector-eligible rows",
+    "run fixed-anchor detector/SAM2 substrate without using evaluation labels for action"
+  ],
+  "paper_claim_allowed": false,
+  "schema_version": "h001.expanded_retrieval_branch_contract.v1",
+  "source": {
+    "expected_request_rows": 23,
+    "router_output": "local_dataset/runs/h001_expanded_retrieval_paper_scale_source_v1/expanded_retrieval_paper_scale_source_rows.jsonl",
+    "source_action_evidence": "local_dataset/runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_action_evidence_rows.jsonl",
+    "source_candidate_artifact": "local_dataset/runs/h001_rival_identity_goal_validity_independent_plan_standoff_navmesh_v1/rival_identity_candidate_artifact.jsonl",
+    "source_decisions": "local_dataset/runs/h001_rival_identity_goal_validity_independent_post_observation_goal_validity_v1/rival_identity_post_observation_decisions.jsonl",
+    "source_evidence": "local_dataset/runs/h001_rival_identity_goal_validity_independent_post_observation_goal_validity_v1/rival_identity_post_observation_evidence.jsonl",
+    "source_filter": {
+      "source_action": "defer_expanded_retrieval_needed"
+    },
+    "source_rows": "local_dataset/runs/h001_expanded_retrieval_paper_scale_source_v1/expanded_retrieval_paper_scale_source_rows.jsonl",
+    "source_summary": "local_dataset/runs/h001_expanded_retrieval_paper_scale_source_v1/source_summary.json"
+  },
+  "source_freeze_gate": {
+    "action_evidence_forbidden_key_count": 0,
+    "action_evidence_forbidden_keys": [],
+    "checks": {
+      "action_evidence_forbidden_key_count": true,
+      "ambiguity_contract_allows_larger_source": true,
+      "ambiguity_contract_gate_passed": true,
+      "excluded_scene_overlap": true,
+      "minimum_request_queries": true,
+      "minimum_request_rows": true,
+      "minimum_request_scenes": true,
+      "missing_action_evidence_rows": true,
+      "no_gt_for_action": true
+    },
+    "excluded_scene_overlap": [],
+    "gt_action_rows": [],
+    "missing_action_evidence_rows": [],
+    "paper_scale_gate": {
+      "checks": {
+        "minimum_request_queries": true,
+        "minimum_request_rows": true,
+        "minimum_request_scenes": true
+      },
+      "passed": true,
+      "required": {
+        "minimum_request_queries": 3,
+        "minimum_request_rows": 20,
+        "minimum_request_scenes": 5
+      }
+    },
+    "passed": true,
+    "query_counts": {
+      "bed": 9,
+      "chair": 5,
+      "plant": 3,
+      "sofa": 2,
+      "toilet": 1,
+      "tv_monitor": 3
+    },
+    "request_queries": 6,
+    "request_rows": 23,
+    "request_scenes": 10,
+    "required": {
+      "action_evidence_forbidden_key_count": 0,
+      "excluded_scene_overlap": 0,
+      "minimum_request_queries": 3,
+      "minimum_request_rows": 20,
+      "minimum_request_scenes": 5,
+      "uses_gt_for_action": false
+    },
+    "scene_counts": {
+      "4ok3usBNeis": 4,
+      "BAbdmeyTvMZ": 3,
+      "Dd4bFSTQ8gi": 2,
+      "HY1NcmCgn3n": 1,
+      "QaLdnwvtxbs": 4,
+      "bCPU9suPUw9": 1,
+      "bxsVRursffK": 4,
+      "q3zU7Yy5E5s": 1,
+      "qyAac8rV8Zk": 1,
+      "yr17PDCnDDW": 2
+    },
+    "source_reason_counts": {
+      "defer_low_goal_validity_cross_view_aliasing": 12,
+      "defer_low_goal_validity_surrogate": 1,
+      "defer_visible_object_not_goal_validity": 2,
+      "post_observation_no_candidate_support": 8
+    }
+  },
+  "status": "frozen_paper_scale_source",
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": false
+}

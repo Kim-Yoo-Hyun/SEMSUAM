@@ -1,0 +1,197 @@
+{
+  "schema_version": "h001.expanded_retrieval_local_context_revision_contract.v1",
+  "contract_name": "expanded_retrieval_local_context_revision_v1",
+  "date_checked": "2026-05-28",
+  "status": "frozen_design_contract_before_implementation",
+  "supersedes": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_disambiguation_v1.json",
+  "source": {
+    "paper_scale_manifest": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_paper_scale_v1.json",
+    "local_context_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_disambiguation_v1.json",
+    "local_context_plan": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_plan.jsonl",
+    "local_context_detector_substrate": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "local_context_post_observation": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_post_observation_v1/expanded_retrieval_local_context_post_observation_summary.json",
+    "local_context_failure_diagnostic": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_failure_diagnostic_v1/expanded_retrieval_local_context_failure_summary.json",
+    "evaluation_labels": "local_dataset/runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_evaluation_labels.jsonl"
+  },
+  "observed_facts": {
+    "request_rows": 21,
+    "evidence_rows": 113,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.9203539823008849,
+    "strong_own_view_request_rows": 19,
+    "proposed_commit_rows": 10,
+    "proposed_success_commit_rows": 3,
+    "proposed_wrong_goal_commit_rows": 7,
+    "proposed_no_valid_commit_rows": 3,
+    "post_observation_gate_passed": false,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "failure_taxonomy_from_diagnostic": {
+    "no_valid_candidate_pool_failure": {
+      "diagnostic_tags": {
+        "source_pool_no_valid_candidate": 3,
+        "wrong_commit_without_correct_planned_candidate": 3
+      },
+      "interpretation": "If the planned candidate pool has no valid goal candidate, any terminal commit is invalid regardless of local-context evidence.",
+      "required_route": "request_backend_retrieval_revision_or_defer_pool_validity_unresolved"
+    },
+    "wrong_instance_arbitration_failure": {
+      "diagnostic_tags": {
+        "wrong_commit": 7,
+        "wrong_candidate_stronger_own_view_than_best_correct": 4,
+        "best_correct_not_strong_own_view": 4,
+        "own_view_support_prefers_wrong_over_weak_correct": 4,
+        "selected_detector_strong_role": 9
+      },
+      "interpretation": "Own-view detector/SAM2 category evidence can support a wrong repeated instance more strongly than the correct goal instance.",
+      "required_route": "request_goal_validity_confirmation_or_defer_instance_arbitration_unresolved"
+    }
+  },
+  "design_principle": {
+    "fact": "Local-context detector/SAM2 substrate is available, but the first terminal local-context rule commits wrong and no-valid goals.",
+    "agent_inference": "The revised objective must treat own-view category evidence as object visibility evidence, not as ObjectNav goal validity evidence.",
+    "novelty_constraint": "The contribution remains semantic uncertainty as active SLAM/navigation utility only if uncertainty routes to pool repair or goal-validity confirmation instead of becoming detector-score re-ranking."
+  },
+  "allowed_action_inputs": [
+    "episode_key",
+    "scene_key",
+    "query",
+    "source request id",
+    "objective_action",
+    "candidate ids, semantic ranks, and non-GT scores",
+    "candidate roles from the frozen local-context plan",
+    "candidate grounded_position and visit_position",
+    "detector box, mask, and candidate-association evidence",
+    "own-view and cross-view evidence counts",
+    "projection anchor metadata",
+    "non-GT spatial consistency between source, detector, and local-context candidates",
+    "non-GT pool-validity proxy features",
+    "Habitat navmesh reachability and standoff metadata"
+  ],
+  "forbidden_action_inputs": [
+    "candidate_correct",
+    "selected_for_goal",
+    "wrong_goal_visit",
+    "success label",
+    "no_valid label",
+    "GT object id",
+    "GT goal id",
+    "oracle shortest path",
+    "post-join evaluation labels",
+    "threshold tuning from joined labels"
+  ],
+  "revised_objective": {
+    "objective_name": "goal_validity_guarded_local_context_v1",
+    "terminal_commit_allowed": "conditional_after_two_guards",
+    "guard_order": [
+      "pool_validity_guard_v2",
+      "wrong_instance_arbitration_guard_v1"
+    ],
+    "route_priority": [
+      {
+        "condition": "pool_validity_guard_v2 cannot establish an action-time valid candidate pool",
+        "action": "request_backend_retrieval_revision",
+        "terminal_commit_allowed": false
+      },
+      {
+        "condition": "pool_validity_guard_v2 is unresolved rather than failed",
+        "action": "defer_pool_validity_unresolved",
+        "terminal_commit_allowed": false
+      },
+      {
+        "condition": "candidate pool appears valid but repeated-instance goal validity is not uniquely established",
+        "action": "request_goal_validity_confirmation",
+        "terminal_commit_allowed": false
+      },
+      {
+        "condition": "multiple candidates remain compatible with goal validity after local-context evidence",
+        "action": "defer_instance_arbitration_unresolved",
+        "terminal_commit_allowed": false
+      },
+      {
+        "condition": "one candidate passes pool-validity and wrong-instance arbitration guards using action-time evidence",
+        "action": "commit_goal_validity_confirmed_candidate",
+        "terminal_commit_allowed": true
+      }
+    ]
+  },
+  "terminal_commit_requirements": [
+    {
+      "name": "pool_validity_guard_passed",
+      "rule": "A terminal commit is forbidden when the action-time evidence only says that an object/category is visible but cannot support that at least one candidate in the pool is a plausible ObjectNav goal."
+    },
+    {
+      "name": "unique_goal_valid_candidate",
+      "rule": "The committed candidate must be uniquely supported as a goal-valid instance, not merely as the strongest own-view detection."
+    },
+    {
+      "name": "wrong_instance_arbitration_resolved",
+      "rule": "If a wrong detector-strong candidate and a weak correct-compatible candidate remain plausible, the policy must request confirmation or defer."
+    },
+    {
+      "name": "no_detector_score_shortcut",
+      "rule": "Detector score, source rank, own-view support, and local-context-only support cannot independently trigger a terminal commit."
+    },
+    {
+      "name": "evaluation_only_label_separation",
+      "rule": "Candidate correctness, wrong-goal labels, and no-valid labels may be joined only after action rows are written."
+    }
+  ],
+  "blocked_shortcuts": [
+    "semantic_top",
+    "source_top_if_associated",
+    "detector_score_best",
+    "own_support_best",
+    "local_context_only_best",
+    "local_context_unique_own_view_advantage_without_pool_validity_guard"
+  ],
+  "required_simpler_alternatives_for_next_evaluation": [
+    "defer_all",
+    "semantic_top",
+    "source_top_if_associated",
+    "detector_score_best",
+    "own_support_best",
+    "local_context_only_best",
+    "previous_local_context_unique_own_view_advantage",
+    "goal_validity_guarded_local_context_v1"
+  ],
+  "expected_outputs_for_revised_analyzer": {
+    "output_root": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1",
+    "evidence_rows": "expanded_retrieval_local_context_revision_evidence_rows.jsonl",
+    "decision_rows": "expanded_retrieval_local_context_revision_decision_rows.jsonl",
+    "evaluated_rows": "expanded_retrieval_local_context_revision_evaluated_rows.jsonl",
+    "summary": "expanded_retrieval_local_context_revision_summary.json"
+  },
+  "evaluation_gates": {
+    "schema_validation_passed": true,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "wrong_goal_commit_rows_maximum_after_label_join": 0,
+    "no_valid_commit_rows_maximum_after_label_join": 0,
+    "must_report_pool_validity_route_counts": true,
+    "must_report_wrong_instance_route_counts": true,
+    "must_report_simpler_alternatives": true,
+    "must_report_failure_taxonomy": true,
+    "must_exceed_defer_all_with_nonzero_safe_commits_for_paper_claim": true,
+    "paper_claim_allowed_before_gate_pass": false
+  },
+  "interpretation_rules": {
+    "safe_but_inert": "If the revised rule produces zero wrong/no-valid commits but no safe success commits, it is a safety result, not a utility proof.",
+    "unsafe_nonzero": "If the revised rule produces any wrong/no-valid commit, terminal utility remains blocked and failure diagnosis is required before revision.",
+    "safe_nonzero": "If the revised rule produces zero wrong/no-valid commits and nonzero success commits while outperforming defer_all, it can become a paper-facing candidate for fresh validation.",
+    "no_threshold_repair": "Changing numeric thresholds after seeing joined labels is not a valid repair."
+  },
+  "next_steps": [
+    "Implement revised local-context analyzer from this contract.",
+    "Run Docker py_compile or equivalent smoke check.",
+    "Run paper-scale local-context revision evaluation on the frozen rows.",
+    "Join labels only after decision rows are written.",
+    "Update failure taxonomy before any policy-scale comparison."
+  ],
+  "paper_claim_allowed": false
+}

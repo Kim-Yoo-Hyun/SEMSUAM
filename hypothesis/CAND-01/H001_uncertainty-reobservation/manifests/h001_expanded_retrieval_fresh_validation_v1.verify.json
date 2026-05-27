@@ -1,0 +1,12 @@
+{
+  "contract_name": "expanded_retrieval_fresh_validation_v1",
+  "ok": true,
+  "paper_claim_allowed": false,
+  "paper_scale_gate_passed": false,
+  "request_queries": 4,
+  "request_rows": 6,
+  "request_scenes": 2,
+  "source_freeze_gate_passed": true,
+  "status": "frozen_after_fixed_anchor_detector_gate",
+  "uses_gt_for_action": false
+}
