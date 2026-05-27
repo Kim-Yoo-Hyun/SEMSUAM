@@ -169,7 +169,13 @@ def passthrough_fields(row: Dict[str, Any]) -> Dict[str, Any]:
         "source_followup_",
         "second_stage_",
         "rival_identity_",
+        "revision_",
+        "expanded_",
+        "proxy_",
+        "source_pool_",
         "focus_",
+        "rival_",
+        "standoff_",
         "target_",
     )
     keys = {
@@ -181,6 +187,7 @@ def passthrough_fields(row: Dict[str, Any]) -> Dict[str, Any]:
         "scene_key",
         "source_name",
         "target_index",
+        "viewpoint_pair_role",
         "viewpoint_source",
     }
     return {key: value for key, value in row.items() if key.startswith(prefixes) or key in keys}

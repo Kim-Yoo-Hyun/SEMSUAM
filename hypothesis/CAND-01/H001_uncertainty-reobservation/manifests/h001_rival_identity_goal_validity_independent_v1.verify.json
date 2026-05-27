@@ -1,0 +1,69 @@
+{
+  "contract_name": "rival_identity_goal_validity_independent_v1",
+  "duplicate_episode_keys": [],
+  "manifest_status": "frozen",
+  "ok": true,
+  "paper_claim_allowed": false,
+  "request_queries": 6,
+  "request_rows": 30,
+  "request_scenes": 10,
+  "request_taxonomy_route_counts": {
+    "object_existence_validation": 4,
+    "rival_identity_arbitration": 26
+  },
+  "source_freeze_gate": {
+    "action_evidence_forbidden_key_count": 0,
+    "checks": {
+      "action_evidence_forbidden_key_count": true,
+      "excluded_scene_overlap": true,
+      "minimum_object_existence_rows": true,
+      "minimum_request_queries": true,
+      "minimum_request_rows": true,
+      "minimum_request_scenes": true,
+      "minimum_rival_identity_rows": true,
+      "no_gt_for_action": true,
+      "parent_design_gate_passed": true
+    },
+    "excluded_scene_overlap": [],
+    "gt_action_rows": [],
+    "passed": true,
+    "query_counts": {
+      "bed": 11,
+      "chair": 6,
+      "plant": 6,
+      "sofa": 2,
+      "toilet": 1,
+      "tv_monitor": 4
+    },
+    "request_queries": 6,
+    "request_rows": 30,
+    "request_scenes": 10,
+    "request_taxonomy_route_counts": {
+      "object_existence_validation": 4,
+      "rival_identity_arbitration": 26
+    },
+    "required": {
+      "action_evidence_forbidden_key_count": 0,
+      "excluded_scene_overlap": 0,
+      "minimum_object_existence_rows": 4,
+      "minimum_request_queries": 3,
+      "minimum_request_rows": 20,
+      "minimum_request_scenes": 5,
+      "minimum_rival_identity_rows": 20,
+      "uses_gt_for_action": false
+    },
+    "scene_counts": {
+      "4ok3usBNeis": 4,
+      "BAbdmeyTvMZ": 4,
+      "Dd4bFSTQ8gi": 2,
+      "HY1NcmCgn3n": 1,
+      "QaLdnwvtxbs": 4,
+      "bCPU9suPUw9": 4,
+      "bxsVRursffK": 4,
+      "q3zU7Yy5E5s": 1,
+      "qyAac8rV8Zk": 4,
+      "yr17PDCnDDW": 2
+    }
+  },
+  "uses_gt_for_action": false
+}

@@ -9,6 +9,8 @@ from h001_runtime.extract_dense_conflict_generalization_evidence import scan_for
 
 
 SCHEMA_VERSION = "h001.rival_identity_post_observation.v1"
+DEFAULT_OBJECTIVE = "unique_strong_own_view_identity"
+GOAL_VALIDITY_OBJECTIVE = "goal_validity_arbitration_v1"
 
 
 def load_jsonl(path: Path) -> List[Dict[str, Any]]:
@@ -37,6 +39,13 @@ def safe_float(value: Any) -> Optional[float]:
 
 def ratio(numerator: int, denominator: int) -> Optional[float]:
     return None if denominator == 0 else numerator / denominator
+
+
+def safe_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
 
 
 def label_lookup(label_rows: Sequence[Dict[str, Any]]) -> Dict[Tuple[str, str], Dict[str, Any]]:
@@ -76,7 +85,10 @@ def plan_index(plan_rows: Sequence[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]
                 "request_reason": row.get("request_reason"),
                 "focus_candidate_id": row.get("focus_candidate_id"),
                 "rival_candidate_ids": list(row.get("rival_candidate_ids") or []),
+                "source_candidate_count": row.get("candidate_count"),
+                "positive_support_candidate_count": row.get("positive_support_candidate_count"),
                 "candidate_ids": set(),
+                "target_candidate_ids": set(),
                 "target_roles_by_candidate": defaultdict(set),
                 "candidate_meta": {},
                 "plan_rows": 0,
@@ -85,8 +97,13 @@ def plan_index(plan_rows: Sequence[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]
         request["plan_rows"] += 1
         target_candidate_id = str(row.get("target_candidate_id"))
         request["candidate_ids"].add(target_candidate_id)
+        request["target_candidate_ids"].add(target_candidate_id)
         for candidate_id in row.get("candidate_ids") or []:
             request["candidate_ids"].add(str(candidate_id))
+        if request.get("source_candidate_count") is None and row.get("candidate_count") is not None:
+            request["source_candidate_count"] = row.get("candidate_count")
+        if request.get("positive_support_candidate_count") is None and row.get("positive_support_candidate_count") is not None:
+            request["positive_support_candidate_count"] = row.get("positive_support_candidate_count")
         request["target_roles_by_candidate"][target_candidate_id].add(str(row.get("rival_identity_target_role")))
         request["candidate_meta"].setdefault(
             target_candidate_id,
@@ -140,6 +157,11 @@ def summarize_candidate(
     own_roles = sorted({str(row.get("rival_identity_target_role")) for row in own})
     cross_roles = sorted({str(row.get("rival_identity_target_role")) for row in cross})
     meta = dict(request["candidate_meta"].get(candidate_id) or {"candidate_id": candidate_id, "uses_gt_for_action": False})
+    planned_target_ids = sorted(str(value) for value in request["target_candidate_ids"])
+    planned_target_count = len(planned_target_ids)
+    positive_support_candidate_count = safe_int(request.get("positive_support_candidate_count"))
+    has_rival_contrast = planned_target_count >= 2 and positive_support_candidate_count >= 2
+    single_positive_candidate = planned_target_count <= 1 or positive_support_candidate_count <= 1
     return {
         "schema_version": SCHEMA_VERSION,
         "validation_stage": "action_evidence_only",
@@ -153,6 +175,17 @@ def summarize_candidate(
         "request_reason": request.get("request_reason"),
         "focus_candidate_id": request.get("focus_candidate_id"),
         "rival_candidate_ids": request.get("rival_candidate_ids"),
+        "source_candidate_count": request.get("source_candidate_count"),
+        "positive_support_candidate_count": request.get("positive_support_candidate_count"),
+        "planned_target_count": planned_target_count,
+        "planned_target_ids": planned_target_ids,
+        "has_rival_contrast": has_rival_contrast,
+        "single_positive_candidate": single_positive_candidate,
+        "request_taxonomy_route": "object_existence_validation"
+        if single_positive_candidate
+        else "rival_identity_arbitration"
+        if has_rival_contrast
+        else "insufficient_contrast_review",
         **meta,
         "detector_association_rows": len(rows),
         "post_associated_heading_count": len(associated),
@@ -221,7 +254,37 @@ def request_reason(evidence_rows: Sequence[Dict[str, Any]], strong_rows: Sequenc
     return "post_observation_safe_defer"
 
 
-def decision_rows(evidence_rows: Sequence[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def goal_validity_surrogate(row: Dict[str, Any]) -> bool:
+    own = int(row.get("post_own_associated_heading_count") or 0)
+    cross = int(row.get("post_cross_associated_heading_count") or 0)
+    rank = safe_int(row.get("semantic_rank"), default=999999)
+    box = safe_float(row.get("post_best_box_score"))
+    depth = safe_float(row.get("post_min_depth_error_m"))
+    return bool(
+        row.get("has_rival_contrast") is True
+        and own >= 3
+        and cross == 0
+        and rank <= 5
+        and box is not None
+        and box >= 0.25
+        and depth is not None
+        and depth <= 0.50
+    )
+
+
+def low_goal_validity_reason(evidence_rows: Sequence[Dict[str, Any]], strong_rows: Sequence[Dict[str, Any]]) -> str:
+    if not any(int(row["post_own_associated_heading_count"]) > 0 for row in evidence_rows):
+        return "post_observation_no_candidate_support"
+    if not any(safe_float(row.get("post_best_box_score")) is not None for row in evidence_rows):
+        return "defer_low_goal_validity_no_detector_box"
+    if any(int(row.get("post_cross_associated_heading_count") or 0) > 0 for row in evidence_rows):
+        return "defer_low_goal_validity_cross_view_aliasing"
+    if strong_rows:
+        return "defer_visible_object_not_goal_validity"
+    return "defer_low_goal_validity_surrogate"
+
+
+def decision_rows(evidence_rows: Sequence[Dict[str, Any]], objective: str = DEFAULT_OBJECTIVE) -> List[Dict[str, Any]]:
     grouped: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
     for row in evidence_rows:
         grouped[str(row["rival_identity_request_id"])].append(row)
@@ -231,7 +294,31 @@ def decision_rows(evidence_rows: Sequence[Dict[str, Any]]) -> List[Dict[str, Any
         rows = grouped[request_id]
         strong = [row for row in rows if row.get("strong_identity_evidence") is True]
         exemplar = rows[0]
-        if len(strong) == 1:
+        request_taxonomy_route = exemplar.get("request_taxonomy_route")
+        requires_object_existence_validation = request_taxonomy_route == "object_existence_validation"
+        validity_rows = [row for row in rows if goal_validity_surrogate(row)]
+        if requires_object_existence_validation:
+            selected = None
+            action = "defer_object_existence_validation"
+            reason = "object_existence_requires_independent_confirmation"
+            selected_candidate_id = None
+        elif objective == GOAL_VALIDITY_OBJECTIVE:
+            if len(validity_rows) == 1:
+                selected = validity_rows[0]
+                action = "commit_candidate"
+                reason = "commit_goal_validity_unique_semantic_geometric_consistency"
+                selected_candidate_id = str(selected["candidate_id"])
+            elif len(validity_rows) > 1:
+                selected = None
+                action = "defer_unresolved_identity"
+                reason = "defer_comparable_goal_validity_candidates"
+                selected_candidate_id = None
+            else:
+                selected = None
+                action = "defer_expanded_retrieval_needed"
+                reason = low_goal_validity_reason(rows, strong)
+                selected_candidate_id = None
+        elif len(strong) == 1:
             selected = strong[0]
             action = "commit_candidate"
             reason = "commit_unique_strong_own_view_identity"
@@ -255,7 +342,9 @@ def decision_rows(evidence_rows: Sequence[Dict[str, Any]]) -> List[Dict[str, Any
                 "action": action,
                 "reason": reason,
                 "selected_candidate_id": selected_candidate_id,
+                "objective": objective,
                 "strong_identity_candidate_count": len(strong),
+                "goal_validity_candidate_count": len(validity_rows),
                 "candidate_count": len(rows),
                 "selected_post_own_associated_heading_count": None
                 if selected is None
@@ -264,9 +353,21 @@ def decision_rows(evidence_rows: Sequence[Dict[str, Any]]) -> List[Dict[str, Any
                 if selected is None
                 else selected.get("post_cross_associated_heading_count"),
                 "selected_post_identity_margin": None if selected is None else selected.get("post_identity_margin"),
+                "selected_post_best_box_score": None if selected is None else selected.get("post_best_box_score"),
+                "selected_post_min_depth_error_m": None if selected is None else selected.get("post_min_depth_error_m"),
+                "selected_semantic_rank": None if selected is None else selected.get("semantic_rank"),
+                "source_candidate_count": exemplar.get("source_candidate_count"),
+                "positive_support_candidate_count": exemplar.get("positive_support_candidate_count"),
+                "planned_target_count": exemplar.get("planned_target_count"),
+                "planned_target_ids": exemplar.get("planned_target_ids"),
+                "evidence_candidate_count": len(rows),
+                "requires_object_existence_validation": requires_object_existence_validation,
                 "uses_gt_for_action": False,
             }
         )
+        decisions[-1]["has_rival_contrast"] = bool(exemplar.get("has_rival_contrast"))
+        decisions[-1]["single_positive_candidate"] = bool(exemplar.get("single_positive_candidate"))
+        decisions[-1]["request_taxonomy_route"] = request_taxonomy_route
     return decisions
 
 
@@ -274,9 +375,20 @@ def failure_taxonomy(row: Dict[str, Any]) -> str:
     if row.get("evaluation_only_no_label_commit") is True:
         return "label_plumbing_failure"
     if row.get("evaluation_only_wrong_goal_commit") is True:
+        if row.get("single_positive_candidate") is True:
+            return "object_existence_false_positive_commit"
+        if row.get("has_rival_contrast") is True:
+            return "unsafe_rival_identity_commit"
         return "unsafe_post_observation_commit"
     if row.get("action") == "commit_candidate":
         return "none"
+    if row.get("action") == "defer_object_existence_validation":
+        return "object_existence_deferred_no_independent_confirmation"
+    if (
+        row.get("reason") == "post_observation_cross_view_aliasing"
+        and row.get("has_rival_contrast") is True
+    ):
+        return "rival_identity_unresolved_cross_view_aliasing"
     return str(row.get("reason") or "post_observation_safe_defer")
 
 
@@ -324,7 +436,20 @@ def summarize(
     primary_wrong = [row for row in primary_rows if row["evaluation_only_wrong_goal_commit"]]
     secondary_rows = [row for row in evaluated if row.get("role") == "secondary_stress"]
     secondary_wrong = [row for row in secondary_rows if row["evaluation_only_wrong_goal_commit"]]
-    defer_rows = [row for row in evaluated if row["action"] == "defer_unresolved_identity"]
+    defer_rows = [row for row in evaluated if str(row["action"]).startswith("defer_")]
+    unresolved_identity_defer = [row for row in evaluated if row["action"] == "defer_unresolved_identity"]
+    object_existence_defer = [row for row in evaluated if row["action"] == "defer_object_existence_validation"]
+    object_existence_wrong = [
+        row for row in evaluated if row["failure_taxonomy_type"] == "object_existence_false_positive_commit"
+    ]
+    unsafe_rival_identity = [row for row in evaluated if row["failure_taxonomy_type"] == "unsafe_rival_identity_commit"]
+    rival_identity_cross_view = [
+        row for row in evaluated
+        if row["failure_taxonomy_type"] in {
+            "rival_identity_unresolved_cross_view_aliasing",
+            "post_observation_cross_view_aliasing",
+        }
+    ]
 
     gates = {
         "wrong_goal_gate_passed": len(wrong_rows) <= int(args.max_wrong_goal_commit_rows),
@@ -345,6 +470,7 @@ def summarize(
             "plan": str(args.plan),
             "primary_evaluation_labels": str(args.primary_evaluation_labels),
             "secondary_evaluation_labels": str(args.secondary_evaluation_labels),
+            "objective": str(args.objective),
         },
         "request_rows": request_rows,
         "evidence_rows": len(evidence_rows),
@@ -357,7 +483,9 @@ def summarize(
         "new_primary_success_commit_rows": len(primary_success),
         "primary_wrong_goal_commit_rows": len(primary_wrong),
         "secondary_stress_wrong_goal_commit_rows": len(secondary_wrong),
-        "defer_unresolved_identity_rows": len(defer_rows),
+        "defer_rows": len(defer_rows),
+        "defer_unresolved_identity_rows": len(unresolved_identity_defer),
+        "defer_object_existence_validation_rows": len(object_existence_defer),
         "identity_evidence_non_discriminative_rows": len(
             [
                 row
@@ -370,14 +498,30 @@ def summarize(
         "post_observation_no_candidate_support_rows": len(
             [row for row in evaluated if row["failure_taxonomy_type"] == "post_observation_no_candidate_support"]
         ),
-        "post_observation_cross_view_aliasing_rows": len(
-            [row for row in evaluated if row["failure_taxonomy_type"] == "post_observation_cross_view_aliasing"]
+        "post_observation_cross_view_aliasing_rows": len(rival_identity_cross_view),
+        "object_existence_false_positive_commit_rows": len(object_existence_wrong),
+        "object_existence_deferred_no_independent_confirmation_rows": len(
+            [
+                row for row in evaluated
+                if row["failure_taxonomy_type"] == "object_existence_deferred_no_independent_confirmation"
+            ]
+        ),
+        "unsafe_rival_identity_commit_rows": len(unsafe_rival_identity),
+        "rival_identity_unresolved_cross_view_aliasing_rows": len(
+            [
+                row for row in evaluated
+                if row["failure_taxonomy_type"] == "rival_identity_unresolved_cross_view_aliasing"
+            ]
         ),
         "commit_rate": ratio(len(commit_rows), request_rows),
         "success_commit_rate": ratio(len(success_rows), request_rows),
         "wrong_goal_commit_rate": ratio(len(wrong_rows), request_rows),
         "action_counts": dict(sorted(Counter(str(row["action"]) for row in evaluated).items())),
         "reason_counts": dict(sorted(Counter(str(row["reason"]) for row in evaluated).items())),
+        "objective_counts": dict(sorted(Counter(str(row.get("objective")) for row in evaluated).items())),
+        "request_taxonomy_route_counts": dict(
+            sorted(Counter(str(row.get("request_taxonomy_route")) for row in evaluated).items())
+        ),
         "failure_taxonomy_counts": dict(
             sorted(Counter(str(row["failure_taxonomy_type"]) for row in evaluated).items())
         ),
@@ -391,7 +535,10 @@ def summarize(
         "interpretation": {
             "fact": (
                 "The analyzer writes action-time evidence and decisions before joining evaluation labels. "
-                "The fixed decision rule is applied without category-specific branches."
+                "The fixed decision rule is applied without category-specific branches. "
+                "Failure taxonomy now separates single-positive-candidate object-existence failures from "
+                "multi-candidate rival-identity arbitration failures. The object-existence branch is a no-commit "
+                "safety branch until independent object-existence validation is defined."
             ),
             "agent_inference": (
                 "A gate pass supports this diagnostic active-observation contract, but does not by itself "
@@ -417,7 +564,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     )
     forbidden = action_forbidden_keys(plan_rows + association_rows)
     evidence_rows = build_evidence_rows(plan_rows, association_rows)
-    decisions = decision_rows(evidence_rows)
+    decisions = decision_rows(evidence_rows, objective=str(args.objective))
     evaluated = evaluated_rows(decisions, labels)
     summary = summarize(
         evidence_rows=evidence_rows,
@@ -447,6 +594,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-new-primary-success-commit-rows", type=int, default=1)
     parser.add_argument("--min-resolved-request-rows", type=int, default=1)
     parser.add_argument("--max-secondary-stress-wrong-goal-commit-rows", type=int, default=0)
+    parser.add_argument(
+        "--objective",
+        choices=[DEFAULT_OBJECTIVE, GOAL_VALIDITY_OBJECTIVE],
+        default=DEFAULT_OBJECTIVE,
+    )
     return parser.parse_args()
 
 

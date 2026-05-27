@@ -10,6 +10,7 @@ TS=${TS:-$(date +%Y%m%d-%H%M%S)}
 
 PLAN_OUT=${PLAN_OUT:-${RUNS_ROOT}/h001_rival_identity_pair_probe_plan_v1}
 FRAMES=${FRAMES:-${RUNS_ROOT}/h001_rival_identity_pair_probe_frames_v1/rival_identity_frame_summary.jsonl}
+FRAME_ROOT=${FRAME_ROOT:-$(dirname "${FRAMES}")}
 FRAME_EXPORT_SUMMARY=${FRAME_EXPORT_SUMMARY:-$(dirname "${FRAMES}")/summary.json}
 CANDIDATE_ARTIFACT=${CANDIDATE_ARTIFACT:-${PLAN_OUT}/rival_identity_candidate_artifact.jsonl}
 OUT=${OUT:-${RUNS_ROOT}/h001_rival_identity_pair_probe_detector_substrate_v1}
@@ -63,6 +64,7 @@ payload = {
     "stage": sys.argv[3],
     "updated_at": datetime.now(timezone.utc).isoformat(),
     "frames": "${FRAMES}",
+    "frame_root": "${FRAME_ROOT}",
     "frame_export_summary": "${FRAME_EXPORT_SUMMARY}",
     "candidate_artifact": "${CANDIDATE_ARTIFACT}",
     "out": "${OUT}",
@@ -97,6 +99,7 @@ echo "started_at=$(date -Is)"
 echo "working_directory=${ROOT}"
 echo "image=${OPENVOCAB_IMG}"
 echo "frames=${FRAMES}"
+echo "frame_root=${FRAME_ROOT}"
 echo "frame_export_summary=${FRAME_EXPORT_SUMMARY}"
 echo "candidate_artifact=${CANDIDATE_ARTIFACT}"
 echo "groundingdino_dir=${GROUNDINGDINO_DIR}"
@@ -115,6 +118,7 @@ from pathlib import Path
 
 paths = {
     "frames": Path("${FRAMES}"),
+    "frame_root": Path("${FRAME_ROOT}"),
     "candidate_artifact": Path("${CANDIDATE_ARTIFACT}"),
     "frame_export_summary": Path("${FRAME_EXPORT_SUMMARY}"),
     "groundingdino_config": Path("${GROUNDINGDINO_DIR}") / "config.json",
@@ -156,6 +160,7 @@ docker run --rm ${GPU_FLAG} \
   "${OPENVOCAB_IMG}" \
   python -m h001_runtime.detect_postview_groundingdino_sam2 \
     --frames "$(to_runs_path "${FRAMES}")" \
+    --frame-root "$(to_runs_path "${FRAME_ROOT}")" \
     --candidate-artifact "$(to_runs_path "${CANDIDATE_ARTIFACT}")" \
     --groundingdino-dir /models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny \
     --sam2-checkpoint /models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt \

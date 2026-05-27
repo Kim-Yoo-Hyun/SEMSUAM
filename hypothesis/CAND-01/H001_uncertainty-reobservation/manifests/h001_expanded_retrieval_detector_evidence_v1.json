@@ -1,0 +1,117 @@
+{
+  "schema_version": "h001.expanded_retrieval_detector_evidence_contract.v1",
+  "contract_name": "expanded_retrieval_detector_evidence_v1",
+  "date_checked": "2026-05-27",
+  "status": "design_contract_only",
+  "source": {
+    "candidate_set": "local_dataset/runs/h001_expanded_retrieval_plan_v1/expanded_retrieval_candidate_set.jsonl",
+    "source_pool_validity_proxy": "local_dataset/runs/h001_expanded_retrieval_source_pool_validity_proxy_v1/expanded_retrieval_source_pool_validity_proxy_rows.jsonl",
+    "source_filter": "proxy_decision.detector_evidence_allowed_by_proxy == true",
+    "expected_detector_proxy_request_rows": 6,
+    "terminal_commit_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "purpose": {
+    "fact": "The current source-pool validity proxy routes 6 rows to detector-guarded observation and 2 rows to backend retrieval revision.",
+    "agent_inference": "Detector evidence should be collected only for source-pool-valid expanded retrieval rows, and zero-standoff candidate viewpoints must be forbidden before detector/SAM2 scoring."
+  },
+  "allowed_action_inputs": [
+    "episode_key",
+    "scene_id",
+    "scene_key",
+    "query",
+    "rival_identity_request_id",
+    "proxy_decision.proxy_route",
+    "proxy_decision.detector_evidence_allowed_by_proxy",
+    "source_pool_features non-GT score-shape fields",
+    "expanded candidate ids",
+    "candidate semantic rank and score",
+    "candidate support score",
+    "candidate position and visit_position",
+    "candidate positive_support",
+    "Habitat navmesh snap/navigability"
+  ],
+  "forbidden_action_inputs": [
+    "analysis_only_target_route",
+    "analysis_only_target_taxonomy",
+    "analysis_only_proxy_matches_target_route",
+    "candidate_correct",
+    "selected_for_goal",
+    "wrong_goal_visit",
+    "success label",
+    "GT object id",
+    "GT goal id",
+    "post-observation detector association",
+    "evaluation labels",
+    "threshold tuning from joined labels"
+  ],
+  "planner_design": {
+    "planner_name": "expanded_retrieval_detector_standoff_v1",
+    "policy": "ExpandedRetrievalDetectorObservation",
+    "candidate_selection": "Use the expanded retrieval candidate set in action-time rank order up to max_candidates_per_request. Do not select by correctness labels.",
+    "candidate_budget": {
+      "max_candidates_per_request": 10,
+      "min_plan_rows_per_request": 5
+    },
+    "viewpoint_rule": [
+      "Generate one detector observation row per selected candidate.",
+      "Use non-GT standoff viewpoints around each candidate.",
+      "Snap standoff viewpoints to Habitat navmesh.",
+      "Reject candidate visit-position fallback, rotation fallback, zero-standoff rows, and non-navigable standoff rows.",
+      "Carry only the target candidate id in candidate_ids for per-candidate detector association, while preserving the full expanded candidate set separately."
+    ],
+    "standoff_distances_m": [
+      1.25,
+      1.75,
+      2.25,
+      2.75
+    ],
+    "preferred_standoff_distance_m": 1.75,
+    "min_standoff_distance_m": 0.75,
+    "max_standoff_distance_m": 3.25
+  },
+  "minimum_plan_gate": {
+    "detector_proxy_request_rows_minimum": 6,
+    "planned_request_rows_minimum": 6,
+    "plan_rows_minimum": 36,
+    "plan_rows_per_request_minimum": 5,
+    "zero_standoff_rows": 0,
+    "near_standoff_rows": 0,
+    "rotation_fallback_rows": 0,
+    "fallback_rows": 0,
+    "consumed_forbidden_action_fields": 0,
+    "uses_gt_for_action": false
+  },
+  "frame_gate": {
+    "frame_export_allowed_after_plan_gate": true,
+    "policy": "ExpandedRetrievalDetectorObservation",
+    "candidate_point_field": "grounded_position",
+    "max_candidates_per_decision": 1,
+    "row_level_nonblank_gate": true,
+    "uses_gt_for_action": false
+  },
+  "detector_substrate_gate": {
+    "detector_box_rate_minimum": 0.8,
+    "sam2_mask_rate_minimum": 0.8,
+    "candidate_association_rate_minimum": 0.4,
+    "uses_gt_for_action": false,
+    "terminal_commit_allowed": false
+  },
+  "paper_claim_gate": {
+    "scope": "fresh_or_predeclared_scene_disjoint_source_after_detector_evidence_rule_is_fixed",
+    "must_report_source_pool_proxy_validity": true,
+    "must_report_detector_association_failure_taxonomy": true,
+    "must_compare_against_no_reobserve_and_defer_all": true,
+    "uses_gt_for_action": false
+  },
+  "expected_outputs": [
+    "expanded_retrieval_detector_plan.jsonl",
+    "expanded_retrieval_detector_candidate_artifact.jsonl",
+    "expanded_retrieval_detector_plan_summary.json",
+    "postview_frames_v2.jsonl",
+    "rival_identity_frame_summary.jsonl",
+    "nonblank_filter_v1/nonblank_frame_filter_summary.json",
+    "expanded_retrieval_detector_substrate_summary.json"
+  ],
+  "paper_claim_allowed": false
+}

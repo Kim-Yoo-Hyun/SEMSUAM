@@ -1,0 +1,118 @@
+{
+  "schema_version": "h001.discriminative_rival_view_planner_contract.v1",
+  "contract_name": "discriminative_rival_view_planner_v1",
+  "date_checked": "2026-05-27",
+  "status": "design_contract_only",
+  "source_router": {
+    "output": "local_dataset/runs/h001_rival_identity_goal_validity_revision_v2_router_v1",
+    "source_rows": "goal_validity_revision_v2_routes.jsonl",
+    "filter": "revision_action == request_discriminative_rival_view",
+    "target_request_rows": 14,
+    "paper_claim_allowed": false
+  },
+  "purpose": {
+    "fact": "The independent strict goal-validity rule is safe but inert, while the default unique-strong identity rule is nontrivial but unsafe.",
+    "agent_inference": "The next observation should collect contrastive evidence between rival candidates instead of adding another single-candidate confidence threshold."
+  },
+  "allowed_action_inputs": [
+    "rival_identity_request_id",
+    "episode_key",
+    "scene_key",
+    "query",
+    "candidate_id",
+    "target_position",
+    "target_visit_position",
+    "planned_target_ids",
+    "semantic_rank",
+    "semantic_score",
+    "support_score",
+    "post_own_associated_heading_count",
+    "post_cross_associated_heading_count",
+    "post_identity_margin",
+    "post_best_box_score",
+    "post_min_depth_error_m",
+    "viewpoint geometry metadata",
+    "navmesh snapping result"
+  ],
+  "forbidden_action_inputs": [
+    "evaluation_only_candidate_correct",
+    "evaluation_only_success_commit",
+    "evaluation_only_wrong_goal_commit",
+    "GT object id",
+    "GT goal id",
+    "oracle distance to goal",
+    "post-join labels"
+  ],
+  "planner_design": [
+    {
+      "stage": "select_confusing_pair",
+      "rule": "For each request_discriminative_rival_view row, select one focus candidate and one or more confusing rivals using action-time evidence: strong candidate if present, otherwise highest own support; rivals ranked by cross support, own support, semantic rank, and proximity in the planned target set.",
+      "blocked": "Do not select pairs by evaluation correctness."
+    },
+    {
+      "stage": "common_pair_view",
+      "rule": "Try a navmesh-snapped common standoff viewpoint around the midpoint or perpendicular axis of the focus-rival pair so both candidate projections can be compared under the same camera context.",
+      "fallback": "If no common view is navigable, create matched dual standoff views with the same heading policy and explicit pair candidate ids."
+    },
+    {
+      "stage": "explicit_pair_candidate_set",
+      "rule": "Every exported frame row must carry only the focus/rival pair candidate ids for detector association, plus optional local-context ids recorded separately for analysis.",
+      "blocked": "Do not let detector association silently expand to unrelated category candidates."
+    },
+    {
+      "stage": "evidence_output",
+      "rule": "Write pair-level evidence that compares support under matched views: focus own support, rival own support, cross support, box/mask/depth consistency, and whether either candidate remains unsupported."
+    }
+  ],
+  "minimum_plan_gate": {
+    "target_request_rows_minimum": 10,
+    "zero_standoff_rows": 0,
+    "near_standoff_rows": 0,
+    "rotation_fallback_rows": 0,
+    "planned_pair_rows_minimum": 10,
+    "planned_query_count_minimum": 3,
+    "uses_gt_for_action": false
+  },
+  "frame_detector_gate": {
+    "row_level_nonblank_gate": true,
+    "detector_box_rate_minimum": 0.80,
+    "sam2_mask_rate_minimum": 0.80,
+    "pair_candidate_association_rate_minimum": 0.40,
+    "uses_gt_for_action": false
+  },
+  "diagnostic_evaluation_gate": {
+    "scope": "mechanism_design_only_on_used_independent_source",
+    "wrong_goal_commit_rows": 0,
+    "no_label_commit_rows": 0,
+    "min_success_commit_rows": 1,
+    "must_compare_against_goal_validity_v1": true,
+    "must_compare_against_unique_strong_identity": true,
+    "must_report_unresolved_cross_view_aliasing": true,
+    "uses_gt_for_action": false
+  },
+  "paper_claim_gate": {
+    "scope": "fresh_or_predeclared_scene_disjoint_source_after_planner_and_objective_are_fixed",
+    "wrong_goal_commit_rows": 0,
+    "no_label_commit_rows": 0,
+    "must_beat_defer_all_on_success": true,
+    "must_not_exceed_default_rule_wrong_goal": true,
+    "must_include_failure_taxonomy": true,
+    "uses_gt_for_action": false
+  },
+  "required_baselines": [
+    "existing_standoff_goal_validity_v1",
+    "unique_strong_own_view_identity",
+    "single_candidate_extra_view",
+    "random_rival_view",
+    "defer_all"
+  ],
+  "expected_outputs": [
+    "discriminative_rival_view_plan.jsonl",
+    "discriminative_rival_view_plan_summary.json",
+    "discriminative_rival_view_frame_summary.jsonl",
+    "discriminative_rival_view_detector_associations.jsonl",
+    "discriminative_rival_view_pair_evidence.jsonl",
+    "discriminative_rival_view_validation_summary.json"
+  ],
+  "paper_claim_allowed": false
+}

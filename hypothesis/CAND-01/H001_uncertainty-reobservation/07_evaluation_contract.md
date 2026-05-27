@@ -249,6 +249,43 @@ Policy progression:
 
 Do not tune switch gates on held-out `first_eval`.
 
+## Expanded Retrieval Guard Gate
+
+### 사실
+
+- Analysis-only guard design output: `local_dataset/runs/h001_expanded_retrieval_candidate_set_guard_v1`
+- Non-GT proxy feature audit output: `local_dataset/runs/h001_expanded_retrieval_guard_proxy_features_v1`
+- Route counts: `request_backend_retrieval_revision 2`, `request_detector_guarded_observation 5`, `request_lightweight_confirmation 1`
+- Detector evidence allowed rows: `6/8`
+- Terminal commit rows: `0`
+- `guard_design_gate_passed`: `true`
+- Proxy route counts: `request_detector_guarded_observation_proxy 8`
+- Source-pool validity proxy recall: `0.0`
+- Evidence-allowed target recall: `1.0`
+- `proxy_ready_for_detector_gate`: `false`
+- Source-pool validity proxy output: `local_dataset/runs/h001_expanded_retrieval_source_pool_validity_proxy_v1`
+- Source-pool proxy route counts: `request_backend_retrieval_revision_proxy 2`, `request_detector_guarded_observation_proxy 6`
+- Source-pool proxy recall: `1.0`
+- Source-pool proxy evidence-allowed target recall: `1.0`
+- Source-pool proxy backend targets escalated to evidence: `0`
+- Source-pool proxy evidence targets blocked as backend: `0`
+- Source-pool proxy consumed forbidden rows: `0`
+- Source-pool `proxy_ready_for_detector_gate`: `true`
+- `uses_gt_for_action`: `false`
+- `uses_gt_for_analysis`: `true`
+- `paper_claim_allowed`: `false`
+
+### 에이전트 추론
+
+This guard defines target behavior, not an action-time method. The first non-GT proxy feature audit extracts usable action-time features but fails the source-pool validity gate. The stronger source-pool proxy passes the current diagnostic gate without GT action inputs, but it was designed from this diagnostic evidence and is not a paper-facing claim. A detector/viewpoint evidence gate is now allowed only for proxy detector-eligible rows and must still estimate:
+
+- source-pool validity risk;
+- wrong-goal distractor risk;
+- whether evidence acquisition is allowed;
+- whether terminal commit remains blocked.
+
+Current candidate-set score/support/margin/spatial/reachability features were insufficient because both `source_pool_no_valid_candidate` rows were routed to detector evidence rather than backend revision. The source-pool score-shape proxy fixes this diagnostic blocker; fresh/predeclared validation is still required before paper-facing utility claims.
+
 ## Fixed Dense Backend Terminal Diagnostic Contract
 
 ### 사실
@@ -989,6 +1026,405 @@ Gate interpretation:
 - 에이전트 추론: These failures are not dense same-category rival ambiguity. Both failed `toilet` rows have only one focus candidate in the observation plan, strong own-view detector association, and post-join labels mark that candidate as wrong. The failure mechanism is closer to object-existence false positive than rival-identity arbitration.
 - 사용자 판단 필요: Decide whether `request_identity_no_guard_eligible_positive_candidates` should remain in the rival-identity branch or be routed to a separate object-existence validation branch.
 
+Fresh-source failure diagnostic:
+
+```text
+diagnostic_script: runtime/h001_runtime/diagnose_rival_identity_generalization_failures.py
+output: local_dataset/runs/h001_rival_identity_generalization_failure_diagnostic_v1
+diagnostic_passed: true
+mechanism_counts:
+  rival_identity_resolved_success: 2
+  rival_identity_unresolved_cross_view_aliasing: 2
+  single_candidate_object_existence_false_positive: 2
+proposed_route_counts:
+  keep_in_rival_identity_arbitration: 4
+  object_existence_validation: 2
+request_identity_no_guard_eligible_positive_candidates:
+  rival_identity_unresolved_cross_view_aliasing: 2
+  single_candidate_object_existence_false_positive: 2
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+Facts:
+
+- The detector substrate passed with detector box / SAM2 / candidate association rates `1.0 / 1.0 / 1.0`.
+- All wrong commits are explained by single-positive-candidate `toilet` false positives.
+- `request_identity_no_guard_eligible_positive_candidates` is a mixed request reason, not a stable mechanism label.
+
+Agent inference:
+
+- Single-positive-candidate requests need an object-existence validation branch before any commit rule is promoted.
+- Multi-positive requests can remain in rival-identity arbitration.
+- Candidate/rival count split is required before changing thresholds; this split is implemented in the taxonomy run below.
+
+Fresh-source taxonomy split:
+
+```text
+script: runtime/h001_runtime/analyze_rival_identity_post_observation.py
+output: local_dataset/runs/h001_rival_identity_generalization_taxonomy_split_v1
+status: Docker py_compile and analyzer rerun passed
+request_taxonomy_route_counts:
+  rival_identity_arbitration: 4
+  object_existence_validation: 2
+failure_taxonomy_counts:
+  none: 2
+  rival_identity_unresolved_cross_view_aliasing: 2
+  object_existence_false_positive_commit: 2
+unsafe_rival_identity_commit_rows: 0
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+post_observation_gate_passed: false
+```
+
+Decision:
+
+- The split is accepted.
+- `request_reason` remains a planner/action reason, not a mechanism label.
+- `request_taxonomy_route == rival_identity_arbitration` covers multi-positive candidate requests with planned rival contrast.
+- `request_taxonomy_route == object_existence_validation` covers single-positive candidate requests and must not use the same unique-strong-identity commit rule.
+- The no-commit object-existence validation branch for single-positive requests is implemented below.
+
+Object-existence no-commit branch:
+
+```text
+script: runtime/h001_runtime/analyze_rival_identity_post_observation.py
+rule: if request_taxonomy_route == object_existence_validation, action = defer_object_existence_validation
+reason: object_existence_requires_independent_confirmation
+fresh_output: local_dataset/runs/h001_rival_identity_generalization_object_existence_branch_v1
+regression_output: local_dataset/runs/h001_rival_identity_pair_probe_object_existence_branch_regression_v1
+```
+
+Fresh-source result:
+
+```text
+action_counts:
+  commit_candidate: 2
+  defer_object_existence_validation: 2
+  defer_unresolved_identity: 2
+failure_taxonomy_counts:
+  none: 2
+  object_existence_deferred_no_independent_confirmation: 2
+  rival_identity_unresolved_cross_view_aliasing: 2
+commit / success / wrong: 2 / 2 / 0
+request_taxonomy_route_counts:
+  rival_identity_arbitration: 4
+  object_existence_validation: 2
+post_observation_gate_passed: true
+uses_gt_for_action: false
+```
+
+Regression result on the earlier diagnostic source:
+
+```text
+output: local_dataset/runs/h001_rival_identity_pair_probe_object_existence_branch_regression_v1
+commit / success / wrong: 1 / 1 / 0
+request_taxonomy_route_counts:
+  rival_identity_arbitration: 6
+post_observation_gate_passed: true
+uses_gt_for_action: false
+```
+
+Interpretation:
+
+- 사실: The no-commit branch removes the two fresh-source `toilet` wrong-goal commits without changing the earlier multi-candidate diagnostic success.
+- 에이전트 추론: This is a safety repair, not an object-existence utility proof. A paper-facing method still needs independent evidence that can distinguish true single-object goals from false-positive object candidates.
+- 사용자 판단 필요: None for the safety branch; future object-existence confirmation should be evaluated separately before allowing any single-positive commit.
+
+Independent object-existence validation probe:
+
+```text
+script: runtime/h001_runtime/analyze_object_existence_validation_probe.py
+output: local_dataset/runs/h001_rival_identity_object_existence_probe_v1
+target_rows: request_taxonomy_route == object_existence_validation
+current_policy: defer_object_existence_validation
+naive_baseline: unique strong object-like candidate would commit without the no-commit safety branch
+```
+
+Probe result:
+
+```text
+request_rows: 2
+query_counts:
+  toilet: 2
+naive_unique_strong_commit_rows: 2
+naive_wrong_goal_commit_rows: 2
+naive_success_commit_rows: 0
+wrong_goal_avoided_by_defer_rows: 2
+success_lost_by_defer_rows: 0
+wrong_goal_avoided_by_defer_rate: 1.0
+success_lost_by_defer_rate: 0.0
+action_evidence_forbidden_key_count: 0
+probe_design_passed: true
+paper_claim_allowed: false
+```
+
+Interpretation:
+
+- 사실: On this source, the no-commit branch is not hiding a success; it avoids two wrong-goal commits.
+- 에이전트 추론: The current object-existence probe supports keeping single-positive rows in defer until independent confirmation evidence exists.
+- 사용자 판단 필요: No paper-facing object-existence commit rule should be promoted from two `toilet` rows only.
+
+Broader fresh-source validation design:
+
+```text
+script: runtime/h001_runtime/design_rival_identity_broader_validation.py
+output: local_dataset/runs/h001_rival_identity_broader_validation_design_v1
+design_name: rival_identity_broader_validation_v1
+preferred_source: risk_validation
+source_candidate_decisions: local_dataset/runs/h001_risk_validation_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl
+excluded_scenes:
+  DYehNKdT76V
+  7MXmsvcQjpJ
+  y9hTuugGdiq
+  5cdEh9F2hJL
+  CrMo8WxCyVb
+  mL8ThkuaVTM
+```
+
+Design result:
+
+```text
+selected_parent_rows: 72
+selected_parent_scenes: 10
+selected_parent_queries: 6
+estimated_request_rows: 22
+expected_request_rate_from_prior_source: 0.30
+top_wrong_goal_rows: 41
+top_wrong_rows: 61
+rows_with_correct_and_wrong_candidates: 49
+episode_class_counts:
+  rival_identity_likely_wrong_goal: 24
+  rival_identity_likely_selected_wrong: 14
+  object_existence_or_backend_recall_negative: 23
+  rival_identity_control_selected_correct: 11
+design_gate_passed: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Actual miner result:
+
+```text
+script: runtime/h001_runtime/build_rival_identity_broader_manifest.py
+output: local_dataset/runs/h001_rival_identity_broader_source_v1
+manifest: manifests/h001_rival_identity_broader_validation_v1.json
+verify: manifests/h001_rival_identity_broader_validation_v1.verify.json
+request_rows: 30
+request_scenes: 10
+request_queries: 6
+request_taxonomy_route_counts:
+  rival_identity_arbitration: 26
+  object_existence_validation: 4
+excluded_scene_overlap: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+source_freeze_gate_passed: true
+```
+
+Planner smoke result:
+
+```text
+script: runtime/h001_runtime/plan_rival_identity_observation.py
+output: local_dataset/runs/h001_rival_identity_broader_plan_v1
+request_rows: 30
+planned_request_rows: 30
+plan_rows: 112
+skipped_rows: 0
+missing_action_rows: 0
+candidate_artifact_rows: 21
+candidate_artifact_candidates: 80
+action_evidence_forbidden_key_count: 0
+plan_gate: true
+uses_gt_for_action: false
+```
+
+Frame export and nonblank filter result:
+
+```text
+renderer: runtime/h001_runtime/export_postview_frames_v2.py
+filter: runtime/h001_runtime/filter_nonblank_frame_summary.py
+frame_output: local_dataset/runs/h001_rival_identity_broader_frames_v1
+filtered_frame_summary: local_dataset/runs/h001_rival_identity_broader_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+rows_requested: 112
+rows_exported: 112
+rendered_heading_count: 862
+rgb_files: 862
+depth_files: 862
+metadata_files: 862
+unique_scenes: 10
+removed_blank_heading_count: 56
+rows_with_blank_headings: 20
+dropped_rows: 0
+kept_heading_count: 806
+row_level_nonblank_gate_passed: true
+strict_no_blank_heading_gate_passed: false
+uses_gt_for_action: false
+```
+
+Interpretation:
+
+- 사실: `risk_validation` is scene-disjoint from the previous diagnostic and current fresh-source scenes under the explicit exclusion list.
+- 에이전트 추론: The broader miner, row-level frame substrate, and corrected detector substrate pass, but the broader post-observation failure diagnosis shows the current planner used zero-standoff viewpoints for every target. The next gate is `rival_identity_broader_standoff_planner_v1`, not threshold tuning.
+- 사용자 판단 필요: None before detector/SAM2 substrate job.
+
+Zero-standoff-safe planner revision:
+
+```text
+contract: manifests/h001_rival_identity_broader_standoff_planner_v1.json
+trigger_diagnostic: local_dataset/runs/h001_rival_identity_broader_post_observation_diagnostic_v1
+current_failure:
+  zero_standoff_plan_rows: 112
+  rotation_fallback_plan_rows: 112
+  own_associated_rows: 0
+  cross_associated_rows: 442
+revision: replace candidate_visit_position/position fallback with non-GT standoff viewpoints
+reuse:
+  runtime/h001_runtime/plan_association_recovery_observation.py::NavmeshSnapper
+  runtime/h001_runtime/plan_association_recovery_observation.py::plan_standoff_viewpoint
+minimum_geometry_gate:
+  zero_standoff_plan_rows: 0
+  near_standoff_plan_rows: 0
+  rotation_fallback_plan_rows: 0
+  target_distance_from_viewpoint_min_m: 0.75
+  planned_request_rows_minimum: 20
+  planned_scene_count_minimum: 5
+  planned_query_count_minimum: 3
+post_observation_rule_change_allowed_before_standoff_gate: false
+```
+
+Zero-standoff-safe planner implementation result:
+
+```text
+script: runtime/h001_runtime/plan_rival_identity_observation.py
+mode: --viewpoint-mode standoff
+output: local_dataset/runs/h001_rival_identity_broader_plan_standoff_v1
+docker_syntax_smoke: passed
+plan_gate: true
+geometry_gate: true
+request_rows: 30
+planned_request_rows: 30
+plan_rows: 112
+skipped_rows: 0
+planned_scene_count: 10
+planned_query_count: 6
+zero_standoff_plan_rows: 0
+near_standoff_plan_rows: 0
+rotation_fallback_plan_rows: 0
+candidate_fallback_plan_rows: 0
+target_distance_from_viewpoint_min_mean_max_m: 1.6386 / 1.7506 / 1.9747
+viewpoint_source_counts:
+  standoff_navmesh: 104
+  standoff_geometry: 8
+uses_gt_for_action: false
+next_gate: broader standoff frame export and row-level nonblank sanity
+```
+
+Mixed standoff frame export result:
+
+```text
+frame_output: local_dataset/runs/h001_rival_identity_broader_frames_standoff_v1
+rows_requested: 112
+rows_exported: 112
+rendered_heading_count: 1079
+nonblank_output_rows: 107
+nonblank_kept_heading_count: 1028
+dropped_rows: 5
+removed_blank_heading_count: 51
+row_level_nonblank_gate_passed: false
+failure_rows: all dropped rows use standoff_geometry fallback with standoff_navmesh_navigable false
+detector_rerun_allowed: false
+```
+
+Navmesh-only standoff repair result:
+
+```text
+script: runtime/h001_runtime/plan_rival_identity_observation.py
+mode: --viewpoint-mode standoff --require-navmesh-standoff
+plan_output: local_dataset/runs/h001_rival_identity_broader_plan_standoff_navmesh_v1
+frame_output: local_dataset/runs/h001_rival_identity_broader_frames_standoff_navmesh_v1
+filtered_frame_summary: local_dataset/runs/h001_rival_identity_broader_frames_standoff_navmesh_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+plan_gate: true
+geometry_gate: true
+request_rows: 30
+planned_request_rows: 28
+plan_rows: 104
+skipped_rows: 8
+skip_reason: standoff_navmesh_required
+planned_scene_count: 9
+planned_query_count: 6
+viewpoint_source_counts:
+  standoff_navmesh: 104
+rows_exported: 104
+rendered_heading_count: 997
+nonblank_output_rows: 104
+nonblank_kept_heading_count: 997
+dropped_rows: 0
+removed_blank_heading_count: 0
+row_level_nonblank_gate_passed: true
+strict_no_blank_heading_gate_passed: true
+uses_gt_for_action: false
+next_gate: completed below; detector/SAM2 and post-observation objective validation are recorded in the following sections
+```
+
+Navmesh-only detector and post-observation result:
+
+```text
+detector_output: local_dataset/runs/h001_rival_identity_broader_detector_substrate_standoff_navmesh_v1
+post_observation_output: local_dataset/runs/h001_rival_identity_broader_post_observation_standoff_navmesh_v1
+detector_rows: 104
+frame_rows: 104
+detector_box_rate: 0.9808
+sam2_mask_rate: 0.9808
+candidate_association_rate: 0.7212
+rows_with_candidate_association: 75
+associated_candidate_heading_count: 277
+request/evidence/decision_rows: 28 / 110 / 28
+commit/success/wrong/no_label: 7 / 0 / 7 / 0
+defer_unresolved_identity: 19
+defer_object_existence_validation: 2
+failure_taxonomy:
+  unsafe_rival_identity_commit: 7
+  rival_identity_unresolved_cross_view_aliasing: 8
+  post_observation_no_candidate_support: 6
+  post_observation_margin_too_small: 5
+  object_existence_deferred_no_independent_confirmation: 2
+post_observation_gate_passed: false
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+```
+
+Unsafe-commit diagnostic:
+
+```text
+script: runtime/h001_runtime/diagnose_rival_identity_unsafe_commits.py
+output: local_dataset/runs/h001_rival_identity_unsafe_commit_diagnostic_standoff_navmesh_v1
+unsafe_commit_rows: 7
+unsafe_commit_query_counts:
+  bed: 4
+  chair: 2
+  tv_monitor: 1
+mechanism_counts:
+  absence_of_cross_support_not_discriminative: 7
+  low_detector_score_still_strong_by_count: 5
+  wrong_candidate_has_stronger_own_view_support_than_correct: 4
+  rival_candidate_false_positive_commit: 4
+  candidate_set_no_valid_goal_candidate: 3
+  depth_consistent_wrong_candidate: 3
+  semantic_prior_favors_wrong_over_correct: 3
+  semantic_top_is_wrong: 3
+simple_guard_variants_with_wrong_commit:
+  existing_unique_strong_own_view_identity
+  semantic_rank_1_only
+  detector_box_ge_0_25
+  depth_error_le_0_33
+  own_count_ge_4_only
+safe_nontrivial_simple_guard_variants: []
+post_observation_threshold_tuning_allowed: false
+paper_claim_allowed: false
+```
+
 Promotion gate beyond this first fresh source:
 
 ```text
@@ -999,6 +1435,248 @@ at least one non-furniture or small-object query
 same frozen analyzer and thresholds
 failure taxonomy reported for all unresolved rows
 ```
+
+Safer rival-identity arbitration contract before the next rule:
+
+```text
+contract: manifests/h001_rival_identity_strict_arbitration_v1.json
+contract_name: rival_identity_goal_validity_arbitration_v1
+status: design_contract_before_implementation
+blocked_changes:
+  - increase only own-view count or identity-margin threshold
+  - commit from object/category existence evidence alone
+  - commit from detector box score, depth error, or semantic rank alone
+  - use evaluation-only correctness, GT goal ids, or GT target distance in action rows
+required_before_next_rule:
+  - separate candidate-set validity failure from rival-identity arbitration
+  - report defer-only, semantic-rank, detector-score, depth-consistency, and combined simple guards
+  - require an action-time surrogate that a candidate is a valid navigation goal, not merely a visible object
+  - route no-valid-candidate or low-validity-surrogate rows to expanded retrieval or object-existence validation
+  - keep label joins sidecar-only and evaluate wrong-goal, no-label, and success commits after action selection
+next_implementation_target:
+  design a stricter rival-identity arbitration objective that tests candidate-set validity and local semantic/geometric consistency before any detector-backed commit
+```
+
+Implementation result:
+
+```text
+script: runtime/h001_runtime/analyze_rival_identity_post_observation.py
+objective: goal_validity_arbitration_v1
+default_regression_output: local_dataset/runs/h001_rival_identity_broader_post_observation_standoff_navmesh_default_regression_v1
+strict_objective_output: local_dataset/runs/h001_rival_identity_broader_post_observation_goal_validity_v1
+default_commit/success/wrong/no_label: 7 / 0 / 7 / 0
+strict_commit/success/wrong/no_label: 2 / 2 / 0 / 0
+strict_request/evidence/decision_rows: 28 / 110 / 28
+strict_action_counts:
+  commit_candidate: 2
+  defer_expanded_retrieval_needed: 23
+  defer_object_existence_validation: 2
+  defer_unresolved_identity: 1
+strict_reason_counts:
+  commit_goal_validity_unique_semantic_geometric_consistency: 2
+  defer_low_goal_validity_cross_view_aliasing: 12
+  post_observation_no_candidate_support: 6
+  defer_low_goal_validity_surrogate: 4
+  object_existence_requires_independent_confirmation: 2
+  defer_comparable_goal_validity_candidates: 1
+  defer_visible_object_not_goal_validity: 1
+strict_post_observation_gate_passed: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+Independent/predeclared source freeze:
+
+```text
+contract: rival_identity_goal_validity_independent_v1
+design_output: local_dataset/runs/h001_rival_identity_goal_validity_independent_design_v1
+source_output: local_dataset/runs/h001_rival_identity_goal_validity_independent_source_v1
+manifest: manifests/h001_rival_identity_goal_validity_independent_v1.json
+verify: manifests/h001_rival_identity_goal_validity_independent_v1.verify.json
+preferred_source: v3_fresh_validation
+excluded_scene_policy:
+  - exclude prior diagnostic scenes
+  - exclude broader unsafe-diagnostic/objective-design scenes
+design_parent_rows/scenes/queries: 72 / 11 / 6
+design_top_wrong_goal_rows: 51
+design_correct_and_wrong_candidate_rows: 59
+source_request_rows/scenes/queries: 30 / 10 / 6
+source_route_counts:
+  rival_identity_arbitration: 26
+  object_existence_validation: 4
+source_excluded_scene_overlap: 0
+source_action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The zero-standoff and detector-substrate blockers are resolved. The stricter objective is a useful diagnostic repair because it turns seven unsafe commits into two successful commits and zero wrong-goal commits without GT action inputs. It is not paper-ready because this same broader split was used to diagnose the unsafe failure and define the objective. The independent/predeclared source, runtime substrate, and objective rerun are now complete; the independent result below rejects the current rule as a utility claim.
+
+Independent runtime and rerun result:
+
+```text
+plan_output: local_dataset/runs/h001_rival_identity_goal_validity_independent_plan_standoff_navmesh_v1
+frame_output: local_dataset/runs/h001_rival_identity_goal_validity_independent_frames_standoff_navmesh_v1
+detector_output: local_dataset/runs/h001_rival_identity_goal_validity_independent_detector_substrate_standoff_navmesh_v1
+post_observation_output: local_dataset/runs/h001_rival_identity_goal_validity_independent_post_observation_goal_validity_v1
+plan_request/planned/rows: 30 / 30 / 92
+frame_rows/headings: 92 / 810
+detector_box/sam2/candidate_association: 1.0 / 1.0 / 0.6196
+objective: goal_validity_arbitration_v1
+request/evidence/decision_rows: 30 / 101 / 30
+action_counts:
+  defer_expanded_retrieval_needed: 23
+  defer_object_existence_validation: 6
+  defer_unresolved_identity: 1
+commit/success/wrong/no_label: 0 / 0 / 0 / 0
+post_observation_gate_passed: false
+wrong_goal_gate_passed: true
+no_label_gate_passed: true
+new_primary_success_gate_passed: false
+resolved_request_gate_passed: false
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: Independent validation rejects the current `goal_validity_arbitration_v1` as a utility rule. The result is a safe negative result, not a success: the objective avoids wrong commits by deferring every request. The failure diagnosis below shows that any next change must revise the evidence acquisition or candidate-validity model, not tune thresholds from joined labels.
+
+Independent failure diagnosis and revision contract:
+
+```text
+default_counterfactual_output: local_dataset/runs/h001_rival_identity_goal_validity_independent_post_observation_default_v1
+failure_diagnostic_script: runtime/h001_runtime/diagnose_goal_validity_independent_failure.py
+failure_diagnostic_output: local_dataset/runs/h001_rival_identity_goal_validity_independent_failure_diagnostic_v1
+revision_contract: manifests/h001_rival_identity_goal_validity_revision_v2.json
+revision_router_script: runtime/h001_runtime/route_goal_validity_revision_v2.py
+revision_router_output: local_dataset/runs/h001_rival_identity_goal_validity_revision_v2_router_v1
+discriminative_rival_view_contract: manifests/h001_discriminative_rival_view_planner_v1.json
+strict_goal_validity_commit/success/wrong/no_label: 0 / 0 / 0 / 0
+default_counterfactual_commit/success/wrong/no_label: 7 / 4 / 3 / 0
+default_wrong_goal_queries:
+  chair: 1
+  sofa: 1
+  toilet: 1
+diagnostic_tradeoff_check: true
+dominant_mechanism_tags:
+  cross_view_aliasing_blocks_goal_validity: 14
+  planned_candidate_set_has_no_valid_goal: 13
+  no_own_candidate_support: 11
+  strong_identity_not_goal_validity: 8
+  object_existence_branch_blocks_commit: 6
+revision_router_actions:
+  request_discriminative_rival_view: 14
+  request_expanded_retrieval: 8
+  request_object_existence_confirmation: 6
+  request_goal_validity_confirmation: 2
+router_commit_allowed_rows: 0
+router_uses_gt_for_action: false
+discriminative_rival_view_target_rows: 14
+discriminative_rival_view_contract_status: detector_substrate_running
+discriminative_rival_view_plan_output: local_dataset/runs/h001_discriminative_rival_view_plan_v1
+discriminative_rival_view_plan_rows: 38
+discriminative_rival_view_planned_request_rows: 14
+discriminative_rival_view_common_pair_rows: 10
+discriminative_rival_view_matched_dual_standoff_rows: 28
+discriminative_rival_view_zero/near_standoff_rows: 0 / 0
+discriminative_rival_view_rotation_fallback_rows: 0
+discriminative_rival_view_plan_smoke_passed: true
+discriminative_rival_view_v1_frame_rows/headings: 38 / 222
+discriminative_rival_view_v1_nonblank_dropped_rows: 1
+discriminative_rival_view_v1_nonblank_gate_passed: false
+discriminative_rival_view_v2_plan_output: local_dataset/runs/h001_discriminative_rival_view_plan_v2
+discriminative_rival_view_v2_frame_output: local_dataset/runs/h001_discriminative_rival_view_frames_v2
+discriminative_rival_view_v2_frame_rows/headings: 38 / 222
+discriminative_rival_view_v2_nonblank_dropped_rows: 0
+discriminative_rival_view_v2_removed_blank_headings: 0
+discriminative_rival_view_v2_row_level_nonblank_gate_passed: true
+discriminative_rival_view_v2_strict_no_blank_heading_gate_passed: true
+discriminative_rival_view_v2_metadata_repair: viewpoint_pair_role/rival_*/revision_*/standoff_* passthrough preserved for pair-level evidence analysis
+discriminative_rival_view_v2_role_counts: common 10 / focus 14 / rival 14
+discriminative_rival_view_detector_v1_output: local_dataset/runs/h001_discriminative_rival_view_detector_substrate_v1
+discriminative_rival_view_detector_v1_status: completed, substrate gate pass, superseded for pair analysis
+discriminative_rival_view_detector_v1_box/sam2/association: 1.0 / 1.0 / 0.8158
+discriminative_rival_view_detector_v1_superseded_reason: detector output did not preserve viewpoint_pair_role
+discriminative_rival_view_detector_v2_job: h001-discriminative-rival-view-detector-v2-20260527-033307
+discriminative_rival_view_detector_v2_job_status: completed, substrate gate pass
+discriminative_rival_view_detector_v2_output: local_dataset/runs/h001_discriminative_rival_view_detector_substrate_v2
+discriminative_rival_view_detector_v2_box/sam2/association: 1.0 / 1.0 / 0.8158
+discriminative_rival_view_evidence_script: runtime/h001_runtime/analyze_discriminative_rival_view_evidence.py
+discriminative_rival_view_evidence_output: local_dataset/runs/h001_discriminative_rival_view_evidence_v1
+discriminative_rival_view_evidence_availability/disambiguation: 1.0 / 0.6429
+discriminative_rival_view_evidence_actions: support_focus 8 / support_rival 1 / ambiguous_defer 5
+discriminative_rival_view_evidence_single_correct_preferred/wrong: 0.0 / 0.3333
+discriminative_rival_view_evidence_gate_passed: false
+discriminative_rival_view_failure_diagnostic: local_dataset/runs/h001_discriminative_rival_view_failure_diagnostic_v1
+discriminative_rival_view_failure_tags:
+  symmetric_cross_view_leak: 7
+  rival_visible_from_focus_view: 6
+  identity_score_near_tie: 5
+  common_view_supports_both_candidates: 5
+  no_valid_goal_pair_but_disambiguated: 4
+  both_correct_goal_region_or_duplicate_preferred: 4
+  rival_correct_own_view_evidence_weak: 3
+failure_diagnostic_decision: threshold_tuning false, objective_revision false, fresh_validation false, planner_or_branch_revision required
+branch_priority_decision: request_expanded_retrieval before discriminative view revision
+expanded_retrieval_contract: manifests/h001_expanded_retrieval_branch_v1.json
+expanded_retrieval_expected_request_rows: 8
+expanded_retrieval_candidate_budget: 6-10
+expanded_retrieval_terminal_commit_allowed: false
+expanded_retrieval_jq_validation: passed
+expanded_retrieval_planner_output: local_dataset/runs/h001_expanded_retrieval_plan_v1
+expanded_retrieval_request_rows: 8
+expanded_retrieval_candidate_set_rows: 8
+expanded_retrieval_plan_rows: 80
+expanded_retrieval_candidates_per_request: 10
+expanded_retrieval_duplicate_candidate_id_rate: 0.0
+expanded_retrieval_nonfinite_position_rate: 0.0
+expanded_retrieval_forbidden_action_keys: 0
+expanded_retrieval_planner_gate_passed: true
+expanded_retrieval_candidate_set_validity: local_dataset/runs/h001_expanded_retrieval_candidate_set_validity_v1
+expanded_retrieval_label_join_gate_passed: true
+expanded_retrieval_contains_correct_rows: 6/8
+expanded_retrieval_no_valid_candidate_rows: 2/8
+expanded_retrieval_source_top_correct_rows: 1/8
+expanded_retrieval_source_top_wrong_goal_rows: 7/8
+expanded_retrieval_wrong_top_replacement_rows: 5/7
+expanded_retrieval_rows_with_wrong_goal_candidate: 7/8
+expanded_retrieval_full_pool_contains_correct_rows: 6/8
+expanded_retrieval_selected_missed_full_pool_correct_rows: 0
+expanded_retrieval_taxonomy:
+  source_pool_no_valid_candidate: 2
+  valid_set_with_wrong_goal_distractor: 5
+  valid_set_without_wrong_goal_distractor: 1
+expanded_retrieval_candidate_set_guard: local_dataset/runs/h001_expanded_retrieval_candidate_set_guard_v1
+expanded_retrieval_guard_routes:
+  request_backend_retrieval_revision: 2
+  request_detector_guarded_observation: 5
+  request_lightweight_confirmation: 1
+expanded_retrieval_guard_detector_evidence_allowed_rows: 6/8
+expanded_retrieval_guard_terminal_commit_rows: 0
+expanded_retrieval_guard_design_gate_passed: true
+expanded_retrieval_guard_is_action_time_rule: false
+expanded_retrieval_guard_requires_action_time_proxy: true
+expanded_retrieval_guard_proxy_features: local_dataset/runs/h001_expanded_retrieval_guard_proxy_features_v1
+expanded_retrieval_proxy_route_counts:
+  request_detector_guarded_observation_proxy: 8
+expanded_retrieval_proxy_source_pool_validity_recall: 0.0
+expanded_retrieval_proxy_evidence_allowed_target_recall: 1.0
+expanded_retrieval_proxy_ready_for_detector_gate: false
+expanded_retrieval_source_pool_validity_proxy: local_dataset/runs/h001_expanded_retrieval_source_pool_validity_proxy_v1
+expanded_retrieval_source_pool_proxy_route_counts:
+  request_backend_retrieval_revision_proxy: 2
+  request_detector_guarded_observation_proxy: 6
+expanded_retrieval_source_pool_proxy_validity_recall: 1.0
+expanded_retrieval_source_pool_proxy_evidence_allowed_recall: 1.0
+expanded_retrieval_source_pool_proxy_backend_escalated_to_evidence: 0
+expanded_retrieval_source_pool_proxy_evidence_blocked_as_backend: 0
+expanded_retrieval_source_pool_proxy_consumed_forbidden_rows: 0
+expanded_retrieval_source_pool_proxy_ready_for_detector_gate: true
+paper_claim_allowed: false
+```
+
+에이전트 추론: The independent evidence shows a strict-safe/inert versus loose-nontrivial/unsafe tradeoff. Therefore, `goal_validity_arbitration_v1` is rejected as a paper-facing utility rule, and the next implementation should be branch-specific active evidence acquisition rather than threshold tuning. `goal_validity_revision_v2` is a routing contract only: it does not claim terminal ObjectNav utility. The first branch-specific planner is `discriminative_rival_view_planner_v1`, because cross-view aliasing is the largest route. v2 passes the frame/nonblank and detector substrate gates after rejecting geometry-only common pair views, but the first pair-role evidence analyzer fails. Failure taxonomy suggests candidate-set expansion before another discriminative-view revision. The `request_expanded_retrieval` planner gate, label-join diagnostic, candidate-set guard design, proxy feature extraction, and source-pool validity proxy pass on current diagnostic evidence. The result is useful but still not paper-facing: it recovers valid candidates in `6/8` rows, has no rank-band selection misses, and separates the two source-pool no-valid rows without GT action inputs, but this proxy must be validated on a fresh/predeclared source. The next gate is expanded-retrieval frame/detector evidence for proxy detector-eligible rows.
 
 ### Generalization Decision
 

@@ -1,0 +1,617 @@
+{
+  "contract_name": "rival_identity_goal_validity_independent_v1",
+  "created_at": "2026-05-26T17:02:38.830540+00:00",
+  "date_frozen": "2026-05-27",
+  "evaluation_contract": {
+    "metrics": [
+      "wrong_goal_commit_rows",
+      "success_commit_rows",
+      "request_identity_confirmation_rows",
+      "defer_object_existence_validation_rows",
+      "wrong_goal_avoided_by_defer",
+      "success_lost_by_defer"
+    ],
+    "minimum_plan_gate": {
+      "action_evidence_forbidden_key_count": 0,
+      "planned_rows_minimum": 30,
+      "primary_request_rows": 30,
+      "request_rows": 30,
+      "secondary_stress_request_rows": 0
+    },
+    "post_observation_gate": {
+      "no_label_commit_rows": 0,
+      "object_existence_validation_rows_reported": true,
+      "rival_identity_arbitration_rows_reported": true,
+      "wrong_goal_commit_rows": 0
+    },
+    "scope": "goal_validity_independent_predeclared_validation_source",
+    "source_freeze_gate": {
+      "action_evidence_forbidden_key_count": 0,
+      "checks": {
+        "action_evidence_forbidden_key_count": true,
+        "excluded_scene_overlap": true,
+        "minimum_object_existence_rows": true,
+        "minimum_request_queries": true,
+        "minimum_request_rows": true,
+        "minimum_request_scenes": true,
+        "minimum_rival_identity_rows": true,
+        "no_gt_for_action": true,
+        "parent_design_gate_passed": true
+      },
+      "excluded_scene_overlap": [],
+      "gt_action_rows": [],
+      "passed": true,
+      "query_counts": {
+        "bed": 11,
+        "chair": 6,
+        "plant": 6,
+        "sofa": 2,
+        "toilet": 1,
+        "tv_monitor": 4
+      },
+      "request_queries": 6,
+      "request_rows": 30,
+      "request_scenes": 10,
+      "request_taxonomy_route_counts": {
+        "object_existence_validation": 4,
+        "rival_identity_arbitration": 26
+      },
+      "required": {
+        "action_evidence_forbidden_key_count": 0,
+        "excluded_scene_overlap": 0,
+        "minimum_object_existence_rows": 4,
+        "minimum_request_queries": 3,
+        "minimum_request_rows": 20,
+        "minimum_request_scenes": 5,
+        "minimum_rival_identity_rows": 20,
+        "uses_gt_for_action": false
+      },
+      "scene_counts": {
+        "4ok3usBNeis": 4,
+        "BAbdmeyTvMZ": 4,
+        "Dd4bFSTQ8gi": 2,
+        "HY1NcmCgn3n": 1,
+        "QaLdnwvtxbs": 4,
+        "bCPU9suPUw9": 4,
+        "bxsVRursffK": 4,
+        "q3zU7Yy5E5s": 1,
+        "qyAac8rV8Zk": 4,
+        "yr17PDCnDDW": 2
+      }
+    }
+  },
+  "interpretation": {
+    "agent_inference": "Passing the source-freeze gate only establishes a broader validation substrate. A paper-facing utility claim remains blocked until detector-backed post-observation validation passes.",
+    "fact": "This contract freezes request rows before frame rendering, detector association, and evaluation joins.",
+    "paper_claim_status": "not_allowed_until_broader_detector_backed_validation_passes"
+  },
+  "manifest_status": "frozen",
+  "observation_contract": {
+    "allowed_action_time_inputs": [
+      "candidate_id",
+      "query",
+      "scene_key",
+      "episode_key",
+      "candidate position",
+      "semantic_rank",
+      "semantic_score",
+      "candidate_score",
+      "top2 score gap",
+      "uncertainty scores",
+      "trigger_reobserve"
+    ],
+    "expected_outputs": [
+      "rival_identity_observation_plan.jsonl",
+      "rival_identity_frame_summary.jsonl",
+      "rival_identity_detector_associations.jsonl",
+      "rival_identity_post_observation_evidence.jsonl",
+      "rival_identity_observation_validation_summary.json"
+    ],
+    "forbidden_action_time_inputs": [
+      "evaluation_only_candidate_correct",
+      "evaluation_only_recall_rank",
+      "GT object position",
+      "GT geodesic distance",
+      "success label",
+      "wrong-goal label"
+    ],
+    "planner_name": "rival_identity_pair_probe_v1",
+    "purpose": "Validate whether semantic uncertainty can be converted into active observation utility on a larger scene-disjoint ObjectNav source.",
+    "target_selection": {
+      "always_include_focus_candidate": true,
+      "deduplicate_candidate_ids": true,
+      "include_guard_eligible_rivals_first": true,
+      "include_semantic_or_support_rivals_for_unique_guard_candidate": false,
+      "max_rivals_per_request": 4,
+      "max_target_candidates_per_request": 5
+    },
+    "viewpoint_policy": {
+      "fallback": "If later frame smoke shows navigation invalidity, add a separate viewpoint repair workflow.",
+      "gt_usage_allowed": false,
+      "minimum": "Use non-GT candidate positions as the initial pair-probe view target source."
+    }
+  },
+  "paper_claim_allowed": false,
+  "policy_source": {
+    "design_source": "local_dataset/runs/h001_rival_identity_goal_validity_independent_design_v1/rival_identity_broader_design_summary.json",
+    "diagnostic_result": {
+      "action_evidence_forbidden_key_count": 0,
+      "request_queries": 6,
+      "request_rows": 30,
+      "request_scenes": 10,
+      "request_taxonomy_route_counts": {
+        "object_existence_validation": 4,
+        "rival_identity_arbitration": 26
+      },
+      "source_freeze_gate_passed": true,
+      "uses_gt_for_action": false
+    },
+    "parent_rows": "local_dataset/runs/h001_rival_identity_goal_validity_independent_design_v1/rival_identity_broader_parent_rows.jsonl",
+    "policy_description": "Mine a larger predeclared rival-identity/object-existence validation source from frozen semantic candidate decisions. Request selection uses action-time score uncertainty, semantic top-gap, trigger flags, and deterministic scene/query caps. Evaluation labels are written only after request rows are frozen.",
+    "policy_name": "semantic_uncertainty_goal_validity_request_split_v1",
+    "selection_rule": "Use the frozen parent rows, convert candidate decisions to action-time candidate evidence, select request rows by semantic uncertainty budget, and never use candidate_correct or wrong_goal labels for the request action.",
+    "source_candidate_decisions": "local_dataset/runs/h001_v3_fresh_validation_policy_spatial_nms_p97_k20_v1/policy_revision/candidate_decisions.jsonl"
+  },
+  "request_rows": [
+    {
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:17:3:chair",
+      "focus_candidate_id": "vlmaps:export:chair:spatial_nms:0",
+      "query": "chair",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:chair:spatial_nms:1",
+        "vlmaps:export:chair:spatial_nms:2"
+      ],
+      "role": "primary",
+      "scene_key": "4ok3usBNeis"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:14:2:bed",
+      "focus_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "query": "bed",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:4"
+      ],
+      "role": "primary",
+      "scene_key": "4ok3usBNeis"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:9:1:chair",
+      "focus_candidate_id": "vlmaps:export:chair:spatial_nms:0",
+      "query": "chair",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:chair:spatial_nms:1",
+        "vlmaps:export:chair:spatial_nms:2"
+      ],
+      "role": "primary",
+      "scene_key": "4ok3usBNeis"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:9:1:sofa",
+      "focus_candidate_id": "vlmaps:export:sofa:spatial_nms:0",
+      "query": "sofa",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:sofa:spatial_nms:1",
+        "vlmaps:export:sofa:spatial_nms:2",
+        "vlmaps:export:sofa:spatial_nms:3"
+      ],
+      "role": "primary",
+      "scene_key": "QaLdnwvtxbs"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:7:4:bed",
+      "focus_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "query": "bed",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2"
+      ],
+      "role": "primary",
+      "scene_key": "qyAac8rV8Zk"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:bCPU9suPUw9:27:2:bed",
+      "focus_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "query": "bed",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:4"
+      ],
+      "role": "primary",
+      "scene_key": "bCPU9suPUw9"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:17:1:bed",
+      "focus_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "query": "bed",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2"
+      ],
+      "role": "primary",
+      "scene_key": "qyAac8rV8Zk"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:q3zU7Yy5E5s:5:5:bed",
+      "focus_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "query": "bed",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:4"
+      ],
+      "role": "primary",
+      "scene_key": "q3zU7Yy5E5s"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:Dd4bFSTQ8gi:5:1:bed",
+      "focus_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "query": "bed",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:4"
+      ],
+      "role": "primary",
+      "scene_key": "Dd4bFSTQ8gi"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:12:2:chair",
+      "focus_candidate_id": "vlmaps:export:chair:spatial_nms:0",
+      "query": "chair",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:chair:spatial_nms:1",
+        "vlmaps:export:chair:spatial_nms:2"
+      ],
+      "role": "primary",
+      "scene_key": "qyAac8rV8Zk"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:9:5:tv_monitor",
+      "focus_candidate_id": "vlmaps:export:tv_monitor:spatial_nms:0",
+      "query": "tv_monitor",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:tv_monitor:spatial_nms:1",
+        "vlmaps:export:tv_monitor:spatial_nms:2"
+      ],
+      "role": "primary",
+      "scene_key": "qyAac8rV8Zk"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:yr17PDCnDDW:21:0:tv_monitor",
+      "focus_candidate_id": "vlmaps:export:tv_monitor:spatial_nms:0",
+      "query": "tv_monitor",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:tv_monitor:spatial_nms:1",
+        "vlmaps:export:tv_monitor:spatial_nms:2",
+        "vlmaps:export:tv_monitor:spatial_nms:3"
+      ],
+      "role": "primary",
+      "scene_key": "yr17PDCnDDW"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:0:1:bed",
+      "focus_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "query": "bed",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:3"
+      ],
+      "role": "primary",
+      "scene_key": "QaLdnwvtxbs"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:16:1:bed",
+      "focus_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "query": "bed",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:4"
+      ],
+      "role": "primary",
+      "scene_key": "bxsVRursffK"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:5:2:bed",
+      "focus_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "query": "bed",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:3"
+      ],
+      "role": "primary",
+      "scene_key": "QaLdnwvtxbs"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:23:4:tv_monitor",
+      "focus_candidate_id": "vlmaps:export:tv_monitor:spatial_nms:0",
+      "query": "tv_monitor",
+      "request_reason": "request_object_existence_independent_confirmation",
+      "request_taxonomy_route": "object_existence_validation",
+      "rival_candidate_ids": [],
+      "role": "primary",
+      "scene_key": "BAbdmeyTvMZ"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:bCPU9suPUw9:13:2:plant",
+      "focus_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "query": "plant",
+      "request_reason": "request_object_existence_independent_confirmation",
+      "request_taxonomy_route": "object_existence_validation",
+      "rival_candidate_ids": [],
+      "role": "primary",
+      "scene_key": "bCPU9suPUw9"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:yr17PDCnDDW:25:4:tv_monitor",
+      "focus_candidate_id": "vlmaps:export:tv_monitor:spatial_nms:0",
+      "query": "tv_monitor",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:tv_monitor:spatial_nms:1",
+        "vlmaps:export:tv_monitor:spatial_nms:2",
+        "vlmaps:export:tv_monitor:spatial_nms:3"
+      ],
+      "role": "primary",
+      "scene_key": "yr17PDCnDDW"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:bCPU9suPUw9:19:5:plant",
+      "focus_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "query": "plant",
+      "request_reason": "request_object_existence_independent_confirmation",
+      "request_taxonomy_route": "object_existence_validation",
+      "rival_candidate_ids": [],
+      "role": "primary",
+      "scene_key": "bCPU9suPUw9"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:bCPU9suPUw9:11:0:plant",
+      "focus_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "query": "plant",
+      "request_reason": "request_object_existence_independent_confirmation",
+      "request_taxonomy_route": "object_existence_validation",
+      "rival_candidate_ids": [],
+      "role": "primary",
+      "scene_key": "bCPU9suPUw9"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:22:2:toilet",
+      "focus_candidate_id": "vlmaps:export:toilet:spatial_nms:0",
+      "query": "toilet",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:toilet:spatial_nms:1"
+      ],
+      "role": "primary",
+      "scene_key": "QaLdnwvtxbs"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:20:3:chair",
+      "focus_candidate_id": "vlmaps:export:chair:spatial_nms:0",
+      "query": "chair",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:chair:spatial_nms:1",
+        "vlmaps:export:chair:spatial_nms:2"
+      ],
+      "role": "primary",
+      "scene_key": "BAbdmeyTvMZ"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:6:2:sofa",
+      "focus_candidate_id": "vlmaps:export:sofa:spatial_nms:0",
+      "query": "sofa",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:sofa:spatial_nms:1"
+      ],
+      "role": "primary",
+      "scene_key": "4ok3usBNeis"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:3:1:bed",
+      "focus_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "query": "bed",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:4"
+      ],
+      "role": "primary",
+      "scene_key": "BAbdmeyTvMZ"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:HY1NcmCgn3n:18:0:chair",
+      "focus_candidate_id": "vlmaps:export:chair:spatial_nms:0",
+      "query": "chair",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:chair:spatial_nms:1",
+        "vlmaps:export:chair:spatial_nms:2"
+      ],
+      "role": "primary",
+      "scene_key": "HY1NcmCgn3n"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:11:1:plant",
+      "focus_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "query": "plant",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:1",
+        "vlmaps:export:plant:spatial_nms:2"
+      ],
+      "role": "primary",
+      "scene_key": "bxsVRursffK"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:Dd4bFSTQ8gi:1:5:chair",
+      "focus_candidate_id": "vlmaps:export:chair:spatial_nms:0",
+      "query": "chair",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:chair:spatial_nms:1",
+        "vlmaps:export:chair:spatial_nms:2",
+        "vlmaps:export:chair:spatial_nms:3",
+        "vlmaps:export:chair:spatial_nms:4"
+      ],
+      "role": "primary",
+      "scene_key": "Dd4bFSTQ8gi"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:18:4:plant",
+      "focus_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "query": "plant",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:1",
+        "vlmaps:export:plant:spatial_nms:2"
+      ],
+      "role": "primary",
+      "scene_key": "bxsVRursffK"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:19:5:bed",
+      "focus_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "query": "bed",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:4"
+      ],
+      "role": "primary",
+      "scene_key": "BAbdmeyTvMZ"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:4:5:plant",
+      "focus_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "query": "plant",
+      "request_reason": "request_semantic_rival_identity_confirmation",
+      "request_taxonomy_route": "rival_identity_arbitration",
+      "rival_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:1",
+        "vlmaps:export:plant:spatial_nms:2"
+      ],
+      "role": "primary",
+      "scene_key": "bxsVRursffK"
+    }
+  ],
+  "schema_version": "h001.rival_identity_broader_manifest.v1",
+  "source_evidence": {
+    "primary_action_evidence": "local_dataset/runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_action_evidence_rows.jsonl",
+    "primary_evaluation_labels": "local_dataset/runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_evaluation_labels.jsonl",
+    "secondary_action_evidence": "local_dataset/runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_action_evidence_rows.jsonl",
+    "secondary_evaluation_labels": "local_dataset/runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_evaluation_labels.jsonl"
+  },
+  "source_freeze_gate": {
+    "action_evidence_forbidden_key_count": 0,
+    "checks": {
+      "action_evidence_forbidden_key_count": true,
+      "excluded_scene_overlap": true,
+      "minimum_object_existence_rows": true,
+      "minimum_request_queries": true,
+      "minimum_request_rows": true,
+      "minimum_request_scenes": true,
+      "minimum_rival_identity_rows": true,
+      "no_gt_for_action": true,
+      "parent_design_gate_passed": true
+    },
+    "excluded_scene_overlap": [],
+    "gt_action_rows": [],
+    "passed": true,
+    "query_counts": {
+      "bed": 11,
+      "chair": 6,
+      "plant": 6,
+      "sofa": 2,
+      "toilet": 1,
+      "tv_monitor": 4
+    },
+    "request_queries": 6,
+    "request_rows": 30,
+    "request_scenes": 10,
+    "request_taxonomy_route_counts": {
+      "object_existence_validation": 4,
+      "rival_identity_arbitration": 26
+    },
+    "required": {
+      "action_evidence_forbidden_key_count": 0,
+      "excluded_scene_overlap": 0,
+      "minimum_object_existence_rows": 4,
+      "minimum_request_queries": 3,
+      "minimum_request_rows": 20,
+      "minimum_request_scenes": 5,
+      "minimum_rival_identity_rows": 20,
+      "uses_gt_for_action": false
+    },
+    "scene_counts": {
+      "4ok3usBNeis": 4,
+      "BAbdmeyTvMZ": 4,
+      "Dd4bFSTQ8gi": 2,
+      "HY1NcmCgn3n": 1,
+      "QaLdnwvtxbs": 4,
+      "bCPU9suPUw9": 4,
+      "bxsVRursffK": 4,
+      "q3zU7Yy5E5s": 1,
+      "qyAac8rV8Zk": 4,
+      "yr17PDCnDDW": 2
+    }
+  },
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": false
+}

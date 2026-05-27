@@ -8,8 +8,11 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 from h001_runtime.extract_dense_conflict_generalization_evidence import scan_forbidden_keys
 from h001_runtime.plan_association_recovery_observation import (
+    NavmeshSnapper,
     candidate_target_position,
     horizontal_distance,
+    parse_float_list,
+    plan_standoff_viewpoint,
     quaternion_xyzw_from_yaw,
     safe_float,
     vector,
@@ -19,6 +22,12 @@ from h001_runtime.plan_association_recovery_observation import (
 
 SCHEMA_VERSION = "h001.rival_identity_observation_plan.v1"
 POLICY_NAME = "RivalIdentityPairProbe"
+
+
+def active_planner_name(args: argparse.Namespace) -> str:
+    if str(args.viewpoint_mode) == "standoff":
+        return "rival_identity_pair_probe_standoff_v1"
+    return "rival_identity_pair_probe_v1"
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -121,6 +130,79 @@ def viewpoint_from_candidate(candidate: Dict[str, Any]) -> Optional[Tuple[List[f
     return viewpoint, quaternion_xyzw_from_yaw(yaw), f"{source}_heading_to_target"
 
 
+def alternate_candidate_id(
+    candidate_id: str,
+    candidate_ids: Sequence[str],
+    candidates: Dict[str, Dict[str, Any]],
+) -> Optional[str]:
+    for other_id in candidate_ids:
+        if other_id != candidate_id and other_id in candidates:
+            return other_id
+    for other_id in candidates:
+        if other_id != candidate_id:
+            return other_id
+    return None
+
+
+def standoff_viewpoint_from_candidate(
+    *,
+    args: argparse.Namespace,
+    action_row: Dict[str, Any],
+    candidate_id: str,
+    candidate_ids: Sequence[str],
+    candidate: Dict[str, Any],
+    candidates: Dict[str, Dict[str, Any]],
+    snapper: Optional[NavmeshSnapper],
+) -> Tuple[Optional[Tuple[List[float], List[float], str, Dict[str, Any]]], Optional[str], Dict[str, Any]]:
+    if snapper is None:
+        return None, "standoff_snapper_required", {}
+    alt_id = alternate_candidate_id(candidate_id, candidate_ids, candidates)
+    viewpoint = plan_standoff_viewpoint(action_row, candidate, candidates, alt_id, snapper, args)
+    if viewpoint is None:
+        return None, "standoff_unavailable", {"standoff_alt_candidate_id": alt_id}
+
+    metadata = {
+        "standoff_alt_candidate_id": alt_id,
+        "standoff_target_position": viewpoint.get("target_position"),
+        "standoff_desired_position": viewpoint.get("desired_position"),
+        "standoff_target_horizontal_distance": viewpoint.get("target_horizontal_distance"),
+        "standoff_snap_distance": viewpoint.get("snap_distance"),
+        "standoff_navmesh_snapped": viewpoint.get("navmesh_snapped"),
+        "standoff_navmesh_navigable": viewpoint.get("navmesh_navigable"),
+        "standoff_direction_source": viewpoint.get("direction_source"),
+        "standoff_distance_requested": viewpoint.get("standoff_distance_requested"),
+        "standoff_projection_sane": viewpoint.get("projection_sane"),
+        "standoff_viewpoint_yaw_rad": viewpoint.get("yaw"),
+        "standoff_score": viewpoint.get("score"),
+    }
+    viewpoint_source = str(viewpoint.get("viewpoint_source") or "")
+    target_distance = safe_float(viewpoint.get("target_horizontal_distance"))
+    if "fallback" in viewpoint_source:
+        return None, "standoff_unavailable", metadata
+    if bool(args.require_navmesh_standoff) and (
+        viewpoint_source != "standoff_navmesh" or viewpoint.get("navmesh_navigable") is not True
+    ):
+        return None, "standoff_navmesh_required", metadata
+    if target_distance is None:
+        return None, "standoff_missing_target_distance", metadata
+    if target_distance < float(args.min_standoff_distance_m):
+        return None, "standoff_all_too_close", metadata
+    if target_distance > float(args.max_standoff_distance_m):
+        return None, "standoff_all_too_far", metadata
+    if viewpoint.get("projection_sane") is not True:
+        return None, "standoff_no_valid_yaw", metadata
+    return (
+        (
+            [float(item) for item in viewpoint["position"]],
+            [float(item) for item in viewpoint["rotation"]],
+            viewpoint_source,
+            metadata,
+        ),
+        None,
+        metadata,
+    )
+
+
 def copy_candidate_fields(candidate: Dict[str, Any], prefix: str) -> Dict[str, Any]:
     fields = [
         "semantic_rank",
@@ -212,6 +294,7 @@ def make_plan_row(
     viewpoint_position: List[float],
     viewpoint_rotation: List[float],
     viewpoint_source: str,
+    viewpoint_metadata: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     target_position = candidate_target_position(candidate)
     focus_position = candidate_target_position(focus_candidate or {})
@@ -220,8 +303,9 @@ def make_plan_row(
         "schema_version": SCHEMA_VERSION,
         "run_id": str(args.run_id),
         "policy": POLICY_NAME,
-        "viewpoint_policy": str(contract.get("observation_contract", {}).get("planner_name") or "rival_identity_pair_probe_v1"),
-        "planner_name": "rival_identity_pair_probe_v1",
+        "viewpoint_policy": active_planner_name(args),
+        "planner_name": active_planner_name(args),
+        "viewpoint_mode": str(args.viewpoint_mode),
         "request_index": request_index,
         "target_index": target_index,
         "source_schema_version": action_row.get("schema_version"),
@@ -267,6 +351,8 @@ def make_plan_row(
     row.update(copy_candidate_fields(candidate, "target"))
     if focus_candidate is not None:
         row.update(copy_candidate_fields(focus_candidate, "focus"))
+    if viewpoint_metadata:
+        row.update(viewpoint_metadata)
     return row
 
 
@@ -277,6 +363,7 @@ def plan_request(
     request: Dict[str, Any],
     request_index: int,
     action_row: Dict[str, Any],
+    snapper: Optional[NavmeshSnapper],
 ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     selection = contract.get("observation_contract", {}).get("target_selection", {})
     max_targets = int(args.max_target_candidates_per_request or selection.get("max_target_candidates_per_request") or 5)
@@ -317,23 +404,38 @@ def plan_request(
                 }
             )
             continue
-        viewpoint = viewpoint_from_candidate(candidate)
-        if viewpoint is None:
-            skipped.append(
-                {
-                    "schema_version": SCHEMA_VERSION,
-                    "request_index": request_index,
-                    "target_index": target_index,
-                    "role": request.get("role"),
-                    "episode_key": request.get("episode_key"),
-                    "scene_key": request.get("scene_key"),
-                    "query": request.get("query"),
-                    "candidate_id": candidate_id,
-                    "focus_candidate_id": focus_id,
-                    "skip_reason": "no_non_gt_candidate_viewpoint",
-                    "uses_gt_for_action": False,
-                }
+        viewpoint_metadata: Dict[str, Any] = {}
+        skip_reason = "no_non_gt_candidate_viewpoint"
+        if str(args.viewpoint_mode) == "standoff":
+            standoff_viewpoint, standoff_skip_reason, viewpoint_metadata = standoff_viewpoint_from_candidate(
+                args=args,
+                action_row=action_row,
+                candidate_id=candidate_id,
+                candidate_ids=candidate_ids,
+                candidate=candidate,
+                candidates=candidates,
+                snapper=snapper,
             )
+            viewpoint = None if standoff_viewpoint is None else standoff_viewpoint[:3]
+            skip_reason = standoff_skip_reason or skip_reason
+        else:
+            viewpoint = viewpoint_from_candidate(candidate)
+        if viewpoint is None:
+            skipped_row = {
+                "schema_version": SCHEMA_VERSION,
+                "request_index": request_index,
+                "target_index": target_index,
+                "role": request.get("role"),
+                "episode_key": request.get("episode_key"),
+                "scene_key": request.get("scene_key"),
+                "query": request.get("query"),
+                "candidate_id": candidate_id,
+                "focus_candidate_id": focus_id,
+                "skip_reason": skip_reason,
+                "uses_gt_for_action": False,
+            }
+            skipped_row.update(viewpoint_metadata)
+            skipped.append(skipped_row)
             continue
         viewpoint_position, viewpoint_rotation, viewpoint_source = viewpoint
         rows.append(
@@ -351,9 +453,20 @@ def plan_request(
                 viewpoint_position=viewpoint_position,
                 viewpoint_rotation=viewpoint_rotation,
                 viewpoint_source=viewpoint_source,
+                viewpoint_metadata=viewpoint_metadata,
             )
         )
     return rows, skipped
+
+
+def number_stats(values: Sequence[float]) -> Dict[str, Optional[float]]:
+    if not values:
+        return {"min": None, "mean": None, "max": None}
+    return {
+        "min": min(values),
+        "mean": sum(values) / len(values),
+        "max": max(values),
+    }
 
 
 def run(args: argparse.Namespace) -> Dict[str, Any]:
@@ -377,32 +490,38 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     skipped_rows: List[Dict[str, Any]] = []
     missing_action_rows: List[Dict[str, Any]] = []
     request_rows = list(contract.get("request_rows") or [])
-    for request_index, request in enumerate(request_rows):
-        key = (str(request.get("role")), str(request.get("episode_key")))
-        action_row = action_index.get(key)
-        if action_row is None:
-            missing = {
-                "schema_version": SCHEMA_VERSION,
-                "request_index": request_index,
-                "role": request.get("role"),
-                "episode_key": request.get("episode_key"),
-                "scene_key": request.get("scene_key"),
-                "query": request.get("query"),
-                "skip_reason": "missing_action_evidence_row",
-                "uses_gt_for_action": False,
-            }
-            missing_action_rows.append(missing)
-            skipped_rows.append(missing)
-            continue
-        rows, skipped = plan_request(
-            args=args,
-            contract=contract,
-            request=request,
-            request_index=request_index,
-            action_row=action_row,
-        )
-        plan_rows.extend(rows)
-        skipped_rows.extend(skipped)
+    snapper = NavmeshSnapper(args.data_root) if str(args.viewpoint_mode) == "standoff" else None
+    try:
+        for request_index, request in enumerate(request_rows):
+            key = (str(request.get("role")), str(request.get("episode_key")))
+            action_row = action_index.get(key)
+            if action_row is None:
+                missing = {
+                    "schema_version": SCHEMA_VERSION,
+                    "request_index": request_index,
+                    "role": request.get("role"),
+                    "episode_key": request.get("episode_key"),
+                    "scene_key": request.get("scene_key"),
+                    "query": request.get("query"),
+                    "skip_reason": "missing_action_evidence_row",
+                    "uses_gt_for_action": False,
+                }
+                missing_action_rows.append(missing)
+                skipped_rows.append(missing)
+                continue
+            rows, skipped = plan_request(
+                args=args,
+                contract=contract,
+                request=request,
+                request_index=request_index,
+                action_row=action_row,
+                snapper=snapper,
+            )
+            plan_rows.extend(rows)
+            skipped_rows.extend(skipped)
+    finally:
+        if snapper is not None:
+            snapper.close()
 
     out_root = Path(args.out_root)
     write_jsonl(out_root / "rival_identity_observation_plan.jsonl", plan_rows)
@@ -416,6 +535,61 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
     viewpoint_source_counts = Counter(str(row.get("viewpoint_source")) for row in plan_rows)
     target_role_counts = Counter(str(row.get("rival_identity_target_role")) for row in plan_rows)
     skipped_reason_counts = Counter(str(row.get("skip_reason")) for row in skipped_rows)
+    planned_scenes = {
+        str(row.get("scene_key") or row.get("scene_id"))
+        for row in plan_rows
+        if row.get("scene_key") or row.get("scene_id")
+    }
+    planned_queries = {str(row.get("query")) for row in plan_rows if row.get("query")}
+    target_distances = [
+        float(distance)
+        for distance in (safe_float(row.get("target_distance_from_viewpoint_m")) for row in plan_rows)
+        if distance is not None
+    ]
+    target_distance_stats = number_stats(target_distances)
+    zero_standoff_plan_rows = sum(1 for distance in target_distances if distance < 1e-4)
+    near_standoff_plan_rows = sum(1 for distance in target_distances if distance < float(args.min_standoff_distance_m))
+    missing_target_distance_plan_rows = len(plan_rows) - len(target_distances)
+    rotation_fallback_plan_rows = sum(1 for row in plan_rows if "rotation_fallback" in str(row.get("viewpoint_source") or ""))
+    candidate_fallback_plan_rows = sum(1 for row in plan_rows if "fallback" in str(row.get("viewpoint_source") or ""))
+    valid_standoff_rows = sum(
+        1
+        for row in plan_rows
+        if str(row.get("viewpoint_source")) in {"standoff_navmesh", "standoff_geometry"}
+        and row.get("standoff_projection_sane") is True
+        and (
+            not bool(args.require_navmesh_standoff)
+            or (str(row.get("viewpoint_source")) == "standoff_navmesh" and row.get("standoff_navmesh_navigable") is True)
+        )
+        and (safe_float(row.get("target_distance_from_viewpoint_m")) or -1.0) >= float(args.min_standoff_distance_m)
+        and (safe_float(row.get("target_distance_from_viewpoint_m")) or math.inf) <= float(args.max_standoff_distance_m)
+    )
+    valid_standoff_rate = ratio(valid_standoff_rows, len(plan_rows))
+    geometry_gate = {
+        "enabled": str(args.viewpoint_mode) == "standoff",
+        "planned_request_rows_minimum": int(args.min_planned_request_rows),
+        "planned_request_rows_minimum_passed": len(request_keys_planned) >= int(args.min_planned_request_rows),
+        "planned_scene_count_minimum": int(args.min_planned_scene_count),
+        "planned_scene_count_minimum_passed": len(planned_scenes) >= int(args.min_planned_scene_count),
+        "planned_query_count_minimum": int(args.min_planned_query_count),
+        "planned_query_count_minimum_passed": len(planned_queries) >= int(args.min_planned_query_count),
+        "zero_standoff_plan_rows_passed": zero_standoff_plan_rows == 0,
+        "near_standoff_plan_rows_passed": near_standoff_plan_rows == 0 and missing_target_distance_plan_rows == 0,
+        "rotation_fallback_plan_rows_passed": rotation_fallback_plan_rows == 0 and candidate_fallback_plan_rows == 0,
+        "target_distance_minimum_passed": target_distance_stats["min"] is not None
+        and target_distance_stats["min"] >= float(args.min_standoff_distance_m),
+        "target_distance_maximum_passed": target_distance_stats["max"] is not None
+        and target_distance_stats["max"] <= float(args.max_standoff_distance_m),
+        "navmesh_snapped_or_geometry_valid_row_rate_minimum": float(args.min_navmesh_snapped_or_geometry_valid_row_rate),
+        "navmesh_snapped_or_geometry_valid_row_rate_passed": (valid_standoff_rate or 0.0)
+        >= float(args.min_navmesh_snapped_or_geometry_valid_row_rate),
+    }
+    geometry_checks = [
+        value
+        for key, value in geometry_gate.items()
+        if key.endswith("_passed")
+    ]
+    geometry_gate["passed"] = (not geometry_gate["enabled"]) or all(bool(value) for value in geometry_checks)
     plan_gate = {
         "request_rows_match": len(request_rows) == int(minimum.get("request_rows") or len(request_rows)),
         "primary_request_rows_match": sum(1 for row in request_rows if row.get("role") == "primary")
@@ -426,8 +600,20 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         "all_request_rows_have_plan": len(request_keys_planned) == len(request_rows),
         "no_missing_action_rows": len(missing_action_rows) == 0,
         "no_forbidden_action_keys": len(forbidden) == int(minimum.get("action_evidence_forbidden_key_count") or 0),
+        "standoff_geometry_gate_passed": bool(geometry_gate["passed"]),
     }
-    plan_gate["smoke_passed"] = all(bool(value) for value in plan_gate.values())
+    if str(args.viewpoint_mode) == "standoff":
+        plan_gate["smoke_passed"] = (
+            bool(plan_gate["request_rows_match"])
+            and bool(plan_gate["primary_request_rows_match"])
+            and bool(plan_gate["secondary_stress_request_rows_match"])
+            and bool(plan_gate["planned_rows_minimum_passed"])
+            and bool(plan_gate["no_missing_action_rows"])
+            and bool(plan_gate["no_forbidden_action_keys"])
+            and bool(geometry_gate["passed"])
+        )
+    else:
+        plan_gate["smoke_passed"] = all(bool(value) for value in plan_gate.values())
     summary = {
         "schema_version": SCHEMA_VERSION,
         "contract": str(contract_path),
@@ -437,7 +623,8 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         "out_root": str(out_root),
         "run_id": str(args.run_id),
         "policy": POLICY_NAME,
-        "planner_name": "rival_identity_pair_probe_v1",
+        "planner_name": active_planner_name(args),
+        "viewpoint_mode": str(args.viewpoint_mode),
         "request_rows": len(request_rows),
         "primary_request_rows": sum(1 for row in request_rows if row.get("role") == "primary"),
         "secondary_stress_request_rows": sum(1 for row in request_rows if row.get("role") == "secondary_stress"),
@@ -451,13 +638,31 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
         "target_role_counts": dict(sorted(target_role_counts.items())),
         "viewpoint_source_counts": dict(sorted(viewpoint_source_counts.items())),
         "skipped_reason_counts": dict(sorted(skipped_reason_counts.items())),
+        "planned_scene_count": len(planned_scenes),
+        "planned_query_count": len(planned_queries),
         "mean_plan_rows_per_request": ratio(len(plan_rows), len(request_rows)),
+        "target_distance_from_viewpoint_min_m": target_distance_stats["min"],
+        "target_distance_from_viewpoint_mean_m": target_distance_stats["mean"],
+        "target_distance_from_viewpoint_max_m": target_distance_stats["max"],
+        "zero_standoff_plan_rows": zero_standoff_plan_rows,
+        "near_standoff_plan_rows": near_standoff_plan_rows,
+        "missing_target_distance_plan_rows": missing_target_distance_plan_rows,
+        "rotation_fallback_plan_rows": rotation_fallback_plan_rows,
+        "candidate_fallback_plan_rows": candidate_fallback_plan_rows,
+        "navmesh_snapped_or_geometry_valid_rows": valid_standoff_rows,
+        "navmesh_snapped_or_geometry_valid_row_rate": valid_standoff_rate,
+        "standoff_distances": [float(value) for value in args.standoff_distances],
+        "preferred_standoff_distance_m": float(args.preferred_standoff_distance_m),
+        "min_standoff_distance_m": float(args.min_standoff_distance_m),
+        "max_standoff_distance_m": float(args.max_standoff_distance_m),
+        "require_navmesh_standoff": bool(args.require_navmesh_standoff),
         "action_evidence_forbidden_key_count": len(forbidden),
         "action_evidence_forbidden_keys": forbidden[:50],
         "max_target_candidates_per_request": int(args.max_target_candidates_per_request or 0)
         or int(contract.get("observation_contract", {}).get("target_selection", {}).get("max_target_candidates_per_request") or 5),
         "max_rivals_per_request": int(args.max_rivals_per_request or 0)
         or int(contract.get("observation_contract", {}).get("target_selection", {}).get("max_rivals_per_request") or 4),
+        "geometry_gate": geometry_gate,
         "plan_gate": plan_gate,
         "uses_gt_for_action": False,
         "uses_gt_for_analysis": False,
@@ -485,10 +690,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--contract", required=True)
     parser.add_argument("--runs-root", default="/runs")
     parser.add_argument("--workspace-root", default="/workspace")
+    parser.add_argument("--data-root", default=None)
     parser.add_argument("--out-root", required=True)
     parser.add_argument("--run-id", default="h001_rival_identity_pair_probe_v1")
     parser.add_argument("--max-target-candidates-per-request", type=int, default=0)
     parser.add_argument("--max-rivals-per-request", type=int, default=0)
+    parser.add_argument("--viewpoint-mode", choices=["candidate", "standoff"], default="candidate")
+    parser.add_argument("--standoff-distances", type=parse_float_list, default=[1.25, 1.75, 2.25])
+    parser.add_argument("--preferred-standoff-distance-m", type=float, default=1.75)
+    parser.add_argument("--min-standoff-distance-m", type=float, default=0.75)
+    parser.add_argument("--max-standoff-distance-m", type=float, default=3.25)
+    parser.add_argument("--min-planned-request-rows", type=int, default=0)
+    parser.add_argument("--min-planned-scene-count", type=int, default=0)
+    parser.add_argument("--min-planned-query-count", type=int, default=0)
+    parser.add_argument("--min-navmesh-snapped-or-geometry-valid-row-rate", type=float, default=0.8)
+    parser.add_argument("--require-navmesh-standoff", action="store_true")
     return parser.parse_args()
 
 

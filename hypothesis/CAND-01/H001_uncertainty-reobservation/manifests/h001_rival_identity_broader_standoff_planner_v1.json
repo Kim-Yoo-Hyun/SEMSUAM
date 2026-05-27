@@ -1,0 +1,119 @@
+{
+  "contract_name": "rival_identity_broader_standoff_planner_v1",
+  "date_defined": "2026-05-27",
+  "parent_contract": "h001_rival_identity_broader_validation_v1.json",
+  "parent_plan_output": "local_dataset/runs/h001_rival_identity_broader_plan_v1",
+  "trigger_diagnostic": {
+    "output": "local_dataset/runs/h001_rival_identity_broader_post_observation_diagnostic_v1",
+    "mechanism_counts": {
+      "degenerate_zero_standoff_cross_association": 22,
+      "degenerate_zero_standoff_no_visible_candidate": 8
+    },
+    "zero_standoff_plan_rows": 112,
+    "rotation_fallback_plan_rows": 112,
+    "own_associated_rows": 0,
+    "cross_associated_rows": 442,
+    "post_observation_rule_change_allowed": false
+  },
+  "revision_goal": "Recover own-view identity evidence by replacing zero-standoff candidate viewpoints with non-GT standoff viewpoints before any post-observation rule or threshold change.",
+  "planner_revision": {
+    "planner_name": "rival_identity_pair_probe_standoff_v1",
+    "reuse_components": [
+      "runtime/h001_runtime/plan_association_recovery_observation.py::NavmeshSnapper",
+      "runtime/h001_runtime/plan_association_recovery_observation.py::plan_standoff_viewpoint"
+    ],
+    "allowed_action_time_inputs": [
+      "scene_id",
+      "scene_key",
+      "episode_key",
+      "query",
+      "candidate_id",
+      "candidate position",
+      "candidate visit_position",
+      "candidate semantic_rank",
+      "candidate semantic_score",
+      "candidate support_score",
+      "candidate positive_support",
+      "same-request rival candidate positions",
+      "Habitat navmesh for navigability/snap only"
+    ],
+    "forbidden_action_time_inputs": [
+      "evaluation_only_candidate_correct",
+      "evaluation_only_recall_rank",
+      "GT object position",
+      "GT geodesic distance",
+      "success label",
+      "wrong-goal label",
+      "post-observation detector association",
+      "post-observation evaluation labels"
+    ],
+    "standoff_distances_m": [
+      1.25,
+      1.75,
+      2.25
+    ],
+    "preferred_standoff_distance_m": 1.75,
+    "min_standoff_distance_m": 0.75,
+    "max_standoff_distance_m": 3.25,
+    "direction_sources": [
+      "source_viewpoint_to_target when source viewpoint exists",
+      "alt_candidate_to_target",
+      "target_to_alt_candidate",
+      "compass_0_45_90_135_180_225_270_315"
+    ],
+    "selection_rule": [
+      "Generate candidate standoff points from non-GT target and rival candidate geometry.",
+      "Snap each candidate point to the Habitat navmesh when available.",
+      "Reject any snapped or geometric viewpoint with target horizontal distance below min_standoff_distance_m.",
+      "Reject any viewpoint above max_standoff_distance_m or without a valid yaw toward the target candidate.",
+      "Score feasible viewpoints by distance-to-preferred-standoff, snap distance, travel proxy, and navmesh navigability.",
+      "Choose the lowest-score feasible viewpoint.",
+      "If no feasible standoff exists, skip the target row with a skip reason; do not fallback to candidate visit_position or target position."
+    ],
+    "zero_standoff_policy": "forbidden",
+    "rotation_fallback_policy": "forbidden_for_planned_rows",
+    "candidate_visit_position_fallback_policy": "forbidden_when_target_distance_from_viewpoint_m_is_below_min_standoff_distance_m"
+  },
+  "planned_outputs": {
+    "plan_output": "local_dataset/runs/h001_rival_identity_broader_plan_standoff_v1",
+    "frame_output": "local_dataset/runs/h001_rival_identity_broader_frames_standoff_v1",
+    "detector_output": "local_dataset/runs/h001_rival_identity_broader_detector_substrate_standoff_v1",
+    "post_observation_output": "local_dataset/runs/h001_rival_identity_broader_post_observation_standoff_v1"
+  },
+  "minimum_plan_geometry_gate": {
+    "uses_gt_for_action": false,
+    "action_evidence_forbidden_key_count": 0,
+    "request_rows": 30,
+    "planned_request_rows_minimum": 20,
+    "planned_scene_count_minimum": 5,
+    "planned_query_count_minimum": 3,
+    "zero_standoff_plan_rows": 0,
+    "near_standoff_plan_rows": 0,
+    "rotation_fallback_plan_rows": 0,
+    "target_distance_from_viewpoint_min_m": 0.75,
+    "target_distance_from_viewpoint_max_m": 3.25,
+    "navmesh_snapped_or_geometry_valid_row_rate_minimum": 0.8
+  },
+  "rerun_policy": {
+    "frame_export_allowed_after_plan_geometry_gate": true,
+    "detector_substrate_allowed_after_row_level_nonblank_gate": true,
+    "post_observation_allowed_after_detector_substrate_gate": true,
+    "post_observation_rule_change_allowed_before_standoff_gate": false
+  },
+  "expected_failure_taxonomy": {
+    "standoff_unavailable": "No non-GT standoff point can be generated or snapped for a target candidate.",
+    "standoff_navmesh_snap_fail": "Generated standoff candidates cannot be snapped to a navigable point.",
+    "standoff_all_too_close": "Every generated viewpoint remains below the minimum standoff distance.",
+    "standoff_all_too_far": "Every generated viewpoint exceeds the maximum standoff distance.",
+    "standoff_no_valid_yaw": "Candidate viewpoint cannot face the target candidate.",
+    "post_observation_no_own_support_after_standoff": "Standoff geometry passes, but detector evidence still yields no own association.",
+    "post_observation_cross_view_aliasing_after_standoff": "Own evidence exists but rival/cross evidence remains competitive."
+  },
+  "direction_judgment": {
+    "fact": "The broader failure was caused by a planner substrate issue: zero-standoff viewpoints made own-view association impossible despite detector availability.",
+    "agent_inference": "The research direction remains valid because the failure mechanism strengthens the argument that semantic uncertainty must become active observation utility with geometry-aware viewpoint selection, not just detector re-ranking or threshold tuning.",
+    "risk": "If a zero-standoff-safe planner still cannot produce own-view evidence on the broader split, the contribution should narrow to viewpoint feasibility and semantic-memory observability limits before claiming ObjectNav utility.",
+    "user_decision_needed": null
+  },
+  "paper_claim_allowed": false
+}

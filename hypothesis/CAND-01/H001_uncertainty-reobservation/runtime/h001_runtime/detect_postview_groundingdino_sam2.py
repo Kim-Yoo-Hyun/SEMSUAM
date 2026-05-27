@@ -49,7 +49,13 @@ def passthrough_fields(row: Dict[str, Any]) -> Dict[str, Any]:
         "source_followup_",
         "second_stage_",
         "rival_identity_",
+        "revision_",
+        "expanded_",
+        "proxy_",
+        "source_pool_",
         "focus_",
+        "rival_",
+        "standoff_",
         "target_",
     )
     keys = {
@@ -61,6 +67,7 @@ def passthrough_fields(row: Dict[str, Any]) -> Dict[str, Any]:
         "scene_key",
         "source_name",
         "target_index",
+        "viewpoint_pair_role",
         "viewpoint_source",
     }
     return {key: value for key, value in row.items() if key.startswith(prefixes) or key in keys}
@@ -323,7 +330,7 @@ def draw_debug(
 
 def run(args: argparse.Namespace) -> Dict[str, Any]:
     frames_path = Path(args.frames)
-    frame_root = frames_path.parent
+    frame_root = Path(args.frame_root) if args.frame_root else frames_path.parent
     frames = load_jsonl(frames_path)
     if int(args.max_frames) > 0:
         frames = frames[: int(args.max_frames)]
@@ -627,6 +634,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run GroundingDINO + SAM2 on H001 post-view frames.")
     parser.add_argument("--frames", required=True)
+    parser.add_argument("--frame-root", default=None)
     parser.add_argument("--candidate-artifact", required=True)
     parser.add_argument("--groundingdino-dir", required=True)
     parser.add_argument("--sam2-checkpoint", required=True)

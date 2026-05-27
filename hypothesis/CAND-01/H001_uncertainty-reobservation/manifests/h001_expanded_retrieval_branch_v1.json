@@ -1,0 +1,92 @@
+{
+  "schema_version": "h001.expanded_retrieval_branch_contract.v1",
+  "contract_name": "expanded_retrieval_branch_v1",
+  "date_created": "2026-05-27",
+  "status": "frozen_before_implementation",
+  "source": {
+    "router_output": "local_dataset/runs/h001_rival_identity_goal_validity_revision_v2_router_v1/goal_validity_revision_v2_routes.jsonl",
+    "source_filter": {
+      "revision_action": "request_expanded_retrieval"
+    },
+    "expected_request_rows": 8,
+    "source_evidence": "local_dataset/runs/h001_rival_identity_goal_validity_independent_post_observation_goal_validity_v1/rival_identity_post_observation_evidence.jsonl",
+    "source_action_evidence": "local_dataset/runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_action_evidence_rows.jsonl",
+    "source_candidate_artifact": "local_dataset/runs/h001_rival_identity_goal_validity_independent_plan_standoff_navmesh_v1/rival_identity_candidate_artifact.jsonl"
+  },
+  "motivation": {
+    "facts": [
+      "goal_validity_arbitration_v1 is safe but inert on the independent source.",
+      "The default counterfactual recovers successes but commits wrong goals.",
+      "discriminative_rival_view_planner_v1 passes plan/frame/detector substrate gates but its first evidence analyzer fails.",
+      "The failure diagnostic includes invalid/no-valid candidate pairs and cross-view leakage."
+    ],
+    "agent_inference": [
+      "Candidate-set validity should be tested before another discriminative view revision.",
+      "Expanded retrieval is the next branch because it can test whether semantic memory can recover a better candidate set without terminal commitment."
+    ]
+  },
+  "action_inputs_allowed": [
+    "router rows with revision_action == request_expanded_retrieval",
+    "action-time candidate artifact fields",
+    "semantic score/rank fields",
+    "candidate position and visit_position fields",
+    "non-GT reachability or navmesh-derived feasibility fields if available before evaluation labels"
+  ],
+  "action_inputs_forbidden": [
+    "candidate_correct",
+    "selected_for_goal",
+    "wrong_goal_visit",
+    "success labels",
+    "post-hoc GT object ids",
+    "evaluation labels",
+    "threshold tuning from joined labels"
+  ],
+  "branch_contract": {
+    "planner_name": "expanded_retrieval_branch_v1",
+    "candidate_budget": {
+      "min_candidates_per_request": 6,
+      "max_candidates_per_request": 10,
+      "selection_modes": [
+        "semantic_rank_band",
+        "spatial_diversity",
+        "reachability_available_before_labels"
+      ]
+    },
+    "required_outputs": [
+      "expanded_retrieval_plan.jsonl",
+      "expanded_retrieval_candidate_set.jsonl",
+      "expanded_retrieval_summary.json"
+    ],
+    "terminal_commit_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "diagnostic_gates": {
+    "source_gate": {
+      "request_rows_min": 6,
+      "action_evidence_forbidden_key_count": 0,
+      "uses_gt_for_action": false
+    },
+    "candidate_set_gate": {
+      "expanded_candidate_rows_min": 48,
+      "expanded_candidates_per_request_min": 6,
+      "duplicate_candidate_id_rate_max": 0.05,
+      "nonfinite_position_rate_max": 0.05,
+      "uses_gt_for_action": false
+    },
+    "analysis_only_label_gate": {
+      "candidate_set_contains_correct_rate_report_only": true,
+      "no_valid_candidate_rate_report_only": true,
+      "wrong_top_replacement_rate_report_only": true
+    }
+  },
+  "next_steps": [
+    "implement expanded retrieval planner using only action-time candidate artifact fields",
+    "run Docker smoke on the 8 request_expanded_retrieval rows",
+    "diagnose candidate-set validity before detector or terminal objective",
+    "only add detector/viewpoint evidence if expanded candidate sets improve valid-candidate availability"
+  ],
+  "decision": {
+    "why_not_revise_discriminative_first": "The failed discriminative branch often compares invalid/no-valid or non-discriminative candidate pairs; viewpoint refinement alone is unlikely to fix candidate-set validity.",
+    "how_discriminative_views_return_later": "Use discriminative views as identity validation after expanded retrieval produces a better candidate set."
+  }
+}
