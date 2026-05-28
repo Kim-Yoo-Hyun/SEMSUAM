@@ -231,12 +231,12 @@ H001은 다음 구조로 좁힐 때 가장 강하다.
 
 ## Near-Term Paper Actions
 
-1. Prepare full `ExternalCandidateFollowupObservation` detector/evidence validation job.
-2. Verify whether follow-up observations convert V4 `request_identity_confirmation` and `request_expanded_retrieval` into safe commits or safe continued defers.
-3. Keep `first_eval` replacement rerun blocked until the follow-up evidence full gate passes on a fixed validation split.
-4. Write the failure taxonomy table for V2/V3/V4 and follow-up evidence before adding new method components.
-5. Define ablations for direct re-ranking, threshold-only routing, detector-score confirmation, pair-local view only, and follow-up observation removal.
-6. Promote to policy-scale comparison only after robust held-out follow-up evidence validation.
+1. Implement backend pool expansion evidence from `h001_expanded_retrieval_backend_pool_expansion_v1` for the five `request_backend_pool_expansion` rows.
+2. Define goal-validity confirmation evidence only after backend expansion yields repaired or sufficiently valid candidate pools.
+3. Keep terminal commits, `first_eval` rerun, and policy-scale comparison blocked until branch-specific evidence passes a fixed validation gate.
+4. Preserve simpler alternatives as unsafe or inert baselines: direct re-ranking, detector-score best, source-top, own-support, local-context-only, and defer-all.
+5. Write the failure taxonomy around source-pool validity, object visibility vs goal validity, and repeated-instance arbitration.
+6. Promote only after a fresh or predeclared source shows nonzero safe utility over defer-all with wrong/no-valid commits still zero.
 
 ## Promotion Rule
 

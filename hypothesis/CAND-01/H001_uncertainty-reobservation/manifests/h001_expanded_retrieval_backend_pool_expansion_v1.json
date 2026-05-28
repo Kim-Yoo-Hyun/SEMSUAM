@@ -1,0 +1,207 @@
+{
+  "schema_version": "h001.expanded_retrieval_backend_pool_expansion_contract.v1",
+  "contract_name": "expanded_retrieval_backend_pool_expansion_v1",
+  "date_checked": "2026-05-28",
+  "status": "frozen_design_contract_before_implementation",
+  "source": {
+    "source_pool_repair_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_source_pool_repair_v1.json",
+    "source_pool_repair_output": "local_dataset/runs/h001_expanded_retrieval_source_pool_repair_v1/source_pool_repair_summary.json",
+    "repair_rows": "local_dataset/runs/h001_expanded_retrieval_source_pool_repair_v1/source_pool_repair_rows.jsonl",
+    "evaluated_repair_rows": "local_dataset/runs/h001_expanded_retrieval_source_pool_repair_v1/source_pool_repair_evaluated_rows.jsonl",
+    "source_filter": {
+      "repair_action": "request_backend_pool_expansion"
+    }
+  },
+  "observed_facts": {
+    "backend_expansion_request_rows": 5,
+    "post_action_no_valid_rows": 4,
+    "post_action_valid_but_not_goal_validity_ready_rows": 1,
+    "terminal_commit_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "target_rows_action_time": [
+    {
+      "expanded_retrieval_request_id": "rival_identity:8",
+      "scene_key": "Dd4bFSTQ8gi",
+      "query": "bed",
+      "repair_signal": "source_top_visibility_not_goal_validity",
+      "repair_action": "request_backend_pool_expansion"
+    },
+    {
+      "expanded_retrieval_request_id": "rival_identity:10",
+      "scene_key": "qyAac8rV8Zk",
+      "query": "tv_monitor",
+      "repair_signal": "no_strong_own_view_support",
+      "repair_action": "request_backend_pool_expansion"
+    },
+    {
+      "expanded_retrieval_request_id": "rival_identity:12",
+      "scene_key": "QaLdnwvtxbs",
+      "query": "bed",
+      "repair_signal": "local_context_pool_contradiction",
+      "repair_action": "request_backend_pool_expansion"
+    },
+    {
+      "expanded_retrieval_request_id": "rival_identity:13",
+      "scene_key": "bxsVRursffK",
+      "query": "bed",
+      "repair_signal": "no_strong_own_view_support",
+      "repair_action": "request_backend_pool_expansion"
+    },
+    {
+      "expanded_retrieval_request_id": "rival_identity:14",
+      "scene_key": "QaLdnwvtxbs",
+      "query": "bed",
+      "repair_signal": "local_context_pool_contradiction",
+      "repair_action": "request_backend_pool_expansion"
+    }
+  ],
+  "problem_statement": {
+    "fact": "All source-pool repair rows require backend expansion under the fixed repair analyzer. Four rows are no-valid after evaluation-only label join, and the one valid row is not action-time separable from the no-valid rows under the current pool evidence.",
+    "agent_inference": "The next branch should expand or regenerate the non-GT candidate pool before goal-validity confirmation. Direct pass-through to goal-validity confirmation would mix no-valid pool failures with repeated-instance goal-validity reasoning.",
+    "paper_constraint": "This contract tests candidate-pool expansion evidence only. It must not be promoted as terminal ObjectNav utility."
+  },
+  "allowed_action_inputs": [
+    "source-pool repair action rows with repair_action == request_backend_pool_expansion",
+    "episode_key, scene_key, query, expanded_retrieval_request_id, rival_identity_request_id",
+    "source_pool_proxy, action_candidate_summary, pool_accounting, repair_signals, and non-GT score/support features",
+    "existing non-GT semantic map candidates and backend candidate artifacts generated before evaluation label join",
+    "new non-GT backend candidates generated from fixed retrieval, spatial NMS, component, or dense map settings",
+    "candidate ids, semantic rank, semantic score, support score, grounded_position, visit_position, and reachability fields",
+    "Habitat navmesh, standoff feasibility, duplicate/spatial-diversity metadata, and projection feasibility generated without target labels",
+    "detector/SAM2 or local-context evidence only if generated after expansion from fixed action-time candidate ids"
+  ],
+  "forbidden_action_inputs": [
+    "candidate_correct",
+    "selected_for_goal",
+    "wrong_goal_visit",
+    "success label",
+    "no_valid label",
+    "GT object id",
+    "GT goal id",
+    "oracle geodesic distance",
+    "post-join evaluation labels",
+    "threshold tuning from joined labels",
+    "choosing backend settings after inspecting per-row evaluation correctness"
+  ],
+  "backend_expansion_objective": {
+    "objective_name": "backend_pool_expansion_evidence_v1",
+    "terminal_commit_allowed": false,
+    "required_question": "Can a fixed non-GT backend expansion produce an action-time candidate pool that is candidate-accountable, reachable enough to evaluate, and safe to hand to goal-validity confirmation?",
+    "required_outputs": [
+      "backend_pool_expansion_rows.jsonl",
+      "backend_pool_expansion_evaluated_rows.jsonl",
+      "backend_pool_expansion_summary.json"
+    ],
+    "route_actions": [
+      {
+        "action": "request_backend_candidate_generation",
+        "condition": "The contract has not yet materialized an expanded candidate pool for a row, or the required backend artifacts are unavailable.",
+        "terminal_commit_allowed": false
+      },
+      {
+        "action": "route_to_goal_validity_confirmation_after_expansion",
+        "condition": "A fixed non-GT expanded pool has at least one reachable or standoff-feasible candidate with independent support and no action-time pool contradiction.",
+        "terminal_commit_allowed": false
+      },
+      {
+        "action": "defer_backend_pool_unresolved",
+        "condition": "Expansion evidence remains unavailable, contradictory, duplicate-only, unreachable, or insufficient for goal-validity confirmation.",
+        "terminal_commit_allowed": false
+      }
+    ]
+  },
+  "candidate_generation_policy": {
+    "fixed_before_label_join": true,
+    "candidate_budget_candidates": [
+      20,
+      50,
+      100
+    ],
+    "spatial_diversity_required": true,
+    "reachability_filter_required": true,
+    "duplicate_accounting_required": true,
+    "allowed_backend_families": [
+      "existing_vlmaps_artifact_jsonl",
+      "fixed_spatial_nms_budget",
+      "fixed_component_candidate_budget",
+      "fixed_dense_candidate_export_if_existing_artifacts_are_insufficient"
+    ],
+    "long_running_job_policy": "If dense re-export or preprocessing is needed, launch it as a background job under the AGENTS.md long-running task policy and record command, output, expected files, and verification command."
+  },
+  "minimum_evidence_requirements": {
+    "candidate_pool_accounting": [
+      "report original candidate ids and expanded candidate ids",
+      "report new, retained, removed, duplicated, unreachable, and standoff-infeasible candidate counts",
+      "report whether source-top, detector-strong, local-context, and previous action candidates remain in the expanded pool",
+      "report candidate budget, backend family, expansion config, and deterministic sort key"
+    ],
+    "independent_support": [
+      "report non-GT semantic/support score evidence",
+      "report reachability or navmesh feasibility",
+      "report detector/SAM2, projection, or local-context evidence if used after expansion",
+      "do not treat category visibility alone as candidate-pool validity"
+    ],
+    "failure_accounting": [
+      "report backend artifact missing",
+      "report expanded pool still no-candidate or duplicate-only",
+      "report expanded pool unreachable or standoff-infeasible",
+      "report local-context pool contradiction not repaired",
+      "report source-top visibility still not goal validity"
+    ]
+  },
+  "required_simpler_alternatives": [
+    "defer_all_backend_expansion_rows",
+    "pass_through_to_goal_validity_without_expansion",
+    "topk_semantic_expansion_without_spatial_diversity",
+    "source_score_shape_proxy_only",
+    "backend_expansion_without_reachability_filter",
+    "detector_visible_category_as_pool_validity"
+  ],
+  "evaluation_gates": {
+    "input_request_rows": 5,
+    "source_filter_repair_action": "request_backend_pool_expansion",
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "must_report_backend_route_action_counts": true,
+    "must_report_expanded_candidate_counts": true,
+    "must_report_new_candidate_counts": true,
+    "must_report_duplicate_and_reachability_counts": true,
+    "must_report_backend_config": true,
+    "must_report_goal_validity_ready_rows": true,
+    "must_report_defer_backend_pool_unresolved_rows": true,
+    "must_join_labels_only_after_expansion_rows": true,
+    "must_report_contains_valid_candidate_after_label_join": true,
+    "must_report_no_valid_rows_by_backend_route_after_label_join": true,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed_before_branch_validation": false
+  },
+  "expected_next_analyzer": {
+    "name": "expanded_retrieval_backend_pool_expansion_v1",
+    "role": "process backend expansion rows and decide whether each expanded pool still needs candidate generation, can proceed to goal-validity confirmation, or should remain deferred",
+    "input_scope": "five rows from h001_expanded_retrieval_source_pool_repair_v1 with repair_action == request_backend_pool_expansion",
+    "expected_output_root": "local_dataset/runs/h001_expanded_retrieval_backend_pool_expansion_v1",
+    "output_files": {
+      "expansion_rows": "backend_pool_expansion_rows.jsonl",
+      "evaluated_rows": "backend_pool_expansion_evaluated_rows.jsonl",
+      "summary": "backend_pool_expansion_summary.json"
+    }
+  },
+  "promotion_rules": {
+    "contract_only": "Passing this contract permits backend pool expansion implementation, not a paper utility claim.",
+    "goal_validity_confirmation_unblocked": "Goal-validity confirmation can be defined only for rows whose backend expansion evidence routes to goal-validity confirmation after expansion.",
+    "paper_claim_blocked": "No policy-scale or terminal ObjectNav claim is allowed until backend expansion and goal-validity confirmation pass on a predeclared source."
+  },
+  "next_steps": [
+    "Implement backend pool expansion analyzer from this contract.",
+    "Run Docker py_compile or equivalent smoke check.",
+    "Run the analyzer on the five frozen request_backend_pool_expansion rows.",
+    "If a long-running dense backend job is needed, launch it with logs and status under the AGENTS.md background-task policy.",
+    "Define goal-validity confirmation evidence only for rows routed to goal-validity confirmation after expansion."
+  ],
+  "paper_claim_allowed": false
+}

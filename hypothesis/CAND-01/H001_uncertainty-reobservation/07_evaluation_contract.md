@@ -2216,6 +2216,150 @@ paper_claim_allowed: false
 
 에이전트 추론: The result is safe but inert. It supports the failure mechanism that own-view category evidence is not enough for ObjectNav goal validity, but it does not yet support a utility claim over `defer_all`.
 
+Revised local-context route diagnosis:
+
+```text
+script: runtime/h001_runtime/diagnose_expanded_retrieval_local_context_revision_routes.py
+output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_route_diagnostic_v1
+request_rows: 21
+route_counts:
+  request_goal_validity_confirmation: 12
+  defer_instance_arbitration_unresolved: 9
+route_counts_for_no_valid_rows:
+  request_goal_validity_confirmation: 4
+route_counts_for_valid_rows:
+  request_goal_validity_confirmation: 8
+  defer_instance_arbitration_unresolved: 9
+diagnostic_tag_counts:
+  pool_guard_false_positive_no_valid_pool: 4
+  unsafe_previous_commit_prevented: 7
+  previous_rule_success_lost_by_guard: 3
+  correct_and_wrong_both_strong_own_view: 7
+  wrong_only_strong_own_view: 7
+  correct_candidate_not_strong_own_view: 5
+  simpler_alternatives_unsafe_analysis_only: 20
+paper_claim_allowed: false
+```
+
+사실: The route diagnostic is post-action analysis only. It shows the current source-pool proxy passes all 21 rows, including four no-valid rows after label join.
+
+에이전트 추론: The next evaluation contract should not just add a looser commit rule. It should define a source-pool repair branch for no-valid risk and a separate goal-validity confirmation branch for valid but unresolved repeated-instance rows.
+
+#### Route-Specific Contract
+
+```text
+contract: manifests/h001_expanded_retrieval_local_context_route_contract_v1.json
+verify: manifests/h001_expanded_retrieval_local_context_route_contract_v1.verify.json
+status: frozen_design_contract_before_implementation
+branches:
+  source_pool_repair_v1
+  goal_validity_confirmation_v1
+  instance_arbitration_defer_v1
+terminal_commit_rows_maximum: 0
+routes_all_request_rows: 21
+action_evidence_forbidden_key_count_maximum: 0
+label_join_only_after_action_rows: true
+paper_claim_allowed: false
+```
+
+사실: The contract is a branch-routing contract. It does not promote a terminal local-context commit rule.
+
+에이전트 추론: The next analyzer should report how many rows require source-pool repair versus goal-validity confirmation before any fresh validation. A paper claim remains blocked until branch-specific evidence is fixed and validated on a predeclared source.
+
+#### Route-Specific Analyzer Result
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_local_context_route_specific.py
+output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1
+request_rows: 21
+route_action_counts:
+  request_source_pool_repair: 5
+  request_goal_validity_confirmation_evidence: 7
+  defer_instance_arbitration_unresolved: 9
+route_counts_for_no_valid_rows:
+  request_source_pool_repair: 4
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+route_contract_gate_passed: true
+paper_claim_allowed: false
+```
+
+사실: All no-valid rows are routed to source-pool repair after label join, but the route actions themselves are written before label join.
+
+에이전트 추론: The next evaluation contract should start with source-pool repair evidence because no-valid rows must be resolved before goal-validity confirmation can be interpreted as an ObjectNav utility signal.
+
+#### Source-Pool Repair Evidence Contract
+
+```text
+contract: manifests/h001_expanded_retrieval_source_pool_repair_v1.json
+verify: manifests/h001_expanded_retrieval_source_pool_repair_v1.verify.json
+source_filter:
+  route_action: request_source_pool_repair
+input_request_rows: 5
+required_route_actions:
+  request_backend_pool_expansion
+  route_to_goal_validity_confirmation_after_pool_repair
+  defer_source_pool_unresolved
+terminal_commit_rows_maximum: 0
+action_evidence_forbidden_key_count_maximum: 0
+label_join_only_after_action_rows: true
+paper_claim_allowed: false
+```
+
+사실: The contract freezes the source-pool repair branch before implementation.
+
+에이전트 추론: A row can move from source-pool repair to goal-validity confirmation only after action-time repair evidence says the candidate pool is repaired or sufficiently valid. The contract keeps `ObjectNav` terminal utility blocked.
+
+#### Source-Pool Repair Analyzer Result
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_source_pool_repair.py
+output: local_dataset/runs/h001_expanded_retrieval_source_pool_repair_v1
+request_rows: 5
+evaluated_rows: 5
+repair_action_counts:
+  request_backend_pool_expansion: 5
+  route_to_goal_validity_confirmation_after_pool_repair: 0
+  defer_source_pool_unresolved: 0
+no_valid_rows_by_repair_action:
+  request_backend_pool_expansion: 4
+valid_rows_by_repair_action:
+  request_backend_pool_expansion: 1
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+source_pool_repair_gate_passed: true
+paper_claim_allowed: false
+```
+
+사실: The analyzer writes action rows before label join and keeps all five repair rows out of terminal reasoning.
+
+에이전트 추론: Goal-validity confirmation is still blocked for this branch because no row is routed to `route_to_goal_validity_confirmation_after_pool_repair`. The next evaluation contract should define backend pool expansion evidence and a fixed criterion for when an expanded pool can be handed to goal-validity confirmation.
+
+#### Backend Pool Expansion Evidence Contract
+
+```text
+contract: manifests/h001_expanded_retrieval_backend_pool_expansion_v1.json
+verify: manifests/h001_expanded_retrieval_backend_pool_expansion_v1.verify.json
+source_filter:
+  repair_action: request_backend_pool_expansion
+input_request_rows: 5
+required_route_actions:
+  request_backend_candidate_generation
+  route_to_goal_validity_confirmation_after_expansion
+  defer_backend_pool_unresolved
+terminal_commit_rows_maximum: 0
+action_evidence_forbidden_key_count_maximum: 0
+expanded_candidate_accounting_required: true
+duplicate_and_reachability_accounting_required: true
+backend_config_reporting_required: true
+label_join_only_after_expansion_rows: true
+paper_claim_allowed: false
+```
+
+사실: The contract freezes the backend expansion branch before implementation.
+
+에이전트 추론: This branch should answer whether a fixed non-GT backend expansion can repair candidate-pool validity before any goal-validity confirmation. If the expanded pool still lacks reachable, non-duplicate, independently supported candidates, the correct action is unresolved defer or backend candidate generation, not terminal commitment.
+
 ### Generalization Decision
 
 #### 사실

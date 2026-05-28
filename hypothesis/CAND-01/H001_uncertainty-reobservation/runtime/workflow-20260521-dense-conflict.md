@@ -1553,6 +1553,240 @@ docker run --rm --ipc=host \
 
 The revised analyzer successfully blocks the previous unsafe terminal commits, but it is safe-but-inert. This is not a paper utility result. It shows that the current action-time evidence can route uncertainty to confirmation/defer, but cannot yet convert local-context evidence into safe nonzero `ObjectNav` goal commitment. The next step is route diagnosis, not threshold tuning.
 
+### Expanded Retrieval Paper-Scale Revised Local-Context Route Diagnosis
+
+### 사실
+
+```text
+script: runtime/h001_runtime/diagnose_expanded_retrieval_local_context_revision_routes.py
+output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_route_diagnostic_v1
+summary: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_route_diagnostic_v1/expanded_retrieval_local_context_revision_route_summary.json
+request_rows: 21
+route_counts:
+  request_goal_validity_confirmation: 12
+  defer_instance_arbitration_unresolved: 9
+route_counts_for_no_valid_rows:
+  request_goal_validity_confirmation: 4
+route_counts_for_valid_rows:
+  request_goal_validity_confirmation: 8
+  defer_instance_arbitration_unresolved: 9
+diagnostic_tag_counts:
+  pool_guard_false_positive_no_valid_pool: 4
+  no_valid_candidate_pool_after_label_join: 4
+  unsafe_previous_commit_prevented: 7
+  previous_rule_success_lost_by_guard: 3
+  correct_and_wrong_both_strong_own_view: 7
+  wrong_only_strong_own_view: 7
+  correct_candidate_not_strong_own_view: 5
+  detector_strong_visibility_not_goal_validity: 9
+  multi_strong_own_view_ambiguity: 9
+  simpler_alternatives_unsafe_analysis_only: 20
+  some_simpler_alternative_succeeds_analysis_only: 15
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+Command:
+
+```bash
+docker run --rm --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.diagnose_expanded_retrieval_local_context_revision_routes \
+    --evidence-rows /runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1/expanded_retrieval_local_context_revision_evidence_rows.jsonl \
+    --decision-rows /runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1/expanded_retrieval_local_context_revision_decision_rows.jsonl \
+    --evaluated-rows /runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1/expanded_retrieval_local_context_revision_evaluated_rows.jsonl \
+    --evaluation-labels /runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_evaluation_labels.jsonl \
+    --out-root /runs/h001_expanded_retrieval_paper_scale_local_context_revision_route_diagnostic_v1
+```
+
+### 에이전트 추론
+
+There are two next design constraints. First, `pool_validity_guard_v2` is not sufficient: it passes four no-valid rows, so backend/source-pool repair must be a first-class branch. Second, valid-pool rows still cannot use own-view category evidence as a commit authority because correct and wrong repeated instances are often both strong, or only wrong instances are strong. The next contract should define source-pool repair and goal-validity confirmation separately.
+
+### Expanded Retrieval Paper-Scale Route-Specific Local-Context Contract
+
+### 사실
+
+```text
+contract: manifests/h001_expanded_retrieval_local_context_route_contract_v1.json
+verify: manifests/h001_expanded_retrieval_local_context_route_contract_v1.verify.json
+status: frozen_design_contract_before_implementation
+source_revision_output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1
+source_route_diagnostic: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_route_diagnostic_v1
+branches:
+  source_pool_repair_v1: request_source_pool_repair
+  goal_validity_confirmation_v1: request_goal_validity_confirmation_evidence
+  instance_arbitration_defer_v1: defer_instance_arbitration_unresolved
+terminal_commit_allowed: false
+routes_all_request_rows_required: 21
+action_evidence_forbidden_key_count_maximum: 0
+label_join_only_after_action_rows: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+This contract fixes the next implementation target as branch routing, not a terminal utility rule. The source-pool branch must test whether the candidate pool itself is trustworthy before goal-validity evidence is considered. The goal-validity branch must add candidate-specific confirmation stronger than object/category visibility. The contract intentionally keeps terminal commits blocked because the current evidence only proves that unsafe shortcuts exist and that the strict guard is inert.
+
+### Expanded Retrieval Paper-Scale Route-Specific Local-Context Analyzer
+
+### 사실
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_local_context_route_specific.py
+output: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1
+summary: local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_summary.json
+request_rows: 21
+route_action_counts:
+  request_source_pool_repair: 5
+  request_goal_validity_confirmation_evidence: 7
+  defer_instance_arbitration_unresolved: 9
+route_counts_for_no_valid_rows:
+  request_source_pool_repair: 4
+route_counts_for_valid_rows:
+  request_source_pool_repair: 1
+  request_goal_validity_confirmation_evidence: 7
+  defer_instance_arbitration_unresolved: 9
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+route_contract_gate_passed: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+Command:
+
+```bash
+docker run --rm --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.analyze_expanded_retrieval_local_context_route_specific \
+    --contract /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_route_contract_v1.json \
+    --evidence-rows /runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1/expanded_retrieval_local_context_revision_evidence_rows.jsonl \
+    --decision-rows /runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1/expanded_retrieval_local_context_revision_decision_rows.jsonl \
+    --evaluated-rows /runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1/expanded_retrieval_local_context_revision_evaluated_rows.jsonl \
+    --evaluation-labels /runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_evaluation_labels.jsonl \
+    --out-root /runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1
+```
+
+### 에이전트 추론
+
+The route-specific analyzer converts the safe-but-inert local-context result into a branch plan. It is useful because all four no-valid rows are kept out of the goal-validity branch and routed to source-pool repair, while seven rows remain available for future goal-validity confirmation evidence. It is still not a utility claim: one valid row is conservatively routed to source-pool repair, and no terminal commits are allowed. The next contract should therefore define source-pool repair evidence before goal-validity confirmation or policy-scale comparison.
+
+### Expanded Retrieval Source-Pool Repair Evidence Contract
+
+### 사실
+
+```text
+contract: manifests/h001_expanded_retrieval_source_pool_repair_v1.json
+verify: manifests/h001_expanded_retrieval_source_pool_repair_v1.verify.json
+status: frozen_design_contract_before_implementation
+source_filter:
+  route_action: request_source_pool_repair
+source_rows: 5
+post_action_no_valid_rows: 4
+post_action_valid_but_conservative_repair_rows: 1
+required_route_actions:
+  request_backend_pool_expansion
+  route_to_goal_validity_confirmation_after_pool_repair
+  defer_source_pool_unresolved
+terminal_commit_allowed: false
+action_evidence_forbidden_key_count_maximum: 0
+label_join_only_after_action_rows: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+Target rows:
+
+| Request id | Scene | Query | Action-time route signal |
+| --- | --- | --- | --- |
+| `rival_identity:8` | `Dd4bFSTQ8gi` | `bed` | `source_top_visibility_not_goal_validity` |
+| `rival_identity:10` | `qyAac8rV8Zk` | `tv_monitor` | `no_strong_own_view_candidate` |
+| `rival_identity:12` | `QaLdnwvtxbs` | `bed` | `expanded_local_context_pool_not_validated` |
+| `rival_identity:13` | `bxsVRursffK` | `bed` | `no_strong_own_view_candidate` |
+| `rival_identity:14` | `QaLdnwvtxbs` | `bed` | `expanded_local_context_pool_not_validated` |
+
+### 에이전트 추론
+
+The repair contract should not try to prove a goal instance. Its role is narrower: decide whether the candidate pool needs backend expansion, can be handed to goal-validity confirmation after repair, or must remain unresolved. This keeps no-valid and weak-pool cases from contaminating goal-validity confirmation. Passing this contract only permits a source-pool repair analyzer; it does not permit terminal commits or policy-scale comparison.
+
+### Expanded Retrieval Source-Pool Repair Analyzer Result
+
+### 사실
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_source_pool_repair.py
+output: local_dataset/runs/h001_expanded_retrieval_source_pool_repair_v1
+request_rows: 5
+evaluated_rows: 5
+repair_action_counts:
+  request_backend_pool_expansion: 5
+  route_to_goal_validity_confirmation_after_pool_repair: 0
+  defer_source_pool_unresolved: 0
+no_valid_rows_by_repair_action:
+  request_backend_pool_expansion: 4
+valid_rows_by_repair_action:
+  request_backend_pool_expansion: 1
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+source_pool_repair_gate_passed: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The current repair rows should not be handed directly to goal-validity confirmation. Four are no-valid after evaluation-only label join, and the one valid row lacks enough action-time source-pool evidence to distinguish it from the no-valid cases without backend expansion. The next contract should therefore define backend pool expansion evidence and its handoff criteria before goal-validity confirmation.
+
+### Expanded Retrieval Backend Pool Expansion Contract
+
+### 사실
+
+```text
+contract: manifests/h001_expanded_retrieval_backend_pool_expansion_v1.json
+verify: manifests/h001_expanded_retrieval_backend_pool_expansion_v1.verify.json
+status: frozen_design_contract_before_implementation
+source_filter:
+  repair_action: request_backend_pool_expansion
+source_rows: 5
+post_action_no_valid_rows: 4
+post_action_valid_but_not_goal_validity_ready_rows: 1
+required_route_actions:
+  request_backend_candidate_generation
+  route_to_goal_validity_confirmation_after_expansion
+  defer_backend_pool_unresolved
+terminal_commit_allowed: false
+action_evidence_forbidden_key_count_maximum: 0
+expanded_candidate_accounting_required: true
+duplicate_and_reachability_accounting_required: true
+label_join_only_after_expansion_rows: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+This contract freezes backend expansion as the next branch, not a terminal rule. It allows fixed non-GT candidate generation, spatial diversity, reachability checks, and later detector/local-context evidence only after expansion. It rejects pass-through to goal-validity confirmation until an expanded pool is candidate-accountable and action-time safe enough to hand off. If dense re-export is needed, it must be launched as a background job with logged command and verification.
+
 ## Target Row Contract
 
 ### Primary Independent Set

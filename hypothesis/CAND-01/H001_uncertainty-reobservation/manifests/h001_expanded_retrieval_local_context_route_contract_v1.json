@@ -1,0 +1,159 @@
+{
+  "schema_version": "h001.expanded_retrieval_local_context_route_contract.v1",
+  "contract_name": "expanded_retrieval_local_context_route_contract_v1",
+  "date_checked": "2026-05-28",
+  "status": "frozen_design_contract_before_implementation",
+  "supersedes_for_next_step": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_revision_v1.json",
+  "source": {
+    "revision_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_revision_v1.json",
+    "revision_output": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1/expanded_retrieval_local_context_revision_summary.json",
+    "route_diagnostic": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_route_diagnostic_v1/expanded_retrieval_local_context_revision_route_summary.json",
+    "route_rows": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_route_diagnostic_v1/expanded_retrieval_local_context_revision_route_rows.jsonl",
+    "evaluation_labels": "local_dataset/runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_evaluation_labels.jsonl"
+  },
+  "observed_facts": {
+    "request_rows": 21,
+    "revision_commit_success_wrong_no_valid": "0/0/0/0",
+    "revision_route_counts": {
+      "request_goal_validity_confirmation": 12,
+      "defer_instance_arbitration_unresolved": 9
+    },
+    "route_counts_for_no_valid_rows": {
+      "request_goal_validity_confirmation": 4
+    },
+    "route_counts_for_valid_rows": {
+      "request_goal_validity_confirmation": 8,
+      "defer_instance_arbitration_unresolved": 9
+    },
+    "pool_guard_false_positive_no_valid_rows": 4,
+    "unsafe_previous_commit_prevented_rows": 7,
+    "previous_rule_success_lost_rows": 3,
+    "simpler_alternatives_unsafe_rows": 20,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "diagnostic_interpretation": {
+    "fact": "The revised local-context rule writes no terminal commits and the route diagnostic joins labels only after action rows are written.",
+    "agent_inference": "The safe-but-inert result is not only excessive strictness. The source-pool proxy can pass no-valid pools, and own-view detector/SAM2 category evidence can show object visibility without establishing ObjectNav goal validity.",
+    "paper_constraint": "The next method must be framed as route-specific active evidence acquisition. It must not be framed as detector-score reranking, source-top reranking, or threshold tuning from joined labels."
+  },
+  "allowed_action_inputs": [
+    "episode_key",
+    "scene_key",
+    "query",
+    "rival_identity_request_id",
+    "expanded_retrieval_request_id",
+    "candidate ids and semantic ranks",
+    "non-GT semantic scores and uncertainty scores",
+    "source-pool proxy features",
+    "candidate support, reachability, and grounded_position fields",
+    "local-context plan roles and viewpoint metadata",
+    "detector box, SAM2 mask, projection, depth, and candidate-association evidence",
+    "own-view, cross-view, and rival support counts",
+    "Habitat navmesh/standoff metadata"
+  ],
+  "forbidden_action_inputs": [
+    "candidate_correct",
+    "selected_for_goal",
+    "wrong_goal_visit",
+    "success label",
+    "no_valid label",
+    "GT object id",
+    "GT goal id",
+    "oracle geodesic distance",
+    "post-join evaluation labels",
+    "threshold tuning from joined labels"
+  ],
+  "route_specific_branches": {
+    "source_pool_repair_v1": {
+      "purpose": "Separate candidate-pool validity from repeated-instance goal validity before any terminal decision.",
+      "trigger": "The current source-pool validity evidence is missing, contradicted, or insufficient to establish that the action-time candidate pool contains a plausible ObjectNav goal candidate.",
+      "required_action": "request_source_pool_repair",
+      "terminal_commit_allowed": false,
+      "required_evidence_to_exit_branch": [
+        "candidate pool completeness or expansion evidence from a non-GT backend",
+        "at least one reachable candidate with independent support beyond source score-shape",
+        "explicit report of unresolved or repaired source-pool validity"
+      ],
+      "blocked_shortcuts": [
+        "treat high source score as valid pool proof",
+        "treat detector-visible category instance as valid pool proof",
+        "force a choice among candidates when pool validity is unresolved"
+      ]
+    },
+    "goal_validity_confirmation_v1": {
+      "purpose": "Test whether a visible same-category candidate is the valid ObjectNav goal instance after source-pool validity is not rejected.",
+      "trigger": "The pool is not rejected, but local-context evidence leaves detector-strong, source-top, or multiple strong own-view candidates unresolved.",
+      "required_action": "request_goal_validity_confirmation_evidence",
+      "terminal_commit_allowed": false,
+      "required_evidence_to_exit_branch": [
+        "candidate-specific confirmation that is stronger than object/category visibility",
+        "rival suppression or contradiction evidence for same-category distractors",
+        "cross-view leakage check so visibility from another candidate view is not treated as identity proof",
+        "spatial consistency between source memory, local observation, and candidate grounded position"
+      ],
+      "blocked_shortcuts": [
+        "detector_score_best",
+        "source_top_if_associated",
+        "own_support_best",
+        "local_context_only_best",
+        "unique_own_view_without_rival_or_pool_check"
+      ]
+    },
+    "instance_arbitration_defer_v1": {
+      "purpose": "Keep unresolved repeated-instance ambiguity out of terminal commits.",
+      "trigger": "Multiple strong candidates remain compatible with the evidence or no candidate-specific confirmation is available.",
+      "required_action": "defer_instance_arbitration_unresolved",
+      "terminal_commit_allowed": false
+    }
+  },
+  "expected_next_analyzer": {
+    "name": "expanded_retrieval_local_context_route_specific_v1",
+    "role": "route rows to source-pool repair, goal-validity confirmation evidence, or defer; do not issue paper-facing terminal commits",
+    "input_scope": "the same frozen paper-scale local-context rows used by the route diagnostic",
+    "expected_output_root": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1",
+    "output_files": {
+      "route_rows": "expanded_retrieval_local_context_route_specific_rows.jsonl",
+      "evaluated_rows": "expanded_retrieval_local_context_route_specific_evaluated_rows.jsonl",
+      "summary": "expanded_retrieval_local_context_route_specific_summary.json"
+    }
+  },
+  "evaluation_gates": {
+    "routes_all_request_rows": 21,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "must_report_source_pool_repair_rows": true,
+    "must_report_goal_validity_confirmation_rows": true,
+    "must_report_instance_defer_rows": true,
+    "must_join_labels_only_after_action_rows": true,
+    "must_report_no_valid_rows_by_route_after_label_join": true,
+    "must_report_previous_success_lost_and_unsafe_commit_prevented": true,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed_before_branch_validation": false
+  },
+  "required_simpler_alternatives": [
+    "defer_all",
+    "semantic_top",
+    "source_top_if_associated",
+    "detector_score_best",
+    "own_support_best",
+    "local_context_only_best",
+    "previous_local_context_unique_own_view_advantage",
+    "goal_validity_guarded_local_context_v1"
+  ],
+  "promotion_rules": {
+    "route_contract_only": "Passing this contract allows branch-specific planner/evidence implementation, not a paper utility claim.",
+    "branch_validation_needed": "A paper-facing terminal rule requires a fresh or predeclared branch validation after source-pool repair and goal-validity confirmation evidence are fixed.",
+    "safe_but_inert": "Zero wrong/no-valid commits with zero success remains safety evidence only.",
+    "unsafe_nonzero": "Any wrong/no-valid terminal commit blocks policy-scale comparison and requires failure diagnosis."
+  },
+  "next_steps": [
+    "Implement a route-specific analyzer from this contract.",
+    "Run Docker py_compile or equivalent smoke check.",
+    "Run the analyzer on the frozen paper-scale local-context rows.",
+    "Keep terminal commit and policy-scale comparison blocked until branch-specific evidence is validated."
+  ],
+  "paper_claim_allowed": false
+}

@@ -19,14 +19,14 @@
 - Date checked: 2026-05-28
 - Primary candidate: `CAND-01`
 - Active hypothesis: `H001_uncertainty-reobservation`
-- Current gate: diagnose revised local-context safe-but-inert routing before any fresh validation
+- Current gate: freeze fixed backend candidate generation contract for backend expansion rows
 - Current `Now`: [TODO.md](TODO.md)
 - Active hypothesis entrypoint: [hypothesis/CAND-01/H001_uncertainty-reobservation/README.md](hypothesis/CAND-01/H001_uncertainty-reobservation/README.md)
 - Current detailed workflow: [workflow-20260521-dense-conflict.md](hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260521-dense-conflict.md)
 
 ### 에이전트 추론
 
-현재 연구 방향은 semantic uncertainty를 단순 confidence score가 아니라 active SLAM/navigation utility로 바꾸는 것이다. Paper-scale local-context detector/SAM2 substrate는 통과했지만 post-observation terminal rule은 wrong-goal/no-valid commit 때문에 실패했다. Revised local-context analyzer는 wrong/no-valid commit을 0으로 막았지만 success commit도 0이라 safe-but-inert 결과다. 다음 작업은 threshold 조정이 아니라 이 route split을 진단해 어떤 goal-validity confirmation evidence가 필요한지 정하는 것이다.
+현재 연구 방향은 semantic uncertainty를 단순 confidence score가 아니라 active SLAM/navigation utility로 바꾸는 것이다. Paper-scale local-context detector/SAM2 substrate는 통과했지만 post-observation terminal rule은 wrong-goal/no-valid commit 때문에 실패했다. Route-specific analyzer는 `21`개 row를 `request_source_pool_repair 5`, `request_goal_validity_confirmation_evidence 7`, `defer_instance_arbitration_unresolved 9`로 나눴고, source-pool repair analyzer는 5개 repair row를 모두 `request_backend_pool_expansion`으로 라우팅했다. Backend pool expansion analyzer는 현재 top-10 paper-scale candidate artifact가 fixed budget minimum `20`을 만족하지 못한다고 판정해 5개 row 전부를 `request_backend_candidate_generation`으로 보냈다. 다음 gate는 fixed non-GT backend candidate generation contract를 고정하는 것이다.
 
 ## Key Documents
 
