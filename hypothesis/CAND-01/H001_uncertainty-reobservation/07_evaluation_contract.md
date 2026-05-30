@@ -2360,6 +2360,969 @@ paper_claim_allowed: false
 
 에이전트 추론: This branch should answer whether a fixed non-GT backend expansion can repair candidate-pool validity before any goal-validity confirmation. If the expanded pool still lacks reachable, non-duplicate, independently supported candidates, the correct action is unresolved defer or backend candidate generation, not terminal commitment.
 
+#### Backend Pool Expansion Analyzer Result
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_backend_pool_expansion.py
+output: local_dataset/runs/h001_expanded_retrieval_backend_pool_expansion_v1
+request_rows: 5
+evaluated_rows: 5
+backend_route_action_counts:
+  request_backend_candidate_generation: 5
+  route_to_goal_validity_confirmation_after_expansion: 0
+  defer_backend_pool_unresolved: 0
+expanded_candidate_count_min/max: 10 / 10
+fixed_candidate_budget_minimum: 20
+new_candidate_count_min/max: 4 / 8
+reachable_candidate_count_min/max: 1 / 1
+no_valid_rows_by_backend_route:
+  request_backend_candidate_generation: 3
+valid_rows_by_backend_route:
+  request_backend_candidate_generation: 2
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+backend_pool_expansion_gate_passed: true
+goal_validity_confirmation_unblocked: false
+paper_claim_allowed: false
+```
+
+사실: The analyzer writes expansion action rows before evaluation label join. The existing paper-scale artifact provides only `10` expanded candidates per row, while the contract requires a fixed minimum of `20`.
+
+에이전트 추론: Goal-validity confirmation remains blocked. The next contract should materialize fixed backend candidate generation rather than pass the top-10 preview into goal-validity confirmation.
+
+#### Backend Candidate Generation Contract
+
+```text
+contract: manifests/h001_expanded_retrieval_backend_candidate_generation_v1.json
+verify: manifests/h001_expanded_retrieval_backend_candidate_generation_v1.verify.json
+source_filter:
+  backend_route_action: request_backend_candidate_generation
+input_request_rows: 5
+fixed_generation_policy: fixed_action_evidence_top20_v1
+candidate_backend_family: existing_vlmaps_action_evidence_jsonl
+generated_candidate_count_min/max: 20 / 20
+generated_candidate_rows_minimum: 100
+source_action_evidence_rows_found_minimum: 5
+duplicate_candidate_id_count_maximum: 0
+nonfinite_candidate_position_count_maximum: 0
+terminal_commit_rows_maximum: 0
+action_evidence_forbidden_key_count_maximum: 0
+label_join_only_after_generation_rows: true
+paper_claim_allowed: false
+```
+
+사실: The contract freezes fixed top-20 candidate generation before implementation. It uses existing non-GT action evidence, not evaluation labels, as the candidate source.
+
+에이전트 추론: This is the narrowest next step because it tests whether the already materialized non-GT top-20 evidence is enough before triggering expensive deeper backend generation. If the generated top-20 pool still has no-valid rows after evaluation-only reporting, goal-validity confirmation should remain blocked.
+
+#### Backend Candidate Generation Analyzer Result
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_backend_candidate_generation.py
+output: local_dataset/runs/h001_expanded_retrieval_backend_candidate_generation_v1
+request_rows: 5
+evaluated_rows: 5
+generated_candidate_rows: 100
+candidate_generation_status_counts:
+  generated_fixed_top20_pool: 5
+  request_deeper_backend_generation: 0
+  defer_backend_candidate_generation_unresolved: 0
+generated_candidate_count_min/max: 20 / 20
+duplicate_candidate_id_count_min/max: 0 / 0
+nonfinite_candidate_position_count_min/max: 0 / 0
+reachable_or_standoff_candidate_count_min/max: 1 / 1
+positive_support_candidate_count_min/max: 3 / 5
+evaluation_only_contains_valid_rows: 2
+evaluation_only_no_valid_rows: 3
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+backend_candidate_generation_gate_passed: true
+goal_validity_confirmation_unblocked: false
+deeper_backend_generation_required: true
+paper_claim_allowed: false
+```
+
+사실: The analyzer writes generation rows before label join and materializes exactly `20` candidates per row from existing non-GT action evidence.
+
+에이전트 추론: The fixed top-20 source is structurally valid, but it does not repair candidate-pool validity for all rows. Goal-validity confirmation remains blocked because `3/5` generated pools still have no valid candidate after evaluation-only reporting. The next contract should define deeper backend generation or a non-GT pool-validity proxy rather than terminal commitment.
+
+#### Deeper Backend Generation Contract
+
+```text
+contract: manifests/h001_expanded_retrieval_deeper_backend_generation_v1.json
+verify: manifests/h001_expanded_retrieval_deeper_backend_generation_v1.verify.json
+status: frozen_design_contract_before_implementation
+source_fixed_top20_rows: 5
+diagnostic_target_request_rows: 3
+target_scene_query_pairs: 2
+target_scene_query_keys:
+  QaLdnwvtxbs::bed
+  bxsVRursffK::bed
+first_variant: spatial_nms_p90_k100_d5_v1
+expected_candidate_count_minimum_per_request: 50
+expected_candidate_count_primary_target_per_request: 100
+expected_new_beyond_top20_minimum_per_request: 30
+generated_candidate_rows_minimum: 150
+duplicate_candidate_id_count_maximum: 0
+nonfinite_candidate_position_count_maximum: 0
+terminal_commit_rows_maximum: 0
+action_evidence_forbidden_key_count_maximum: 0
+label_join_only_after_generation_rows: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+사실: The contract freezes a diagnostic deeper backend generation probe for the three fixed top-20 rows that still have no valid candidate after evaluation-only label join.
+
+에이전트 추론: This is backend recall repair, not goal-validity confirmation. Because the target rows were selected by evaluation-only no-valid reporting, paper-facing policy claims remain blocked until either deeper generation is evaluated on a predeclared action-time source or a non-GT pool-validity proxy can isolate the same failure class.
+
+#### Deeper Backend Generation Analyzer / Job
+
+```text
+analyzer: runtime/h001_runtime/analyze_expanded_retrieval_deeper_backend_generation.py
+job: runtime/jobs/expanded_retrieval_deeper_backend_generation.sh
+target_spec_smoke: local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_v1
+existing_artifact_smoke: local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_existing_p97_k20_smoke_v1
+full_job_session: h001-deeper-backend-20260529-003000
+full_job_status: completed
+full_job_log: runtime/logs/expanded-retrieval-deeper-backend-generation-20260529-003000.log
+full_job_candidate_artifact: local_dataset/runs/h001_expanded_retrieval_deeper_backend_artifact_spatial_nms_p90_k100_d5_v1/all_scenes_aligned.jsonl
+target_spec_source_rows: 5
+target_spec_request_rows: 3
+target_scene_query_pairs: 2
+existing_artifact_generated_candidate_rows: 60
+existing_artifact_candidate_count_per_request: 20
+existing_artifact_new_beyond_top20: 0
+existing_artifact_valid_containing_rows: 0
+existing_artifact_no_valid_rows: 3
+full_artifact_coverage_ok: true
+full_artifact_scene_query_rows: 12
+full_artifact_candidates: 1200
+full_generated_candidate_rows: 300
+full_candidate_count_per_request: 100
+full_new_beyond_top20_per_request: 80
+full_valid_containing_rows: 2
+full_still_no_valid_rows: 1
+full_recovered_rows:
+  rival_identity:12 first_correct_rank=34 correct_count=3
+  rival_identity:14 first_correct_rank=34 correct_count=3
+full_still_no_valid_row:
+  rival_identity:13
+deeper_backend_generation_gate_passed: true
+goal_validity_confirmation_unblocked: true
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+paper_claim_allowed: false
+```
+
+사실: The analyzer writes action-time deeper generation rows before any GT-analysis label join. It normalizes artifact scene keys, verifies that contract targets are no-valid rows in the previous evaluation-only join, and keeps nonfinite candidates as structural gate evidence rather than crashing the evaluation join.
+
+에이전트 추론: The existing `p97_k20` smoke is a schema and label-join test, not a recovery result. It has only `20` candidates per request and no new candidates beyond top-20, so it is expected to fail the deeper generation gate. The completed `p90_k100_d5` job shows that deeper backend recall can recover valid candidates for `QaLdnwvtxbs::bed`, but not for `bxsVRursffK::bed`. The next contract should define goal-validity confirmation only for recovered rows and keep the still-no-valid row on a backend/pool-validity branch.
+
+#### Goal-Validity Confirmation Contract For Recovered Rows
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_confirmation_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_confirmation_v1.verify.json
+status: frozen_design_contract_before_implementation
+source_deeper_generation_rows: 3
+target_goal_validity_rows: 2
+target_goal_validity_request_ids:
+  rival_identity:12
+  rival_identity:14
+excluded_backend_pool_validity_rows: 1
+excluded_request_ids:
+  rival_identity:13
+candidate_count_per_request: 100
+new_beyond_top20_per_request: 80
+goal_validity_target_scene_query_pairs: 1
+excluded_target_scene_query_pairs: 1
+terminal_commit_rows_maximum: 0
+action_evidence_forbidden_key_count_maximum: 0
+label_join_only_after_request_and_evidence_rows: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+사실: The contract consumes the completed deeper backend generation output and routes only the recovered `QaLdnwvtxbs::bed` rows to goal-validity confirmation evidence. `rival_identity:13` remains on a backend/pool-validity branch because the evaluation-only label join still finds no valid candidate.
+
+에이전트 추론: This prevents a category/pool recall failure from being interpreted as goal-validity evidence. The next analyzer should produce label-free request/evidence rows for `rival_identity:12` and `rival_identity:14`, write a separate backend/pool-validity branch row for `rival_identity:13`, and keep terminal commits blocked.
+
+#### Goal-Validity Confirmation Request / Branch Analyzer
+
+```text
+analyzer: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_confirmation.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_confirmation_v1
+request_rows: 2
+branch_rows: 1
+candidate_evidence_target_rows: 200
+evaluated_rows: 3
+handoff_actions:
+  request_goal_validity_confirmation_evidence: 2
+  request_non_gt_pool_validity_proxy_or_fallback_backend_variant: 1
+request_ids:
+  rival_identity:12
+  rival_identity:14
+branch_request_ids:
+  rival_identity:13
+goal_validity_target_scene_query_pairs:
+  QaLdnwvtxbs::bed
+excluded_target_scene_query_pairs:
+  bxsVRursffK::bed
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+goal_validity_confirmation_request_gate_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+사실: The analyzer writes request rows, candidate evidence target rows, and the backend/pool-validity branch row before attaching evaluation-only labels. Docker compile and the 3-row smoke run passed.
+
+에이전트 추론: This closes the branch handoff step. The still-no-valid `rival_identity:13` branch is now handled by the pool-validity fallback contract below, while candidate-specific goal-validity evidence for `rival_identity:12` and `rival_identity:14` remains a later branch.
+
+#### Pool-Validity Branch Fallback Contract
+
+```text
+contract: manifests/h001_expanded_retrieval_pool_validity_branch_v1.json
+verify: manifests/h001_expanded_retrieval_pool_validity_branch_v1.verify.json
+status: frozen_design_contract_before_implementation
+source_branch_rows: 1
+target_request_ids:
+  rival_identity:13
+target_scene_query_keys:
+  bxsVRursffK::bed
+source_variant: spatial_nms_p90_k100_d5_v1
+source_candidate_count: 100
+source_reachable_or_standoff_candidate_count: 100
+source_positive_support_candidate_count: 5
+source_duplicate_candidate_id_count: 0
+source_nonfinite_candidate_position_count: 0
+non_gt_proxy_ready: false
+first_fallback_variant: spatial_nms_p80_k200_d3_v1
+second_fallback_variant: components_p80_min1_k200_v1
+terminal_commit_rows_maximum: 0
+action_evidence_forbidden_key_count_maximum: 0
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+사실: `rival_identity:13` remains no-valid after the completed `spatial_nms_p90_k100_d5_v1` deeper backend generation, but the action-time pool is structurally strong: `100` finite candidates, `100` reachable/standoff candidates, `5` positive-support candidates, no duplicate candidate ids, no nonfinite positions, and high semantic scores.
+
+에이전트 추론: Count, reachability, positive-support, duplicate/nonfinite, and score-shape proxies are not safe pool-validity separators here because the still-no-valid row is not weaker than the recovered rows on those features. The contract therefore rejects a simple proxy and fixes a fallback backend variant before any goal-validity confirmation. This remains diagnostic because the branch row was selected by evaluation-only no-valid reporting.
+
+#### Pool-Validity Branch Analyzer / Job
+
+```text
+analyzer: runtime/h001_runtime/analyze_expanded_retrieval_pool_validity_branch.py
+job: runtime/jobs/expanded_retrieval_pool_validity_branch.sh
+target_spec_smoke: local_dataset/runs/h001_expanded_retrieval_pool_validity_branch_v1
+full_job_session: h001-pool-validity-fallback-20260529-093033
+full_job_status: completed
+full_job_stage: completed
+full_job_log: runtime/logs/expanded-retrieval-pool-validity-branch-20260529-093033.log
+full_job_candidate_artifact: local_dataset/runs/h001_expanded_retrieval_pool_validity_artifact_spatial_nms_p80_k200_d3_v1/all_scenes_aligned.jsonl
+full_artifact_coverage_ok: true
+full_artifact_scene_count: 1
+full_artifact_query_rows: 6
+full_artifact_candidates: 1200
+target_spec_branch_rows: 1
+target_spec_action_rows: 1
+target_spec_evaluated_rows: 1
+target_spec_status: defer_pool_validity_fallback_unresolved
+target_spec_gate_passed: false
+target_spec_expected_reason: fallback_candidate_artifact_row_missing
+target_spec_terminal_commit_rows: 0
+target_spec_action_forbidden_keys: 0
+target_request_ids:
+  rival_identity:13
+target_scene_query_keys:
+  bxsVRursffK::bed
+full_fallback_candidate_rows: 200
+full_new_beyond_previous_pool: 100
+full_gate_passed: true
+full_valid_containing_rows: 0
+full_no_valid_rows: 1
+goal_validity_confirmation_unblocked: false
+second_fallback_backend_required: true
+```
+
+사실: Docker compile and target-spec smoke passed. The smoke intentionally has no candidate artifact, so it writes schema-valid branch/action/evaluated rows and a false fallback gate with reason `fallback_candidate_artifact_row_missing`. The full `spatial_nms_p80_k200_d3_v1` job completed. The artifact coverage gate passed, and the final analyzer wrote `200` fallback candidates with `100` candidates new beyond the previous pool, but evaluation-only label join still found no valid candidate.
+
+에이전트 추론: This implementation closes the first fallback branch. Because the wider spatial NMS backend is structurally valid but still no-valid, `rival_identity:13` should not move to goal-validity confirmation. The next contract should use the already predeclared component-level fallback `components_p80_min1_k200_v1` or, if that also fails, record `bxsVRursffK::bed` as a backend/source-map recall blind spot.
+
+#### Pool-Validity Second Fallback Contract
+
+```text
+contract: manifests/h001_expanded_retrieval_pool_validity_second_fallback_v1.json
+verify: manifests/h001_expanded_retrieval_pool_validity_second_fallback_v1.verify.json
+status: frozen_design_contract_before_implementation
+source_branch_rows: 1
+target_request_ids:
+  rival_identity:13
+target_scene_query_keys:
+  bxsVRursffK::bed
+previous_source_variant: spatial_nms_p90_k100_d5_v1
+first_fallback_variant: spatial_nms_p80_k200_d3_v1
+first_fallback_candidate_count: 200
+first_fallback_new_beyond_source_pool_count: 100
+first_fallback_valid_containing_rows: 0
+first_fallback_no_valid_rows: 1
+second_fallback_variant: components_p80_min1_k200_v1
+second_fallback_selection_mode: components
+second_fallback_top_percentile: 80.0
+second_fallback_max_candidates: 200
+second_fallback_min_component_cells: 1
+terminal_commit_rows_maximum: 0
+action_evidence_forbidden_key_count_maximum: 0
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+사실: The second fallback contract is now frozen after the first fallback produced a structurally valid but still no-valid `200`-candidate spatial-NMS pool. The new fixed backend variant is component-level `VLMaps` export with `top_percentile 80.0`, `max_candidates 200`, and `min_component_cells 1`.
+
+에이전트 추론: The second fallback changes backend granularity rather than tuning another spatial-NMS threshold. It must report component candidate count, `component_cells`, duplicate/nonfinite/reachability accounting, and overlap with both previous spatial-NMS pools before any evaluation-only label join. If this also remains no-valid, `bxsVRursffK::bed` should be recorded as a backend/source-map recall blind spot for this branch.
+
+#### Pool-Validity Second Fallback Analyzer / Job
+
+```text
+analyzer: runtime/h001_runtime/analyze_expanded_retrieval_pool_validity_second_fallback.py
+job: runtime/jobs/expanded_retrieval_pool_validity_second_fallback.sh
+target_spec_output: local_dataset/runs/h001_expanded_retrieval_pool_validity_second_fallback_v1
+full_job_session: h001-pool-validity-second-fallback-20260529-151217
+full_job_status: completed
+full_job_stage: completed
+full_job_log: runtime/logs/expanded-retrieval-pool-validity-second-fallback-20260529-151217.log
+full_job_candidate_artifact: local_dataset/runs/h001_expanded_retrieval_pool_validity_artifact_components_p80_min1_k200_v1/all_scenes_aligned.jsonl
+full_artifact_coverage_ok: true
+full_artifact_scene_count: 1
+full_artifact_query_rows: 6
+full_artifact_candidates: 1163
+target_spec_branch_rows: 1
+target_spec_action_rows: 1
+target_spec_evaluated_rows: 1
+target_spec_status: defer_component_fallback_unresolved
+target_spec_gate_passed: false
+target_spec_expected_reason: component_candidate_artifact_row_missing
+target_spec_terminal_commit_rows: 0
+target_spec_action_forbidden_keys: 0
+target_request_ids:
+  rival_identity:13
+target_scene_query_keys:
+  bxsVRursffK::bed
+full_component_candidate_rows: 200
+full_component_cells_min_mean_max: 1 / 20.29 / 1254
+full_new_positions_beyond_first_fallback: 200
+full_gate_passed: true
+full_valid_containing_rows: 0
+full_no_valid_rows: 1
+goal_validity_confirmation_unblocked: false
+backend_source_map_blind_spot_after_second_fallback: true
+```
+
+사실: Docker compile, bash syntax check, and target-spec smoke passed. The full component fallback job completed and generated a structurally valid component pool, but evaluation-only label join still found no valid candidate.
+
+에이전트 추론: This closes the fallback backend branch for `rival_identity:13` under the current diagnostic scope. The row should not be sent to goal-validity confirmation. Treat `bxsVRursffK::bed` as a backend/source-map recall blind spot for this branch unless a later all-row backend policy changes the source-map evidence.
+
+#### Candidate-Specific Goal-Validity Evidence Contract / Planner
+
+사실: The candidate-specific goal-validity evidence contract is frozen at `manifests/h001_expanded_retrieval_goal_validity_evidence_v1.json`. It consumes recovered request rows `rival_identity:12` and `rival_identity:14`, fixes `candidate_specific_goal_validity_evidence_v1`, and requires target-candidate standoff evidence with local rival context. Terminal commit remains blocked and `paper_claim_allowed false`.
+
+Docker planner implementation:
+
+```text
+script: runtime/h001_runtime/plan_expanded_retrieval_goal_validity_evidence.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1
+request_rows: 2
+candidate_evidence_target_rows: 200
+plan_rows: 158
+skipped_rows: 42
+skipped_reason_counts: standoff_navmesh_required 42
+plan_rows_by_request: rival_identity:12 79, rival_identity:14 79
+candidate_artifact_rows: 1
+candidate_artifact_candidate_count: 80
+terminal_commit_rows: 0
+output_forbidden_action_field_count: 0
+uses_gt_for_action: false
+goal_validity_evidence_plan_gate_passed: true
+verification_command:
+  jq -e '.gate.goal_validity_evidence_plan_gate_passed == true and .output_forbidden_action_field_count == 0 and .terminal_commit_rows == 0 and .uses_gt_for_action == false' local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1/goal_validity_evidence_plan_summary.json
+```
+
+에이전트 추론: This planner is stronger than a category-visible detector rule because every observation row is tied to one target candidate plus label-free rival context. The next gate is frame/projection sanity. Detector/SAM2 scoring and terminal utility validation remain blocked until the rendered evidence substrate is verified.
+
+#### Candidate-Specific Goal-Validity Frame/Projection Smoke
+
+사실: Bounded Docker frame/projection smoke passed for the first `20` rows of `goal_validity_evidence_plan_v1`.
+
+```text
+frame_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_smoke_v1
+projection_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_projection_smoke_v1
+rows_exported: 20 / 20
+rendered_heading_count: 172
+headings_per_row_min_max: 5 / 11
+nonblank_rows: 20 / 20
+removed_blank_heading_count: 0
+projection_visible_rows: 20 / 20
+projection_visible_rate: 1.0
+missing_candidate_rows: 0
+frame_revision_metadata_rows: 20
+candidate_selection_source: explicit_candidate_ids 20
+uses_gt_for_action: false
+paper_claim_allowed: false
+projection_anchor_smoke_passed: true
+```
+
+에이전트 추론: The rendered substrate is detector-ready for this bounded gate. This still does not authorize terminal commits; detector/SAM2 evidence and a post-detector candidate-specific objective must pass before any utility validation.
+
+#### Candidate-Specific Goal-Validity Detector/SAM2 Substrate
+
+사실: Bounded detector/SAM2 substrate passed for the frame/projection smoke rows.
+
+```text
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_smoke_v1
+tmux_session: h001-goal-validity-detector-20260529-171217
+detector_rows: 20
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.95
+rows_with_candidate_association: 19
+passes_detector_substrate_gate: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+verification_command:
+  cat local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_smoke_v1/job_status.json
+  cat local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_smoke_v1/expanded_retrieval_detector_substrate_summary.json
+```
+
+에이전트 추론: Perception substrate is not the immediate blocker for the bounded candidate-specific evidence branch. The next gate must be an objective analyzer, not a terminal commit rule, because the previous local-context failures show category visibility can still be wrong ObjectNav goal evidence.
+
+#### Candidate-Specific Goal-Validity Objective Analyzer
+
+사실: The post-detector candidate-specific goal-validity objective analyzer is frozen and Docker-verified.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_objective_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_objective_v1.verify.json
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_evidence.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_smoke_v1
+planned_request_rows: 2
+planned_candidate_rows: 158
+observed_detector_candidate_rows: 20
+observed_detector_request_rows: 1
+unscored_candidate_rows: 138
+candidate_evidence_class_counts:
+  candidate_specific_support: 18
+  weak_or_partial_candidate_specific_support: 2
+  not_scored_in_bounded_substrate: 138
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.95
+observed_candidate_evaluation_wrong: 20 / 20
+first_correct_generated_rank: 34 for rival_identity:12 and rival_identity:14
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+objective_analyzer_gate_passed: true
+terminal_utility_validation_allowed: false
+full_detector_substrate_required: true
+paper_claim_allowed: false
+verification_command:
+  jq '{gate:.gate.objective_analyzer_gate_passed, terminal:.terminal_utility_validation_allowed, full_required:.full_detector_substrate_required, forbidden:.action_evidence_forbidden_key_count, observed_wrong:.observed_candidate_evaluation.evaluation_only_observed_wrong_candidate_count, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_smoke_v1/goal_validity_objective_summary.json
+```
+
+에이전트 추론: This closes the bounded post-detector analyzer gate as a diagnostic, not as a utility claim. The result is important because it shows the top-20 bounded detector subset is structurally available but incomplete and wrong-only. Terminal commit, `first_eval`, and policy-scale comparison remain blocked. The full recovered-row candidate-specific detector/SAM2 scoring contract below now includes the recovered correct-rank region and should be executed before any terminal utility validation.
+
+#### Full Candidate-Specific Detector/SAM2 Substrate Contract
+
+사실: The full recovered-row candidate-specific substrate contract is frozen before launch.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_full_substrate_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_full_substrate_v1.verify.json
+source_plan: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1/goal_validity_evidence_plan.jsonl
+expected_request_rows: 2
+expected_plan_rows: 158
+expected_plan_rows_by_request: rival_identity:12 79, rival_identity:14 79
+expected_correct_candidate_rows_in_plan: 6
+expected_correct_candidate_rows_in_skipped: 0
+expected_correct_generated_ranks: 34, 57, 60 for both recovered requests
+frame_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1
+projection_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_projection_full_v1
+detector_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1
+expected_frame_rows: 158
+expected_detector_rows: 158
+detector_box_rate_minimum: 0.80
+sam2_mask_rate_minimum: 0.80
+candidate_association_rate_minimum: 0.40
+terminal_commit_allowed: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This contract specifically fixes the bounded top-20 failure: it requires both recovered rows and the expected correct-rank region before detector evidence can be interpreted. Passing it permits a full post-detector objective analyzer run, not a terminal ObjectNav utility claim.
+
+#### Full Candidate-Specific Objective Analyzer
+
+사실: The full recovered-row candidate-specific substrate and objective analyzer are Docker-verified.
+
+```text
+substrate_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1
+objective_contract: manifests/h001_expanded_retrieval_goal_validity_objective_full_v1.json
+objective_verify: manifests/h001_expanded_retrieval_goal_validity_objective_full_v1.verify.json
+objective_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_full_v1
+detector_rows: 158
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.9746835443037974
+observed_request_rows: 2
+observed_candidate_rows: 158
+unscored_candidate_rows: 0
+candidate_evidence_class_counts:
+  candidate_specific_support: 146
+  weak_or_partial_candidate_specific_support: 12
+evaluation_only_observed_correct_candidate_count: 6
+evaluation_only_observed_wrong_candidate_count: 152
+proposed_objective_action: defer_candidate_specific_support_ambiguous for both request rows
+unsafe_simpler_alternatives:
+  semantic_top_observed: wrong 2 / 2
+  detector_score_best_observed: wrong 2 / 2
+  positive_support_best_observed: wrong 2 / 2
+  candidate_specific_support_best_observed: wrong 2 / 2
+terminal_commit_rows: 0
+objective_analyzer_gate_passed: true
+terminal_utility_validation_allowed: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: Full substrate resolves the bounded coverage flaw but exposes a stronger failure mechanism: candidate-specific visual support is saturated across many same-category candidates. Detector score, semantic rank, positive support, and support-count variants are unsafe on the recovered rows. The next contract should target ambiguity resolution or discriminative goal evidence, not terminal commit thresholding.
+
+#### Candidate-Specific Ambiguity-Resolution Diagnostic Contract
+
+사실: The next diagnostic contract is frozen before implementation.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1.verify.json
+source_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_full_v1/goal_validity_objective_summary.json
+expected_request_rows: 2
+expected_candidate_rows: 158
+candidate_specific_support_count_minimum: 100
+evaluation_only_correct_candidate_count_minimum: 6
+blocked_actions:
+  threshold_tune_detector_score
+  threshold_tune_semantic_rank
+  terminal_commit_from_support_count
+  first_eval_rerun
+required_diagnostics:
+  support_saturation_profile
+  unsafe_selector_taxonomy
+  next_evidence_requirement
+terminal_commit_allowed: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This contract turns the negative result into the next research question: whether active semantic uncertainty needs discriminative instance, relation, or goal-region evidence after visual support becomes saturated. It keeps the work aligned with novelty-by-failure-mechanism rather than adding another score threshold.
+
+#### Candidate-Specific Ambiguity-Resolution Analyzer
+
+사실: The ambiguity-resolution diagnostic analyzer is implemented and Docker-verified.
+
+```text
+script: runtime/h001_runtime/diagnose_expanded_retrieval_goal_validity_ambiguity.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1
+request_rows: 2
+candidate_rows: 158
+candidate_specific_support_count: 146
+candidate_specific_support_rate: 0.9240506329113924
+correct_support_count: 6
+wrong_support_count: 140
+correct_wrong_support_overlap: true
+selector_rows: 8
+wrong_selector_rows: 8
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+ambiguity_diagnostic_gate_passed: true
+recommended_next_actions:
+  request_discriminative_instance_or_goal_region_evidence
+  request_relation_or_spatial_context_evidence
+  defer_goal_validity_terminal_policy
+paper_claim_allowed: false
+```
+
+에이전트 추론: The diagnostic supports a narrower next step: first test discriminative instance or goal-region evidence, then relation/spatial context evidence if the first probe remains ambiguous. This is stronger than threshold tuning because it follows the observed failure mechanism.
+
+#### Discriminative Instance/Goal-Region Evidence Contract
+
+사실: The discriminative evidence contract is frozen before implementation.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_discriminative_evidence_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_discriminative_evidence_v1.verify.json
+source_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1/goal_validity_ambiguity_resolution_summary.json
+request_ids:
+  rival_identity:12
+  rival_identity:14
+expected_request_rows: 2
+expected_candidate_rows: 158
+candidate_specific_support_count: 146
+wrong_selector_rows: 8
+evaluation_only_correct_candidates:
+  vlmaps:export:bed:spatial_nms:33
+  vlmaps:export:bed:spatial_nms:56
+  vlmaps:export:bed:spatial_nms:59
+evaluation_only_unsafe_selector_candidates:
+  vlmaps:export:bed:spatial_nms:0
+  vlmaps:export:bed:spatial_nms:21
+  vlmaps:export:bed:spatial_nms:23
+required_outputs:
+  goal_validity_discriminative_candidate_rows.jsonl
+  goal_validity_discriminative_pair_rows.jsonl
+  goal_validity_discriminative_request_rows.jsonl
+  goal_validity_discriminative_evidence_summary.json
+blocked_actions:
+  threshold_tuning
+  terminal_commit_from_support_count
+  first_eval_rerun
+  policy_scale_comparison
+terminal_commit_allowed: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This contract fixes the next question as separability, not confidence. The analyzer should test whether non-GT visual/geometric evidence can distinguish unsafe early-rank selected candidates from late-rank valid candidates or whether the method must request relation/spatial-context evidence and keep terminal policy deferred.
+
+#### Discriminative Instance/Goal-Region Analyzer
+
+사실: The discriminative evidence analyzer is implemented and Docker-verified.
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_discriminative_evidence.py
+image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_discriminative_evidence_v1
+request_rows: 2
+candidate_rows: 158
+pair_rows: 420
+target_contrast_pair_rows_after_label_join: 18
+candidate_specific_support_count: 146
+simple_selector_candidate_count: 6
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+discriminative_evidence_gate_passed: true
+target_pair_visual_delta_sign_counts:
+  contrast_visual_higher: 8
+  selector_visual_higher: 10
+target_pair_region_proxy_counts:
+  adjacent_region_proxy: 12
+  distinct_region_proxy: 6
+diagnostic_conclusion: discriminative_instance_or_goal_region_signal_ready false
+recommended_next_action: request_relation_or_spatial_context_evidence
+paper_claim_allowed: false
+```
+
+에이전트 추론: The diagnostic rejects instance/goal-region visual separability as a terminal selector for this recovered-row branch. The target contrast grid exists, but action-time features still favor unsafe selector candidates in more than half of the target pairs. The next contract should ask for relation or spatial-context evidence rather than relaxing detector/support thresholds.
+
+#### Relation/Spatial Context Evidence Contract
+
+사실: The relation/spatial context evidence contract is frozen before implementation.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_relation_spatial_context_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_relation_spatial_context_v1.verify.json
+source: local_dataset/runs/h001_expanded_retrieval_goal_validity_discriminative_evidence_v1/goal_validity_discriminative_evidence_summary.json
+request_rows: 2
+candidate_rows: 158
+pair_rows: 420
+candidate_specific_support_count: 146
+target_contrast_pair_rows_after_label_join: 18
+target_pair_visual_delta_sign_counts_after_label_join:
+  contrast_visual_higher: 8
+  selector_visual_higher: 10
+target_pair_region_proxy_counts_after_label_join:
+  adjacent_region_proxy: 12
+  distinct_region_proxy: 6
+required_outputs:
+  goal_validity_relation_spatial_candidate_context_rows.jsonl
+  goal_validity_relation_spatial_pair_context_rows.jsonl
+  goal_validity_relation_spatial_request_context_rows.jsonl
+  goal_validity_relation_spatial_context_summary.json
+blocked_actions:
+  direct_candidate_commit
+  threshold_tuning
+  first_eval_rerun
+  policy_scale_comparison
+terminal_commit_allowed: false
+paper_claim_allowed: false
+next_script_target: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_relation_spatial_context.py
+```
+
+에이전트 추론: This contract turns the negative discriminative result into a more precise diagnostic: action-time context rows must test whether unsafe selectors and late-rank valid candidates differ by local spatial component, neighborhood density, relation-to-anchor, or co-visibility proxy. Correctness labels can only be joined after those context rows are written. If context features still cannot separate the pairs, the branch should remain deferred or request richer scene-graph/object-relation evidence.
+
+#### Relation/Spatial Context Analyzer
+
+사실: The relation/spatial context analyzer is implemented and Docker-verified.
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_relation_spatial_context.py
+image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_relation_spatial_context_v1
+request_rows: 2
+candidate_context_rows: 158
+pair_context_rows: 420
+spatial_context_group_count: 8
+target_contrast_pair_rows_after_label_join: 18
+target_pair_component_relation_counts:
+  same_component: 12
+  distinct_component: 6
+target_pair_context_score_delta_sign_counts:
+  contrast_context_higher: 18
+target_pair_failure_taxonomy_counts:
+  same_component_selector_visual_dominates: 10
+  same_component_context_not_discriminative: 2
+  context_candidate_for_followup: 6
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+relation_spatial_context_gate_passed: true
+diagnostic_conclusion: relation_spatial_context_signal_ready false
+recommended_next_action: request_scene_graph_or_object_relation_evidence
+paper_claim_allowed: false
+```
+
+에이전트 추론: Static relation/spatial context is useful as a failure diagnostic because all target contrast pairs have higher context score for the contrast candidate. It is not sufficient as a terminal selector because most target pairs remain in the same spatial component and unsafe selector visual evidence still dominates in `10/18` target pairs. The next contract should define object-relation or scene-graph evidence and keep terminal policy blocked.
+
+#### Scene-Graph/Object-Relation Evidence Contract
+
+사실: The scene-graph/object-relation evidence contract is frozen before implementation.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1.verify.json
+source: local_dataset/runs/h001_expanded_retrieval_goal_validity_relation_spatial_context_v1/goal_validity_relation_spatial_context_summary.json
+request_rows: 2
+candidate_context_rows: 158
+pair_context_rows: 420
+spatial_context_group_count: 8
+target_contrast_pair_rows_after_label_join: 18
+same_component_target_pair_rows_after_label_join: 12
+same_component_selector_visual_dominates_after_label_join: 10
+required_outputs:
+  goal_validity_scene_graph_candidate_relation_rows.jsonl
+  goal_validity_scene_graph_pair_relation_rows.jsonl
+  goal_validity_scene_graph_request_relation_rows.jsonl
+  goal_validity_scene_graph_context_object_rows.jsonl
+  goal_validity_scene_graph_object_relation_summary.json
+blocked_actions:
+  direct_candidate_commit
+  threshold_tuning
+  first_eval_rerun
+  policy_scale_comparison
+terminal_commit_allowed: false
+paper_claim_allowed: false
+next_script_target: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_scene_graph_object_relation.py
+```
+
+에이전트 추론: This contract narrows the next diagnostic to same-component object-relation evidence. It does not allow importing GT scene graphs. The intended evidence is action-time relation rows computed from RGB-D, detector/SAM2 masks, candidate geometry, and non-GT context detections. If those relations cannot separate unsafe selectors from late-rank valid candidates, the branch should remain deferred or move to a new active observation design.
+
+#### Scene-Graph/Object-Relation Evidence Analyzer
+
+사실: The scene-graph/object-relation evidence analyzer is implemented and Docker-verified.
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_scene_graph_object_relation.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+scene_graph_object_relation_gate_passed: true
+request_rows: 2
+candidate_relation_rows: 158
+pair_relation_rows: 420
+context_object_rows: 7788
+target_contrast_pair_rows_after_label_join: 18
+same_component_target_pair_rows_after_label_join: 12
+same_component_selector_visual_dominates_after_label_join: 10
+target_pair_relation_delta_sign_counts_after_label_join:
+  contrast_relation_higher: 18
+relation_separability_probe_supports_signal: true
+relation_coverage_complete: true
+detector_coverage_complete: false
+rows_with_detector_association_by_request:
+  rival_identity:12: 77 / 79
+  rival_identity:14: 77 / 79
+scene_graph_object_relation_signal_ready: false
+recommended_next_action: request_object_relation_observation
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+paper_claim_allowed: false
+```
+
+에이전트 추론: The object-relation proxy is directionally useful because every evaluation-only target contrast pair has higher relation signature score for the contrast candidate, including the same-component selector-visual failures. It is still not a terminal selector because detector association coverage is incomplete and the signal is measured in a narrow recovered-row diagnostic. The next contract should repair or explicitly account for object-relation observation coverage before any `first_eval` rerun, threshold tuning, or policy-scale comparison.
+
+#### Object-Relation Observation Coverage Repair Contract
+
+사실: The object-relation observation coverage repair contract is frozen before implementation.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_coverage_repair_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_coverage_repair_v1.verify.json
+source: local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_object_relation_summary.json
+scene_graph_object_relation_gate_passed: true
+scene_graph_object_relation_signal_ready: false
+recommended_next_action: request_object_relation_observation
+request_rows: 2
+candidate_relation_rows: 158
+pair_relation_rows: 420
+context_object_rows: 7788
+detector_coverage_complete: false
+rows_with_detector_association_by_request:
+  rival_identity:12: 77 / 79
+  rival_identity:14: 77 / 79
+detector_missing_candidate_rows: 4
+detector_missing_unique_candidate_ids:
+  - vlmaps:export:bed:spatial_nms:5
+  - vlmaps:export:bed:spatial_nms:90
+evaluation_only_missing_detector_correct_rows: 0
+evaluation_only_missing_detector_target_pair_rows: 0
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+paper_claim_allowed: false
+next_script_target: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_coverage_repair.py
+```
+
+에이전트 추론: The missing detector rows are not target-pair or correct-candidate rows under the current evaluation-only join, but that fact must not be used as an action-time shortcut. The next analyzer should materialize coverage-gap rows and either request bounded object-relation observations or define an action-time waiver before any terminal policy, threshold tuning, or `first_eval` rerun.
+
+#### Object-Relation Observation Coverage Repair Analyzer
+
+사실: The object-relation observation coverage repair analyzer is Docker-verified.
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_coverage_repair.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_coverage_repair_v1
+coverage_gap_rows: 4
+repair_action_rows: 4
+repair_action_counts:
+  request_object_relation_observation: 2
+  waive_non_target_policy_promotion_only: 2
+request_coverage_rows: 2
+evaluated_coverage_gap_rows: 4
+evaluation_only_missing_detector_candidate_valid_rows: 0
+evaluation_only_missing_detector_target_pair_rows: 0
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+coverage_repair_gate_passed: true
+paper_claim_allowed: false
+recommended_next_action: freeze_object_relation_observation_plan_contract
+```
+
+에이전트 추론: The analyzer preserves the label separation rule: rank-6 dense relation gaps become bounded observation targets, while rank-91 medium relation gaps are waived only from terminal-policy promotion by an action-time rank/context rule. This resolves the coverage materialization step but still does not permit terminal relation utility or `first_eval` rerun.
+
+#### Object-Relation Observation Plan Contract
+
+사실: The object-relation observation plan contract is frozen before planner implementation.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_observation_plan_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_observation_plan_v1.verify.json
+source: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_coverage_repair_v1/goal_validity_object_relation_coverage_repair_summary.json
+planner_name: object_relation_depth_recheck_standoff_v1
+observation_target_rows: 2
+observation_targets:
+  - rival_identity:12 / vlmaps:export:bed:spatial_nms:5 / rank 6 / relation_dense
+  - rival_identity:14 / vlmaps:export:bed:spatial_nms:5 / rank 6 / relation_dense
+waiver_rows_kept_out_of_terminal_policy_promotion: 2
+minimum_plan_rows: 8
+minimum_plan_rows_per_request: 4
+relation_anchor_candidates_per_plan_minimum: 2
+required_viewpoint_policy: relation_multiview_depth_recheck_v1
+projection_anchor_policy: projection_anchor_height_sweep_v1
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+paper_claim_allowed: false
+next_script_target: runtime/h001_runtime/plan_expanded_retrieval_goal_validity_object_relation_observation.py
+```
+
+에이전트 추론: This contract turns the coverage repair output into a planner-only task. The next implementation must create relation-aware multiview/depth-recheck observation rows from action-time relation anchors, not a relation-score terminal selector or an evaluation-label shortcut.
+
+#### Object-Relation Observation Planner
+
+사실: The object-relation observation planner is Docker-verified.
+
+```text
+script: runtime/h001_runtime/plan_expanded_retrieval_goal_validity_object_relation_observation.py
+docker_image: research3/habitat-h001:20260508-calib-artifacts
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_plan_v1
+plan_rows: 8
+skipped_rows: 0
+plan_rows_by_request:
+  rival_identity:12: 4
+  rival_identity:14: 4
+relation_anchor_candidates_per_plan_min_mean_max: 8 / 8 / 8
+direction_sources: source_viewpoint_to_target, target_to_relation_anchor, relation_anchor_to_target, orthogonal_relation_axis
+candidate_artifact_rows: 1
+output_forbidden_action_field_count: 0
+terminal_commit_rows: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+object_relation_observation_plan_gate_passed: true
+```
+
+에이전트 추론: The planner now turns the dense relation coverage gap into a bounded action-time observation substrate. It still does not provide terminal utility; the next gate is frame/projection smoke and then detector substrate validation.
+
+#### Object-Relation Observation Frame/Projection Smoke
+
+사실: The object-relation observation frame/projection smoke is Docker-verified.
+
+```text
+frame_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_frames_v1
+filtered_frame_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+projection_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_projection_v1
+frame_rows: 8 / 8
+rendered_heading_count: 72
+headings_per_row_min_max: 9 / 9
+candidate_point_field: grounded_position
+candidate_ids_per_frame: 9
+nonblank_rows: 8 / 8
+removed_blank_heading_count: 0
+strict_no_blank_heading_gate_passed: true
+projection_visible_rows: 8 / 8
+projection_visible_rate: 1.0
+missing_candidate_rows: 0
+frame_revision_metadata_rows: 8
+candidate_selection_source: explicit_candidate_ids
+uses_gt_for_action: false
+paper_claim_allowed: false
+projection_anchor_smoke_passed: true
+```
+
+에이전트 추론: The render/projection substrate is now detector-ready. This still only verifies viewpoint/render/projection feasibility, not whether detector/SAM2 association resolves the visible-but-depth-weak relation gap.
+
+#### Object-Relation Observation Detector Substrate
+
+사실: The object-relation observation detector substrate is Docker-verified.
+
+```text
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_detector_substrate_v1
+detector_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_detector_substrate_v1/detector_v3c
+log: runtime/logs/object-relation-detector-substrate-20260530-092542.log
+detector_rows: 8
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 1.0
+rows_with_candidate_association: 8 / 8
+associated_candidate_heading_count: 48
+association_rows: 72
+detector_box_rows: 110
+detector_mask_rows: 110
+projection_status_counts:
+  visible: 58
+  out_of_fov: 14
+candidate_selection_source: explicit_candidate_ids
+projection_anchor_policy: projection_anchor_height_sweep_v1
+uses_gt_for_action: false
+paper_claim_allowed: false
+passes_detector_substrate_gate: true
+```
+
+에이전트 추론: Detector availability and candidate association are no longer the blocker for these two dense relation gaps. The next contract should define post-detector evidence rows and decide whether the new detector-depth evidence resolves the prior visible-but-depth-weak relation gap, while still separating this substrate result from terminal goal-validity utility.
+
 ### Generalization Decision
 
 #### 사실

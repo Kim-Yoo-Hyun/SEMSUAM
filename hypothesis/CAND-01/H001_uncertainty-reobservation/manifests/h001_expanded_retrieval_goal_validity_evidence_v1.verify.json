@@ -1,0 +1,25 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_evidence_contract.verify.v1",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_evidence_v1.json",
+  "date_checked": "2026-05-29",
+  "ok": true,
+  "checks": {
+    "request_ids_frozen": true,
+    "candidate_evidence_rows_frozen": true,
+    "planner_defined": true,
+    "objective_defined": true,
+    "terminal_commit_blocked": true,
+    "forbidden_action_inputs_defined": true,
+    "minimum_plan_gate_defined": true,
+    "paper_claim_allowed": false
+  },
+  "expected_request_ids": [
+    "rival_identity:12",
+    "rival_identity:14"
+  ],
+  "expected_candidate_evidence_rows": 200,
+  "notes": [
+    "This verify file checks the frozen design contract only.",
+    "Planner implementation and Docker smoke are recorded in the runtime output summary."
+  ]
+}

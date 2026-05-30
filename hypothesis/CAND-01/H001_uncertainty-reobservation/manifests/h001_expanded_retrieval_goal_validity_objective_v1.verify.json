@@ -1,0 +1,16 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_objective_verify.v1",
+  "contract": "h001_expanded_retrieval_goal_validity_objective_v1.json",
+  "date_checked": "2026-05-29",
+  "expected_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_smoke_v1",
+  "expected_summary": {
+    "planned_request_rows": 2,
+    "planned_candidate_rows": 158,
+    "observed_detector_candidate_rows": 20,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false,
+    "action_evidence_forbidden_key_count": 0,
+    "objective_analyzer_gate_passed": true
+  },
+  "verification_command": "jq '{gate:.gate.objective_analyzer_gate_passed, terminal:.terminal_utility_validation_allowed, full_required:.full_detector_substrate_required, forbidden:.action_evidence_forbidden_key_count, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_smoke_v1/goal_validity_objective_summary.json"
+}

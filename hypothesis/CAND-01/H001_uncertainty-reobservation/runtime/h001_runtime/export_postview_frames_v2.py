@@ -174,6 +174,8 @@ def passthrough_fields(row: Dict[str, Any]) -> Dict[str, Any]:
         "proxy_",
         "source_pool_",
         "focus_",
+        "goal_validity_",
+        "object_relation_",
         "rival_",
         "standoff_",
         "target_",

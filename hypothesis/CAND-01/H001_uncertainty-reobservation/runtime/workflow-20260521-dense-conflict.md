@@ -1787,6 +1787,1162 @@ paper_claim_allowed: false
 
 This contract freezes backend expansion as the next branch, not a terminal rule. It allows fixed non-GT candidate generation, spatial diversity, reachability checks, and later detector/local-context evidence only after expansion. It rejects pass-through to goal-validity confirmation until an expanded pool is candidate-accountable and action-time safe enough to hand off. If dense re-export is needed, it must be launched as a background job with logged command and verification.
 
+### Expanded Retrieval Backend Pool Expansion Analyzer
+
+### 사실
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_backend_pool_expansion.py
+output: local_dataset/runs/h001_expanded_retrieval_backend_pool_expansion_v1
+request_rows: 5
+evaluated_rows: 5
+backend_route_action_counts:
+  request_backend_candidate_generation: 5
+  route_to_goal_validity_confirmation_after_expansion: 0
+  defer_backend_pool_unresolved: 0
+expanded_candidate_count_min/max: 10 / 10
+fixed_candidate_budget_minimum: 20
+new_candidate_count_min/max: 4 / 8
+reachable_candidate_count_min/max: 1 / 1
+no_valid_rows_by_backend_route:
+  request_backend_candidate_generation: 3
+valid_rows_by_backend_route:
+  request_backend_candidate_generation: 2
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+backend_pool_expansion_gate_passed: true
+goal_validity_confirmation_unblocked: false
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The available paper-scale candidate artifact is only a top-10 preview. It is useful for accounting and post-action diagnosis, but it does not meet the fixed backend expansion budget of at least `20` candidates. The next step is therefore not goal-validity confirmation; it is a fixed non-GT backend candidate generation contract that materializes a larger, spatially accountable pool.
+
+### Expanded Retrieval Backend Candidate Generation Contract
+
+### 사실
+
+```text
+contract: manifests/h001_expanded_retrieval_backend_candidate_generation_v1.json
+verify: manifests/h001_expanded_retrieval_backend_candidate_generation_v1.verify.json
+status: frozen_design_contract_before_implementation
+source_filter:
+  backend_route_action: request_backend_candidate_generation
+source_rows: 5
+fixed_generation_policy: fixed_action_evidence_top20_v1
+candidate_backend_family: existing_vlmaps_action_evidence_jsonl
+generated_candidate_count_per_row: 20
+expected_generated_candidate_rows: 100
+source_action_evidence_rows_available_for_targets: 5
+required_outputs:
+  backend_candidate_generation_rows.jsonl
+  backend_candidate_generation_evaluated_rows.jsonl
+  backend_candidate_generation_summary.json
+terminal_commit_allowed: false
+action_evidence_forbidden_key_count_maximum: 0
+duplicate_candidate_id_count_maximum: 0
+nonfinite_candidate_position_count_maximum: 0
+label_join_only_after_generation_rows: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+This contract deliberately tests the existing top-20 non-GT action evidence before launching a deeper dense backend job. If fixed top-20 generation still leaves no-valid pools after evaluation-only reporting, the next contract should be deeper backend generation, not goal-validity confirmation.
+
+### Expanded Retrieval Backend Candidate Generation Analyzer
+
+### 사실
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_backend_candidate_generation.py
+output: local_dataset/runs/h001_expanded_retrieval_backend_candidate_generation_v1
+summary: local_dataset/runs/h001_expanded_retrieval_backend_candidate_generation_v1/backend_candidate_generation_summary.json
+generation_rows: local_dataset/runs/h001_expanded_retrieval_backend_candidate_generation_v1/backend_candidate_generation_rows.jsonl
+evaluated_rows: local_dataset/runs/h001_expanded_retrieval_backend_candidate_generation_v1/backend_candidate_generation_evaluated_rows.jsonl
+request_rows: 5
+evaluated_rows: 5
+generated_candidate_rows: 100
+candidate_generation_status_counts:
+  generated_fixed_top20_pool: 5
+  request_deeper_backend_generation: 0
+  defer_backend_candidate_generation_unresolved: 0
+generated_candidate_count_min/max: 20 / 20
+duplicate_candidate_id_count_min/max: 0 / 0
+nonfinite_candidate_position_count_min/max: 0 / 0
+reachable_or_standoff_candidate_count_min/max: 1 / 1
+positive_support_candidate_count_min/max: 3 / 5
+evaluation_only_contains_valid_rows: 2
+evaluation_only_no_valid_rows: 3
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+backend_candidate_generation_gate_passed: true
+goal_validity_confirmation_unblocked: false
+deeper_backend_generation_required: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+Command:
+
+```bash
+docker run --rm --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.analyze_expanded_retrieval_backend_candidate_generation \
+    --contract /workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_backend_candidate_generation_v1.json \
+    --backend-expansion-rows /runs/h001_expanded_retrieval_backend_pool_expansion_v1/backend_pool_expansion_rows.jsonl \
+    --source-action-evidence /runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_action_evidence_rows.jsonl \
+    --evaluation-labels /runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_evaluation_labels.jsonl \
+    --out-root /runs/h001_expanded_retrieval_backend_candidate_generation_v1
+```
+
+### 에이전트 추론
+
+The fixed top-20 action evidence passes the structural candidate generation gate, so the immediate blocker is not candidate count or lineage. The remaining blocker is candidate-pool validity: post-generation evaluation-only labels still show `3/5` no-valid pools. The next contract should therefore test deeper backend generation or a non-GT pool-validity proxy before goal-validity confirmation.
+
+### Expanded Retrieval Deeper Backend Generation Contract
+
+### 사실
+
+```text
+contract: manifests/h001_expanded_retrieval_deeper_backend_generation_v1.json
+verify: manifests/h001_expanded_retrieval_deeper_backend_generation_v1.verify.json
+status: frozen_design_contract_before_implementation
+source_rows: 5 fixed top-20 generation rows
+diagnostic_target_request_rows: 3 no-valid rows after evaluation-only label join
+target_scene_query_pairs: 2
+target_scene_query_keys:
+  QaLdnwvtxbs::bed
+  bxsVRursffK::bed
+first_variant: spatial_nms_p90_k100_d5_v1
+expected_candidate_count_minimum_per_request: 50
+expected_candidate_count_primary_target_per_request: 100
+expected_new_beyond_top20_minimum_per_request: 30
+generated_candidate_rows_minimum: 150
+required_outputs:
+  deeper_backend_generation_rows.jsonl
+  deeper_backend_generation_evaluated_rows.jsonl
+  deeper_backend_generation_summary.json
+  deeper_backend_scene_query_artifacts.jsonl
+terminal_commit_allowed: false
+action_evidence_forbidden_key_count_maximum: 0
+label_join_only_after_generation_rows: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+This contract is a diagnostic backend recall repair contract. It freezes the first deeper generation variant before implementation, but it does not allow a paper method claim because the diagnostic target rows are selected after evaluation-only no-valid reporting. The next implementation should materialize target scene/query specs and deeper candidate rows first, then join labels only for recovery analysis.
+
+### Expanded Retrieval Deeper Backend Generation Analyzer / Job
+
+### 사실
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_deeper_backend_generation.py
+job: runtime/jobs/expanded_retrieval_deeper_backend_generation.sh
+target_spec_output: local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_v1
+existing_artifact_smoke_output: local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_existing_p97_k20_smoke_v1
+full_job_session: h001-deeper-backend-20260529-003000
+full_job_status: completed
+full_job_log: runtime/logs/expanded-retrieval-deeper-backend-generation-20260529-003000.log
+full_job_output: local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_v1
+full_job_candidate_artifact: local_dataset/runs/h001_expanded_retrieval_deeper_backend_artifact_spatial_nms_p90_k100_d5_v1/all_scenes_aligned.jsonl
+target_spec_source_rows: 5
+target_spec_request_rows: 3
+target_scene_query_pairs: 2
+target_spec_terminal_commit_rows: 0
+target_spec_action_forbidden_keys: 0
+existing_artifact_candidate_rows: 60
+existing_artifact_candidate_count_per_request: 20
+existing_artifact_new_beyond_top20: 0
+existing_artifact_valid_containing_rows: 0
+existing_artifact_no_valid_rows: 3
+existing_artifact_gate_passed: false
+full_artifact_coverage_ok: true
+full_artifact_scene_query_rows: 12
+full_artifact_candidates: 1200
+full_generated_candidate_rows: 300
+full_candidate_count_per_request: 100
+full_new_beyond_top20_per_request: 80
+full_valid_containing_rows: 2
+full_still_no_valid_rows: 1
+full_recovered_rows:
+  rival_identity:12 first_correct_rank=34 correct_count=3
+  rival_identity:14 first_correct_rank=34 correct_count=3
+full_still_no_valid_row:
+  rival_identity:13
+full_gate_passed: true
+goal_validity_confirmation_unblocked: true
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The analyzer/job implementation closes the target-spec and schema step. The existing `p97_k20` artifact smoke is useful because it exercises artifact loading, scene-key normalization, nonfinite-candidate handling, action/evaluation separation, and label join. It is expected to fail the deeper gate because it is not the fixed `spatial_nms_p90_k100_d5_v1` variant and adds no new candidates beyond top-20. The completed full job shows backend recall repair is partially effective: `QaLdnwvtxbs::bed` recovers valid candidates, while `bxsVRursffK::bed` remains no-valid. The next contract should split these paths instead of passing all three rows into one goal-validity confirmation rule.
+
+### Expanded Retrieval Goal-Validity Confirmation Contract
+
+### 사실
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_confirmation_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_confirmation_v1.verify.json
+status: frozen_design_contract_before_implementation
+source_rows: 3 deeper backend generation rows
+goal_validity_request_rows: 2
+goal_validity_request_ids:
+  rival_identity:12
+  rival_identity:14
+backend_pool_validity_branch_rows: 1
+backend_pool_validity_request_ids:
+  rival_identity:13
+candidate_count_per_request: 100
+new_beyond_top20_per_request: 80
+terminal_commit_allowed: false
+action_evidence_forbidden_key_count_maximum: 0
+label_join_only_after_request_and_evidence_rows: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The recovered-row contract is a branch-separation gate. It allows goal-validity evidence only where the deeper backend has recovered a valid pool under evaluation-only analysis, and it keeps the still-no-valid row on a backend/pool-validity branch. This avoids treating object/category observation evidence as an explanation for a row that still has no candidate capable of satisfying the ObjectNav goal.
+
+### Expanded Retrieval Goal-Validity Confirmation Analyzer
+
+### 사실
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_confirmation.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_confirmation_v1
+request_rows: 2
+branch_rows: 1
+evidence_rows: 200
+evaluated_rows: 3
+handoff_action_counts:
+  request_goal_validity_confirmation_evidence: 2
+  request_non_gt_pool_validity_proxy_or_fallback_backend_variant: 1
+request_ids:
+  rival_identity:12
+  rival_identity:14
+branch_request_ids:
+  rival_identity:13
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+goal_validity_confirmation_request_gate_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The analyzer materializes the split required by the contract. It does not prove a terminal policy; it keeps recovered-pool goal-validity evidence and still-no-valid backend/pool validity as separate branches. The still-no-valid branch is now specified by the pool-validity fallback contract below.
+
+## Expanded Retrieval Pool-Validity Branch Fallback Contract
+
+### 사실
+
+```text
+contract: manifests/h001_expanded_retrieval_pool_validity_branch_v1.json
+verify: manifests/h001_expanded_retrieval_pool_validity_branch_v1.verify.json
+status: frozen_design_contract_before_implementation
+source_branch_rows: 1
+target_request_ids:
+  rival_identity:13
+target_scene_query_keys:
+  bxsVRursffK::bed
+source_variant: spatial_nms_p90_k100_d5_v1
+source_candidate_count: 100
+source_reachable_or_standoff_candidate_count: 100
+source_positive_support_candidate_count: 5
+source_duplicate_candidate_id_count: 0
+source_nonfinite_candidate_position_count: 0
+non_gt_proxy_ready: false
+first_fallback_variant: spatial_nms_p80_k200_d3_v1
+second_fallback_variant: components_p80_min1_k200_v1
+terminal_commit_rows_maximum: 0
+action_evidence_forbidden_key_count_maximum: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The still-no-valid `bxsVRursffK::bed` branch is not separable by simple non-GT structural proxy: it has more reachable/standoff candidates than the recovered rows and the same positive-support count. The next implementation should therefore materialize the fixed fallback backend variant rather than tune a proxy on the diagnostic label join. Goal-validity confirmation remains blocked for this branch until fallback generation rows are written label-free and recovery is checked only after generation.
+
+## Expanded Retrieval Pool-Validity Branch Analyzer / Job
+
+### 사실
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_pool_validity_branch.py
+job: runtime/jobs/expanded_retrieval_pool_validity_branch.sh
+target_spec_output: local_dataset/runs/h001_expanded_retrieval_pool_validity_branch_v1
+target_spec_branch_rows: 1
+target_spec_action_rows: 1
+target_spec_evaluated_rows: 1
+target_spec_status_counts:
+  defer_pool_validity_fallback_unresolved: 1
+target_spec_reason:
+  fallback_candidate_artifact_row_missing: 1
+target_spec_gate_passed: false
+target_spec_terminal_commit_rows: 0
+target_spec_action_forbidden_keys: 0
+tmux_session: h001-pool-validity-fallback-20260529-093033
+status_file: local_dataset/runs/h001_expanded_retrieval_pool_validity_branch_v1/job_status.json
+current_status: completed
+current_stage: completed
+log: runtime/logs/expanded-retrieval-pool-validity-branch-20260529-093033.log
+artifact_out: local_dataset/runs/h001_expanded_retrieval_pool_validity_artifact_spatial_nms_p80_k200_d3_v1
+artifact_coverage_ok: true
+artifact_scene_count: 1
+artifact_query_rows: 6
+artifact_candidates: 1200
+final_fallback_candidate_rows: 200
+final_new_beyond_previous_pool: 100
+final_gate_passed: true
+final_valid_containing_rows: 0
+final_no_valid_rows: 1
+goal_validity_confirmation_unblocked: false
+second_fallback_backend_required: true
+verification_command:
+  cat local_dataset/runs/h001_expanded_retrieval_pool_validity_branch_v1/job_status.json
+  cat local_dataset/runs/h001_expanded_retrieval_pool_validity_artifact_spatial_nms_p80_k200_d3_v1/coverage_check.json
+  cat local_dataset/runs/h001_expanded_retrieval_pool_validity_branch_v1/pool_validity_summary.json
+```
+
+### 에이전트 추론
+
+The target-spec smoke confirms the branch analyzer preserves action/evaluation separation before the expensive artifact exists. The completed first fallback shows the wider spatial NMS backend is structurally adequate but still does not recover a valid goal candidate for `bxsVRursffK::bed`. The next branch should either materialize the predeclared component fallback or, after that fails, record a backend blind-spot note instead of sending this row to goal-validity confirmation.
+
+## Expanded Retrieval Pool-Validity Second Fallback Contract
+
+### 사실
+
+```text
+contract: manifests/h001_expanded_retrieval_pool_validity_second_fallback_v1.json
+verify: manifests/h001_expanded_retrieval_pool_validity_second_fallback_v1.verify.json
+status: frozen_design_contract_before_implementation
+source_branch_rows: 1
+target_request_ids:
+  rival_identity:13
+target_scene_query_keys:
+  bxsVRursffK::bed
+first_fallback_variant: spatial_nms_p80_k200_d3_v1
+first_fallback_candidate_count: 200
+first_fallback_new_beyond_source_pool_count: 100
+first_fallback_valid_containing_rows: 0
+first_fallback_no_valid_rows: 1
+second_fallback_variant: components_p80_min1_k200_v1
+second_fallback_selection_mode: components
+second_fallback_top_percentile: 80.0
+second_fallback_max_candidates: 200
+second_fallback_min_component_cells: 1
+terminal_commit_rows_maximum: 0
+action_evidence_forbidden_key_count_maximum: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+### 에이전트 추론
+
+The frozen second fallback keeps the branch diagnostic and label-separated. It tests whether component-level map export recovers a valid candidate where wider point-level spatial NMS did not. This is not a terminal utility rule; the branch either becomes eligible for later goal-validity evidence after evaluation-only recovery, or becomes a backend/source-map recall blind spot if the component fallback also remains no-valid.
+
+## Expanded Retrieval Pool-Validity Second Fallback Analyzer / Job
+
+### 사실
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_pool_validity_second_fallback.py
+job: runtime/jobs/expanded_retrieval_pool_validity_second_fallback.sh
+target_spec_output: local_dataset/runs/h001_expanded_retrieval_pool_validity_second_fallback_v1
+target_spec_branch_rows: 1
+target_spec_action_rows: 1
+target_spec_evaluated_rows: 1
+target_spec_status_counts:
+  defer_component_fallback_unresolved: 1
+target_spec_reason:
+  component_candidate_artifact_row_missing: 1
+target_spec_gate_passed: false
+target_spec_terminal_commit_rows: 0
+target_spec_action_forbidden_keys: 0
+tmux_session: h001-pool-validity-second-fallback-20260529-151217
+status_file: local_dataset/runs/h001_expanded_retrieval_pool_validity_second_fallback_v1/job_status.json
+current_status: completed
+current_stage: completed
+log: runtime/logs/expanded-retrieval-pool-validity-second-fallback-20260529-151217.log
+artifact_out: local_dataset/runs/h001_expanded_retrieval_pool_validity_artifact_components_p80_min1_k200_v1
+artifact_coverage_ok: true
+artifact_scene_count: 1
+artifact_query_rows: 6
+artifact_candidates: 1163
+final_component_candidate_rows: 200
+final_component_cells_min_mean_max: 1 / 20.29 / 1254
+final_new_positions_beyond_first_fallback: 200
+final_gate_passed: true
+final_valid_containing_rows: 0
+final_no_valid_rows: 1
+goal_validity_confirmation_unblocked: false
+backend_source_map_blind_spot_after_second_fallback: true
+verification_command:
+  cat local_dataset/runs/h001_expanded_retrieval_pool_validity_second_fallback_v1/job_status.json
+  cat local_dataset/runs/h001_expanded_retrieval_pool_validity_artifact_components_p80_min1_k200_v1/coverage_check.json
+  cat local_dataset/runs/h001_expanded_retrieval_pool_validity_second_fallback_v1/second_fallback_summary.json
+```
+
+### 에이전트 추론
+
+The component fallback rules out the simplest backend-granularity explanation for `bxsVRursffK::bed` under this diagnostic branch. Since both wider spatial NMS and component export are structurally valid but no-valid, the branch should be treated as source-map/backend recall failure rather than goal-validity ambiguity. The next active branch is candidate-specific goal-validity evidence for recovered rows `rival_identity:12` and `rival_identity:14`.
+
+## Expanded Retrieval Candidate-Specific Goal-Validity Evidence Contract / Planner
+
+### 사실
+
+The evidence contract is frozen at:
+
+```text
+hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_evidence_v1.json
+```
+
+It consumes:
+
+```text
+local_dataset/runs/h001_expanded_retrieval_goal_validity_confirmation_v1/goal_validity_confirmation_request_rows.jsonl
+local_dataset/runs/h001_expanded_retrieval_goal_validity_confirmation_v1/goal_validity_confirmation_evidence_rows.jsonl
+```
+
+The target request ids are `rival_identity:12` and `rival_identity:14`. The planner/objective separates `candidate_specific_support`, `category_only_support`, `cross_view_or_rival_ambiguous`, `no_visual_support`, and `unrenderable_or_unreachable`. Terminal commit is not allowed.
+
+Docker planner implementation:
+
+```text
+script: runtime/h001_runtime/plan_expanded_retrieval_goal_validity_evidence.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1
+request_rows: 2
+candidate_evidence_target_rows: 200
+plan_rows: 158
+skipped_rows: 42
+skipped_reason_counts: standoff_navmesh_required 42
+plan_rows_by_request: rival_identity:12 79, rival_identity:14 79
+candidate_artifact_rows: 1
+candidate_artifact_candidate_count: 80
+target_distance_min_mean_max_m: 1.5952 / 1.7506 / 1.8677
+viewpoint_source_counts: standoff_navmesh 158
+terminal_commit_rows: 0
+output_forbidden_action_field_count: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+goal_validity_evidence_plan_gate_passed: true
+```
+
+Verification command:
+
+```bash
+jq -e '.gate.goal_validity_evidence_plan_gate_passed == true and .plan_rows == 158 and .skipped_rows == 42 and .output_forbidden_action_field_count == 0 and .terminal_commit_rows == 0 and .uses_gt_for_action == false and .paper_claim_allowed == false' local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1/goal_validity_evidence_plan_summary.json
+```
+
+### 에이전트 추론
+
+This closes the planner/objective definition step for recovered rows. The result is not terminal utility evidence. It only says the recovered candidate pools can be converted into label-free, candidate-specific standoff observation rows with local rival context. The bounded frame/projection smoke now passes, so the next step is detector/SAM2 scoring.
+
+### Expanded Retrieval Candidate-Specific Goal-Validity Frame/Projection Smoke
+
+### 사실
+
+```text
+frame_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_smoke_v1
+filtered_frame_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_smoke_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+projection_smoke_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_projection_smoke_v1
+bounded_rows: 20
+frame_rows: 20 / 20
+rendered_heading_count: 172
+headings_per_row_min/max: 5 / 11
+unique_scenes: 1
+nonblank_rows: 20 / 20
+removed_blank_heading_count: 0
+strict_no_blank_heading_gate_passed: true
+projection_visible_rows: 20 / 20
+projection_visible_rate: 1.0
+missing_candidate_rows: 0
+frame_revision_metadata_rows: 20
+candidate_selection_source:
+  explicit_candidate_ids: 20
+uses_gt_for_action: false
+paper_claim_allowed: false
+projection_smoke_gate_passed: true
+```
+
+Verification command:
+
+```bash
+jq '{rows_requested,rows_exported,rendered_heading_count,min_headings_per_row,max_headings_per_row,unique_scenes,candidate_point_field,uses_gt_for_action}' local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_smoke_v1/summary.json
+jq '{input_rows,output_rows,dropped_rows,removed_blank_heading_count,row_level_nonblank_gate_passed,strict_no_blank_heading_gate_passed,uses_gt_for_action}' local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_smoke_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json
+jq '{rows,projection_anchor_visible_rows,projection_anchor_visible_rate,missing_candidate_rows,frame_revision_metadata_rows,candidate_selection_source_counts,gate,uses_gt_for_action,paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_projection_smoke_v1/projection_anchor_smoke_summary.json
+```
+
+### 에이전트 추론
+
+The bounded smoke removes the immediate rendering/projection blocker for candidate-specific goal-validity evidence. It does not prove detector evidence quality or terminal utility. The next gate is detector/SAM2 substrate on the filtered frame summary, followed by a post-detector objective analyzer.
+
+### Expanded Retrieval Candidate-Specific Goal-Validity Detector/SAM2 Substrate Job
+
+### 사실
+
+```text
+status: completed
+tmux_session: h001-goal-validity-detector-20260529-171217
+script: runtime/jobs/expanded_retrieval_detector_substrate.sh
+frames: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_smoke_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+frame_root: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_smoke_v1
+candidate_artifact: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1/goal_validity_evidence_candidate_artifact.jsonl
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_smoke_v1
+detector_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_smoke_v1/detector_v3c
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/goal-validity-evidence-detector-substrate-20260529-171217.log
+expected_frame_rows: 20
+expected_policy: ExpandedRetrievalGoalValidityEvidence
+max_frames: 20
+candidate_point_field: grounded_position
+projection_anchor_height_offsets_m: 0.0,0.4,0.8,1.2,1.6,2.0,2.4
+min_detector_box_rate: 0.80
+min_sam2_mask_rate: 0.80
+min_candidate_association_rate: 0.40
+detector_rows: 20
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.95
+rows_with_candidate_association: 19
+passes_detector_substrate_gate: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+Launch command:
+
+```bash
+tmux new-session -d -s h001-goal-validity-detector-20260529-171217 \
+  'cd /home/yoohyun/research3 && TS=20260529-171217 ROOT=/home/yoohyun/research3 RUNS_ROOT=/home/yoohyun/research3/local_dataset/runs MODEL_ROOT=/home/yoohyun/research3/local_dataset/models PLAN_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1 FRAME_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_smoke_v1 FRAMES=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_smoke_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl FRAME_ROOT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_smoke_v1 CANDIDATE_ARTIFACT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1/goal_validity_evidence_candidate_artifact.jsonl OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_smoke_v1 DETECTOR_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_smoke_v1/detector_v3c OPENVOCAB_IMG=research3/openvocab-perception:20260513-v3c-gdino-sam2 DEVICE=cuda MAX_FRAMES=20 EXPECTED_FRAME_ROWS=20 EXPECTED_POLICY=ExpandedRetrievalGoalValidityEvidence MAX_HEADINGS_PER_FRAME=0 MAX_DETECTOR_BOXES_PER_HEADING=3 MAX_MASKS_PER_HEADING=3 CANDIDATE_POINT_FIELD=grounded_position PROJECTION_ANCHOR_HEIGHT_OFFSETS_M=0.0,0.4,0.8,1.2,1.6,2.0,2.4 BOX_THRESHOLD=0.10 TEXT_THRESHOLD=0.10 ASSOCIATION_DEPTH_TOLERANCE_M=1.0 MIN_DETECTOR_BOX_RATE=0.80 MIN_SAM2_MASK_RATE=0.80 MIN_CANDIDATE_ASSOCIATION_RATE=0.40 MAX_DEBUG_IMAGES=80 LOG=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/goal-validity-evidence-detector-substrate-20260529-171217.log STATUS=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_smoke_v1/job_status.json bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_detector_substrate.sh'
+```
+
+Verification command:
+
+```bash
+cat local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_smoke_v1/job_status.json
+cat local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_smoke_v1/expanded_retrieval_detector_substrate_summary.json
+```
+
+### 에이전트 추론
+
+The bounded detector/SAM2 substrate is strong enough to proceed to objective design: box/mask availability is not the blocker, and candidate association succeeds on `19/20` rows. The result still cannot be used as terminal utility evidence until a post-detector analyzer separates candidate-specific support from category-only visibility and rival ambiguity.
+
+### Expanded Retrieval Candidate-Specific Goal-Validity Objective Analyzer
+
+### 사실
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_objective_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_objective_v1.verify.json
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_evidence.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_smoke_v1
+planned_request_rows: 2
+planned_candidate_rows: 158
+observed_detector_candidate_rows: 20
+observed_detector_request_rows: 1
+unscored_candidate_rows: 138
+candidate_specific_support_rows: 18
+weak_or_partial_candidate_specific_support_rows: 2
+not_scored_in_bounded_substrate_rows: 138
+detector_box/sam2/candidate_association: 1.0 / 1.0 / 0.95
+observed_candidate_evaluation_wrong: 20 / 20
+first_correct_generated_rank: 34 for rival_identity:12 and rival_identity:14
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+objective_analyzer_gate_passed: true
+terminal_utility_validation_allowed: false
+full_detector_substrate_required: true
+paper_claim_allowed: false
+```
+
+Verification command:
+
+```bash
+jq '{gate:.gate.objective_analyzer_gate_passed, terminal:.terminal_utility_validation_allowed, full_required:.full_detector_substrate_required, forbidden:.action_evidence_forbidden_key_count, observed_wrong:.observed_candidate_evaluation.evaluation_only_observed_wrong_candidate_count, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_smoke_v1/goal_validity_objective_summary.json
+```
+
+### 에이전트 추론
+
+The analyzer validates the schema and confirms that candidate-specific detector evidence is being accounted for without GT action leakage. It also blocks terminal utility validation: the bounded detector subset observes only `20/158` candidates, covers only `1/2` recovered request rows, and all observed candidates are evaluation-only wrong. The full-substrate contract below is now the launch contract for the recovered-row frame/projection/detector run, not `first_eval` rerun or terminal commit validation.
+
+### Expanded Retrieval Full Candidate-Specific Goal-Validity Substrate Contract
+
+### 사실
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_full_substrate_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_full_substrate_v1.verify.json
+status: frozen before full frame/projection/detector run
+source_plan: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1/goal_validity_evidence_plan.jsonl
+candidate_artifact: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1/goal_validity_evidence_candidate_artifact.jsonl
+expected_request_rows: 2
+expected_plan_rows: 158
+expected_plan_rows_by_request: rival_identity:12 79, rival_identity:14 79
+expected_skipped_rows: 42
+skipped_rank_range_by_request: 63-100 for both requests
+correct_candidate_rows_in_plan: 6
+correct_candidate_rows_in_skipped: 0
+expected_correct_generated_ranks: 34, 57, 60 for both recovered requests
+frame_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1
+projection_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_projection_full_v1
+detector_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1
+expected_frame_rows: 158
+expected_detector_rows: 158
+min_detector_box_rate: 0.80
+min_sam2_mask_rate: 0.80
+min_candidate_association_rate: 0.40
+terminal_commit_allowed: false
+paper_claim_allowed: false
+```
+
+Frame export command:
+
+```bash
+docker run --rm --gpus all --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.export_postview_frames_v2 \
+    --data-root /data \
+    --viewpoint-decisions /runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1/goal_validity_evidence_plan.jsonl \
+    --candidate-artifact /runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1/goal_validity_evidence_candidate_artifact.jsonl \
+    --out-root /runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1 \
+    --policy ExpandedRetrievalGoalValidityEvidence \
+    --max-decisions 0 \
+    --max-candidates-per-decision 1 \
+    --candidate-point-field grounded_position \
+    --yaw-offsets=-30,0,30 \
+    --width 160 \
+    --height 120 \
+    --camera-height 1.5 \
+    --hfov 90
+```
+
+Nonblank/projection commands:
+
+```bash
+docker run --rm --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.filter_nonblank_frame_summary \
+    --frame-summary /runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1/rival_identity_frame_summary.jsonl \
+    --frame-root /runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1 \
+    --out-root /runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1/nonblank_filter_v1 \
+    --min-stddev 0.0
+
+docker run --rm --ipc=host \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -w /workspace \
+  research3/habitat-h001:20260508-calib-artifacts \
+  micromamba run -n base python -m h001_runtime.smoke_expanded_retrieval_projection_anchor \
+    --frames /runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl \
+    --frame-root /runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1 \
+    --candidate-artifact /runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1/goal_validity_evidence_candidate_artifact.jsonl \
+    --out-root /runs/h001_expanded_retrieval_goal_validity_evidence_projection_full_v1 \
+    --projection-anchor-height-offsets-m 0.0,0.4,0.8,1.2,1.6,2.0,2.4 \
+    --candidate-point-field grounded_position \
+    --max-candidates-per-frame 1 \
+    --expected-rows 158 \
+    --min-visible-row-rate 0.95
+```
+
+Detector launch template:
+
+```bash
+ts=$(date +%Y%m%d-%H%M%S)
+tmux new-session -d -s "h001-goal-validity-full-detector-${ts}" \
+  "cd /home/yoohyun/research3 && \
+   TS=${ts} \
+   ROOT=/home/yoohyun/research3 \
+   RUNS_ROOT=/home/yoohyun/research3/local_dataset/runs \
+   MODEL_ROOT=/home/yoohyun/research3/local_dataset/models \
+   PLAN_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1 \
+   FRAME_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1 \
+   FRAMES=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl \
+   FRAME_ROOT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1 \
+   CANDIDATE_ARTIFACT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1/goal_validity_evidence_candidate_artifact.jsonl \
+   OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1 \
+   DETECTOR_OUT=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1/detector_v3c \
+   OPENVOCAB_IMG=research3/openvocab-perception:20260513-v3c-gdino-sam2 \
+   DEVICE=cuda \
+   MAX_FRAMES=158 \
+   EXPECTED_FRAME_ROWS=158 \
+   EXPECTED_POLICY=ExpandedRetrievalGoalValidityEvidence \
+   MAX_HEADINGS_PER_FRAME=0 \
+   MAX_DETECTOR_BOXES_PER_HEADING=3 \
+   MAX_MASKS_PER_HEADING=3 \
+   CANDIDATE_POINT_FIELD=grounded_position \
+   PROJECTION_ANCHOR_HEIGHT_OFFSETS_M=0.0,0.4,0.8,1.2,1.6,2.0,2.4 \
+   BOX_THRESHOLD=0.10 \
+   TEXT_THRESHOLD=0.10 \
+   ASSOCIATION_DEPTH_TOLERANCE_M=1.0 \
+   MIN_DETECTOR_BOX_RATE=0.80 \
+   MIN_SAM2_MASK_RATE=0.80 \
+   MIN_CANDIDATE_ASSOCIATION_RATE=0.40 \
+   MAX_DEBUG_IMAGES=180 \
+   LOG=/home/yoohyun/research3/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/goal-validity-full-detector-${ts}.log \
+   STATUS=/home/yoohyun/research3/local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1/job_status.json \
+   bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_detector_substrate.sh"
+```
+
+Verification command:
+
+```bash
+jq '{gate:.gate.passes_detector_substrate_gate, rows:.detector_rows, box:.detector_box_rate, sam2:.sam2_mask_rate, assoc:.candidate_association_rate, gt:.uses_gt_for_action, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1/expanded_retrieval_detector_substrate_summary.json
+```
+
+Full pipeline wrapper and launch:
+
+```bash
+ts=20260529-202640
+tmux new-session -d -s "h001-goal-validity-full-substrate-${ts}" \
+  "cd /home/yoohyun/research3 && TS=${ts} bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_goal_validity_full_substrate.sh"
+```
+
+Launch record:
+
+```text
+wrapper: runtime/jobs/expanded_retrieval_goal_validity_full_substrate.sh
+session: h001-goal-validity-full-substrate-20260529-202640
+working_directory: /home/yoohyun/research3
+log: hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/goal-validity-full-substrate-20260529-202640.log
+pipeline_status: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1/full_substrate_job_status.json
+detector_status: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1/job_status.json
+expected_files:
+  local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1/summary.json
+  local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json
+  local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_projection_full_v1/projection_anchor_smoke_summary.json
+  local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1/expanded_retrieval_detector_substrate_summary.json
+initial_status: running at detector_substrate after frame/nonblank/projection passed
+verification_command:
+  jq '{gate:.gate.passes_detector_substrate_gate, rows:.detector_rows, box:.detector_box_rate, sam2:.sam2_mask_rate, assoc:.candidate_association_rate, gt:.uses_gt_for_action, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1/expanded_retrieval_detector_substrate_summary.json
+```
+
+Known launch repair:
+
+```text
+failed_session: h001-goal-validity-full-substrate-20260529-202552
+failed_stage: frame_export
+failure: output root was host-created with insufficient Docker write permission
+repair: wrapper now chmods full frame/projection/detector output roots to 0777 before Docker execution
+```
+
+Completion and full objective analyzer:
+
+```text
+completed_session: h001-goal-validity-full-substrate-20260529-202640
+completed_at: 2026-05-29T20:29:04+09:00
+substrate_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1
+substrate_gate: true
+detector_rows: 158
+frame_rows: 158
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.9746835443037974
+rows_with_candidate_association: 154
+uses_gt_for_action: false
+paper_claim_allowed: false
+
+objective_contract: manifests/h001_expanded_retrieval_goal_validity_objective_full_v1.json
+objective_verify: manifests/h001_expanded_retrieval_goal_validity_objective_full_v1.verify.json
+objective_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_full_v1
+objective_analyzer_gate_passed: true
+observed_request_rows: 2
+observed_candidate_rows: 158
+unscored_candidate_rows: 0
+candidate_specific_support: 146
+weak_or_partial_candidate_specific_support: 12
+evaluation_only_observed_correct_candidate_count: 6
+evaluation_only_observed_wrong_candidate_count: 152
+proposal_action: defer_candidate_specific_support_ambiguous on both request rows
+unsafe_simpler_alternatives: semantic_top_observed, detector_score_best_observed, positive_support_best_observed, candidate_specific_support_best_observed
+terminal_utility_validation_allowed: false
+paper_claim_allowed: false
+```
+
+Bounded/full comparison:
+
+```text
+bounded_observed_candidate_rows: 20
+bounded_observed_request_rows: 1
+bounded_unscored_rows: 138
+bounded_observed_correct_wrong: 0 / 20
+full_observed_candidate_rows: 158
+full_observed_request_rows: 2
+full_unscored_rows: 0
+full_observed_correct_wrong: 6 / 152
+```
+
+Next ambiguity-resolution contract:
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1.verify.json
+status: frozen before implementation
+source_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_full_v1/goal_validity_objective_summary.json
+diagnostic_target: support saturation after full candidate-specific observation
+required_diagnostics:
+  support_saturation_profile
+  unsafe_selector_taxonomy
+  next_evidence_requirement
+blocked_actions:
+  threshold_tune_detector_score
+  threshold_tune_semantic_rank
+  terminal_commit_from_support_count
+  first_eval_rerun
+next_script_target: runtime/h001_runtime/diagnose_expanded_retrieval_goal_validity_ambiguity.py
+next_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1
+```
+
+Ambiguity-resolution diagnostic result:
+
+```text
+script: runtime/h001_runtime/diagnose_expanded_retrieval_goal_validity_ambiguity.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1
+ambiguity_diagnostic_gate_passed: true
+request_rows: 2
+candidate_rows: 158
+candidate_specific_support_count: 146
+candidate_specific_support_rate: 0.9240506329113924
+correct_support_count: 6
+wrong_support_count: 140
+correct_wrong_support_overlap: true
+selector_rows: 8
+wrong_selector_rows: 8
+wrong_selector_rows_by_variant:
+  semantic_top_observed: 2
+  detector_score_best_observed: 2
+  positive_support_best_observed: 2
+  candidate_specific_support_best_observed: 2
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+recommended_next_actions:
+  request_discriminative_instance_or_goal_region_evidence
+  request_relation_or_spatial_context_evidence
+  defer_goal_validity_terminal_policy
+paper_claim_allowed: false
+```
+
+Discriminative instance/goal-region evidence contract:
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_discriminative_evidence_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_discriminative_evidence_v1.verify.json
+status: frozen before implementation
+source_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1/goal_validity_ambiguity_resolution_summary.json
+request_ids: rival_identity:12, rival_identity:14
+expected_candidate_rows: 158
+candidate_specific_support_count: 146
+wrong_selector_rows: 8
+evaluation_only_correct_candidates: spatial_nms:33, spatial_nms:56, spatial_nms:59
+evaluation_only_unsafe_selector_candidates: spatial_nms:0, spatial_nms:21, spatial_nms:23
+required_outputs:
+  goal_validity_discriminative_candidate_rows.jsonl
+  goal_validity_discriminative_pair_rows.jsonl
+  goal_validity_discriminative_request_rows.jsonl
+  goal_validity_discriminative_evidence_summary.json
+blocked_actions:
+  threshold_tuning
+  terminal_commit_from_support_count
+  first_eval_rerun
+  policy_scale_comparison
+next_script_target: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_discriminative_evidence.py
+next_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_discriminative_evidence_v1
+```
+
+Discriminative analyzer result:
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_discriminative_evidence.py
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_discriminative_evidence_v1
+request_rows: 2
+candidate_rows: 158
+pair_rows: 420
+target_contrast_pair_rows_after_label_join: 18
+candidate_specific_support_count: 146
+simple_selector_candidate_count: 6
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+discriminative_evidence_gate_passed: true
+target_pair_visual_delta_sign_counts:
+  contrast_visual_higher: 8
+  selector_visual_higher: 10
+target_pair_region_proxy_counts:
+  adjacent_region_proxy: 12
+  distinct_region_proxy: 6
+recommended_next_action: request_relation_or_spatial_context_evidence
+paper_claim_allowed: false
+```
+
+Relation/spatial context contract:
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_relation_spatial_context_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_relation_spatial_context_v1.verify.json
+source_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_discriminative_evidence_v1/goal_validity_discriminative_evidence_summary.json
+request_rows: 2
+candidate_rows: 158
+pair_rows: 420
+target_contrast_pair_rows_after_label_join: 18
+target_visual_split_after_label_join: contrast_visual_higher 8 / selector_visual_higher 10
+target_region_split_after_label_join: adjacent_region_proxy 12 / distinct_region_proxy 6
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+blocked_actions: direct commit, threshold tuning, first_eval rerun, policy-scale comparison
+next_script_target: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_relation_spatial_context.py
+next_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_relation_spatial_context_v1
+```
+
+Relation/spatial context analyzer result:
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_relation_spatial_context.py
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_relation_spatial_context_v1
+request_rows: 2
+candidate_context_rows: 158
+pair_context_rows: 420
+spatial_context_group_count: 8
+target_contrast_pair_rows_after_label_join: 18
+target_pair_component_relation_counts:
+  same_component: 12
+  distinct_component: 6
+target_pair_context_score_delta_sign_counts:
+  contrast_context_higher: 18
+target_pair_failure_taxonomy_counts:
+  same_component_selector_visual_dominates: 10
+  same_component_context_not_discriminative: 2
+  context_candidate_for_followup: 6
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+relation_spatial_context_gate_passed: true
+diagnostic_conclusion: relation_spatial_context_signal_ready false
+recommended_next_action: request_scene_graph_or_object_relation_evidence
+paper_claim_allowed: false
+```
+
+Scene-graph/object-relation evidence contract:
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1.verify.json
+source_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_relation_spatial_context_v1/goal_validity_relation_spatial_context_summary.json
+request_rows: 2
+candidate_context_rows: 158
+pair_context_rows: 420
+spatial_context_group_count: 8
+target_contrast_pair_rows_after_label_join: 18
+same_component_target_pair_rows_after_label_join: 12
+same_component_selector_visual_dominates_after_label_join: 10
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+blocked_actions: direct commit, threshold tuning, first_eval rerun, policy-scale comparison
+next_script_target: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_scene_graph_object_relation.py
+next_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1
+```
+
+Scene-graph/object-relation analyzer result:
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_scene_graph_object_relation.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+scene_graph_object_relation_gate_passed: true
+request/candidate/pair/context_object_rows: 2 / 158 / 420 / 7788
+target_contrast_pair_rows_after_label_join: 18
+same_component_target_pair_rows_after_label_join: 12
+same_component_selector_visual_dominates_after_label_join: 10
+target_pair_relation_delta_sign_counts_after_label_join:
+  contrast_relation_higher: 18
+relation_separability_probe_supports_signal: true
+relation_coverage_complete: true
+detector_coverage_complete: false
+rows_with_detector_association_by_request: 77 / 79 for each recovered request
+scene_graph_object_relation_signal_ready: false
+recommended_next_action: request_object_relation_observation
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+paper_claim_allowed: false
+```
+
+Object-relation observation coverage repair contract:
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_coverage_repair_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_coverage_repair_v1.verify.json
+source_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_object_relation_summary.json
+source_gate: scene_graph_object_relation_gate_passed true
+source_signal_ready: false
+request/candidate/pair/context_object_rows: 2 / 158 / 420 / 7788
+detector_coverage_complete: false
+rows_with_detector_association_by_request: 77 / 79 for each recovered request
+detector_missing_candidate_rows: 4
+detector_missing_unique_candidate_ids:
+  - vlmaps:export:bed:spatial_nms:5
+  - vlmaps:export:bed:spatial_nms:90
+evaluation_only_missing_detector_correct_rows: 0
+evaluation_only_missing_detector_target_pair_rows: 0
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+blocked_actions: direct commit, threshold tuning, first_eval rerun, policy-scale comparison
+next_script_target: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_coverage_repair.py
+next_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_coverage_repair_v1
+```
+
+Object-relation observation coverage repair analyzer:
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_coverage_repair.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_coverage_repair_v1
+coverage_gap_rows: 4
+repair_action_rows: 4
+repair_action_counts:
+  request_object_relation_observation: 2
+  waive_non_target_policy_promotion_only: 2
+request_coverage_rows: 2
+evaluated_coverage_gap_rows: 4
+evaluation_only_missing_detector_candidate_valid_rows: 0
+evaluation_only_missing_detector_target_pair_rows: 0
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+coverage_repair_gate_passed: true
+paper_claim_allowed: false
+recommended_next_action: freeze_object_relation_observation_plan_contract
+```
+
+Object-relation observation plan contract:
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_observation_plan_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_observation_plan_v1.verify.json
+source_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_coverage_repair_v1/goal_validity_object_relation_coverage_repair_summary.json
+planner_name: object_relation_depth_recheck_standoff_v1
+observation_target_rows: 2
+observation_targets:
+  - rival_identity:12 / vlmaps:export:bed:spatial_nms:5 / rank 6 / relation_dense
+  - rival_identity:14 / vlmaps:export:bed:spatial_nms:5 / rank 6 / relation_dense
+waiver_rows_kept_out_of_terminal_policy_promotion: 2
+minimum_plan_rows: 8
+minimum_plan_rows_per_request: 4
+relation_anchor_candidates_per_plan_minimum: 2
+viewpoint_policy: relation_multiview_depth_recheck_v1
+projection_anchor_policy: projection_anchor_height_sweep_v1
+blocked_actions: direct commit, relation-signature best commit, threshold tuning, first_eval rerun, policy-scale comparison
+next_script_target: runtime/h001_runtime/plan_expanded_retrieval_goal_validity_object_relation_observation.py
+next_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_plan_v1
+```
+
+Object-relation observation planner:
+
+```text
+script: runtime/h001_runtime/plan_expanded_retrieval_goal_validity_object_relation_observation.py
+docker_image: research3/habitat-h001:20260508-calib-artifacts
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_plan_v1
+plan_rows: 8
+skipped_rows: 0
+plan_rows_by_request:
+  rival_identity:12: 4
+  rival_identity:14: 4
+relation_anchor_candidates_per_plan_min_mean_max: 8 / 8 / 8
+direction_sources: source_viewpoint_to_target, target_to_relation_anchor, relation_anchor_to_target, orthogonal_relation_axis
+candidate_artifact_rows: 1
+output_forbidden_action_field_count: 0
+terminal_commit_rows: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+object_relation_observation_plan_gate_passed: true
+next_gate: object-relation observation frame/projection smoke
+```
+
+Object-relation observation frame/projection smoke:
+
+```text
+frame_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_frames_v1
+filtered_frame_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+projection_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_projection_v1
+frame_rows: 8 / 8
+rendered_heading_count: 72
+headings_per_row_min_max: 9 / 9
+nonblank_rows: 8 / 8
+removed_blank_heading_count: 0
+strict_no_blank_heading_gate_passed: true
+projection_visible_rows: 8 / 8
+projection_visible_rate: 1.0
+missing_candidate_rows: 0
+frame_revision_metadata_rows: 8
+candidate_selection_source: explicit_candidate_ids
+uses_gt_for_action: false
+paper_claim_allowed: false
+projection_anchor_smoke_passed: true
+next_gate: object-relation observation detector substrate
+```
+
+Object-relation observation detector substrate:
+
+```text
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_detector_substrate_v1
+detector_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_detector_substrate_v1/detector_v3c
+log: runtime/logs/object-relation-detector-substrate-20260530-092542.log
+detector_rows: 8
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 1.0
+rows_with_candidate_association: 8 / 8
+associated_candidate_heading_count: 48
+association_rows: 72
+detector_box_rows: 110
+detector_mask_rows: 110
+projection_status_counts:
+  visible: 58
+  out_of_fov: 14
+candidate_selection_source: explicit_candidate_ids
+projection_anchor_policy: projection_anchor_height_sweep_v1
+uses_gt_for_action: false
+paper_claim_allowed: false
+passes_detector_substrate_gate: true
+next_gate: object-relation post-detector evidence analyzer contract
+```
+
+### 에이전트 추론
+
+This contract fixed the bounded-substrate flaw by requiring all `158` planned rows and preserving the recovered correct candidate ranks `34`, `57`, and `60` for both request rows. The full objective analyzer and ambiguity diagnostic show the remaining problem is not candidate coverage. It is support saturation: same-category visual evidence marks almost every candidate as candidate-specific support, and simple selection rules still choose wrong instances. The discriminative analyzer shows instance/goal-region evidence is insufficient as a terminal separator because target contrast pairs are split between contrast-favored and selector-favored visual evidence. The relation/spatial context analyzer adds a stronger failure diagnosis: static context favors the contrast candidates, but same-component selector failures remain. The scene-graph/object-relation analyzer now adds a positive target-pair separability probe, but the branch is still nonterminal because detector association coverage is incomplete and the result is a narrow recovered-row diagnostic. The coverage repair analyzer materializes the four detector-association gaps and separates high-priority dense relation gaps from low-priority promotion waivers without using labels for action. The object-relation planner, frame/projection smoke, and detector substrate now create the required relation-aware multiview depth-recheck substrate for the two rank-6 dense gaps, without allowing terminal policy or threshold tuning. The next evidence question is whether post-detector evidence should update goal-validity status or remain a nonterminal evidence-acquisition result under support saturation.
+
 ## Target Row Contract
 
 ### Primary Independent Set

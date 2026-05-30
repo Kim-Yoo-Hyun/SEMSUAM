@@ -231,12 +231,13 @@ H001은 다음 구조로 좁힐 때 가장 강하다.
 
 ## Near-Term Paper Actions
 
-1. Implement backend pool expansion evidence from `h001_expanded_retrieval_backend_pool_expansion_v1` for the five `request_backend_pool_expansion` rows.
-2. Define goal-validity confirmation evidence only after backend expansion yields repaired or sufficiently valid candidate pools.
-3. Keep terminal commits, `first_eval` rerun, and policy-scale comparison blocked until branch-specific evidence passes a fixed validation gate.
-4. Preserve simpler alternatives as unsafe or inert baselines: direct re-ranking, detector-score best, source-top, own-support, local-context-only, and defer-all.
-5. Write the failure taxonomy around source-pool validity, object visibility vs goal validity, and repeated-instance arbitration.
-6. Promote only after a fresh or predeclared source shows nonzero safe utility over defer-all with wrong/no-valid commits still zero.
+1. Use the completed full candidate-specific objective analyzer as a diagnostic gate, not as terminal utility evidence.
+2. Keep terminal commits blocked because full candidate-specific visual support is saturated: `146/158` candidates have `candidate_specific_support`, and simple observed-candidate selection rules still commit wrong on both recovered rows.
+3. Freeze a post-detector evidence analyzer contract for the Docker-verified object-relation detector substrate before any `first_eval` rerun or terminal validation; the substrate has detector box/SAM2/candidate association `1.0/1.0/1.0`, but this is still detector availability rather than terminal goal-validity utility.
+4. Record `bxsVRursffK::bed` / `rival_identity:13` as a backend/source-map recall blind spot for this diagnostic branch unless a later all-row backend policy changes the source-map evidence.
+5. Preserve simpler alternatives as unsafe or inert baselines: direct re-ranking, detector-score best, source-top, own-support, local-context-only, observed semantic-top, observed detector-score-best, and defer-all.
+6. Write the failure taxonomy around source-pool validity, object visibility vs goal validity, repeated-instance arbitration, bounded-substrate candidate coverage, and support-saturation after full candidate-specific observation.
+7. Promote only after a fresh or predeclared source shows nonzero safe utility over defer-all with wrong/no-valid commits still zero.
 
 ## Promotion Rule
 

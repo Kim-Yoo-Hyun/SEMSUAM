@@ -1,0 +1,235 @@
+{
+  "schema_version": "h001.expanded_retrieval_deeper_backend_generation_contract.v1",
+  "contract_name": "expanded_retrieval_deeper_backend_generation_v1",
+  "date_checked": "2026-05-28",
+  "status": "frozen_design_contract_before_implementation",
+  "source": {
+    "backend_candidate_generation_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_backend_candidate_generation_v1.json",
+    "backend_candidate_generation_summary": "local_dataset/runs/h001_expanded_retrieval_backend_candidate_generation_v1/backend_candidate_generation_summary.json",
+    "backend_candidate_generation_rows": "local_dataset/runs/h001_expanded_retrieval_backend_candidate_generation_v1/backend_candidate_generation_rows.jsonl",
+    "backend_candidate_generation_evaluated_rows": "local_dataset/runs/h001_expanded_retrieval_backend_candidate_generation_v1/backend_candidate_generation_evaluated_rows.jsonl",
+    "source_filter_action_time": {
+      "candidate_generation_status": "generated_fixed_top20_pool"
+    },
+    "diagnostic_target_filter_after_label_join": {
+      "evaluation_only_no_valid_candidate_pool": true
+    },
+    "expected_source_rows": 5,
+    "expected_diagnostic_target_request_rows": 3,
+    "expected_target_scene_query_pairs": 2
+  },
+  "observed_facts": {
+    "fixed_top20_source_rows": 5,
+    "fixed_top20_generated_candidate_rows": 100,
+    "fixed_top20_status_generated_rows": 5,
+    "fixed_top20_structural_gate_passed": true,
+    "fixed_top20_valid_containing_rows_after_label_join": 2,
+    "fixed_top20_no_valid_rows_after_label_join": 3,
+    "target_query_count": 1,
+    "target_scene_count": 2,
+    "target_scene_query_pair_count": 2,
+    "terminal_commit_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "target_rows_diagnostic_after_label_join": [
+    {
+      "expanded_retrieval_request_id": "rival_identity:12",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:0:1:bed",
+      "scene_key": "QaLdnwvtxbs",
+      "query": "bed",
+      "fixed_top20_candidate_count": 20,
+      "fixed_top20_positive_support_candidate_count": 4,
+      "fixed_top20_reachable_or_standoff_candidate_count": 1,
+      "fixed_top20_no_valid_candidate_pool_after_label_join": true,
+      "target_scene_query_key": "QaLdnwvtxbs::bed"
+    },
+    {
+      "expanded_retrieval_request_id": "rival_identity:13",
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:16:1:bed",
+      "scene_key": "bxsVRursffK",
+      "query": "bed",
+      "fixed_top20_candidate_count": 20,
+      "fixed_top20_positive_support_candidate_count": 5,
+      "fixed_top20_reachable_or_standoff_candidate_count": 1,
+      "fixed_top20_no_valid_candidate_pool_after_label_join": true,
+      "target_scene_query_key": "bxsVRursffK::bed"
+    },
+    {
+      "expanded_retrieval_request_id": "rival_identity:14",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:5:2:bed",
+      "scene_key": "QaLdnwvtxbs",
+      "query": "bed",
+      "fixed_top20_candidate_count": 20,
+      "fixed_top20_positive_support_candidate_count": 4,
+      "fixed_top20_reachable_or_standoff_candidate_count": 1,
+      "fixed_top20_no_valid_candidate_pool_after_label_join": true,
+      "target_scene_query_key": "QaLdnwvtxbs::bed"
+    }
+  ],
+  "target_scene_query_pairs": [
+    {
+      "target_scene_query_key": "QaLdnwvtxbs::bed",
+      "scene_key": "QaLdnwvtxbs",
+      "query": "bed",
+      "request_rows": 2,
+      "reason": "fixed_top20_no_valid_candidate_pool_after_label_join"
+    },
+    {
+      "target_scene_query_key": "bxsVRursffK::bed",
+      "scene_key": "bxsVRursffK",
+      "query": "bed",
+      "request_rows": 1,
+      "reason": "fixed_top20_no_valid_candidate_pool_after_label_join"
+    }
+  ],
+  "problem_statement": {
+    "fact": "Fixed top-20 generation is structurally valid for all five backend-candidate-generation rows, but three rows still have no valid candidate after evaluation-only label join.",
+    "agent_inference": "The remaining blocker is backend recall or source-pool validity, not goal-validity arbitration. Testing goal-validity confirmation on these rows would confound no-valid pool failure with repeated-instance reasoning.",
+    "paper_constraint": "This contract is a diagnostic backend recall repair contract. It uses evaluation-only no-valid reporting to choose a repair probe and must not be described as an action-time policy or paper utility claim."
+  },
+  "deeper_generation_policy": {
+    "policy_name": "deeper_vlmaps_backend_recall_probe_v1",
+    "diagnostic_scope": "fixed_top20_no_valid_pools_only",
+    "candidate_backend_family": "vlmaps_deeper_spatial_nms_or_components",
+    "first_variant": {
+      "variant_name": "spatial_nms_p90_k100_d5_v1",
+      "selection_mode": "spatial_nms",
+      "top_percentile": 90.0,
+      "max_candidates": 100,
+      "spatial_nms_min_distance_cells": 5.0,
+      "min_component_cells": 1
+    },
+    "fallback_variants_if_first_variant_fails": [
+      {
+        "variant_name": "spatial_nms_p80_k200_d3_v1",
+        "selection_mode": "spatial_nms",
+        "top_percentile": 80.0,
+        "max_candidates": 200,
+        "spatial_nms_min_distance_cells": 3.0,
+        "min_component_cells": 1
+      },
+      {
+        "variant_name": "components_p80_min1_k200_v1",
+        "selection_mode": "components",
+        "top_percentile": 80.0,
+        "max_candidates": 200,
+        "spatial_nms_min_distance_cells": null,
+        "min_component_cells": 1
+      }
+    ],
+    "fixed_before_label_join": true,
+    "expected_candidate_count_minimum_per_request": 50,
+    "expected_candidate_count_primary_target_per_request": 100,
+    "expected_new_beyond_top20_minimum_per_request": 30,
+    "reuse_existing_scene_export_if_available": true,
+    "regenerate_scene_export_if_missing": true,
+    "long_running_job_policy": "If scene export, VLMaps map generation, dense candidate export, decompression, or indexing is needed, launch as a tmux/nohup/background job with timestamped logs under the H001 runtime logs directory."
+  },
+  "allowed_action_inputs": [
+    "fixed top-20 generation action rows with candidate_generation_status == generated_fixed_top20_pool",
+    "episode_key, scene_key, query, expanded_retrieval_request_id, and target_scene_query_key",
+    "source action evidence candidate ids, semantic rank, semantic score, support score, positive support, position, visit_position, reachability, and lineage fields",
+    "existing non-GT VLMaps feature maps, text embeddings, map alignment, spatial NMS or component export settings",
+    "Habitat navmesh and reachability or standoff feasibility computed without target labels",
+    "duplicate, finite-position, spatial-diversity, and backend-config metadata"
+  ],
+  "forbidden_action_inputs": [
+    "candidate_correct",
+    "selected_for_goal",
+    "wrong_goal_visit",
+    "success label",
+    "no_valid label",
+    "GT object id",
+    "GT goal id",
+    "oracle geodesic distance",
+    "post-join evaluation labels",
+    "choosing candidate ids, top-k, NMS distance, percentile, or backend family after inspecting candidate correctness within the deeper generated pool",
+    "terminal commit or goal switch based on this diagnostic output"
+  ],
+  "required_outputs": [
+    "deeper_backend_generation_rows.jsonl",
+    "deeper_backend_generation_evaluated_rows.jsonl",
+    "deeper_backend_generation_summary.json",
+    "deeper_backend_scene_query_artifacts.jsonl"
+  ],
+  "minimum_evidence_requirements": {
+    "candidate_generation_accounting": [
+      "report target request rows and target scene/query pairs separately",
+      "report fixed top-20 candidate ids and deeper generated candidate ids",
+      "report retained-from-top20, new-beyond-top20, duplicate, finite-position, reachable/standoff, unknown-reachability, and positive-support counts",
+      "report candidate backend variant, percentile, max_candidates, NMS distance or component settings, deterministic sort key, source map path, and query embedding path"
+    ],
+    "evaluation_only_reporting": [
+      "write action-time deeper generation rows before joining labels",
+      "join evaluation labels only after generation rows are written",
+      "report recovered-valid rows, still-no-valid rows, first recovered candidate rank, and recovery rate by variant",
+      "do not use evaluation labels to change candidate generation parameters within this contract"
+    ],
+    "failure_accounting": [
+      "report map/export unavailable",
+      "report insufficient candidate count",
+      "report duplicate-heavy or nonfinite candidate pool",
+      "report no new candidates beyond top-20",
+      "report still no-valid after deeper generation",
+      "report when source-pool validity remains non-separable by action-time proxy"
+    ]
+  },
+  "required_simpler_alternatives": [
+    "reuse_fixed_top20_without_deeper_generation",
+    "pass_fixed_top20_directly_to_goal_validity_confirmation",
+    "semantic_rank_only_deeper_topk_without_spatial_accounting",
+    "lower_score_threshold_without_reachability_or_duplicate_accounting",
+    "component_export_without_spatial_diversity_check",
+    "detector_visible_category_as_pool_validity"
+  ],
+  "evaluation_gates": {
+    "input_source_rows": 5,
+    "diagnostic_target_request_rows": 3,
+    "target_scene_query_pairs": 2,
+    "generated_candidate_count_minimum_per_target_request": 50,
+    "generated_candidate_rows_minimum": 150,
+    "new_beyond_top20_count_minimum_per_target_request": 30,
+    "duplicate_candidate_id_count_maximum": 0,
+    "nonfinite_candidate_position_count_maximum": 0,
+    "rows_with_reachable_or_standoff_candidate_minimum": 3,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "must_report_backend_variant_counts": true,
+    "must_report_scene_query_artifact_rows": true,
+    "must_report_recovery_after_label_join": true,
+    "must_join_labels_only_after_generation_rows": true,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed_before_goal_validity_validation": false
+  },
+  "expected_next_analyzer_or_job": {
+    "name": "expanded_retrieval_deeper_backend_generation_v1",
+    "role": "generate deeper non-GT backend candidate pools for the three diagnostic no-valid fixed top-20 rows and report whether any rows become eligible for later goal-validity confirmation",
+    "input_scope": "three rows from h001_expanded_retrieval_backend_candidate_generation_v1 with evaluation-only no-valid fixed top-20 pools; action-time source rows remain label-free",
+    "target_scene_query_scope": "two scene/query pairs: QaLdnwvtxbs::bed and bxsVRursffK::bed",
+    "expected_output_root": "local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_v1",
+    "output_files": {
+      "generation_rows": "deeper_backend_generation_rows.jsonl",
+      "evaluated_rows": "deeper_backend_generation_evaluated_rows.jsonl",
+      "scene_query_artifacts": "deeper_backend_scene_query_artifacts.jsonl",
+      "summary": "deeper_backend_generation_summary.json"
+    }
+  },
+  "promotion_rules": {
+    "contract_only": "Freezing this contract permits a diagnostic deeper backend generation implementation, not terminal ObjectNav commitment.",
+    "goal_validity_confirmation_unblocked": "Goal-validity confirmation can be defined only for rows that recover at least one candidate after generation rows are written and labels are joined for analysis, or for rows isolated by a later non-GT pool-validity proxy.",
+    "non_gt_proxy_required_for_paper_method": "Because this contract uses evaluation-only no-valid reporting to choose diagnostic target rows, any paper-facing policy must later replace that selection with a non-GT pool-validity proxy or evaluate deeper generation on all predeclared backend-generation rows.",
+    "paper_claim_blocked": "No policy-scale, first_eval rerun, or terminal ObjectNav claim is allowed from this contract alone."
+  },
+  "next_steps": [
+    "Implement a small analyzer/job that builds target scene/query specs from this contract.",
+    "Reuse existing scene export and VLMaps map artifacts if available; otherwise launch a long-running background job under the AGENTS.md policy.",
+    "Generate fixed deeper candidate pools with the first variant before any label join.",
+    "Join labels only after deeper generation rows exist and report recovered-valid versus still-no-valid rows.",
+    "Define goal-validity confirmation only for recovered rows or define a non-GT pool-validity proxy if no-valid rows remain mixed with valid rows."
+  ],
+  "paper_claim_allowed": false
+}

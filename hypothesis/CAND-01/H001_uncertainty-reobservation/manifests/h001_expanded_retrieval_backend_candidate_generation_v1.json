@@ -1,0 +1,220 @@
+{
+  "schema_version": "h001.expanded_retrieval_backend_candidate_generation_contract.v1",
+  "contract_name": "expanded_retrieval_backend_candidate_generation_v1",
+  "date_checked": "2026-05-28",
+  "status": "frozen_design_contract_before_implementation",
+  "source": {
+    "backend_pool_expansion_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_backend_pool_expansion_v1.json",
+    "backend_pool_expansion_summary": "local_dataset/runs/h001_expanded_retrieval_backend_pool_expansion_v1/backend_pool_expansion_summary.json",
+    "backend_pool_expansion_rows": "local_dataset/runs/h001_expanded_retrieval_backend_pool_expansion_v1/backend_pool_expansion_rows.jsonl",
+    "backend_pool_expansion_evaluated_rows": "local_dataset/runs/h001_expanded_retrieval_backend_pool_expansion_v1/backend_pool_expansion_evaluated_rows.jsonl",
+    "source_filter": {
+      "backend_route_action": "request_backend_candidate_generation"
+    },
+    "source_action_evidence": "local_dataset/runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_action_evidence_rows.jsonl",
+    "evaluation_labels_after_generation_only": "local_dataset/runs/h001_rival_identity_goal_validity_independent_source_v1/rival_identity_goal_validity_independent_evaluation_labels.jsonl",
+    "expected_request_rows": 5
+  },
+  "observed_action_time_facts": {
+    "backend_candidate_generation_request_rows": 5,
+    "upstream_top10_candidate_count_min": 10,
+    "upstream_top10_candidate_count_max": 10,
+    "fixed_candidate_budget_minimum": 20,
+    "source_action_evidence_candidate_count_per_row": 20,
+    "source_action_evidence_rows_available_for_targets": 5,
+    "terminal_commit_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "target_rows_action_time": [
+    {
+      "expanded_retrieval_request_id": "rival_identity:8",
+      "episode_key": "HM3D ObjectNav v2:val:Dd4bFSTQ8gi:5:1:bed",
+      "scene_key": "Dd4bFSTQ8gi",
+      "query": "bed",
+      "backend_route_reason": "expanded_pool_below_fixed_candidate_budget",
+      "source_action_evidence_candidate_count": 20
+    },
+    {
+      "expanded_retrieval_request_id": "rival_identity:10",
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:9:5:tv_monitor",
+      "scene_key": "qyAac8rV8Zk",
+      "query": "tv_monitor",
+      "backend_route_reason": "expanded_pool_below_fixed_candidate_budget",
+      "source_action_evidence_candidate_count": 20
+    },
+    {
+      "expanded_retrieval_request_id": "rival_identity:12",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:0:1:bed",
+      "scene_key": "QaLdnwvtxbs",
+      "query": "bed",
+      "backend_route_reason": "expanded_pool_below_fixed_candidate_budget",
+      "source_action_evidence_candidate_count": 20
+    },
+    {
+      "expanded_retrieval_request_id": "rival_identity:13",
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:16:1:bed",
+      "scene_key": "bxsVRursffK",
+      "query": "bed",
+      "backend_route_reason": "expanded_pool_below_fixed_candidate_budget",
+      "source_action_evidence_candidate_count": 20
+    },
+    {
+      "expanded_retrieval_request_id": "rival_identity:14",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:5:2:bed",
+      "scene_key": "QaLdnwvtxbs",
+      "query": "bed",
+      "backend_route_reason": "expanded_pool_below_fixed_candidate_budget",
+      "source_action_evidence_candidate_count": 20
+    }
+  ],
+  "problem_statement": {
+    "fact": "The backend pool expansion analyzer routed all five rows to request_backend_candidate_generation because the available paper-scale candidate artifact contains only 10 candidates per row.",
+    "agent_inference": "The next branch should first materialize a fixed top-20 non-GT candidate pool from existing action-time semantic evidence before launching deeper dense re-export or goal-validity confirmation.",
+    "paper_constraint": "This contract is candidate generation and accounting only. It must not be promoted as terminal ObjectNav utility or as evidence that a generated candidate is a valid goal."
+  },
+  "fixed_generation_policy": {
+    "policy_name": "fixed_action_evidence_top20_v1",
+    "candidate_backend_family": "existing_vlmaps_action_evidence_jsonl",
+    "candidate_budget": {
+      "min_candidates_per_request": 20,
+      "max_candidates_per_request": 20,
+      "fixed_k": 20,
+      "deeper_candidate_budgets_if_v1_fails": [
+        50,
+        100
+      ]
+    },
+    "selection_source": "source_action_evidence.candidate_evidence",
+    "selection_order": [
+      "semantic_rank ascending",
+      "support_score descending",
+      "candidate_id ascending"
+    ],
+    "spatial_diversity_source_required": "candidate ids must come from the existing spatial_nms candidate artifact or report why that lineage is unavailable",
+    "reachability_policy": "do not filter out unknown-reachability candidates at generation time; report reachable, unreachable, and unknown counts separately",
+    "duplicate_policy": "duplicate candidate ids are forbidden; duplicate or near-duplicate positions must be reported",
+    "terminal_commit_allowed": false,
+    "uses_gt_for_action": false
+  },
+  "allowed_action_inputs": [
+    "backend expansion rows with backend_route_action == request_backend_candidate_generation",
+    "episode_key, scene_key, query, expanded_retrieval_request_id, and rival_identity_request_id",
+    "source action evidence candidate ids, semantic rank, semantic score, support score, positive support, position, visit_position, reachability, and path-to-candidate fields",
+    "non-GT source-pool score shape features",
+    "candidate lineage fields showing whether candidates came from spatial_nms or another fixed backend",
+    "navmesh or standoff feasibility fields generated without target labels"
+  ],
+  "forbidden_action_inputs": [
+    "candidate_correct",
+    "selected_for_goal",
+    "wrong_goal_visit",
+    "success label",
+    "no_valid label",
+    "GT object id",
+    "GT goal id",
+    "oracle geodesic distance",
+    "post-join evaluation labels",
+    "threshold tuning from joined labels",
+    "choosing top-k, backend family, or route action after inspecting per-row evaluation correctness"
+  ],
+  "candidate_generation_objective": {
+    "objective_name": "backend_candidate_generation_evidence_v1",
+    "required_question": "Can a fixed non-GT top-20 backend candidate pool be materialized with accountable candidate lineage, duplicate/reachability accounting, and no GT action inputs for the five backend expansion rows?",
+    "required_outputs": [
+      "backend_candidate_generation_rows.jsonl",
+      "backend_candidate_generation_evaluated_rows.jsonl",
+      "backend_candidate_generation_summary.json"
+    ],
+    "candidate_generation_statuses": [
+      {
+        "status": "generated_fixed_top20_pool",
+        "condition": "exactly 20 non-GT candidates are materialized from source action evidence with finite candidate positions and no duplicate candidate ids"
+      },
+      {
+        "status": "request_deeper_backend_generation",
+        "condition": "fixed top-20 source action evidence is unavailable, incomplete, duplicate-heavy, nonfinite, or still insufficient after evaluation-only reporting"
+      },
+      {
+        "status": "defer_backend_candidate_generation_unresolved",
+        "condition": "required source action evidence or candidate lineage is unavailable and deeper generation cannot be launched under the current workflow"
+      }
+    ]
+  },
+  "minimum_evidence_requirements": {
+    "candidate_pool_accounting": [
+      "report generated candidate ids and source candidate ids",
+      "report generated, retained-from-top10, new-beyond-top10, duplicate, finite-position, reachable, unknown-reachability, and positive-support counts",
+      "report whether source-top, detector-strong, local-context, and previous action candidates remain in the generated pool",
+      "report candidate budget, backend family, selection order, and deterministic sort key"
+    ],
+    "lineage_and_reproducibility": [
+      "record source action evidence path",
+      "record upstream backend expansion row path",
+      "record candidate backend family and spatial_nms lineage when available",
+      "record exact Docker command for analyzer implementation"
+    ],
+    "evaluation_only_reporting": [
+      "join evaluation labels only after candidate_generation rows are written",
+      "report contains-valid and no-valid generated pools by generation status",
+      "do not use evaluation labels to choose candidate budget, backend family, route status, or threshold"
+    ]
+  },
+  "required_simpler_alternatives": [
+    "reuse_top10_preview_without_generation",
+    "pass_top20_pool_directly_to_goal_validity_without_candidate_validity_check",
+    "semantic_rank_only_top20_without_spatial_lineage_accounting",
+    "reachability_only_filter_before_evidence_update",
+    "dense_reexport_before_testing_existing_top20_action_evidence",
+    "detector_visible_category_as_generated_pool_validity"
+  ],
+  "evaluation_gates": {
+    "input_request_rows": 5,
+    "source_filter_backend_route_action": "request_backend_candidate_generation",
+    "source_action_evidence_rows_found_minimum": 5,
+    "generated_candidate_count_minimum": 20,
+    "generated_candidate_count_maximum": 20,
+    "generated_candidate_rows_minimum": 100,
+    "duplicate_candidate_id_count_maximum": 0,
+    "nonfinite_candidate_position_count_maximum": 0,
+    "rows_with_reachable_or_standoff_candidate_minimum": 5,
+    "rows_with_positive_support_candidate_minimum": 5,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "must_report_generation_status_counts": true,
+    "must_report_candidate_lineage": true,
+    "must_report_duplicate_and_reachability_counts": true,
+    "must_join_labels_only_after_generation_rows": true,
+    "must_report_contains_valid_candidate_after_label_join": true,
+    "must_report_no_valid_rows_after_label_join": true,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed_before_goal_validity_validation": false
+  },
+  "expected_next_analyzer": {
+    "name": "expanded_retrieval_backend_candidate_generation_v1",
+    "role": "materialize fixed top-20 backend candidate generation rows for request_backend_candidate_generation rows and report whether deeper generation or goal-validity confirmation should be considered next",
+    "input_scope": "five rows from h001_expanded_retrieval_backend_pool_expansion_v1 with backend_route_action == request_backend_candidate_generation",
+    "expected_output_root": "local_dataset/runs/h001_expanded_retrieval_backend_candidate_generation_v1",
+    "output_files": {
+      "generation_rows": "backend_candidate_generation_rows.jsonl",
+      "evaluated_rows": "backend_candidate_generation_evaluated_rows.jsonl",
+      "summary": "backend_candidate_generation_summary.json"
+    }
+  },
+  "promotion_rules": {
+    "contract_only": "Passing this contract permits implementation of fixed backend candidate generation, not terminal ObjectNav commitment.",
+    "goal_validity_confirmation_unblocked": "Goal-validity confirmation can be defined only after generated pools are structurally valid and post-generation analysis does not show unresolved no-valid pool contamination, or after a non-GT validity proxy can isolate no-valid pools without labels.",
+    "deeper_generation_unblocked": "If fixed top-20 generation still leaves no-valid pools after evaluation-only reporting, define a separate deeper backend generation contract before goal-validity confirmation.",
+    "paper_claim_blocked": "No policy-scale or terminal ObjectNav claim is allowed until candidate generation and goal-validity confirmation pass on a predeclared source."
+  },
+  "next_steps": [
+    "Implement backend candidate generation analyzer from this contract.",
+    "Run Docker py_compile or equivalent smoke check.",
+    "Run the analyzer on the five frozen request_backend_candidate_generation rows.",
+    "Join evaluation labels only after writing action-time generation rows.",
+    "Use the result to decide whether the next contract is deeper backend generation or goal-validity confirmation."
+  ],
+  "paper_claim_allowed": false
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_relation_spatial_context_verify.v1",
+  "date_checked": "2026-05-29",
+  "ok": true,
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_relation_spatial_context_v1.json",
+  "source_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_discriminative_evidence_v1/goal_validity_discriminative_evidence_summary.json",
+  "preconditions": {
+    "discriminative_evidence_gate_passed": true,
+    "request_rows": 2,
+    "candidate_rows": 158,
+    "pair_rows": 420,
+    "candidate_specific_support_count": 146,
+    "target_contrast_pair_rows_after_label_join": 18,
+    "target_pairs_with_contrast_visual_advantage": 8,
+    "target_pairs_with_selector_visual_advantage": 10,
+    "target_pairs_with_visual_tie": 0,
+    "target_pair_region_proxy_counts_after_label_join": {
+      "adjacent_region_proxy": 12,
+      "distinct_region_proxy": 6
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "frozen_decision": {
+    "primary_next_action": "request_relation_or_spatial_context_evidence",
+    "terminal_commit_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "blocked_actions": [
+      "direct_candidate_commit",
+      "threshold_tuning",
+      "first_eval_rerun",
+      "policy_scale_comparison"
+    ]
+  },
+  "evaluation_only_reference_check": {
+    "request_ids": [
+      "rival_identity:12",
+      "rival_identity:14"
+    ],
+    "correct_candidate_ids": [
+      "vlmaps:export:bed:spatial_nms:33",
+      "vlmaps:export:bed:spatial_nms:56",
+      "vlmaps:export:bed:spatial_nms:59"
+    ],
+    "unsafe_selector_candidate_ids": [
+      "vlmaps:export:bed:spatial_nms:0",
+      "vlmaps:export:bed:spatial_nms:21",
+      "vlmaps:export:bed:spatial_nms:23"
+    ],
+    "per_request_target_pair_counts": {
+      "rival_identity:12": {
+        "target_pairs": 9,
+        "contrast_visual_higher": 4,
+        "selector_visual_higher": 5,
+        "adjacent_region_proxy": 6,
+        "distinct_region_proxy": 3
+      },
+      "rival_identity:14": {
+        "target_pairs": 9,
+        "contrast_visual_higher": 4,
+        "selector_visual_higher": 5,
+        "adjacent_region_proxy": 6,
+        "distinct_region_proxy": 3
+      }
+    }
+  },
+  "verification_command": "jq '{gate:.gate.discriminative_evidence_gate_passed, requests:.request_rows, candidates:.candidate_rows, pairs:.pair_rows, support:.candidate_specific_support_count, target_pairs:.post_label_analysis.evaluation_only_target_contrast_pair_rows, contrast_adv:.post_label_analysis.evaluation_only_target_pairs_with_contrast_visual_advantage, selector_adv:.post_label_analysis.evaluation_only_target_pairs_with_selector_visual_advantage, forbidden:.action_evidence_forbidden_key_count, terminal:.terminal_commit_rows, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_discriminative_evidence_v1/goal_validity_discriminative_evidence_summary.json",
+  "interpretation": {
+    "fact": "The relation/spatial context contract is frozen from a Docker-verified discriminative analyzer output.",
+    "agent_inference": "The next analyzer should construct context rows without labels, then join labels only for separability diagnostics; terminal policy remains blocked."
+  }
+}

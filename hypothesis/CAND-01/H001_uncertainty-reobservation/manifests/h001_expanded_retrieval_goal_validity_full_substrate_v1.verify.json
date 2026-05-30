@@ -1,0 +1,29 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_full_substrate_verify.v1",
+  "contract": "h001_expanded_retrieval_goal_validity_full_substrate_v1.json",
+  "date_checked": "2026-05-29",
+  "status": "pre_run_contract_verify_passed",
+  "pre_run_checks": {
+    "plan_rows": 158,
+    "request_rows": 2,
+    "plan_rows_by_request": {
+      "rival_identity:12": 79,
+      "rival_identity:14": 79
+    },
+    "skipped_rows": 42,
+    "skipped_reason": "standoff_navmesh_required",
+    "correct_candidate_rows_in_plan": 6,
+    "correct_candidate_rows_in_skipped": 0,
+    "first_correct_generated_rank": 34,
+    "bounded_observed_candidate_rows": 20,
+    "bounded_observed_wrong_candidate_rows": 20,
+    "bounded_unscored_candidate_rows": 138
+  },
+  "expected_outputs": {
+    "frame_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_frames_full_v1",
+    "projection_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_projection_full_v1",
+    "detector_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1"
+  },
+  "verification_command": "jq '{gate:.gate.passes_detector_substrate_gate, rows:.detector_rows, box:.detector_box_rate, sam2:.sam2_mask_rate, assoc:.candidate_association_rate, gt:.uses_gt_for_action, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1/expanded_retrieval_detector_substrate_summary.json",
+  "ok": true
+}

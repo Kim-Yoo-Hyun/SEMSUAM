@@ -1,0 +1,235 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_confirmation_contract.v1",
+  "contract_name": "expanded_retrieval_goal_validity_confirmation_v1",
+  "date_checked": "2026-05-29",
+  "status": "frozen_design_contract_before_implementation",
+  "source": {
+    "deeper_backend_generation_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_deeper_backend_generation_v1.json",
+    "deeper_backend_generation_summary": "local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_v1/deeper_backend_generation_summary.json",
+    "deeper_backend_generation_rows": "local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_v1/deeper_backend_generation_rows.jsonl",
+    "deeper_backend_generation_evaluated_rows": "local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_v1/deeper_backend_generation_evaluated_rows.jsonl",
+    "deeper_backend_generation_evaluation_labels": "local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_v1/deeper_backend_generation_evaluation_labels.jsonl",
+    "candidate_artifact": "local_dataset/runs/h001_expanded_retrieval_deeper_backend_artifact_spatial_nms_p90_k100_d5_v1/all_scenes_aligned.jsonl",
+    "source_filter_action_time": {
+      "deeper_generation_status": "generated_deeper_backend_pool",
+      "candidate_backend_variant": "spatial_nms_p90_k100_d5_v1"
+    },
+    "diagnostic_handoff_filter_after_label_join": {
+      "evaluation_only_contains_valid_candidate": true,
+      "evaluation_only_no_valid_candidate_pool": false
+    },
+    "diagnostic_exclusion_filter_after_label_join": {
+      "evaluation_only_contains_valid_candidate": false,
+      "evaluation_only_no_valid_candidate_pool": true
+    },
+    "expected_source_rows": 3,
+    "expected_recovered_goal_validity_request_rows": 2,
+    "expected_backend_pool_validity_branch_rows": 1
+  },
+  "observed_facts": {
+    "deeper_backend_generation_gate_passed": true,
+    "source_rows": 3,
+    "generated_candidate_rows": 300,
+    "candidate_count_per_request": 100,
+    "new_beyond_top20_per_request": 80,
+    "evaluation_only_recovered_valid_rows": 2,
+    "evaluation_only_still_no_valid_rows": 1,
+    "recovered_target_scene_query_pairs": 1,
+    "excluded_target_scene_query_pairs": 1,
+    "terminal_commit_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "target_rows_for_goal_validity_confirmation": [
+    {
+      "expanded_retrieval_request_id": "rival_identity:12",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:0:1:bed",
+      "scene_key": "QaLdnwvtxbs",
+      "query": "bed",
+      "target_scene_query_key": "QaLdnwvtxbs::bed",
+      "deeper_candidate_count": 100,
+      "new_beyond_top20_count": 80,
+      "reachable_or_standoff_candidate_count": 81,
+      "evaluation_only_contains_valid_candidate": true,
+      "evaluation_only_correct_candidate_count": 3,
+      "evaluation_only_first_correct_generated_rank": 34,
+      "evaluation_only_correct_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:33",
+        "vlmaps:export:bed:spatial_nms:56",
+        "vlmaps:export:bed:spatial_nms:59"
+      ],
+      "analysis_only_note": "Correct ids and ranks are evaluation-only facts and cannot be used by action-time evidence generation."
+    },
+    {
+      "expanded_retrieval_request_id": "rival_identity:14",
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:5:2:bed",
+      "scene_key": "QaLdnwvtxbs",
+      "query": "bed",
+      "target_scene_query_key": "QaLdnwvtxbs::bed",
+      "deeper_candidate_count": 100,
+      "new_beyond_top20_count": 80,
+      "reachable_or_standoff_candidate_count": 81,
+      "evaluation_only_contains_valid_candidate": true,
+      "evaluation_only_correct_candidate_count": 3,
+      "evaluation_only_first_correct_generated_rank": 34,
+      "evaluation_only_correct_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:33",
+        "vlmaps:export:bed:spatial_nms:56",
+        "vlmaps:export:bed:spatial_nms:59"
+      ],
+      "analysis_only_note": "Correct ids and ranks are evaluation-only facts and cannot be used by action-time evidence generation."
+    }
+  ],
+  "excluded_rows_backend_pool_validity_branch": [
+    {
+      "expanded_retrieval_request_id": "rival_identity:13",
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:16:1:bed",
+      "scene_key": "bxsVRursffK",
+      "query": "bed",
+      "target_scene_query_key": "bxsVRursffK::bed",
+      "deeper_candidate_count": 100,
+      "new_beyond_top20_count": 80,
+      "reachable_or_standoff_candidate_count": 100,
+      "evaluation_only_contains_valid_candidate": false,
+      "evaluation_only_no_valid_candidate_pool": true,
+      "branch_action": "request_non_gt_pool_validity_proxy_or_fallback_backend_variant",
+      "reason": "still_no_valid_after_deeper_backend_generation",
+      "analysis_only_note": "This row is not eligible for goal-validity confirmation because the diagnostic label join finds no valid candidate in the deeper pool."
+    }
+  ],
+  "problem_statement": {
+    "fact": "Deeper backend generation with the fixed spatial_nms_p90_k100_d5_v1 variant is structurally valid and recovers valid candidates on two of three previously no-valid rows.",
+    "agent_inference": "Goal-validity confirmation is interpretable only on recovered rows. Applying the same evidence objective to the still-no-valid row would mix candidate-pool failure with ObjectNav goal-validity evidence.",
+    "paper_constraint": "This contract freezes a diagnostic handoff. It does not permit terminal ObjectNav commits, first_eval reruns, policy-scale comparison, or paper claims."
+  },
+  "goal_validity_confirmation_policy": {
+    "policy_name": "recovered_pool_goal_validity_confirmation_evidence_v1",
+    "diagnostic_scope": "recovered_deeper_backend_rows_only",
+    "candidate_pool_source": "deeper_generated_candidates from spatial_nms_p90_k100_d5_v1",
+    "candidate_evidence_scope": {
+      "selection_rule": "fixed_action_time_top100_deeper_candidates_with_finite_position_and_reachability_accounting",
+      "candidate_count_per_request": 100,
+      "reason": "Use the full fixed deeper pool for the two-row diagnostic so action-time candidate selection is not tuned to post-hoc correct ranks.",
+      "paper_claim_limitation": "A paper-facing method must later replace this diagnostic scope with a predeclared non-GT pool-validity proxy, a fixed evidence budget, or an all-row backend generation policy."
+    },
+    "evidence_to_collect": [
+      "candidate-specific observation request rows",
+      "viewpoint reachability and travel-cost metadata",
+      "projection visibility and depth consistency",
+      "detector box / SAM2 mask association",
+      "own-view candidate support",
+      "cross-view leakage or rival support",
+      "candidate-specific goal-validity evidence features"
+    ],
+    "terminal_commit_allowed": false,
+    "fixed_before_label_join": true
+  },
+  "allowed_action_inputs": [
+    "deeper generation action rows with deeper_generation_status == generated_deeper_backend_pool",
+    "episode_key, scene_key, query, target_scene_query_key, expanded_retrieval_request_id",
+    "deeper generated candidate ids, ranks, scores, semantic scores, support scores, positive support, positions, visit positions, reachability, finite-position metadata, and backend lineage",
+    "Habitat navmesh and standoff/reachability checks computed without GT target labels",
+    "detector/SAM2 observation evidence computed from rendered frames without GT target labels",
+    "duplicate, spatial diversity, candidate count, and backend config metadata"
+  ],
+  "forbidden_action_inputs": [
+    "candidate_correct",
+    "evaluation_only_contains_valid_candidate",
+    "evaluation_only_no_valid_candidate_pool",
+    "evaluation_only_correct_candidate_ids",
+    "evaluation_only_first_correct_generated_rank",
+    "selected_for_goal",
+    "wrong_goal_visit",
+    "success label",
+    "GT object id",
+    "GT goal id",
+    "oracle geodesic distance",
+    "choosing candidate evidence targets after inspecting candidate correctness",
+    "terminal commit or goal switch based on this diagnostic contract"
+  ],
+  "required_outputs": [
+    "goal_validity_confirmation_request_rows.jsonl",
+    "goal_validity_confirmation_evidence_rows.jsonl",
+    "goal_validity_confirmation_evaluated_rows.jsonl",
+    "goal_validity_confirmation_summary.json",
+    "backend_pool_validity_branch_rows.jsonl"
+  ],
+  "minimum_evidence_requirements": {
+    "handoff_accounting": [
+      "report recovered goal-validity request rows separately from backend/pool-validity branch rows",
+      "report target scene/query keys and request ids for both branches",
+      "report candidate count, finite-position count, reachable/standoff count, duplicate count, and retained-from-top20 versus new-beyond-top20 counts per request"
+    ],
+    "action_evidence_separation": [
+      "write request and evidence rows before joining labels",
+      "keep evaluation-only correct ids/ranks out of request/evidence rows",
+      "report action evidence forbidden key count",
+      "join labels only in evaluated rows or summary"
+    ],
+    "goal_validity_evidence": [
+      "report candidate-specific detector/mask/depth association features",
+      "report own-view and cross-view evidence separately",
+      "report whether evidence is object/category visibility only or candidate-specific goal evidence",
+      "do not treat detector-visible category as ObjectNav goal validity"
+    ],
+    "excluded_branch_accounting": [
+      "report still-no-valid rows as backend/pool-validity branch rows",
+      "do not generate terminal goal-validity decisions for still-no-valid rows",
+      "record the next branch as non-GT pool-validity proxy or fallback backend variant"
+    ]
+  },
+  "required_simpler_alternatives": [
+    "pass_all_deeper_rows_to_goal_validity_confirmation",
+    "commit_top_deeper_candidate_without_observation",
+    "detector_visible_category_as_goal_validity",
+    "top20_only_after_deeper_backend_generation",
+    "defer_all_recovered_rows",
+    "route_still_no_valid_row_to_goal_validity_confirmation"
+  ],
+  "evaluation_gates": {
+    "input_deeper_generation_rows": 3,
+    "recovered_goal_validity_request_rows": 2,
+    "backend_pool_validity_branch_rows": 1,
+    "goal_validity_target_scene_query_pairs": 1,
+    "excluded_target_scene_query_pairs": 1,
+    "candidate_count_per_goal_validity_request_minimum": 100,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "must_report_recovered_vs_excluded_rows": true,
+    "must_report_backend_pool_validity_branch": true,
+    "must_join_labels_only_after_request_and_evidence_rows": true,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed_before_fixed_goal_validity_validation": false
+  },
+  "expected_next_analyzer_or_job": {
+    "name": "expanded_retrieval_goal_validity_confirmation_v1",
+    "role": "build request/evidence rows for the two recovered deeper backend rows and write the remaining no-valid row to a backend/pool-validity branch",
+    "input_scope": "three rows from h001_expanded_retrieval_deeper_backend_generation_v1; action-time request generation must use only label-free deeper generation rows",
+    "target_request_scope": "rival_identity:12 and rival_identity:14 only",
+    "excluded_request_scope": "rival_identity:13",
+    "expected_output_root": "local_dataset/runs/h001_expanded_retrieval_goal_validity_confirmation_v1",
+    "output_files": {
+      "request_rows": "goal_validity_confirmation_request_rows.jsonl",
+      "evidence_rows": "goal_validity_confirmation_evidence_rows.jsonl",
+      "evaluated_rows": "goal_validity_confirmation_evaluated_rows.jsonl",
+      "branch_rows": "backend_pool_validity_branch_rows.jsonl",
+      "summary": "goal_validity_confirmation_summary.json"
+    }
+  },
+  "promotion_rules": {
+    "contract_only": "Freezing this contract permits a diagnostic goal-validity confirmation evidence analyzer, not terminal ObjectNav commitment.",
+    "goal_validity_evidence_ready": "A later analyzer must show candidate-specific evidence on recovered rows without wrong/no-valid commits before terminal utility can be reconsidered.",
+    "still_no_valid_branch_required": "rival_identity:13 remains blocked from goal-validity confirmation until a non-GT pool-validity proxy or fallback backend variant produces a valid candidate pool under a predeclared rule.",
+    "paper_claim_blocked": "No first_eval rerun, policy-scale comparison, or paper utility claim is allowed from this contract alone."
+  },
+  "next_steps": [
+    "Implement a small analyzer that consumes deeper generation rows and writes two recovered-row goal-validity request rows plus one backend/pool-validity branch row.",
+    "Keep request/evidence rows label-free and join evaluation labels only after rows are written.",
+    "Define a non-GT pool-validity proxy or fallback backend variant for rival_identity:13.",
+    "Do not promote terminal commits until candidate-specific goal-validity evidence passes a fixed gate on a predeclared or fresh source."
+  ],
+  "paper_claim_allowed": false
+}

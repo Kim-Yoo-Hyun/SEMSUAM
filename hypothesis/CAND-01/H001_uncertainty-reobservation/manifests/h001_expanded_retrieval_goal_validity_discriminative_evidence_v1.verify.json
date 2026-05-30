@@ -1,0 +1,54 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_discriminative_evidence_verify.v1",
+  "date_checked": "2026-05-29",
+  "ok": true,
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_discriminative_evidence_v1.json",
+  "source_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1/goal_validity_ambiguity_resolution_summary.json",
+  "preconditions": {
+    "ambiguity_diagnostic_gate_passed": true,
+    "request_rows": 2,
+    "candidate_rows": 158,
+    "candidate_specific_support_count": 146,
+    "candidate_specific_support_rate": 0.9240506329113924,
+    "correct_support_count": 6,
+    "wrong_support_count": 140,
+    "correct_wrong_support_overlap": true,
+    "wrong_selector_rows": 8,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "paper_claim_allowed": false
+  },
+  "frozen_decision": {
+    "primary_next_action": "request_discriminative_instance_or_goal_region_evidence",
+    "secondary_next_action": "request_relation_or_spatial_context_evidence",
+    "continued_safe_action": "defer_goal_validity_terminal_policy",
+    "blocked_actions": [
+      "threshold_tuning",
+      "terminal_commit_from_support_count",
+      "first_eval_rerun",
+      "policy_scale_comparison"
+    ]
+  },
+  "evaluation_only_reference_check": {
+    "request_ids": [
+      "rival_identity:12",
+      "rival_identity:14"
+    ],
+    "correct_candidate_ids": [
+      "vlmaps:export:bed:spatial_nms:33",
+      "vlmaps:export:bed:spatial_nms:56",
+      "vlmaps:export:bed:spatial_nms:59"
+    ],
+    "unsafe_selector_candidate_ids": [
+      "vlmaps:export:bed:spatial_nms:0",
+      "vlmaps:export:bed:spatial_nms:21",
+      "vlmaps:export:bed:spatial_nms:23"
+    ],
+    "candidate_pair_rows_minimum_after_label_join": 18
+  },
+  "verification_command": "jq '{gate:.gate.ambiguity_diagnostic_gate_passed, requests:.request_rows, candidates:.candidate_rows_count, support:.support_saturation.candidate_specific_support_count, correct:.support_saturation.correct_support_count, wrong:.support_saturation.wrong_support_count, selector_wrong:.unsafe_selector_taxonomy.wrong_selector_rows, terminal:.gate.terminal_utility_validation_allowed, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1/goal_validity_ambiguity_resolution_summary.json",
+  "interpretation": {
+    "fact": "The discriminative evidence contract is frozen from a Docker-verified ambiguity diagnostic.",
+    "agent_inference": "The next analyzer should produce candidate, pair, and request diagnostics that test instance or goal-region separability without using evaluation labels for action."
+  }
+}

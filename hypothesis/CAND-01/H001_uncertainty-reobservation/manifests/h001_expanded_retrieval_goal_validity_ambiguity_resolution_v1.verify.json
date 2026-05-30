@@ -1,0 +1,37 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_ambiguity_resolution_verify.v1",
+  "date_checked": "2026-05-29",
+  "ok": true,
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1.json",
+  "source_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_full_v1/goal_validity_objective_summary.json",
+  "preconditions": {
+    "objective_analyzer_gate_passed": true,
+    "planned_candidate_rows": 158,
+    "observed_detector_candidate_rows": 158,
+    "observed_detector_request_rows": 2,
+    "unscored_candidate_rows": 0,
+    "candidate_specific_support_count": 146,
+    "weak_or_partial_candidate_specific_support_count": 12,
+    "evaluation_only_observed_correct_candidate_count": 6,
+    "evaluation_only_observed_wrong_candidate_count": 152,
+    "proposed_objective_reason": "defer_candidate_specific_support_ambiguous",
+    "unsafe_simpler_alternatives_wrong_rows": {
+      "semantic_top_observed": 2,
+      "detector_score_best_observed": 2,
+      "positive_support_best_observed": 2,
+      "candidate_specific_support_best_observed": 2
+    },
+    "terminal_commit_rows": 0,
+    "paper_claim_allowed": false
+  },
+  "next_implementation_target": {
+    "script": "runtime/h001_runtime/diagnose_expanded_retrieval_goal_validity_ambiguity.py",
+    "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_ambiguity_resolution_v1",
+    "allowed_stage": "diagnostic_only_before_terminal_policy"
+  },
+  "verification_command": "jq '{gate:.gate.objective_analyzer_gate_passed, support:.candidate_evidence_class_counts.candidate_specific_support, observed:.observed_detector_candidate_rows, correct:.observed_candidate_evaluation.evaluation_only_observed_correct_candidate_count, wrong:.observed_candidate_evaluation.evaluation_only_observed_wrong_candidate_count, terminal:.terminal_utility_validation_allowed, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_full_v1/goal_validity_objective_summary.json",
+  "interpretation": {
+    "fact": "The contract is frozen after full substrate and full objective analyzer passed.",
+    "agent_inference": "The next analyzer should produce a failure taxonomy for support saturation and unsafe simple selectors before any terminal utility policy is designed."
+  }
+}
