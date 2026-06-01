@@ -16,17 +16,17 @@
 
 ### 사실
 
-- Date checked: 2026-05-30
+- Date checked: 2026-06-01
 - Primary candidate: `CAND-01`
 - Active hypothesis: `H001_uncertainty-reobservation`
-- Current gate: freeze object-relation post-detector evidence analyzer contract before terminal utility validation
+- Current gate: implement and Docker-run repeated-object relation-anchor consistency post-detector evidence analyzer after contract freeze
 - Current `Now`: [TODO.md](TODO.md)
 - Active hypothesis entrypoint: [hypothesis/CAND-01/H001_uncertainty-reobservation/README.md](hypothesis/CAND-01/H001_uncertainty-reobservation/README.md)
 - Current detailed workflow: [workflow-20260521-dense-conflict.md](hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260521-dense-conflict.md)
 
 ### 에이전트 추론
 
-현재 연구 방향은 semantic uncertainty를 단순 confidence score가 아니라 active SLAM/navigation utility로 바꾸는 것이다. Paper-scale local-context detector/SAM2 substrate는 통과했지만 post-observation terminal rule은 wrong-goal/no-valid commit 때문에 실패했다. Route-specific analyzer는 source-pool repair, goal-validity confirmation, instance arbitration을 분리했고, backend expansion과 deeper generation은 `rival_identity:12`, `rival_identity:14`에서 valid candidates를 회복했다. `rival_identity:13`은 first/second fallback backend 모두에서 no-valid로 남아 `bxsVRursffK::bed` backend/source-map recall blind spot으로 기록한다. Candidate-specific goal-validity full substrate, ambiguity diagnostic, discriminative instance/goal-region analyzer, relation/spatial context analyzer, scene-graph/object-relation analyzer, object-relation coverage repair analyzer, object-relation observation planner, object-relation frame/projection smoke, and object-relation detector substrate are Docker-verified. The object-relation detector substrate has detector rows `8`, detector box/SAM2/candidate association `1.0/1.0/1.0`, associated heading count `48`, and `passes_detector_substrate_gate true`. The next gate is a post-detector evidence analyzer contract before terminal utility, `first_eval`, or policy-scale comparison.
+현재 연구 방향은 semantic uncertainty를 단순 confidence score가 아니라 active SLAM/navigation utility로 바꾸는 것이다. Paper-scale local-context detector/SAM2 substrate는 통과했지만 post-observation terminal rule은 wrong-goal/no-valid commit 때문에 실패했다. Candidate-specific, object-relation, unique-support, partial relation-depth branch들은 terminal commit을 막는 방향으로 세분화되어 있다. 최신 repeated-object relation-anchor consistency post-detector evidence analyzer contract는 `manifests/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1.json`에 frozen 상태이며, source detector substrate는 frame/detector rows `27/27`, detector box/SAM2/candidate association `1.0/1.0/0.8889`, association rows `360`, selected candidate count rows `2:27`, and `uses_gt_for_action false`로 통과했다. 따라서 다음 gate는 terminal utility가 아니라 이 contract에 맞는 analyzer를 Docker에서 구현/실행하는 것이다. `first_eval`, policy-scale comparison, terminal utility, and paper claims remain blocked.
 
 ## Key Documents
 

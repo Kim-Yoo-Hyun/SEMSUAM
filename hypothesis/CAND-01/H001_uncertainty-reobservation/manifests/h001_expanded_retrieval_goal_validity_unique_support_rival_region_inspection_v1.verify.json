@@ -1,0 +1,60 @@
+{
+  "command": "docker run --rm --user \"$(id -u):$(id -g)\" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.inspect_expanded_retrieval_goal_validity_unique_support_rival_region_evidence",
+  "date_checked": "2026-06-01",
+  "gate": {
+    "action_evidence_forbidden_key_gate_passed": true,
+    "cross_region_or_shared_common_blocker_accounted_passed": true,
+    "expected_pair_rows_passed": true,
+    "expected_request_rows_passed": true,
+    "inspection_gate_passed": true,
+    "paper_claim_allowed": false,
+    "source_evidence_gate_passed": true,
+    "terminal_arbitration_blocked_passed": true,
+    "terminal_commit_rows_passed": true,
+    "uses_gt_for_action_passed": true
+  },
+  "implementation": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/inspect_expanded_retrieval_goal_validity_unique_support_rival_region_evidence.py",
+  "metrics": {
+    "action_evidence_forbidden_key_count": 0,
+    "pair_blocker_counts": {
+      "bidirectional_cross_region_overlap": 3,
+      "focus_visible_from_rival_region": 2,
+      "pure_contrastive_no_second_pass_support": 1,
+      "rival_visible_from_focus_region": 2,
+      "shared_common_view_rival_support": 2
+    },
+    "pair_rows": 10,
+    "paper_claim_allowed": false,
+    "request_blocker_counts": {
+      "contains_cross_region_overlap_pairs": 3,
+      "contains_shared_common_view_rival_support": 1
+    },
+    "request_recommendation_counts": {
+      "freeze_cross_region_overlap_failure_branch": 3,
+      "inspect_shared_common_view_support_before_terminal_arbitration": 1
+    },
+    "request_rows": 4,
+    "terminal_commit_rows": 0,
+    "terminal_contract_allowed": false,
+    "uses_gt_for_action": false
+  },
+  "notes": [
+    "Terminal arbitration remains blocked because no request is clean contrastive-only.",
+    "Three of four requests contain cross-region overlap pairs after second-pass evidence.",
+    "The remaining request has shared common-view rival support, so contrastive pair presence alone is not a safe commit rule."
+  ],
+  "ok": true,
+  "output": {
+    "pair_inspection_rows": "unique_support_rival_region_pair_inspection_rows.jsonl",
+    "request_inspection_rows": "unique_support_rival_region_request_inspection_rows.jsonl",
+    "root": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_inspection_v1",
+    "summary": "unique_support_rival_region_inspection_summary.json"
+  },
+  "recommended_next_task": "freeze_cross_region_overlap_failure_branch",
+  "recommended_next_task_reason": "Most requests still contain cross-region overlap after second-pass evidence.",
+  "schema_version": "h001.verify.unique_support_rival_region_inspection.v1",
+  "source_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_evidence_v1.verify.json",
+  "status": "completed_cross_region_overlap_inspection_terminal_arbitration_blocked",
+  "verification_command": "jq '{gate:.gate.inspection_gate_passed, pair_blockers:.pair_blocker_counts, request_blockers:.request_blocker_counts, recommendations:.request_recommendation_counts, terminal_allowed:.terminal_contract_allowed, terminal:.terminal_commit_rows, forbidden:.action_evidence_forbidden_key_count, gt:.uses_gt_for_action, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_inspection_v1/unique_support_rival_region_inspection_summary.json",
+  "working_directory": "/home/yoohyun/research3"
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": "h001.verify.unique_support_shared_common_view_branch.v1",
+  "date_checked": "2026-06-01",
+  "status": "completed_shared_common_view_support_failure_branch_frozen",
+  "ok": true,
+  "working_directory": "/home/yoohyun/research3",
+  "command": "docker run --rm --user \"$(id -u):$(id -g)\" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.route_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch",
+  "implementation": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/route_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch.py",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch_v1.json",
+  "source_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_inspection_v1.verify.json",
+  "output": {
+    "root": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch_v1",
+    "summary": "unique_support_shared_common_view_branch_summary.json",
+    "pair_branch_rows": "unique_support_shared_common_view_branch_pair_rows.jsonl",
+    "request_branch_rows": "unique_support_shared_common_view_branch_request_rows.jsonl",
+    "shared_common_view_failure_rows": "unique_support_shared_common_view_failure_rows.jsonl"
+  },
+  "metrics": {
+    "request_branch_rows": 1,
+    "pair_branch_rows": 2,
+    "request_ids": [
+      "rival_identity:7"
+    ],
+    "request_branch_counts": {
+      "shared_common_view_support_failure_branch": 1
+    },
+    "pair_branch_counts": {
+      "contaminated_clean_contrastive_pair_branch": 1,
+      "shared_common_view_support_failure_branch": 1
+    },
+    "request_action_counts": {
+      "route_to_shared_common_view_support_failure_branch": 1
+    },
+    "shared_common_view_support_failure_request_rows": 1,
+    "contaminated_clean_contrastive_pair_rows": 1,
+    "terminal_contract_allowed": false,
+    "terminal_commit_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "gate": {
+    "source_shared_common_view_inspection_gate_passed": true,
+    "expected_request_branch_rows_passed": true,
+    "expected_pair_branch_rows_passed": true,
+    "expected_shared_common_view_support_failure_request_rows_passed": true,
+    "expected_contaminated_clean_contrastive_pair_rows_passed": true,
+    "terminal_contract_blocked_passed": true,
+    "terminal_commit_rows_passed": true,
+    "action_evidence_forbidden_key_gate_passed": true,
+    "uses_gt_for_action_passed": true,
+    "shared_common_view_branch_freeze_gate_passed": true,
+    "paper_claim_allowed": false
+  },
+  "notes": [
+    "Shared common-view rival support is frozen as a nonterminal failure branch.",
+    "The unique-support visibility branch has no clean request-level contrastive terminal case after cross-region and shared-common blockers are frozen.",
+    "Terminal utility, first_eval rerun, policy-scale comparison, and paper claims remain blocked."
+  ],
+  "recommended_next_task": "close_unique_support_visibility_branch_as_terminal_blocked_and_select_next_branch_specific_evidence_route",
+  "verification_command": "jq '{gate:.gate.shared_common_view_branch_freeze_gate_passed, request_branches:.request_branch_counts, pair_branches:.pair_branch_counts, recommendation:.recommended_next_task, terminal:.terminal_commit_rows, forbidden:.action_evidence_forbidden_key_count, gt:.uses_gt_for_action, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch_v1/unique_support_shared_common_view_branch_summary.json"
+}

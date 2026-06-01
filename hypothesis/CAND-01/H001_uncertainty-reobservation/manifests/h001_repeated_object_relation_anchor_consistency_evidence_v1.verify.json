@@ -1,0 +1,108 @@
+{
+  "schema_version": "h001.verify.repeated_object_relation_anchor_consistency_evidence.v1",
+  "date_checked": "2026-06-01",
+  "ok": true,
+  "status": "docker_verified_planner_materializer",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_repeated_object_relation_anchor_consistency_evidence_v1.json",
+  "script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_repeated_object_relation_anchor_consistency.py",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "output": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1",
+  "source_outputs": {
+    "promotion_requirement": "local_dataset/runs/h001_residual_branch_promotion_requirement_v1",
+    "repeated_object_branch": "local_dataset/runs/h001_repeated_object_relation_anchor_ambiguity_v1",
+    "prior_context_anchor_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1/partial_relation_depth_context_anchor_rows.jsonl",
+    "prior_plan_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1/partial_relation_depth_observation_plan.jsonl"
+  },
+  "output_files": {
+    "request_rows": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1/repeated_object_relation_anchor_consistency_request_rows.jsonl",
+    "candidate_rows": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1/repeated_object_relation_anchor_consistency_candidate_rows.jsonl",
+    "pair_rows": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1/repeated_object_relation_anchor_consistency_pair_rows.jsonl",
+    "observation_targets": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1/repeated_object_relation_anchor_consistency_observation_targets.jsonl",
+    "candidate_artifact": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1/repeated_object_relation_anchor_consistency_candidate_artifact.jsonl",
+    "skipped_rows": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1/repeated_object_relation_anchor_consistency_skipped.jsonl",
+    "summary": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1/repeated_object_relation_anchor_consistency_summary.json"
+  },
+  "verified_source_metrics": {
+    "promotion_requirement_gate_passed": true,
+    "repeated_object_relation_anchor_ambiguity_branch_gate_passed": true,
+    "branch_rows": 12,
+    "request_rows": 3,
+    "prior_context_anchor_rows": 36,
+    "prior_plan_rows": 36,
+    "scene_query": [
+      "bxsVRursffK/plant"
+    ],
+    "request_ids": [
+      "rival_identity:25",
+      "rival_identity:27",
+      "rival_identity:29"
+    ],
+    "candidate_ids": [
+      "vlmaps:export:plant:spatial_nms:0",
+      "vlmaps:export:plant:spatial_nms:2",
+      "vlmaps:export:plant:spatial_nms:4"
+    ]
+  },
+  "verified_materializer_metrics": {
+    "repeated_object_relation_anchor_consistency_plan_gate_passed": true,
+    "request_rows": 3,
+    "candidate_rows": 9,
+    "candidate_anchor_pair_rows": 27,
+    "observation_target_rows": 27,
+    "candidate_artifact_rows": 1,
+    "candidate_artifact_candidate_count": 5,
+    "skipped_rows": 0,
+    "minimum_context_candidates_per_request": 4,
+    "minimum_observation_roles_per_candidate": 3,
+    "view_role_counts": {
+      "candidate_own_view": 9,
+      "orthogonal_axis_challenge_view": 9,
+      "relation_anchor_context_view": 9
+    },
+    "context_candidate_ids_per_request": {
+      "rival_identity:25": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:2",
+        "vlmaps:export:plant:spatial_nms:7",
+        "vlmaps:export:plant:spatial_nms:8"
+      ],
+      "rival_identity:27": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:2",
+        "vlmaps:export:plant:spatial_nms:7",
+        "vlmaps:export:plant:spatial_nms:8"
+      ],
+      "rival_identity:29": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:2",
+        "vlmaps:export:plant:spatial_nms:7",
+        "vlmaps:export:plant:spatial_nms:8"
+      ]
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "blocked_after_verification": {
+    "terminal_utility_validation_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "verification_commands": [
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_repeated_object_relation_anchor_consistency.py",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.plan_repeated_object_relation_anchor_consistency",
+    "jq '.gate.repeated_object_relation_anchor_consistency_plan_gate_passed' local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1/repeated_object_relation_anchor_consistency_summary.json"
+  ],
+  "next_task": "run_repeated_object_relation_anchor_consistency_frame_projection_smoke",
+  "interpretation": {
+    "fact": "The Docker-verified planner materialized relation-anchor consistency action evidence for the repeated-object `bxsVRursffK/plant` branch with no skipped rows, no forbidden action keys, no terminal commit rows, and no GT action use.",
+    "agent_inference": "The next runnable task is frame/projection smoke over the materialized observation targets. Terminal utility, candidate commit/rejection, first_eval, policy-scale comparison, and paper claims remain blocked.",
+    "paper_claim": "No paper claim is allowed from this materializer alone."
+  }
+}

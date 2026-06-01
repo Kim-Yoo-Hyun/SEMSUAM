@@ -1,0 +1,82 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_object_relation_fresh_arbitration_verify.v1",
+  "date_checked": "2026-05-31",
+  "ok": true,
+  "validation_outcome": "fixed_rule_promotion_gate_failed",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_v1.json",
+  "base_support_builder": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/build_expanded_retrieval_goal_validity_object_relation_fresh_base_support.py",
+  "arbitration_analyzer": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_arbitration.py",
+  "base_support_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_base_support_v1",
+  "arbitration_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_v1",
+  "verified_base_support_metrics": {
+    "fresh_base_support_gate_passed": true,
+    "candidate_rows": 36,
+    "request_count": 7,
+    "candidate_specific_support_rows": 7,
+    "associated_candidate_rows": 33,
+    "missing_base_support_rows": 0,
+    "candidate_evidence_class_counts": {
+      "candidate_specific_support": 7,
+      "weak_or_partial_candidate_specific_support": 29
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false
+  },
+  "verified_arbitration_metrics": {
+    "object_relation_arbitration_rule_gate_passed": false,
+    "decision_rows": 36,
+    "evaluated_rows": 36,
+    "base_candidate_rows": 36,
+    "relation_depth_resolved_rows": 24,
+    "rejected_rows": 20,
+    "rejected_negative_rows": 17,
+    "rejected_positive_rows": 3,
+    "provisional_rows": 4,
+    "provisional_negative_rows": 4,
+    "provisional_positive_rows": 0,
+    "decision_action_counts": {
+      "defer_relation_depth_unresolved_or_partial": 12,
+      "provisional_unique_goal_validity_candidate_requires_fresh_validation": 4,
+      "reject_relation_depth_resolved_without_independent_candidate_support": 20
+    },
+    "evaluation_only_interpretation_counts": {
+      "deferred_relation_depth_resolved_negative_candidate": 4,
+      "deferred_relation_depth_resolved_positive_candidate": 8,
+      "provisional_relation_depth_resolved_negative_candidate": 4,
+      "rejected_relation_depth_resolved_negative_candidate": 17,
+      "rejected_relation_depth_resolved_positive_candidate": 3
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "failure_taxonomy": {
+    "wrong_provisional_candidates": [
+      "rival_identity:3 sofa spatial_nms:1",
+      "rival_identity:5 bed spatial_nms:2",
+      "rival_identity:7 bed spatial_nms:2",
+      "rival_identity:22 sofa spatial_nms:5"
+    ],
+    "rejected_positive_candidates": [
+      "rival_identity:3 sofa spatial_nms:5",
+      "rival_identity:7 bed spatial_nms:3",
+      "rival_identity:22 sofa spatial_nms:0"
+    ],
+    "agent_inference": "The fixed rule correctly blocks many resolved negatives, but independent own-view support is still object visibility evidence rather than ObjectNav goal-validity evidence. It is not safe as a terminal or provisional commit rule on this fresh source."
+  },
+  "verification_commands": [
+    "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/build_expanded_retrieval_goal_validity_object_relation_fresh_base_support.py hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_arbitration.py",
+    "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.build_expanded_retrieval_goal_validity_object_relation_fresh_base_support --contract hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_v1.json --out-root local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_base_support_v1",
+    "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.analyze_expanded_retrieval_goal_validity_object_relation_arbitration --contract hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_v1.json --out-root local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_v1",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_v1.verify.json"
+  ],
+  "interpretation": {
+    "fact": "The fresh fixed-rule validation was executed after fresh detector-depth evidence and before evaluation labels were used for decisions.",
+    "agent_inference": "This result strengthens the failure taxonomy: object visibility plus relation-depth consistency can still select wrong repeated-object instances, so the next workflow must diagnose why candidate identity/goal validity is not separated rather than tuning thresholds or running first_eval."
+  }
+}

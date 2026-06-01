@@ -1,0 +1,183 @@
+{
+  "schema_version": "h001.contract.expanded_retrieval_goal_validity_unique_support_goal_region_evidence.v1",
+  "date_checked": "2026-05-31",
+  "status": "frozen_before_implementation",
+  "contract_name": "expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1",
+  "purpose": "Aggregate focus/rival/common-view detector associations into nonterminal goal-region evidence for the unique-support visibility-not-goal-validity branch.",
+  "implementation_target": "runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_unique_support_goal_region_evidence.py",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "source": {
+    "branch_router_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1",
+    "plan_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1",
+    "frame_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_frames_v1",
+    "projection_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_projection_v1",
+    "detector_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1",
+    "frame_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/expanded_retrieval_detector_frame_summary.jsonl",
+    "detector_associations": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl",
+    "detector_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "source_verify": "manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1.verify.json"
+  },
+  "source_metrics": {
+    "request_rows": 4,
+    "candidate_target_rows": 21,
+    "pair_rows": 17,
+    "observation_rows": 51,
+    "detector_rows": 51,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.6470588235294118,
+    "rows_with_candidate_association": 33,
+    "associated_candidate_heading_count": 87,
+    "association_rows": 204,
+    "role_counts": {
+      "focus_own_view": 17,
+      "rival_own_view": 17,
+      "common_pair_view": 17
+    },
+    "associated_rows_by_role": {
+      "focus_own_view": 17,
+      "rival_own_view": 10,
+      "common_pair_view": 6
+    },
+    "associated_heading_count_by_role": {
+      "focus_own_view": 62,
+      "rival_own_view": 13,
+      "common_pair_view": 12
+    },
+    "pairs_by_request": {
+      "rival_identity:3": 3,
+      "rival_identity:5": 4,
+      "rival_identity:7": 5,
+      "rival_identity:22": 5
+    },
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "row_contract": {
+    "view_evidence_rows": 51,
+    "pair_evidence_rows": 17,
+    "request_evidence_rows": 4,
+    "view_role_reconstruction": {
+      "common_pair_view": "viewpoint_source == common_pair_navmesh",
+      "focus_own_view": "viewpoint_source != common_pair_navmesh and target_candidate_id == focus_candidate_id",
+      "rival_own_view": "viewpoint_source != common_pair_navmesh and target_candidate_id == rival_candidate_id"
+    },
+    "required_pair_roles": [
+      "focus_own_view",
+      "rival_own_view",
+      "common_pair_view"
+    ],
+    "required_pair_fields": [
+      "rival_identity_request_id",
+      "pair_id",
+      "focus_candidate_id",
+      "rival_candidate_id",
+      "scene_id",
+      "query",
+      "focus_own_support",
+      "rival_own_support",
+      "common_focus_support",
+      "focus_own_associated_heading_count",
+      "rival_own_associated_heading_count",
+      "common_focus_associated_heading_count",
+      "goal_region_evidence_status"
+    ],
+    "required_request_fields": [
+      "rival_identity_request_id",
+      "scene_id",
+      "query",
+      "focus_candidate_id",
+      "pair_count",
+      "focus_own_supported_pair_count",
+      "rival_own_supported_pair_count",
+      "common_focus_supported_pair_count",
+      "contrastive_goal_region_pair_count",
+      "ambiguous_goal_region_pair_count",
+      "insufficient_detector_pair_count",
+      "recommended_nonterminal_action"
+    ]
+  },
+  "evidence_definitions": {
+    "support_boolean": "A candidate/view row is supported when has_candidate_association is true in the detector frame summary.",
+    "focus_own_support": "The focus candidate is associated from its own standoff view for the pair.",
+    "rival_own_support": "The rival candidate is associated from its own standoff view for the pair.",
+    "common_focus_support": "The focus candidate is associated from the common pair view. The current substrate scores the focus candidate in common view, not the rival candidate.",
+    "contrastive_goal_region_pair": "focus_own_support is true and rival_own_support is false. common_focus_support is recorded but not required to make the pair contrastive.",
+    "ambiguous_goal_region_pair": "focus_own_support is true and rival_own_support is true.",
+    "insufficient_detector_pair": "focus_own_support is false or any required role row is missing.",
+    "recommended_nonterminal_action": "One of request_goal_region_arbitration, request_additional_rival_region_evidence, defer_goal_region_unresolved. The analyzer must not emit commit actions."
+  },
+  "allowed_action_inputs": [
+    "frame_summary rows",
+    "detector association rows",
+    "candidate ids and role metadata from planner output",
+    "projection anchor metadata",
+    "detector/SAM2 support and depth association fields",
+    "scene/query/request identifiers"
+  ],
+  "forbidden_action_inputs": [
+    "evaluation correctness labels",
+    "GT goal object id",
+    "GT target object position",
+    "success/failure labels",
+    "wrong-goal labels",
+    "shortest path distance",
+    "SPL",
+    "oracle stop/commit decisions",
+    "post-hoc positive/negative candidate labels"
+  ],
+  "required_gates": {
+    "source_detector_substrate_gate_passed": true,
+    "expected_view_evidence_rows": 51,
+    "expected_pair_evidence_rows": 17,
+    "expected_request_evidence_rows": 4,
+    "all_pairs_have_three_roles": true,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "blocked_actions": [
+    "direct_commit_focus_candidate",
+    "commit_by_detector_box_presence",
+    "commit_by_sam2_mask_presence",
+    "commit_by_candidate_association_count",
+    "commit_by_focus_own_support_only",
+    "threshold_tuning_on_evaluation_labels",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "terminal_utility_validation"
+  ],
+  "simpler_alternatives_to_report": [
+    {
+      "name": "direct_unique_support_commit",
+      "reason_to_report": "Tests whether the original visible unique-support failure would be repeated as a terminal shortcut."
+    },
+    {
+      "name": "focus_own_support_only",
+      "reason_to_report": "Expected to be unsafe because focus_own_view is supported for all 17 pairs in the substrate."
+    },
+    {
+      "name": "rival_absence_as_goal_validity",
+      "reason_to_report": "May be unsafe because missing rival association can mean detector/viewpoint failure rather than true goal-region separation."
+    },
+    {
+      "name": "association_count_best",
+      "reason_to_report": "Tests whether stronger detector association alone is a goal-validity signal."
+    },
+    {
+      "name": "defer_all",
+      "reason_to_report": "Safety baseline with zero utility."
+    }
+  ],
+  "expected_outputs": {
+    "out_root": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1",
+    "view_evidence_rows": "unique_support_goal_region_view_evidence_rows.jsonl",
+    "pair_evidence_rows": "unique_support_goal_region_pair_evidence_rows.jsonl",
+    "request_evidence_rows": "unique_support_goal_region_request_evidence_rows.jsonl",
+    "summary": "unique_support_goal_region_evidence_summary.json"
+  },
+  "next_step_if_passed": "Implement and Docker-run the analyzer, then inspect whether contrastive goal-region evidence supports a fixed non-GT arbitration design.",
+  "next_step_if_failed": "Diagnose detector association or role coverage failures before changing thresholds or terminal objectives.",
+  "paper_claim_allowed": false
+}

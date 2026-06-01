@@ -1,0 +1,28 @@
+{
+  "ok": true,
+  "schema_version": "h001.expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source.v1",
+  "source_rows": 7,
+  "evaluated_rows": 7,
+  "request_ids": [
+    "rival_identity:3",
+    "rival_identity:5",
+    "rival_identity:7",
+    "rival_identity:22",
+    "rival_identity:25",
+    "rival_identity:27",
+    "rival_identity:29"
+  ],
+  "unique_scene_count": 5,
+  "unique_query_count": 3,
+  "candidate_count_sum": 36,
+  "detector_strong_candidate_count_sum": 28,
+  "bounded_arbitration_overlap_count": 0,
+  "action_evidence_forbidden_key_count": 0,
+  "terminal_commit_rows": 0,
+  "uses_gt_for_action": false,
+  "object_relation_arbitration_validation_ready": false,
+  "object_relation_evidence_generation_required": true,
+  "terminal_utility_validation_allowed": false,
+  "paper_claim_allowed": false,
+  "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_v1"
+}

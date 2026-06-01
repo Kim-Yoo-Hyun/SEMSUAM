@@ -1,0 +1,68 @@
+{
+  "schema_version": "h001.verify.residual_branch_promotion_requirement.v1",
+  "date_checked": "2026-06-01",
+  "status": "docker_verified",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_residual_branch_promotion_requirement_v1.json",
+  "script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/define_residual_branch_promotion_requirements.py",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "source_output": "local_dataset/runs/h001_residual_partial_relation_depth_branch_synthesis_v1",
+  "output": "local_dataset/runs/h001_residual_branch_promotion_requirement_v1",
+  "compile_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/define_residual_branch_promotion_requirements.py",
+  "run_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.define_residual_branch_promotion_requirements",
+  "output_files": [
+    "local_dataset/runs/h001_residual_branch_promotion_requirement_v1/residual_branch_promotion_requirement_rows.jsonl",
+    "local_dataset/runs/h001_residual_branch_promotion_requirement_v1/residual_branch_promotion_requirement_summary.json"
+  ],
+  "checked_summary": {
+    "promotion_requirement_gate_passed": true,
+    "source_family_rows": 3,
+    "source_request_rows": 6,
+    "source_branch_rows": 15,
+    "requirement_rows": 3,
+    "requirement_status_counts": {
+      "defined_not_satisfied": 3
+    },
+    "branch_family_priority": [
+      "repeated_object_relation_anchor_ambiguity",
+      "association_geometry_underlink",
+      "depth_stagnation"
+    ],
+    "top_priority_family": "repeated_object_relation_anchor_ambiguity",
+    "promotable_family_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "terminal_utility_validation_allowed": false,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "checked_gate": {
+    "source_synthesis_gate_passed": true,
+    "expected_family_rows_passed": true,
+    "expected_request_rows_passed": true,
+    "expected_source_branch_rows_passed": true,
+    "source_promotable_rows_passed": true,
+    "source_terminal_commit_rows_passed": true,
+    "source_candidate_commit_rows_passed": true,
+    "source_candidate_rejection_rows_passed": true,
+    "required_families_defined_passed": true,
+    "priority_order_valid_passed": true,
+    "all_requirements_defined_passed": true,
+    "action_evidence_forbidden_key_gate_passed": true,
+    "terminal_commit_rows_passed": true,
+    "candidate_commit_rows_passed": true,
+    "candidate_rejection_rows_passed": true,
+    "promotable_family_rows_passed": true,
+    "terminal_utility_blocked_passed": true,
+    "uses_gt_for_action_passed": true,
+    "promotion_requirement_gate_passed": true
+  },
+  "terminal_utility_validation_allowed": false,
+  "candidate_commit_allowed": false,
+  "candidate_rejection_allowed": false,
+  "first_eval_rerun_allowed": false,
+  "policy_scale_comparison_allowed": false,
+  "paper_claim_allowed": false,
+  "next_task": "design_repeated_object_relation_anchor_consistency_evidence_contract"
+}

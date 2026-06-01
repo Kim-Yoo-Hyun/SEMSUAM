@@ -1,0 +1,300 @@
+{
+  "schema_version": "h001.contract.expanded_retrieval_goal_validity_unique_support_rival_region.v1",
+  "date_checked": "2026-05-31",
+  "status": "frozen_before_implementation",
+  "contract_name": "expanded_retrieval_goal_validity_unique_support_rival_region_v1",
+  "purpose": "Collect second-pass rival-region evidence for ambiguous unique-support goal-region pairs before any terminal arbitration.",
+  "implementation_target": "runtime/h001_runtime/plan_expanded_retrieval_goal_validity_unique_support_rival_region.py",
+  "docker_image": "research3/habitat-h001:20260508-calib-artifacts",
+  "source": {
+    "evidence_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1",
+    "inspection_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_inspection_v1",
+    "pair_inspection_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_inspection_v1/unique_support_goal_region_pair_inspection_rows.jsonl",
+    "request_inspection_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_inspection_v1/unique_support_goal_region_request_inspection_rows.jsonl",
+    "inspection_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_inspection_v1/unique_support_goal_region_inspection_summary.json",
+    "source_evidence_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1/unique_support_goal_region_evidence_summary.json",
+    "source_frame_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/expanded_retrieval_detector_frame_summary.jsonl",
+    "source_detector_associations": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl"
+  },
+  "source_metrics": {
+    "source_evidence_gate_passed": true,
+    "inspection_gate_passed": true,
+    "terminal_contract_allowed": false,
+    "request_rows": 4,
+    "pair_inspection_rows": 17,
+    "ambiguous_goal_region_pair_rows": 10,
+    "contrastive_goal_region_pair_rows": 7,
+    "pair_blocker_counts": {
+      "rival_own_view_supported": 10,
+      "contrastive_without_common_focus_support": 5,
+      "contrastive_but_request_level_ambiguity_check_required": 2
+    },
+    "request_recommendation_counts": {
+      "freeze_second_pass_rival_region_evidence_contract": 4
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "target_scope": {
+    "target_request_rows": 4,
+    "target_ambiguous_pair_rows": 10,
+    "target_observation_rows": 30,
+    "target_request_candidate_rows": 14,
+    "target_queries": {
+      "bed": 5,
+      "sofa": 5
+    },
+    "target_scenes": {
+      "4ok3usBNeis": 4,
+      "QaLdnwvtxbs": 1,
+      "bCPU9suPUw9": 3,
+      "q3zU7Yy5E5s": 2
+    },
+    "ambiguous_pairs": [
+      {
+        "rival_identity_request_id": "rival_identity:3",
+        "query": "sofa",
+        "scene_key": "QaLdnwvtxbs",
+        "pair_index": 2,
+        "focus_candidate_id": "vlmaps:export:sofa:spatial_nms:1",
+        "rival_candidate_id": "vlmaps:export:sofa:spatial_nms:5",
+        "focus_own_associated_heading_count": 3,
+        "rival_own_associated_heading_count": 1,
+        "common_focus_associated_heading_count": 3,
+        "focus_rival_span_m": 2.60768096208106
+      },
+      {
+        "rival_identity_request_id": "rival_identity:5",
+        "query": "bed",
+        "scene_key": "bCPU9suPUw9",
+        "pair_index": 1,
+        "focus_candidate_id": "vlmaps:export:bed:spatial_nms:2",
+        "rival_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+        "focus_own_associated_heading_count": 3,
+        "rival_own_associated_heading_count": 1,
+        "common_focus_associated_heading_count": 0,
+        "focus_rival_span_m": 5.214642844912777
+      },
+      {
+        "rival_identity_request_id": "rival_identity:5",
+        "query": "bed",
+        "scene_key": "bCPU9suPUw9",
+        "pair_index": 2,
+        "focus_candidate_id": "vlmaps:export:bed:spatial_nms:2",
+        "rival_candidate_id": "vlmaps:export:bed:spatial_nms:1",
+        "focus_own_associated_heading_count": 3,
+        "rival_own_associated_heading_count": 2,
+        "common_focus_associated_heading_count": 1,
+        "focus_rival_span_m": 4.2573465914816015
+      },
+      {
+        "rival_identity_request_id": "rival_identity:5",
+        "query": "bed",
+        "scene_key": "bCPU9suPUw9",
+        "pair_index": 3,
+        "focus_candidate_id": "vlmaps:export:bed:spatial_nms:2",
+        "rival_candidate_id": "vlmaps:export:bed:spatial_nms:5",
+        "focus_own_associated_heading_count": 4,
+        "rival_own_associated_heading_count": 1,
+        "common_focus_associated_heading_count": 0,
+        "focus_rival_span_m": 5.303772242470449
+      },
+      {
+        "rival_identity_request_id": "rival_identity:7",
+        "query": "bed",
+        "scene_key": "q3zU7Yy5E5s",
+        "pair_index": 0,
+        "focus_candidate_id": "vlmaps:export:bed:spatial_nms:2",
+        "rival_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+        "focus_own_associated_heading_count": 4,
+        "rival_own_associated_heading_count": 2,
+        "common_focus_associated_heading_count": 0,
+        "focus_rival_span_m": 4.746050990033715
+      },
+      {
+        "rival_identity_request_id": "rival_identity:7",
+        "query": "bed",
+        "scene_key": "q3zU7Yy5E5s",
+        "pair_index": 3,
+        "focus_candidate_id": "vlmaps:export:bed:spatial_nms:2",
+        "rival_candidate_id": "vlmaps:export:bed:spatial_nms:5",
+        "focus_own_associated_heading_count": 4,
+        "rival_own_associated_heading_count": 1,
+        "common_focus_associated_heading_count": 0,
+        "focus_rival_span_m": 5.93506529028957
+      },
+      {
+        "rival_identity_request_id": "rival_identity:22",
+        "query": "sofa",
+        "scene_key": "4ok3usBNeis",
+        "pair_index": 0,
+        "focus_candidate_id": "vlmaps:export:sofa:spatial_nms:5",
+        "rival_candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+        "focus_own_associated_heading_count": 4,
+        "rival_own_associated_heading_count": 1,
+        "common_focus_associated_heading_count": 2,
+        "focus_rival_span_m": 3.908004605933827
+      },
+      {
+        "rival_identity_request_id": "rival_identity:22",
+        "query": "sofa",
+        "scene_key": "4ok3usBNeis",
+        "pair_index": 1,
+        "focus_candidate_id": "vlmaps:export:sofa:spatial_nms:5",
+        "rival_candidate_id": "vlmaps:export:sofa:spatial_nms:0",
+        "focus_own_associated_heading_count": 4,
+        "rival_own_associated_heading_count": 1,
+        "common_focus_associated_heading_count": 0,
+        "focus_rival_span_m": 5.0212050346505475
+      },
+      {
+        "rival_identity_request_id": "rival_identity:22",
+        "query": "sofa",
+        "scene_key": "4ok3usBNeis",
+        "pair_index": 2,
+        "focus_candidate_id": "vlmaps:export:sofa:spatial_nms:5",
+        "rival_candidate_id": "vlmaps:export:sofa:spatial_nms:1",
+        "focus_own_associated_heading_count": 4,
+        "rival_own_associated_heading_count": 2,
+        "common_focus_associated_heading_count": 2,
+        "focus_rival_span_m": 4.350000000000001
+      },
+      {
+        "rival_identity_request_id": "rival_identity:22",
+        "query": "sofa",
+        "scene_key": "4ok3usBNeis",
+        "pair_index": 4,
+        "focus_candidate_id": "vlmaps:export:sofa:spatial_nms:5",
+        "rival_candidate_id": "vlmaps:export:sofa:spatial_nms:9",
+        "focus_own_associated_heading_count": 4,
+        "rival_own_associated_heading_count": 1,
+        "common_focus_associated_heading_count": 0,
+        "focus_rival_span_m": 6.216912416947821
+      }
+    ]
+  },
+  "second_pass_observation_policy": {
+    "name": "swapped_candidate_view_matrix_v1",
+    "selection_rule": "Use only pair inspection rows with goal_region_evidence_status == ambiguous_goal_region_pair.",
+    "required_view_roles_per_pair": [
+      "rival_from_common_pair_view",
+      "rival_from_focus_own_view",
+      "focus_from_rival_own_view"
+    ],
+    "row_count_per_ambiguous_pair": 3,
+    "expected_target_observation_rows": 30,
+    "reason": "The first pass observes focus in its own view, rival in its own view, and focus in the common view. The missing action-time evidence is whether the rival is also visible from the common/focus region and whether the focus is visible from the rival region.",
+    "frame_reuse_allowed": true,
+    "frame_reuse_rule": "The planner may reuse existing rendered viewpoints and RGB-D frames when the target candidate id is swapped without changing camera pose; reused rows must preserve source decision ids and set explicit selected_candidate_ids.",
+    "rerender_allowed": true,
+    "rerender_rule": "If the existing frame metadata cannot be safely reused, rerender the same source viewpoint geometry in Docker and keep the source role provenance."
+  },
+  "row_contract": {
+    "request_rows": 4,
+    "pair_rows": 10,
+    "request_candidate_rows": 14,
+    "observation_plan_rows": 30,
+    "required_observation_fields": [
+      "rival_identity_request_id",
+      "pair_id",
+      "pair_index",
+      "scene_id",
+      "scene_key",
+      "query",
+      "focus_candidate_id",
+      "rival_candidate_id",
+      "target_candidate_id",
+      "source_view_role",
+      "second_pass_view_role",
+      "source_decision_id",
+      "selected_candidate_ids",
+      "viewpoint_source",
+      "uses_gt_for_action"
+    ],
+    "required_second_pass_view_roles": [
+      "rival_from_common_pair_view",
+      "rival_from_focus_own_view",
+      "focus_from_rival_own_view"
+    ]
+  },
+  "allowed_action_inputs": [
+    "unique-support goal-region pair inspection rows",
+    "unique-support goal-region request inspection rows",
+    "first-pass focus/rival/common-view metadata",
+    "candidate ids and candidate positions from first-pass planner artifacts",
+    "source viewpoint geometry and source decision ids",
+    "detector/SAM2 association fields from first-pass action evidence"
+  ],
+  "forbidden_action_inputs": [
+    "evaluation correctness labels",
+    "GT goal object id",
+    "GT target object position",
+    "success/failure labels",
+    "wrong-goal labels",
+    "shortest path distance",
+    "SPL",
+    "oracle stop/commit decisions",
+    "post-hoc positive/negative candidate labels"
+  ],
+  "required_gates": {
+    "source_evidence_gate_passed": true,
+    "source_inspection_gate_passed": true,
+    "expected_request_rows": 4,
+    "expected_pair_rows": 10,
+    "expected_request_candidate_rows": 14,
+    "expected_observation_plan_rows": 30,
+    "required_second_pass_roles_per_pair": 3,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "blocked_actions": [
+    "terminal_arbitration_contract",
+    "direct_commit_focus_candidate",
+    "commit_if_any_contrastive_pair_exists",
+    "ignore_rival_own_view_support",
+    "commit_by_detector_box_presence",
+    "commit_by_sam2_mask_presence",
+    "commit_by_candidate_association_count",
+    "threshold_tuning_on_evaluation_labels",
+    "first_eval_rerun",
+    "policy_scale_comparison"
+  ],
+  "simpler_alternatives_to_report": [
+    {
+      "name": "commit_if_any_contrastive_pair_exists",
+      "reason_to_report": "Rejected because all four requests still contain rival-own-view-supported ambiguous pairs."
+    },
+    {
+      "name": "ignore_rival_own_view_support",
+      "reason_to_report": "Rejected because this would treat repeated-object visibility as goal validity."
+    },
+    {
+      "name": "association_count_margin",
+      "reason_to_report": "Diagnostic only; it can rank evidence strength but cannot authorize terminal commitment."
+    },
+    {
+      "name": "existing_common_focus_only",
+      "reason_to_report": "Insufficient because the current common view scores the focus candidate but does not score the rival candidate."
+    },
+    {
+      "name": "defer_all",
+      "reason_to_report": "Safe but inert baseline."
+    }
+  ],
+  "expected_outputs": {
+    "out_root": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1",
+    "request_rows": "unique_support_rival_region_request_rows.jsonl",
+    "pair_rows": "unique_support_rival_region_pair_rows.jsonl",
+    "candidate_artifact": "unique_support_rival_region_candidate_artifact.jsonl",
+    "observation_plan": "unique_support_rival_region_observation_plan.jsonl",
+    "summary": "unique_support_rival_region_plan_summary.json"
+  },
+  "next_step_if_passed": "Implement and Docker-run the second-pass rival-region evidence planner.",
+  "next_step_if_failed": "Diagnose source inspection coverage before changing thresholds or terminal objectives.",
+  "terminal_utility_validation_allowed": false,
+  "paper_claim_allowed": false
+}

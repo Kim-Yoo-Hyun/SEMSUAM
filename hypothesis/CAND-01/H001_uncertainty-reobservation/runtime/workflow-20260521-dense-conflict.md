@@ -858,7 +858,7 @@ fixed_anchor_detector_rerun_job:
 
 ### 에이전트 추론
 
-The detector evidence gate now has a geometry-safe frame substrate: only source-pool-valid rows are rendered, each candidate observation uses a navmesh standoff viewpoint, and frame export produces no blank rows or headings. The skipped candidates are navmesh-infeasible under the current standoff policy, not GT-filtered. The first detector/SAM2 substrate failed because candidate projection and depth association were weak despite detector boxes and masks being available. The failure taxonomy shows the dominant blocker is not detector availability but out-of-FOV candidate projection, with a smaller depth-mismatch association path. The design probe shows this is vertical anchor uncertainty rather than horizontal yaw: all out-of-FOV projections are `x_in_y_above`, and a category-agnostic projection-anchor height sweep recovers all `projection_never_visible` rows in replay. Revised plan/projection smoke passes and preserves the revision metadata through a 2-row renderer passthrough smoke. The fixed-anchor detector/SAM2 rerun also passes the substrate gate with candidate association rate `0.7381`, compared with the previous `0.0714`. Terminal commit and paper claims remain blocked. Fresh/predeclared source freeze, fresh detector/SAM2 substrate, fresh detector evidence diagnostic, and ambiguity-aware objective contract pass on a small source. Paper-scale source freeze, planner compatibility, source-pool proxy, detector observation planning, upper-anchor frame/projection smoke, detector/SAM2 substrate, detector evidence diagnostic, ambiguity objective application, local-context contract, local-context planner smoke, and local-context frame/projection smoke now pass; the next step is local-context detector/SAM2 substrate.
+The detector evidence gate now has a geometry-safe frame substrate: only source-pool-valid rows are rendered, each candidate observation uses a navmesh standoff viewpoint, and frame export produces no blank rows or headings. The skipped candidates are navmesh-infeasible under the current standoff policy, not GT-filtered. The first detector/SAM2 substrate failed because candidate projection and depth association were weak despite detector boxes and masks being available. The failure taxonomy shows the dominant blocker is not detector availability but out-of-FOV candidate projection, with a smaller depth-mismatch association path. The design probe shows this is vertical anchor uncertainty rather than horizontal yaw: all out-of-FOV projections are `x_in_y_above`, and a category-agnostic projection-anchor height sweep recovers all `projection_never_visible` rows in replay. Revised plan/projection smoke passes and preserves the revision metadata through a 2-row renderer passthrough smoke. The fixed-anchor detector/SAM2 rerun also passes the substrate gate with candidate association rate `0.7381`, compared with the previous `0.0714`. Terminal commit and paper claims remain blocked. Fresh/predeclared source freeze, fresh detector/SAM2 substrate, fresh detector evidence diagnostic, ambiguity-aware objective contract, paper-scale source freeze, local-context branches, recovered-row goal-validity branches, and bounded object-relation branches later pass or are frozen. The current active gate is the fresh object-relation detector/SAM2 substrate documented near the end of this workflow.
 
 ### Expanded Retrieval Fresh Validation and Ambiguity Contract
 
@@ -2936,12 +2936,1433 @@ projection_anchor_policy: projection_anchor_height_sweep_v1
 uses_gt_for_action: false
 paper_claim_allowed: false
 passes_detector_substrate_gate: true
-next_gate: object-relation post-detector evidence analyzer contract
+next_gate: object-relation post-detector evidence analyzer contract frozen below
+```
+
+Object-relation post-detector evidence analyzer contract:
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1.verify.json
+source_plan_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_plan_v1/goal_validity_object_relation_observation_plan_summary.json
+source_projection_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_projection_v1/projection_anchor_smoke_summary.json
+source_detector_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json
+source_association_rows: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_detector_substrate_v1/detector_v3c/detector_candidate_associations.jsonl
+analyzer_name: object_relation_detector_depth_evidence_v1
+expected_request_rows: 2
+expected_plan_rows: 8
+expected_detector_rows: 8
+expected_association_rows: 72
+minimum_evidence_rows: 8
+minimum_request_rows: 2
+minimum_associated_candidate_heading_count: 40
+minimum_depth_consistent_rows: 32
+depth_status_counts: consistent 44 / depth_mismatch 14 / out_of_fov 14
+terminal_commit_rows: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+blocked_actions: direct commit, detector-association best commit, relation-signature best commit, threshold tuning, first_eval rerun, policy-scale comparison
+next_script_target: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_evidence.py
+next_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1
+next_gate: implement nonterminal object-relation post-detector evidence analyzer
+```
+
+Object-relation post-detector evidence analyzer:
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_evidence.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+docker_compile: passed
+docker_run: passed
+evidence_rows: 8
+request_rows: 2
+evaluation_only_rows: 2
+association_rows: 72
+detector_rows: 8
+associated_candidate_heading_count: 48
+depth_status_counts: consistent 44 / depth_mismatch 14 / out_of_fov 14
+request_evidence_status_counts: relation_depth_recheck_resolved 2
+evaluation_only_candidate_correct_counts: false 2
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+object_relation_evidence_gate_passed: true
+paper_claim_allowed: false
+next_gate: freeze interpretation that detector-depth evidence repaired coverage but did not prove goal validity
+```
+
+Object-relation evidence interpretation gate:
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_interpretation_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_interpretation_v1.verify.json
+source_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1/goal_validity_object_relation_evidence_summary.json
+source_evidence_gate_passed: true
+evidence_rows: 8
+request_rows: 2
+evaluation_only_rows: 2
+request_evidence_status_counts: relation_depth_recheck_resolved 2
+evaluation_only_candidate_correct_counts: false 2
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+uses_gt_for_action: false
+terminal_utility_validation_allowed: false
+paper_claim_allowed: false
+rejected_terminal_shortcuts: relation-depth-resolved commit, box/mask presence commit, high-association-count commit
+next_gate: object-relation goal-validity arbitration rule frozen below
+```
+
+Object-relation goal-validity arbitration rule:
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_arbitration_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_arbitration_v1.verify.json
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_arbitration.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_arbitration_v1
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+docker_compile: passed
+docker_run: passed
+policy: relation_depth_guarded_non_gt_arbitration_v1
+decision_rows: 2
+evaluated_rows: 2
+relation_depth_resolved_rows: 2
+arbitration_action_counts: reject_relation_depth_resolved_without_independent_candidate_support 2
+evaluation_only_candidate_correct_counts: false 2
+evaluation_only_interpretation_counts: rejected_relation_depth_resolved_negative_candidate 2
+support_saturation_eligible_candidate_count_per_row: 73 / 79
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+object_relation_arbitration_rule_gate_passed: true
+terminal_utility_validation_allowed: false
+paper_claim_allowed: false
+next_gate: freeze fresh/predeclared source before generating object-relation evidence
+```
+
+Fresh/predeclared object-relation arbitration source:
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_v1.verify.json
+script: runtime/h001_runtime/build_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_v1
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+docker_compile: passed
+docker_run: passed
+source_rows: 7
+evaluated_rows: 7
+request_ids: rival_identity:3, rival_identity:5, rival_identity:7, rival_identity:22, rival_identity:25, rival_identity:27, rival_identity:29
+unique_scene_count: 5
+unique_query_count: 3
+candidate_count_sum: 36
+detector_strong_candidate_count_sum: 28
+bounded_arbitration_overlap_count: 0
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+fresh_source_precheck_gate_passed: true
+object_relation_evidence_generation_required: true
+object_relation_arbitration_validation_ready: false
+terminal_utility_validation_allowed: false
+paper_claim_allowed: false
+next_gate: plan and generate fresh object-relation evidence for these route-specific rows
+```
+
+Fresh object-relation observation plan:
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1.verify.json
+input_builder: runtime/h001_runtime/build_expanded_retrieval_goal_validity_object_relation_fresh_observation_inputs.py
+input_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_inputs_v1
+planner_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1
+input_target_rows: 36
+input_repair_action_rows: 36
+input_context_object_rows: 152
+input_missing_plan_rows: 0
+candidate_positions_missing: 0
+docker_image: research3/habitat-h001:20260508-calib-artifacts
+planner_script: runtime/h001_runtime/plan_expanded_retrieval_goal_validity_object_relation_observation.py
+planner_command_note: use /opt/conda/bin/python in this image
+plan_rows: 144
+skipped_rows: 0
+plan_rows_by_request: 16-24
+candidate_artifact_rows: 5
+candidate_artifact_candidate_count: 26
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+uses_gt_for_action: false
+object_relation_observation_plan_gate_passed: true
+paper_claim_allowed: false
+next_gate: Docker frame/projection smoke, completed below
+```
+
+Fresh object-relation frame/projection smoke:
+
+```text
+status: completed
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_frame_projection_v1.verify.json
+job_wrapper: runtime/jobs/expanded_retrieval_goal_validity_object_relation_fresh_frame_projection.sh
+tmux_session: h001-fresh-object-relation-frame-projection-20260531-000459
+working_directory: /home/yoohyun/research3
+log: runtime/logs/fresh-object-relation-frame-projection-20260531-000459.log
+status_file: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_projection_v1/frame_projection_job_status.json
+plan_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1
+frame_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_frames_v1
+filtered_frame_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+projection_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_projection_v1
+docker_image: research3/habitat-h001:20260508-calib-artifacts
+docker_gpu_args: --gpus all
+frame_export_command: /opt/conda/bin/python runtime/h001_runtime/export_postview_frames_v2.py
+nonblank_filter_command: /opt/conda/bin/python runtime/h001_runtime/filter_nonblank_frame_summary.py
+projection_smoke_command: /opt/conda/bin/python runtime/h001_runtime/smoke_expanded_retrieval_projection_anchor.py
+expected_files:
+  frame_output/summary.json
+  frame_output/nonblank_filter_v1/nonblank_frame_filter_summary.json
+  frame_output/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+  projection_output/projection_anchor_smoke_summary.json
+  projection_output/projection_anchor_smoke_rows.jsonl
+verification_command: jq '.status' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_projection_v1/frame_projection_job_status.json && jq '.ok' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_frames_v1/summary.json && jq '.gate.projection_anchor_smoke_passed' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_projection_v1/projection_anchor_smoke_summary.json
+rows_exported: 144
+rendered_heading_count: 576
+nonblank_output_rows: 144
+kept_heading_count: 573
+removed_blank_heading_count: 3
+blank_heading_scene/query: bxsVRursffK / plant
+row_level_nonblank_gate_passed: true
+strict_no_blank_heading_gate_passed: false
+projection_anchor_visible_rows: 141
+projection_expected_rows: 144
+projection_anchor_visible_rate: 0.9792
+missing_candidate_rows: 0
+gt_action_rows: 0
+projection_anchor_smoke_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+repair_notes:
+  - first launch failed because Docker frame export lacked GPU args for headless rendering
+  - second launch failed because output roots had host permission restrictions
+  - wrapper now defaults to --gpus all and chmods frame/projection output roots before Docker execution
+next_gate: detector/SAM2 substrate for fresh object-relation observation rows
+```
+
+Fresh object-relation detector/SAM2 substrate:
+
+```text
+status: completed
+tmux_session: h001-fresh-object-relation-detector-20260531-013027
+working_directory: /home/yoohyun/research3
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_detector_substrate_v1.verify.json
+script: runtime/jobs/expanded_retrieval_goal_validity_object_relation_fresh_detector_substrate.sh
+base_script: runtime/jobs/expanded_retrieval_detector_substrate.sh
+image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+frames: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+frame_root: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_frames_v1
+candidate_artifact: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1/goal_validity_object_relation_observation_candidate_artifact.jsonl
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1
+detector_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1/detector_v3c
+log: runtime/logs/fresh-object-relation-detector-substrate-20260531-013027.log
+status_file: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1/job_status.json
+expected_policy: ExpandedRetrievalGoalValidityObjectRelationObservation
+expected_frame_rows: 144
+projection_anchor_height_offsets_m: 0.0,0.4,0.8,1.2,1.6,2.0,2.4
+candidate_point_field: grounded_position
+min_detector_box_rate: 0.80
+min_sam2_mask_rate: 0.80
+min_candidate_association_rate: 0.40
+detector_rows: 144
+detector_box_rate: 0.9583
+sam2_mask_rate: 0.9583
+candidate_association_rate: 0.8264
+rows_with_candidate_association: 119 / 144
+associated_candidate_heading_count: 338
+association_rows: 573
+detector_box_rows: 906
+detector_mask_rows: 906
+projected_pixel_inside_mask_count: 401
+projection_status_counts:
+  visible: 561
+  out_of_fov: 12
+projection_anchor_selected_offset_counts:
+  0.0: 205
+  0.4: 44
+  0.8: 29
+  1.2: 24
+  1.6: 31
+  2.0: 75
+  2.4: 165
+passes_detector_substrate_gate: true
+expected_files:
+  detector_v3c/summary.json
+  detector_v3c/detector_candidate_associations.jsonl
+  expanded_retrieval_detector_associations.jsonl
+  expanded_retrieval_detector_frame_summary.jsonl
+  expanded_retrieval_detector_substrate_summary.json
+verification_command: cat local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1/job_status.json && cat local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json
+launch_command: TS=20260531-013027 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_goal_validity_object_relation_fresh_detector_substrate.sh
+uses_gt_for_action: false
+paper_claim_allowed: false
+next_gate_after_completion: fresh object-relation post-detector evidence analyzer
+```
+
+Fresh object-relation post-detector evidence analyzer:
+
+```text
+status: completed
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_evidence_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_evidence_v1.verify.json
+label_builder: runtime/h001_runtime/build_expanded_retrieval_goal_validity_object_relation_fresh_labels.py
+evidence_analyzer: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_evidence.py
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_evidence_v1
+source_evaluated_rows: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_v1/object_relation_arbitration_fresh_source_evaluated_rows.jsonl
+fresh_target_rows: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_inputs_v1/object_relation_fresh_observation_coverage_gap_rows.jsonl
+detector_associations: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1/detector_v3c/detector_candidate_associations.jsonl
+label_rows: 36
+label_correct/wrong: 11 / 25
+request_rows: 36
+evidence_rows: 108
+association_rows: 573
+associated_candidate_heading_count: 338
+depth_consistent_rows: 321
+depth_mismatch_rows: 223
+out_of_fov_rows: 12
+evidence_status_counts:
+  relation_depth_recheck_resolved: 24
+  relation_depth_recheck_partial: 12
+evidence_status_counts_by_direction:
+  relation_depth_recheck_resolved: 72
+  relation_depth_recheck_partial: 33
+  relation_depth_recheck_unresolved: 3
+evaluation_only_interpretation_counts:
+  resolved_detector_depth_gap_for_evaluation_positive_candidate: 3
+  resolved_detector_depth_gap_for_evaluation_negative_candidate: 21
+  partial_detector_depth_gap_after_relation_observation: 12
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+object_relation_evidence_gate_passed: true
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+next_gate_after_evidence: fixed-rule object-relation arbitration validation on fresh evidence (completed; see below)
 ```
 
 ### 에이전트 추론
 
-This contract fixed the bounded-substrate flaw by requiring all `158` planned rows and preserving the recovered correct candidate ranks `34`, `57`, and `60` for both request rows. The full objective analyzer and ambiguity diagnostic show the remaining problem is not candidate coverage. It is support saturation: same-category visual evidence marks almost every candidate as candidate-specific support, and simple selection rules still choose wrong instances. The discriminative analyzer shows instance/goal-region evidence is insufficient as a terminal separator because target contrast pairs are split between contrast-favored and selector-favored visual evidence. The relation/spatial context analyzer adds a stronger failure diagnosis: static context favors the contrast candidates, but same-component selector failures remain. The scene-graph/object-relation analyzer now adds a positive target-pair separability probe, but the branch is still nonterminal because detector association coverage is incomplete and the result is a narrow recovered-row diagnostic. The coverage repair analyzer materializes the four detector-association gaps and separates high-priority dense relation gaps from low-priority promotion waivers without using labels for action. The object-relation planner, frame/projection smoke, and detector substrate now create the required relation-aware multiview depth-recheck substrate for the two rank-6 dense gaps, without allowing terminal policy or threshold tuning. The next evidence question is whether post-detector evidence should update goal-validity status or remain a nonterminal evidence-acquisition result under support saturation.
+This contract fixed the bounded-substrate flaw by requiring all `158` planned rows and preserving the recovered correct candidate ranks `34`, `57`, and `60` for both request rows. The full objective analyzer and ambiguity diagnostic show the remaining problem is not candidate coverage. It is support saturation: same-category visual evidence marks almost every candidate as candidate-specific support, and simple selection rules still choose wrong instances. The discriminative analyzer shows instance/goal-region evidence is insufficient as a terminal separator because target contrast pairs are split between contrast-favored and selector-favored visual evidence. The relation/spatial context analyzer adds a stronger failure diagnosis: static context favors the contrast candidates, but same-component selector failures remain. The scene-graph/object-relation analyzer now adds a positive target-pair separability probe, and the object-relation observation substrate resolves the detector association coverage gap for the two rank-6 dense targets. The bounded post-detector analyzer confirms the relation-depth gap is resolved, but only for evaluation-negative candidates. The bounded arbitration rule rejects these candidates without action-time labels by requiring independent candidate-specific support from the full substrate. The fresh/predeclared source precheck shows that route-specific goal-validity rows exist outside the bounded two-row smoke, and the fresh planner/frame/projection/detector/evidence gates show those rows can be converted into relation-aware standoff observations with candidate-local evidence and without action-time label leakage. The fresh evidence result is mixed: many resolved candidates are evaluation-negative, so detector-depth resolution is not terminal goal-validity evidence.
+
+#### Fresh Fixed-Rule Arbitration Validation
+
+사실: Fresh fixed-rule validation was run with a non-GT base-support conversion from `expanded_retrieval_local_context_revision_v1`.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_v1.verify.json
+base_support_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_base_support_v1
+arbitration_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_v1
+base_support_candidate_rows: 36
+base_support_candidate_specific_support_rows: 7
+base_support_associated_candidate_rows: 33
+fresh_base_support_gate_passed: true
+decision_rows: 36
+relation_depth_resolved_rows: 24
+decision_action_counts:
+  reject_relation_depth_resolved_without_independent_candidate_support: 20
+  defer_relation_depth_unresolved_or_partial: 12
+  provisional_unique_goal_validity_candidate_requires_fresh_validation: 4
+evaluation_only_interpretation_counts:
+  rejected_relation_depth_resolved_negative_candidate: 17
+  rejected_relation_depth_resolved_positive_candidate: 3
+  provisional_relation_depth_resolved_negative_candidate: 4
+  provisional_relation_depth_resolved_positive_candidate: 0
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+object_relation_arbitration_rule_gate_passed: false
+paper_claim_allowed: false
+next_gate_after_arbitration: diagnose fresh arbitration failure before terminal contract (completed; see below)
+```
+
+에이전트 추론: The fixed rule is not promotable on fresh route-specific rows. It does reject many resolved negatives, but the positive-rejection and wrong-provisional rows show that own-view support plus relation-depth consistency still confounds repeated-object visibility with goal validity. This result should become a failure taxonomy and branch-design problem, not a threshold-tuning problem.
+
+#### Fresh Arbitration Failure Diagnosis
+
+사실: Fresh arbitration failure diagnosis was run after fixed decision rows were written.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_failure_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_failure_v1.verify.json
+script: runtime/h001_runtime/diagnose_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_failure.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_failure_v1
+candidate_failure_rows: 36
+request_failure_rows: 7
+primary_failure_class_counts:
+  negative_rejected_missing_independent_support: 17
+  positive_deferred_partial_relation_depth: 8
+  wrong_provisional_unique_support: 4
+  positive_rejected_missing_independent_support: 3
+  negative_deferred_partial_relation_depth: 4
+request_failure_tag_counts:
+  negative_candidates_blocked_by_missing_support: 7
+  correct_goal_relation_depth_partial: 5
+  unique_independent_support_selects_wrong_goal: 4
+  object_visibility_preferred_over_true_goal_validity: 4
+  correct_goal_rejected_by_missing_strong_own_view: 3
+  true_candidate_support_blocked_by_relation_depth_partial: 3
+  semantic_top_can_be_wrong_visible_object: 3
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+fresh_arbitration_failure_diagnostic_gate_passed: true
+terminal_utility_validation_allowed: false
+paper_claim_allowed: false
+next_gate: design branch-specific goal-validity evidence contract
+```
+
+에이전트 추론: This diagnosis makes the blocker actionable: relation-depth repair and own-view support are visibility signals, not goal-validity signals. A next method component must be forced by this taxonomy, for example by separating wrong unique-support cases, correct-but-partial relation-depth cases, and correct-without-strong-own-view cases. Direct threshold tuning remains blocked.
+
+#### Branch-Specific Goal-Validity Evidence Contract
+
+사실: The branch-specific contract is frozen as a nonterminal router design.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1.verify.json
+source: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_failure_v1
+expected_request_rows: 7
+expected_candidate_rows: 36
+branches:
+  unique_support_visibility_not_goal_validity
+  correct_candidate_missing_own_view_support
+  partial_relation_depth_true_goal
+  negative_missing_support_guard
+required_outputs:
+  goal_validity_object_relation_branch_request_rows.jsonl
+  goal_validity_object_relation_branch_candidate_rows.jsonl
+  goal_validity_object_relation_evaluated_branch_request_rows.jsonl
+  goal_validity_object_relation_branch_evidence_summary.json
+next_implementation_target: runtime/h001_runtime/route_expanded_retrieval_goal_validity_object_relation_branch_evidence.py
+terminal_commit_allowed: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The first implementation should be a branch router and coverage audit, not another terminal policy. The preferred first branch is `unique_support_visibility_not_goal_validity` because it turns the strongest current contradiction into an active evidence request: independent support can identify a visible object, but that does not prove this object is the intended `ObjectNav` goal.
+
+#### Branch-Specific Goal-Validity Router
+
+사실: The branch router was implemented and Docker-run.
+
+```text
+script: runtime/h001_runtime/route_expanded_retrieval_goal_validity_object_relation_branch_evidence.py
+contract: manifests/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1.verify.json
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1
+branch_request_rows: goal_validity_object_relation_branch_request_rows.jsonl
+branch_candidate_rows: goal_validity_object_relation_branch_candidate_rows.jsonl
+evaluated_branch_request_rows: goal_validity_object_relation_evaluated_branch_request_rows.jsonl
+summary: goal_validity_object_relation_branch_evidence_summary.json
+request_rows: 7
+candidate_rows: 36
+evaluated_branch_request_rows: 7
+branch_evidence_router_gate_passed: true
+request_branch_counts:
+  unique_support_visibility_not_goal_validity: 4
+  partial_relation_depth_true_goal: 6
+  correct_candidate_missing_own_view_support: 7
+  negative_missing_support_guard: 7
+candidate_branch_counts:
+  unique_support_visibility_not_goal_validity: 4
+  partial_relation_depth_true_goal: 12
+  correct_candidate_missing_own_view_support: 20
+  negative_missing_support_guard: 20
+uncovered_failure_tags: []
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+uses_gt_for_action: false
+selected_next_branch: unique_support_visibility_not_goal_validity
+selected_next_action: request_contrastive_goal_region_evidence
+paper_claim_allowed: false
+```
+
+에이전트 추론: The router covers the fresh taxonomy, but it intentionally over-routes `correct_candidate_missing_own_view_support` at action time because correctness is not available before the audit join. That is acceptable for this gate: the branch is a request for missing-own-view evidence, not a terminal label. The next contract should define the first branch observation, starting with contrastive goal-region evidence for `unique_support_visibility_not_goal_validity`.
+
+#### Unique-Support Goal-Region Contract
+
+사실: The first branch-specific observation contract is frozen before implementation.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1.verify.json
+source_router_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1
+target_branch: unique_support_visibility_not_goal_validity
+target_action: request_contrastive_goal_region_evidence
+target_request_rows: 4
+focus_candidate_rows: 4
+expected_pair_rows_if_all_rivals_materialized: 17
+expected_candidate_target_rows_if_all_rivals_materialized: 21
+target_focus_candidates:
+  rival_identity:3 -> vlmaps:export:sofa:spatial_nms:1
+  rival_identity:5 -> vlmaps:export:bed:spatial_nms:2
+  rival_identity:7 -> vlmaps:export:bed:spatial_nms:2
+  rival_identity:22 -> vlmaps:export:sofa:spatial_nms:5
+minimum_contrastive_rivals_per_request: 2
+terminal_commit_allowed: false
+terminal_utility_validation_allowed: false
+paper_claim_allowed: false
+next_implementation_target: runtime/h001_runtime/plan_expanded_retrieval_goal_validity_unique_support_goal_region.py
+```
+
+에이전트 추론: This contract turns the most direct negative mechanism into a planner target. It asks whether the robot should move to collect goal-region evidence when a uniquely visible candidate is plausible but not trustworthy. The next code change should produce nonterminal request, pair, and observation target rows; it must not create a terminal policy.
+
+#### Unique-Support Goal-Region Planner
+
+사실: The planner was implemented and Docker-smoked in the Habitat runtime image.
+
+```text
+script: runtime/h001_runtime/plan_expanded_retrieval_goal_validity_unique_support_goal_region.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1
+request_rows: 4
+candidate_target_rows: 21
+focus_candidate_rows: 4
+pair_rows: 17
+observation_target_rows: 51
+view_role_counts:
+  common_pair_view: 17
+  focus_own_view: 17
+  rival_own_view: 17
+viewpoint_source_counts:
+  common_pair_navmesh: 17
+  standoff_navmesh: 34
+candidate_artifact_rows: 4
+candidate_artifact_candidate_count: 21
+skipped_rows: 0
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+uses_gt_for_action: false
+unique_support_goal_region_plan_gate_passed: true
+paper_claim_allowed: false
+```
+
+에이전트 추론: This passes the nonterminal planner gate. The next workflow step is frame/projection smoke for the `51` observation targets, not detector evidence or terminal utility.
+
+#### Unique-Support Goal-Region Frame/Projection Smoke
+
+사실: The frame/projection smoke passed in the Habitat runtime image.
+
+```text
+wrapper: runtime/jobs/expanded_retrieval_goal_validity_unique_support_goal_region_frame_projection.sh
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_frame_projection_v1.verify.json
+source_plan_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1
+frame_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_frames_v1
+projection_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_projection_v1
+frame_rows_exported: 51
+rendered_heading_count: 204
+nonblank_output_rows: 51
+nonblank_kept_heading_count: 204
+removed_blank_heading_count: 0
+projection_anchor_visible_rows: 51
+projection_anchor_visible_rate: 1.0
+missing_candidate_rows: 0
+gt_action_rows: 0
+candidate_selection_source_counts:
+  explicit_candidate_ids: 51
+projection_anchor_smoke_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This verifies that the branch-specific goal-region planner can be rendered into RGB-D evidence frames with visible projection anchors and no blank-heading repair need. The next workflow step is detector/SAM2 substrate for these frames, not terminal utility or threshold tuning.
+
+#### Unique-Support Goal-Region Detector/SAM2 Substrate Job
+
+사실: The detector/SAM2 substrate job completed and passed the fixed substrate gate.
+
+```text
+status: completed
+tmux_session: h001-unique-support-detector-20260531-174311
+working_directory: /home/yoohyun/research3
+command: TS=20260531-174311 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate.sh
+wrapper: runtime/jobs/expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate.sh
+base_wrapper: runtime/jobs/expanded_retrieval_detector_substrate.sh
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1.verify.json
+image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+device: cuda
+frames: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl
+candidate_artifact: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1/unique_support_goal_region_candidate_artifact.jsonl
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1
+log: runtime/logs/unique-support-goal-region-detector-substrate-20260531-174311.log
+expected_frame_rows: 51
+expected_policy: ExpandedRetrievalGoalValidityUniqueSupportGoalRegion
+expected_files:
+  detector_v3c/summary.json
+  detector_v3c/detector_candidate_associations.jsonl
+  expanded_retrieval_detector_associations.jsonl
+  expanded_retrieval_detector_substrate_summary.json
+detector_rows: 51
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.6470588235294118
+rows_with_candidate_association: 33
+associated_candidate_heading_count: 87
+association_rows: 204
+detector_box_rows: 467
+detector_mask_rows: 467
+projected_pixel_inside_mask_count: 140
+projection_anchor_selected_offset_counts:
+  "0.0": 58
+  "0.4": 2
+  "0.8": 4
+  "1.2": 7
+  "1.6": 3
+  "2.0": 41
+  "2.4": 89
+uses_gt_for_action: false
+passes_detector_substrate_gate: true
+paper_claim_allowed: false
+```
+
+에이전트 추론: This closes the detector/SAM2 substrate gate for the first branch-specific goal-region evidence path. Candidate association is sufficient for the fixed substrate gate, but it is still not terminal evidence. The next task is a post-detector evidence analyzer that converts focus/rival/common-view detector associations into nonterminal goal-region evidence without threshold tuning or evaluation-label action inputs.
+
+#### Unique-Support Goal-Region Evidence Analyzer Contract
+
+사실: The evidence analyzer contract is frozen before implementation.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1.verify.json
+implementation_target: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_unique_support_goal_region_evidence.py
+source_frame_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/expanded_retrieval_detector_frame_summary.jsonl
+source_detector_associations: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl
+source_detector_summary: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json
+expected_outputs:
+  unique_support_goal_region_view_evidence_rows.jsonl: 51
+  unique_support_goal_region_pair_evidence_rows.jsonl: 17
+  unique_support_goal_region_request_evidence_rows.jsonl: 4
+  unique_support_goal_region_evidence_summary.json: 1
+role_reconstruction:
+  common_pair_view: viewpoint_source == common_pair_navmesh
+  focus_own_view: viewpoint_source != common_pair_navmesh and target_candidate_id == focus_candidate_id
+  rival_own_view: viewpoint_source != common_pair_navmesh and target_candidate_id == rival_candidate_id
+all_pairs_have_three_roles: true
+source_associated_rows_by_role:
+  focus_own_view: 17
+  rival_own_view: 10
+  common_pair_view: 6
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The analyzer should report `contrastive_goal_region_pair`, `ambiguous_goal_region_pair`, and `insufficient_detector_pair` as evidence statuses. It should also report simpler alternatives such as focus-own support only, rival absence as goal validity, association-count best, and defer-all. No terminal policy is allowed at this stage.
+
+#### Unique-Support Goal-Region Evidence Analyzer
+
+사실: The analyzer is implemented and Docker-verified.
+
+```text
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_unique_support_goal_region_evidence.py
+contract: manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1.verify.json
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+view_evidence_rows: 51
+pair_evidence_rows: 17
+request_evidence_rows: 4
+goal_region_pair_status_counts:
+  contrastive_goal_region_pair: 7
+  ambiguous_goal_region_pair: 10
+request_nonterminal_action_counts:
+  request_additional_rival_region_evidence: 4
+all_pairs_have_three_roles: true
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+unique_support_goal_region_evidence_gate_passed: true
+```
+
+에이전트 추론: The gate passes as evidence aggregation, but it does not justify terminal arbitration. Focus own-view support is saturated across all `17` pairs, while `10` pairs also have rival own-view support. The next workflow step is evidence output inspection, especially ambiguous pair rows, before deciding whether an additional rival-region observation or a fixed arbitration contract is possible.
+
+#### Unique-Support Goal-Region Evidence Inspection
+
+사실: The evidence inspection is implemented and Docker-verified.
+
+```text
+script: runtime/h001_runtime/inspect_expanded_retrieval_goal_validity_unique_support_goal_region_evidence.py
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_inspection_v1.verify.json
+source_evidence_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_inspection_v1
+pair_inspection_rows: 17
+request_inspection_rows: 4
+pair_blocker_counts:
+  rival_own_view_supported: 10
+  contrastive_without_common_focus_support: 5
+  contrastive_but_request_level_ambiguity_check_required: 2
+request_recommendation_counts:
+  freeze_second_pass_rival_region_evidence_contract: 4
+terminal_contract_allowed: false
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+inspection_gate_passed: true
+```
+
+에이전트 추론: The inspection rejects an immediate terminal arbitration contract. All four requests remain request-level blocked because each contains at least one rival candidate with own-view support. The next workflow step is to freeze a second-pass rival-region evidence contract for the ambiguous rivals, not to tune thresholds or rerun `first_eval`.
+
+#### Second-Pass Rival-Region Evidence Contract
+
+사실: The contract is frozen before implementation.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1.verify.json
+implementation_target: runtime/h001_runtime/plan_expanded_retrieval_goal_validity_unique_support_rival_region.py
+source_inspection_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_inspection_v1
+target_request_rows: 4
+target_ambiguous_pair_rows: 10
+target_request_candidate_rows: 14
+target_observation_rows: 30
+required_second_pass_roles_per_pair:
+  rival_from_common_pair_view
+  rival_from_focus_own_view
+  focus_from_rival_own_view
+blocked_actions:
+  terminal_arbitration_contract
+  direct_commit_focus_candidate
+  commit_if_any_contrastive_pair_exists
+  ignore_rival_own_view_support
+  threshold_tuning_on_evaluation_labels
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The next implementation should write a planner that materializes a swapped candidate-view matrix for only the `10` ambiguous pairs. Existing frames may be reused if source camera pose and provenance are preserved, but the output must still be a Docker-verified action-time artifact with explicit candidate ids and no label join.
+
+#### Second-Pass Rival-Region Planner Smoke
+
+사실: The second-pass planner is implemented and Docker-run.
+
+```text
+script: runtime/h001_runtime/plan_expanded_retrieval_goal_validity_unique_support_rival_region.py
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1.verify.json
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1
+docker_image: research3/habitat-h001:20260508-calib-artifacts
+request_rows: 4
+pair_rows: 10
+request_candidate_rows: 14
+observation_plan_rows: 30
+skipped_rows: 0
+candidate_artifact_rows: 4
+candidate_artifact_candidate_count: 14
+second_pass_view_role_counts:
+  rival_from_common_pair_view: 10
+  rival_from_focus_own_view: 10
+  focus_from_rival_own_view: 10
+source_view_role_counts:
+  common_pair_view: 10
+  focus_own_view: 10
+  rival_own_view: 10
+unique_support_rival_region_plan_gate_passed: true
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The planner turns the ambiguous-pair blocker into a runnable swapped-view evidence substrate. The next workflow step is frame/projection smoke; terminal utility remains blocked.
+
+#### Second-Pass Rival-Region Frame/Projection Smoke
+
+사실: The frame/projection substrate is Docker-verified.
+
+```text
+wrapper: runtime/jobs/expanded_retrieval_goal_validity_unique_support_rival_region_frame_projection.sh
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_frame_projection_v1.verify.json
+frame_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_frames_v1
+projection_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_projection_v1
+rows_requested: 30
+rows_exported: 30
+rendered_heading_count: 120
+nonblank_rows: 30
+kept_heading_count: 120
+removed_blank_heading_count: 0
+projection_anchor_visible_rows: 30
+projection_anchor_visible_rate: 1.0
+missing_candidate_rows: 0
+gt_action_rows: 0
+explicit_candidate_ids: 30
+source_decision_id_rows: 30
+source_viewpoint_id_rows: 30
+second_pass_view_role_rows: 30
+viewpoint_reused_from_first_pass_rows: 30
+projection_anchor_smoke_passed: true
+paper_claim_allowed: false
+```
+
+에이전트 추론: The swapped candidate-view matrix has a valid rendering/projection substrate. The next workflow step is detector/SAM2 substrate, still without terminal arbitration.
+
+#### Second-Pass Rival-Region Detector/SAM2 Substrate
+
+사실: The detector/SAM2 substrate job completed, but the frozen substrate gate failed because candidate association is below threshold.
+
+```text
+wrapper: runtime/jobs/expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate.sh
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1.verify.json
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1
+diagnostic: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1/rival_region_detector_substrate_diagnostic.json
+tmux_session: h001-unique-support-rival-region-detector-20260531-225208
+detector_rows: 30
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.2667
+rows_with_candidate_association: 8
+associated_candidate_heading_count: 18
+projected_pixel_inside_mask_count: 82
+association_depth_status_counts:
+  consistent: 18
+  depth_mismatch: 77
+  out_of_fov: 15
+  unavailable: 10
+by_second_pass_view_role:
+  focus_from_rival_own_view: 3 / 10 associated rows
+  rival_from_common_pair_view: 3 / 10 associated rows
+  rival_from_focus_own_view: 2 / 10 associated rows
+by_query:
+  bed: 1 / 15 associated rows
+  sofa: 7 / 15 associated rows
+gt_action_rows: 0
+passes_detector_substrate_gate: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This is a negative substrate result. Detector boxes and masks are available on all rows, so the blocker is not open-vocabulary detection availability. The likely blocker is candidate association under swapped rival-region viewpoints, especially `bed` rows. The next workflow step is to freeze an association-failure or association-repair contract before any rerun or post-detector evidence analyzer; terminal utility remains blocked.
+
+#### Second-Pass Rival-Region Association Repair Contract
+
+사실: The association repair contract is frozen.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_association_repair_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_association_repair_v1.verify.json
+source_failed_detector_output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1
+source_failure_diagnostic: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1/rival_region_detector_substrate_diagnostic.json
+implementation_target: runtime/h001_runtime/diagnose_expanded_retrieval_goal_validity_unique_support_rival_region_association.py
+selected_next_contract: association_failure_and_repair_diagnostic_v1
+minimum_repair_gate:
+  global_candidate_association_rate_minimum: 0.4
+  minimum_query_candidate_association_rate_minimum: 0.25
+  minimum_second_pass_role_candidate_association_rate_minimum: 0.3
+  terminal_commit_rows: 0
+  uses_gt_for_action: false
+allowed_diagnostic_variants:
+  mask_depth_1_25_v1
+  mask_depth_1_5_v1
+  mask_depth_2_0_v1
+  mask_only_upper_bound_v1
+  box_only_upper_bound_v1
+forbidden:
+  query-specific threshold rescue
+  role-specific threshold rescue
+  label-tuned threshold rescue
+  terminal utility validation
+  first_eval rerun
+  policy-scale comparison
+paper_claim_allowed: false
+```
+
+에이전트 추론: The next implementation should be a diagnostic analyzer over the existing detector rows, not a detector rerun. It must show whether a fixed non-GT association variant clears the global/query/role gates. If it does not, the next design should revisit viewpoint/candidate geometry instead of relaxing the terminal evidence contract.
+
+#### Second-Pass Rival-Region Association Repair Diagnostic
+
+사실: The association repair diagnostic is implemented and Docker-run.
+
+```text
+script: runtime/h001_runtime/diagnose_expanded_retrieval_goal_validity_unique_support_rival_region_association.py
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_association_repair_diagnostic_v1.verify.json
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_association_repair_v1
+diagnostic_rows: 180
+source_frame_rows: 30
+source_association_rows: 120
+selected_repair_variant: mask_depth_1_25_v1
+candidate_association_rate: 15 / 30 = 0.5
+minimum_query_candidate_association_rate: 0.2667
+minimum_second_pass_role_candidate_association_rate: 0.3
+associated_heading_count: 26
+action_forbidden_key_count: 0
+diagnostic_gate_passed: true
+repair_gate_passed: true
+rerun_allowed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The source failure was mainly strict depth/mask candidate association under swapped rival-region views, not detector or SAM2 availability. The next workflow step is a repaired detector/SAM2 substrate rerun with the fixed `mask_depth_1_25_v1` association rule. Post-detector evidence analysis and terminal utility remain blocked until that rerun passes.
+
+#### Second-Pass Rival-Region Repaired Detector Substrate
+
+사실: The repaired detector/SAM2 rerun with `mask_depth_1_25_v1` completed and failed the fixed substrate gate.
+
+```text
+wrapper: runtime/jobs/expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair.sh
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_v1.verify.json
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_v1
+tmux_session: h001-unique-support-rival-repair-20260531-234903
+association_depth_tolerance_m: 1.25
+detector_rows: 30
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 10 / 30 = 0.3333
+associated_candidate_heading_count: 23
+bed_association: 1 / 15
+sofa_association: 9 / 15
+gt_action_rows: 0
+passes_detector_substrate_gate: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The rerun remains a negative substrate result. The offline repair diagnostic does not exactly match runtime detector association semantics because runtime uses `depth_agreement_m` between projected candidate depth and selected SAM2 mask depth. Before trying the predeclared `mask_depth_2_0_v1` fallback, the workflow should freeze a runtime association-semantics diagnostic and explicitly record the generalization risk.
+
+#### Runtime Association-Semantics Diagnostic
+
+사실: The runtime association-semantics diagnostic is implemented and Docker-run.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association_semantics_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association_semantics_v1.verify.json
+script: runtime/h001_runtime/diagnose_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association_semantics_v1
+diagnostic_rows: 180
+runtime_depth_field: depth_agreement_m
+selected_runtime_repair_variant: mask_depth_2_0_v1
+candidate_association_rate: 16 / 30 = 0.5333
+minimum_query_candidate_association_rate: 0.3333
+minimum_second_pass_role_candidate_association_rate: 0.5
+associated_heading_count: 35
+action_forbidden_key_count: 0
+diagnostic_gate_passed: true
+runtime_repair_gate_passed: true
+rerun_allowed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This diagnostic justified one actual depth2 detector/SAM2 substrate rerun. The rerun result is recorded below; the diagnostic itself remains nonterminal and not paper-claim evidence.
+
+#### Runtime Depth2 Detector/SAM2 Rerun Result
+
+사실: The predeclared `mask_depth_2_0_v1` detector/SAM2 substrate rerun completed and passed the fixed substrate gate.
+
+```text
+session: h001-unique-support-rival-repair-depth2-20260601-001356
+working_directory: /home/yoohyun/research3
+command: TS=20260601-001356 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_depth2.sh
+wrapper: runtime/jobs/expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_depth2.sh
+association_repair_variant: mask_depth_2_0_v1
+association_depth_tolerance_m: 2.0
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_depth2_v1
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_depth2_v1.verify.json
+log: runtime/logs/unique-support-rival-region-detector-substrate-repair-depth2-20260601-001356.log
+detector_rows: 30
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 16 / 30 = 0.5333
+associated_candidate_heading_count: 35
+query_association: bed 5 / 15, sofa 11 / 15
+role_association:
+  rival_from_common_pair_view: 6 / 10
+  rival_from_focus_own_view: 5 / 10
+  focus_from_rival_own_view: 5 / 10
+passes_detector_substrate_gate: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This is still a substrate test. It unlocks only nonterminal post-detector evidence aggregation.
+
+#### Second-Pass Rival-Region Evidence Analyzer
+
+사실: The post-detector evidence analyzer is frozen and Docker-run.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_evidence_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_evidence_v1.verify.json
+script: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_unique_support_rival_region_evidence.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_evidence_v1
+view_evidence_rows: 30
+pair_evidence_rows: 10
+request_evidence_rows: 4
+pair_status:
+  cross_region_overlap_pair: 7
+  shared_common_view_rival_support_pair: 2
+  second_pass_rival_region_contrastive_pair: 1
+request_actions:
+  defer_goal_region_unresolved_cross_region_overlap: 3
+  request_goal_region_arbitration_after_shared_common_evidence: 1
+terminal_commit_rows: 0
+action_forbidden_key_count: 0
+unique_support_rival_region_evidence_gate_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The evidence pass sharpened the blocker: detector/SAM2 substrate is no longer the immediate issue, but the dominant evidence pattern is cross-region overlap. The inspection result below records why terminal utility, `first_eval`, policy-scale comparison, and paper claims remain blocked.
+
+#### Cross-Region Overlap Inspection
+
+사실: The cross-region overlap inspection is implemented and Docker-run.
+
+```text
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_inspection_v1.verify.json
+script: runtime/h001_runtime/inspect_expanded_retrieval_goal_validity_unique_support_rival_region_evidence.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_inspection_v1
+pair_rows: 10
+request_rows: 4
+pair_blockers:
+  bidirectional_cross_region_overlap: 3
+  rival_visible_from_focus_region: 2
+  focus_visible_from_rival_region: 2
+  shared_common_view_rival_support: 2
+  pure_contrastive_no_second_pass_support: 1
+request_blockers:
+  contains_cross_region_overlap_pairs: 3
+  contains_shared_common_view_rival_support: 1
+request_recommendations:
+  freeze_cross_region_overlap_failure_branch: 3
+  inspect_shared_common_view_support_before_terminal_arbitration: 1
+terminal_contract_allowed: false
+terminal_commit_rows: 0
+action_forbidden_key_count: 0
+inspection_gate_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The second-pass branch is not terminal-ready. Three requests should be routed into a cross-region overlap failure branch, and the remaining request still has shared common-view rival support. This led to the branch freeze below rather than a terminal utility contract.
+
+#### Cross-Region Overlap Failure Branch Freeze
+
+사실: The branch freeze is implemented and Docker-run.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_unique_support_cross_region_overlap_branch_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_cross_region_overlap_branch_v1.verify.json
+script: runtime/h001_runtime/route_expanded_retrieval_goal_validity_unique_support_cross_region_overlap_branch.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_cross_region_overlap_branch_v1
+pair_branch_rows: 10
+request_branch_rows: 4
+pair_branch_counts:
+  cross_region_overlap_failure_branch: 7
+  shared_common_view_support_pending_branch: 2
+  clean_contrastive_pending_branch: 1
+request_branch_counts:
+  cross_region_overlap_failure_branch: 3
+  shared_common_view_support_pending_branch: 1
+request_action_counts:
+  route_to_cross_region_overlap_failure_branch: 3
+  route_to_shared_common_view_support_inspection: 1
+cross_region_request_ids:
+  rival_identity:3
+  rival_identity:5
+  rival_identity:22
+shared_common_pending_request_ids:
+  rival_identity:7
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+cross_region_overlap_branch_freeze_gate_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The failure mechanism is now explicitly routed: three requests are cross-region overlap failures and one request remains a shared-common-view support case. Terminal arbitration is still blocked because no branch has yet established non-GT `ObjectNav` goal validity.
+
+#### Shared Common-View Support Inspection
+
+사실: The remaining non-cross-overlap request is inspected for shared common-view rival support.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_inspection_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_inspection_v1.verify.json
+script: runtime/h001_runtime/inspect_expanded_retrieval_goal_validity_unique_support_shared_common_view.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_inspection_v1
+request_inspection_rows: 1
+pair_inspection_rows: 2
+request_ids:
+  rival_identity:7
+pair_status_counts:
+  shared_common_view_rival_support_blocks_terminal: 1
+  clean_contrastive_pair_contaminated_by_request_level_shared_common_support: 1
+request_recommendation_counts:
+  freeze_shared_common_view_support_failure_branch: 1
+terminal_commit_rows: 0
+action_evidence_forbidden_key_count: 0
+shared_common_view_inspection_gate_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This closes the "maybe the no-cross-overlap row is terminal-ready" possibility. The row still has shared common-view rival support, so the next workflow step is branch freeze rather than a terminal arbitration contract.
+
+#### Shared Common-View Support Failure Branch Freeze
+
+사실: The branch freeze is implemented and Docker-run.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch_v1.verify.json
+script: runtime/h001_runtime/route_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch_v1
+request_branch_rows: 1
+pair_branch_rows: 2
+request_branch:
+  shared_common_view_support_failure_branch: 1
+pair_branches:
+  shared_common_view_support_failure_branch: 1
+  contaminated_clean_contrastive_pair_branch: 1
+terminal_contract_allowed: false
+terminal_commit_rows: 0
+action_forbidden_key_count: 0
+shared_common_view_branch_freeze_gate_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: Shared common-view rival support is a frozen nonterminal failure branch. Terminal utility remains blocked.
+
+#### Unique-Support Branch Closure
+
+사실: The branch closure is implemented and Docker-run.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_unique_support_branch_closure_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_unique_support_branch_closure_v1.verify.json
+script: runtime/h001_runtime/close_expanded_retrieval_goal_validity_unique_support_branch.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_branch_closure_v1
+closure_request_rows: 4
+closure_mechanisms:
+  cross_region_overlap_failure_branch: 3
+  shared_common_view_support_failure_branch: 1
+unclosed_unique_support_request_rows: 0
+selected_next_branch: partial_relation_depth_true_goal
+selected_next_action: request_additional_relation_depth_evidence
+selected_next_request_rows: 6
+selected_next_candidate_rows: 12
+terminal_commit_rows: 0
+action_forbidden_key_count: 0
+unique_support_branch_closure_gate_passed: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The unique-support visibility branch is closed as terminal-blocked. This led to the frozen `partial_relation_depth_true_goal` observation contract below before any implementation or terminal utility test.
+
+#### Partial Relation-Depth True-Goal Observation Contract
+
+사실: The branch-specific contract is frozen before implementation.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1.verify.json
+target_branch: partial_relation_depth_true_goal
+target_action: request_additional_relation_depth_evidence
+request_rows: 6
+target_candidate_rows: 12
+failed_relation_depth_evidence_rows: 22
+partial_relation_depth_rows: 19
+unresolved_relation_depth_rows: 3
+context_anchor_rows: 48
+failed_directions:
+  orthogonal_relation_axis: 8
+  relation_anchor_to_target: 11
+  target_to_relation_anchor: 3
+minimum_plan_rows: 48
+terminal_commit_rows: 0
+action_forbidden_key_count: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The contract treats partial relation-depth as observation incompleteness, not candidate invalidity. The runtime implementation below keeps this as nonterminal evidence acquisition, not a method claim.
+
+#### Partial Relation-Depth Input and Planner Smoke
+
+사실: The input materializer and planner smoke are Docker-verified.
+
+```text
+input_builder: runtime/h001_runtime/build_expanded_retrieval_goal_validity_partial_relation_depth_inputs.py
+planner: runtime/h001_runtime/plan_expanded_retrieval_goal_validity_partial_relation_depth.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1
+input_request_rows: 6
+input_target_candidate_rows: 12
+input_failed_relation_depth_evidence_rows: 22
+input_context_anchor_rows: 48
+input_action_forbidden_key_count: 0
+input_terminal_commit_rows: 0
+input_gate: true
+plan_rows: 48
+plan_rows_per_target_candidate: 4
+skipped_rows: 0
+failed_evidence_rows_mapped: 22
+failed_evidence_rows_unmapped: 0
+candidate_artifact_rows: 4
+candidate_artifact_candidate_count: 20
+planner_action_forbidden_key_count: 0
+planner_terminal_commit_rows: 0
+plan_gate: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The next runtime step is frame/projection smoke for the 48 planned relation-depth completion views. Terminal utility, `first_eval`, and policy-scale comparison stay blocked.
+
+#### Partial Relation-Depth Frame/Projection Smoke
+
+사실: The frame/projection smoke is Docker-verified.
+
+```text
+job: runtime/jobs/expanded_retrieval_goal_validity_partial_relation_depth_frame_projection.sh
+frames: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_frames_v1
+projection: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_projection_v1
+frame_rows: 48
+rendered_heading_count: 192
+nonblank_rows: 48
+removed_blank_heading_count: 0
+projection_rows: 48
+projection_expected_rows: 48
+projection_visible_rows: 48
+projection_visible_rate: 1.0
+missing_candidate_rows: 0
+gt_action_rows: 0
+projection_gate: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The next runtime step is detector/SAM2 substrate on these frames. This remains a nonterminal evidence route and cannot support terminal utility or paper claims yet.
+
+#### Partial Relation-Depth Detector/SAM2 Substrate
+
+사실: The detector/SAM2 substrate is Docker/GPU-verified.
+
+```text
+job: runtime/jobs/expanded_retrieval_goal_validity_partial_relation_depth_detector_substrate.sh
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_detector_substrate_v1
+detector_rows: 48
+detector_box_rate: 1.0
+sam2_mask_rate: 1.0
+candidate_association_rate: 0.8125
+rows_with_candidate_association: 39
+associated_candidate_heading_count: 97
+association_rows: 192
+detector_box_rows: 230
+detector_mask_rows: 230
+projected_pixel_inside_mask_count: 133
+candidate_selection_source: explicit_candidate_ids 48
+projection_anchor_policy: projection_anchor_height_sweep_v1 48
+uses_gt_for_action: false
+detector_substrate_gate: true
+paper_claim_allowed: false
+```
+
+에이전트 추론: The next runtime step is to freeze a post-detector evidence analyzer contract for relation-depth completion. It should score whether detector-depth evidence resolves prior partial/unresolved relation-depth rows without creating a confidence-based terminal commit.
+
+#### Partial Relation-Depth Post-Detector Evidence Contract
+
+사실: The post-detector evidence analyzer contract is frozen before implementation.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_evidence_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_evidence_v1.verify.json
+analyzer: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_partial_relation_depth_evidence.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_evidence_v1
+source_gates: input true, plan true, projection true, detector true
+expected_request_rows: 6
+expected_target_candidate_rows: 12
+expected_failed_relation_depth_evidence_rows: 22
+expected_plan_rows: 48
+expected_detector_rows: 48
+expected_detector_association_rows: 192
+minimum_candidate_association_rate: 0.80
+minimum_associated_candidate_heading_count: 90
+minimum_projected_pixel_inside_mask_count: 120
+action_forbidden_key_count_maximum: 0
+terminal_commit_rows_maximum: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The contract is now implemented and Docker-verified as nonterminal evidence. Terminal utility, `first_eval`, and policy-scale comparison remain blocked.
+
+#### Partial Relation-Depth Post-Detector Evidence Analyzer
+
+사실: The analyzer is Docker-verified.
+
+```text
+analyzer: runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_partial_relation_depth_evidence.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_evidence_v1
+evidence_rows: 48
+failed_relation_depth_evidence_rows: 22
+failed_evidence_summary_rows: 22
+request_summary_rows: 6
+unresolved_or_partial_rows: 15
+completion_status_counts:
+  relation_depth_completion_resolved: 7
+  relation_depth_completion_partial: 15
+candidate_association_rate: 0.8125
+associated_candidate_heading_count: 97
+projected_pixel_inside_mask_count: 133
+action_forbidden_key_count: 0
+terminal_commit_rows: 0
+uses_gt_for_action: false
+partial_relation_depth_detector_evidence_gate_passed: true
+paper_claim_allowed: false
+recommended_next_action: inspect_remaining_partial_relation_depth_rows
+terminal_policy_allowed: false
+terminal_utility_validation_allowed: false
+```
+
+에이전트 추론: This result keeps relation-depth completion as evidence acquisition, not terminal goal selection. The immediate runtime follow-up is row-level inspection of the `15` unresolved/partial rows to separate viewpoint geometry, detector association, relation-anchor ambiguity, and remaining goal-validity blockers.
+
+#### Remaining Partial Relation-Depth Row Inspection
+
+사실: The unresolved/partial rows were inspected from the analyzer output.
+
+```text
+source: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_evidence_v1/partial_relation_depth_unresolved_rows.jsonl
+rows: 15
+unresolved_reason_counts:
+  no_candidate_associated_depth_improvement: 15
+query_counts:
+  plant: 12
+  sofa: 2
+  bed: 1
+direction_counts:
+  relation_anchor_to_target: 11
+  orthogonal_relation_axis: 3
+  target_to_relation_anchor: 1
+rows_with_inside_mask: 15
+rows_with_completion_association: 7
+rows_with_zero_completion_association: 8
+rows_with_completion_depth_consistent: 10
+inside_mask_no_association_rows: 8
+depth_positive_association_zero_rows: 3
+dominant_scene_query: bxsVRursffK/plant 12
+dominant_request_rows:
+  rival_identity:25: 4
+  rival_identity:27: 4
+  rival_identity:29: 4
+```
+
+에이전트 추론: Residual partial relation-depth is a structured blocker. It is not a missing-render or detector-absent case because all `15` rows have inside-mask evidence. This led to the frozen residual taxonomy below before any terminal utility rule.
+
+#### Residual Partial Relation-Depth Taxonomy
+
+사실: The residual taxonomy is Docker-verified.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1.verify.json
+analyzer: runtime/h001_runtime/diagnose_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy.py
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1
+taxonomy_rows: 15
+request_taxonomy_rows: 6
+residual_failure_class_counts:
+  association_present_without_depth_improvement: 7
+  depth_signal_not_candidate_associated: 3
+  mask_projection_without_association_or_depth: 5
+request_residual_status_counts:
+  repeated_object_relation_anchor_ambiguity: 3
+  association_geometry_underlink: 2
+  association_present_but_depth_not_improved: 1
+rows_with_inside_mask: 15
+rows_with_zero_completion_association: 8
+rows_with_completion_association: 7
+rows_with_completion_depth_consistent: 10
+dominant_scene_query: bxsVRursffK/plant
+dominant_scene_query_rows: 12
+action_forbidden_key_count: 0
+terminal_commit_rows: 0
+uses_gt_for_action: false
+uses_gt_for_analysis: false
+partial_relation_depth_residual_taxonomy_gate_passed: true
+paper_claim_allowed: false
+```
+
+에이전트 추론: The runtime branch is now frozen into three next mechanisms: association geometry underlink, depth stagnation despite association, and repeated-object relation-anchor ambiguity. The branch-handling contract below fixes how each mechanism is handled without tuning thresholds from labels.
+
+#### Residual Partial Relation-Depth Branch Handling
+
+사실: The branch-handling contract is frozen and Docker-verified.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1.verify.json
+router: runtime/h001_runtime/route_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling.py
+source: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1
+output: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1
+source_taxonomy_rows: 15
+source_request_taxonomy_rows: 6
+branch_rows: 15
+request_branch_rows: 6
+branch_mapping:
+  association_geometry_underlink: route_to_association_geometry_repair_branch
+  association_present_but_depth_not_improved: route_to_depth_stagnation_branch
+  repeated_object_relation_anchor_ambiguity: route_to_repeated_object_relation_anchor_ambiguity_branch
+branch_action_counts:
+  route_to_repeated_object_relation_anchor_ambiguity_branch: 3
+  route_to_association_geometry_repair_branch: 2
+  route_to_depth_stagnation_branch: 1
+unmapped_request_rows: 0
+action_forbidden_key_count: 0
+terminal_commit_rows: 0
+uses_gt_for_action: false
+partial_relation_depth_branch_handling_gate_passed: true
+required_future_outputs:
+  partial_relation_depth_branch_rows.jsonl
+  partial_relation_depth_branch_request_rows.jsonl
+  partial_relation_depth_branch_handling_summary.json
+terminal_commits_allowed: false
+threshold_tuning_allowed: false
+first_eval_rerun_allowed: false
+policy_scale_comparison_allowed: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The branch router preserves the nonterminal split and keeps terminal utility/paper claims blocked. The next workflow step is to design the association-geometry repair branch contract for the two underlink requests before depth-stagnation or repeated-anchor ambiguity work.
+
+#### Association-Geometry Repair Branch Contract
+
+사실: The association-geometry repair branch contract is frozen before implementation.
+
+```text
+contract: manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1.json
+verify: manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1.verify.json
+source: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1
+target_branch_action: route_to_association_geometry_repair_branch
+target_request_rows: 2
+target_branch_rows: 2
+target_queries:
+  sofa: 1
+  bed: 1
+target_candidate_ids:
+  vlmaps:export:sofa:spatial_nms:2
+  vlmaps:export:bed:spatial_nms:9
+residual_failure_class_counts:
+  mask_projection_without_association_or_depth: 2
+rows_with_inside_mask: 2
+rows_with_zero_completion_association: 2
+rows_with_completion_association: 0
+rows_with_completion_depth_consistent: 0
+allowed_repair_checks:
+  projection_anchor_replay
+  mask_depth_agreement_recheck
+  candidate_geometry_sanity_check
+terminal_commit_rows: 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The next workflow step is `runtime/h001_runtime/diagnose_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair.py`. It should account for both underlink requests and emit nonterminal repair/re-observation/defer rows without label joins.
 
 ## Target Row Contract
 
@@ -5103,3 +6524,505 @@ Passing this validation would support the narrower claim that active re-observat
 ### 사용자 판단 필요
 
 No user decision is required before implementing the manifest and recall gate. Real-world deployment and Step 4-5 SLAM metrics remain separate later decisions.
+
+## Partial Relation-Depth Association-Geometry Repair Diagnostic
+
+### 사실
+
+- Date checked: 2026-06-01
+- Contract: `manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1.json`
+- Script: `runtime/h001_runtime/diagnose_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair.py`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Output: `local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1`
+- Repair/request rows: `2/2`
+- Target rows: `rival_identity:3` `sofa` `vlmaps:export:sofa:spatial_nms:2`; `rival_identity:5` `bed` `vlmaps:export:bed:spatial_nms:9`
+- Exact failed completion association/depth-consistent counts: `0/0`
+- Exact failed completion inside-mask count: `5`
+- Same-requested / other-requested associated heading counts: `2/14`
+- Repair diagnostic actions: `request_anchor_selection_repair_for_association_geometry 1`, `request_direction_specific_reobservation_repair 1`
+- Action forbidden keys: `0`
+- Terminal commits: `0`
+- `uses_gt_for_action`: `false`
+- Gate: `association_geometry_repair_diagnostic_gate_passed true`
+
+Docker verification:
+
+```bash
+docker run --rm --ipc=host --user $(id -u):$(id -g) \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  -e PYTHONPYCACHEPREFIX=/tmp/pycache \
+  -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime \
+  -v /home/yoohyun/research3:/workspace -w /workspace \
+  research3/openvocab-perception:20260513-v3c-gdino-sam2 \
+  python -m h001_runtime.diagnose_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair
+```
+
+### 에이전트 추론
+
+This diagnostic separates two nonterminal repair mechanisms. `sofa` can recover association under the same requested direction through another relation-anchor/completion row, while `bed` recovers association only under another requested direction. This supports a follow-up repair contract, not terminal goal-validity utility.
+
+### Follow-up Router Gate
+
+The follow-up repair contract is frozen at `manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair_v1.json`.
+
+It keeps both mechanisms separate:
+
+- `rival_identity:3` `sofa`: `route_to_relation_anchor_selection_repair`
+- `rival_identity:5` `bed`: `route_to_direction_specific_reobservation_repair`
+
+The router is now implemented at `runtime/h001_runtime/route_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair.py` and Docker-run at `local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair_v1`.
+
+```text
+followup/request rows: 2 / 2
+followup routes:
+  route_to_relation_anchor_selection_repair: 1
+  route_to_direction_specific_reobservation_repair: 1
+route_mapping_status_counts: mapped 2
+request_route_status_counts: routed 2
+exact failed completion association/depth/inside-mask: 0 / 0 / 5
+same-requested / other-requested associated heading counts: 2 / 14
+action forbidden keys: 0
+terminal commits: 0
+candidate commit/rejection rows: 0 / 0
+uses_gt_for_action: false
+uses_gt_for_analysis: false
+gate: association_geometry_followup_repair_gate_passed true
+paper_claim_allowed: false
+```
+
+### Relation-Anchor Selection Repair Contract
+
+The relation-anchor selection repair probe contract is frozen at `manifests/h001_relation_anchor_selection_repair_v1.json`.
+
+```text
+target request: rival_identity:3
+scene/query: QaLdnwvtxbs / sofa
+target candidate: vlmaps:export:sofa:spatial_nms:2
+target route: route_to_relation_anchor_selection_repair
+failed explicit anchor:
+  decision_id: QaLdnwvtxbs_sofa_58449f72249b14b7
+  relation_anchor_candidate_id: vlmaps:export:sofa:spatial_nms:1
+  requested/standoff direction: relation_anchor_to_target / relation_anchor_to_target
+  association/depth/inside-mask: 0 / 0 / 4
+same-direction anchorless recovery:
+  decision_id: QaLdnwvtxbs_sofa_766fbb91687fb944
+  context_candidate_id: vlmaps:export:sofa:spatial_nms:0
+  requested/standoff direction: relation_anchor_to_target / relation_anchor_to_target
+  association/depth/inside-mask: 2 / 1 / 4
+gate: relation_anchor_selection_repair_contract_gate_passed true
+paper_claim_allowed: false
+```
+
+The probe is now implemented at `runtime/h001_runtime/probe_relation_anchor_selection_repair.py` and Docker-run at `local_dataset/runs/h001_relation_anchor_selection_repair_v1`.
+
+```text
+probe/request rows: 2 / 1
+probe roles:
+  failed_explicit_relation_anchor_row: 1
+  same_direction_anchorless_recovery_row: 1
+nonterminal action: request_relation_anchor_selection_replay 2
+failed explicit anchor association/depth/inside-mask: 0 / 0 / 4
+same-direction anchorless recovery association/depth/inside-mask: 2 / 1 / 4
+action forbidden keys: 0
+terminal commits: 0
+candidate commit/rejection rows: 0 / 0
+uses_gt_for_action: false
+uses_gt_for_analysis: false
+gate: relation_anchor_selection_repair_probe_gate_passed true
+paper_claim_allowed: false
+```
+
+에이전트 추론: This narrows the `sofa` branch to a reproducible relation-anchor selection replay/audit, not to a goal-validity rule. The direction-specific re-observation repair for `rival_identity:5` `bed` is a separate branch contract and is frozen below.
+
+### Direction-Specific Re-observation Repair Contract
+
+The direction-specific re-observation repair probe contract is frozen at `manifests/h001_direction_specific_reobservation_repair_v1.json`.
+
+```text
+target request: rival_identity:5
+scene/query: bCPU9suPUw9 / bed
+target candidate: vlmaps:export:bed:spatial_nms:9
+target route: route_to_direction_specific_reobservation_repair
+failed requested direction:
+  requested/standoff direction: relation_anchor_to_target / compass_315
+  explicit anchor decision: bCPU9suPUw9_bed_48b07c346eb4683f
+  explicit anchor/context: vlmaps:export:bed:spatial_nms:2 / vlmaps:export:bed:spatial_nms:2
+  association/depth/inside-mask: 0 / 0 / 1
+  anchorless decision: bCPU9suPUw9_bed_54cf4778171bf856
+  anchorless context: vlmaps:export:bed:spatial_nms:0
+  association/depth/inside-mask: 0 / 0 / 1
+recovered target-to-relation-anchor direction:
+  explicit anchor decision: bCPU9suPUw9_bed_4ccded6b70ddf90a
+  explicit anchor/context: vlmaps:export:bed:spatial_nms:2 / vlmaps:export:bed:spatial_nms:2
+  association/depth/inside-mask: 4 / 4 / 4
+  anchorless decision: bCPU9suPUw9_bed_a6358d7274ab68e6
+  anchorless context: vlmaps:export:bed:spatial_nms:1
+  association/depth/inside-mask: 4 / 4 / 4
+gate: direction_specific_reobservation_repair_contract_gate_passed true
+paper_claim_allowed: false
+```
+
+사실: The source follow-up router gate remains `true`. Target follow-up/request rows are `1/1`; same-requested direction association is `0`, while other-requested direction association/depth/inside-mask counts are at least `8/8/8`. Action forbidden keys, terminal commits, and candidate commit/rejection rows remain `0`.
+
+에이전트 추론: This contract isolates direction choice from relation-anchor choice. Both relation-anchor-to-target rows fail under the `compass_315` fallback, while both target-to-relation-anchor rows recover association and depth consistency. The next implementation should materialize four nonterminal probe rows and keep terminal utility, candidate rejection, `first_eval`, policy-scale comparison, and paper claims blocked.
+
+The direction-specific re-observation repair probe is now implemented at `runtime/h001_runtime/probe_direction_specific_reobservation_repair.py` and Docker-run at `local_dataset/runs/h001_direction_specific_reobservation_repair_v1`.
+
+```text
+probe/request rows: 4 / 1
+probe roles:
+  failed_requested_direction_explicit_anchor_row: 1
+  failed_requested_direction_anchorless_row: 1
+  recovered_target_to_relation_anchor_explicit_anchor_row: 1
+  recovered_target_to_relation_anchor_anchorless_row: 1
+nonterminal action: request_direction_specific_reobservation_replay 4
+failed explicit anchor association/depth/inside-mask: 0 / 0 / 1
+failed anchorless association/depth/inside-mask: 0 / 0 / 1
+recovered explicit anchor association/depth/inside-mask: 4 / 4 / 4
+recovered anchorless association/depth/inside-mask: 4 / 4 / 4
+same-requested / other-requested associated heading counts: 0 / 8
+action forbidden keys: 0
+terminal commits: 0
+candidate commit/rejection rows: 0 / 0
+uses_gt_for_action: false
+uses_gt_for_analysis: false
+gate: direction_specific_reobservation_repair_probe_gate_passed true
+paper_claim_allowed: false
+```
+
+에이전트 추론: This closes the association-geometry underlink branch split for the two target rows without turning either branch into a goal-validity rule. The remaining nonterminal residual branches are repeated-object relation-anchor ambiguity and depth stagnation; since repeated-object ambiguity covers more request rows, the next branch contract should start there.
+
+### Repeated-Object Relation-Anchor Ambiguity Contract
+
+The repeated-object relation-anchor ambiguity branch contract is frozen at `manifests/h001_repeated_object_relation_anchor_ambiguity_v1.json`; static source verification is recorded in `manifests/h001_repeated_object_relation_anchor_ambiguity_v1.verify.json`.
+
+사실:
+
+```text
+source: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1
+target branch action: route_to_repeated_object_relation_anchor_ambiguity_branch
+scene/query: bxsVRursffK / plant
+request ids: rival_identity:25, rival_identity:27, rival_identity:29
+target request/branch rows: 3 / 12
+candidate ids: vlmaps:export:plant:spatial_nms:0, spatial_nms:2, spatial_nms:4
+residual classes:
+  association_present_without_depth_improvement: 6
+  depth_signal_not_candidate_associated: 3
+  mask_projection_without_association_or_depth: 3
+directions:
+  relation_anchor_to_target: 9
+  orthogonal_relation_axis: 3
+completion association-positive / zero rows: 6 / 6
+completion depth-consistent rows: 9
+inside-mask rows: 12
+completion association/depth/inside-mask sums: 18 / 12 / 42
+terminal commits: 0
+candidate commit/rejection rows: 0 / 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+Per-request pattern is identical for all three target requests: four residual rows, three candidate ids, two association-positive rows, two association-zero rows, three depth-consistent rows, and one orthogonal relation-axis row.
+
+에이전트 추론: This branch should materialize a label-free repeated-object audit before any terminal utility. The required implementation must preserve the mixed evidence pattern instead of collapsing it into a positive association/depth shortcut.
+
+The repeated-object relation-anchor ambiguity branch is now implemented at `runtime/h001_runtime/route_repeated_object_relation_anchor_ambiguity.py` and Docker-run at `local_dataset/runs/h001_repeated_object_relation_anchor_ambiguity_v1`.
+
+```text
+branch/request rows: 12 / 3
+request ids: rival_identity:25, rival_identity:27, rival_identity:29
+scene/query: bxsVRursffK / plant
+candidate ids: spatial_nms:0, spatial_nms:2, spatial_nms:4
+residual classes:
+  association_present_without_depth_improvement: 6
+  depth_signal_not_candidate_associated: 3
+  mask_projection_without_association_or_depth: 3
+directions:
+  relation_anchor_to_target: 9
+  orthogonal_relation_axis: 3
+completion association-positive / zero rows: 6 / 6
+completion depth-consistent rows: 9
+inside-mask rows: 12
+nonterminal action: request_repeated_object_relation_anchor_ambiguity_audit 12
+action forbidden keys: 0
+terminal commits: 0
+candidate commit/rejection rows: 0 / 0
+uses_gt_for_action: false
+uses_gt_for_analysis: false
+gate: repeated_object_relation_anchor_ambiguity_branch_gate_passed true
+paper_claim_allowed: false
+```
+
+에이전트 추론: This closes the repeated-object relation-anchor ambiguity branch as a nonterminal mechanism audit. It is useful reviewer-defense scaffolding because it preserves the mixed evidence pattern without labels or terminal actions. The remaining residual branch is depth stagnation: `route_to_depth_stagnation_branch` should get the next contract before terminal utility, candidate rejection, `first_eval`, policy-scale comparison, or paper claims are reconsidered.
+
+### Depth-Stagnation Branch Contract
+
+The depth-stagnation branch contract is frozen at `manifests/h001_depth_stagnation_branch_v1.json`; static source verification is recorded in `manifests/h001_depth_stagnation_branch_v1.verify.json`.
+
+사실:
+
+```text
+source: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1
+target branch action: route_to_depth_stagnation_branch
+scene/query: 4ok3usBNeis / sofa
+request id: rival_identity:22
+candidate id: vlmaps:export:sofa:spatial_nms:2
+target request/branch rows: 1 / 1
+request residual status: association_present_but_depth_not_improved
+residual class: association_present_without_depth_improvement
+direction: target_to_relation_anchor
+prior association/depth-consistent/depth-mismatch/inside-mask: 3 / 1 / 7 / 7
+completion association/depth-consistent/inside-mask: 3 / 1 / 4
+completion status: relation_depth_completion_partial
+terminal commits: 0
+candidate commit/rejection rows: 0 / 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This branch is a depth-stagnation audit, not a goal-validity rule. Candidate association and depth consistency are present, but the evidence remains partial and does not improve enough to support ObjectNav commitment.
+
+The depth-stagnation branch is now implemented at `runtime/h001_runtime/route_depth_stagnation_branch.py` and Docker-run at `local_dataset/runs/h001_depth_stagnation_branch_v1`.
+
+```text
+branch/request rows: 1 / 1
+request id: rival_identity:22
+scene/query: 4ok3usBNeis / sofa
+candidate id: vlmaps:export:sofa:spatial_nms:2
+residual class: association_present_without_depth_improvement
+direction: target_to_relation_anchor
+prior association/depth-consistent/depth-mismatch/inside-mask: 3 / 1 / 7 / 7
+completion association/depth-consistent/inside-mask: 3 / 1 / 4
+depth/association delta: 0 / 0
+nonterminal action: request_depth_stagnation_audit 1
+action forbidden keys: 0
+terminal commits: 0
+candidate commit/rejection rows: 0 / 0
+uses_gt_for_action: false
+uses_gt_for_analysis: false
+gate: depth_stagnation_branch_gate_passed true
+paper_claim_allowed: false
+```
+
+에이전트 추론: This closes the last residual partial relation-depth branch as a nonterminal audit. It should be synthesized with association-geometry repair, relation-anchor selection repair, direction-specific repair, and repeated-object ambiguity before any terminal utility, candidate commit/rejection, `first_eval`, policy-scale comparison, or paper claims are reconsidered.
+
+### Residual Partial Relation-Depth Branch Synthesis
+
+The residual branch synthesis contract is frozen at `manifests/h001_residual_partial_relation_depth_branch_synthesis_v1.json`; Docker verification is recorded in `manifests/h001_residual_partial_relation_depth_branch_synthesis_v1.verify.json`.
+
+사실:
+
+```text
+implementation: runtime/h001_runtime/synthesize_residual_partial_relation_depth_branches.py
+output: local_dataset/runs/h001_residual_partial_relation_depth_branch_synthesis_v1
+synthesis gate: true
+family rows: 3
+request/source-branch rows: 6 / 15
+family output rows:
+  association_geometry_underlink: 8
+  repeated_object_relation_anchor_ambiguity: 12
+  depth_stagnation: 1
+family synthesis status:
+  nonterminal_audit_or_repair_only: 3
+nonterminal actions:
+  request_depth_stagnation_audit: 1
+  request_direction_specific_reobservation_replay: 4
+  request_relation_anchor_selection_replay: 2
+  request_repeated_object_relation_anchor_ambiguity_audit: 12
+  route_to_direction_specific_reobservation_repair: 1
+  route_to_relation_anchor_selection_repair: 1
+promotable terminal outcome rows: 0
+action forbidden keys: 0
+terminal commits: 0
+candidate commit/rejection rows: 0 / 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The residual accounting gate is now closed, but the outcome is terminal-blocking. All three branch families are useful mechanism evidence, yet none creates a label-free commit or rejection authority. The promotion requirement gate below defines what extra evidence would make a branch outcome promotable; terminal utility, `first_eval`, policy-scale comparison, and paper claims remain blocked.
+
+### Residual Branch Promotion Requirement
+
+The residual branch promotion requirement contract is frozen at `manifests/h001_residual_branch_promotion_requirement_v1.json`; Docker verification is recorded in `manifests/h001_residual_branch_promotion_requirement_v1.verify.json`.
+
+사실:
+
+```text
+implementation: runtime/h001_runtime/define_residual_branch_promotion_requirements.py
+output: local_dataset/runs/h001_residual_branch_promotion_requirement_v1
+promotion requirement gate: true
+source family/request/branch rows: 3 / 6 / 15
+requirement rows: 3
+status:
+  defined_not_satisfied: 3
+branch priority:
+  1. repeated_object_relation_anchor_ambiguity
+  2. association_geometry_underlink
+  3. depth_stagnation
+top priority family: repeated_object_relation_anchor_ambiguity
+promotable family rows: 0
+action forbidden keys: 0
+terminal commits: 0
+candidate commit/rejection rows: 0 / 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This gate defines what would be required before a residual branch can become paper-facing terminal utility, and it confirms that none of the current branch outcomes satisfies those requirements. The next workflow step is not terminal utility; it is the repeated-object relation-anchor consistency evidence contract frozen below for the `bxsVRursffK/plant` branch family. That contract must test stable relation-anchor candidate assignment, conflict-free candidate-specific support, candidate-associated depth consistency, and orthogonal-axis contradiction before any candidate commit/rejection can be reconsidered.
+
+### Repeated-Object Relation-Anchor Consistency Evidence Contract
+
+The repeated-object relation-anchor consistency evidence contract is frozen at `manifests/h001_repeated_object_relation_anchor_consistency_evidence_v1.json`; static source verification is recorded in `manifests/h001_repeated_object_relation_anchor_consistency_evidence_v1.verify.json`.
+
+사실:
+
+```text
+source promotion output: local_dataset/runs/h001_residual_branch_promotion_requirement_v1
+source repeated-object branch output: local_dataset/runs/h001_repeated_object_relation_anchor_ambiguity_v1
+source prior context anchors: local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1/partial_relation_depth_context_anchor_rows.jsonl
+promotion requirement gate: true
+repeated-object branch gate: true
+target scene/query: bxsVRursffK / plant
+target request/branch rows: 3 / 12
+target request ids: rival_identity:25, rival_identity:27, rival_identity:29
+target candidate ids: spatial_nms:0, spatial_nms:2, spatial_nms:4
+prior context anchor rows: 36
+prior context candidate ids: spatial_nms:0, spatial_nms:2, spatial_nms:4, spatial_nms:7, spatial_nms:8
+minimum candidate-anchor pair rows: 18
+minimum observation target rows: 27
+required observation roles:
+  candidate_own_view
+  relation_anchor_context_view
+  orthogonal_axis_challenge_view
+action forbidden keys: 0
+terminal commits: 0
+candidate commit/rejection rows: 0 / 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This contract is the first concrete promotion probe for a residual branch. It requires independent relation-anchor consistency evidence before any terminal utility. The Docker-based materializer/planner below now writes request, candidate, pair, observation target, skipped, candidate artifact, and summary files under `local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1`.
+
+### Repeated-Object Relation-Anchor Consistency Planner
+
+사실:
+
+```text
+implementation: runtime/h001_runtime/plan_repeated_object_relation_anchor_consistency.py
+output: local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1
+planner gate: true
+source branch/request/context-anchor/prior-plan rows: 12 / 3 / 36 / 36
+output request/candidate/pair/observation rows: 3 / 9 / 27 / 27
+candidate artifact rows/candidates: 1 / 5
+skipped rows: 0
+minimum context candidates per request: 4
+minimum observation roles per candidate: 3
+view roles:
+  candidate_own_view: 9
+  relation_anchor_context_view: 9
+  orthogonal_axis_challenge_view: 9
+action forbidden keys: 0
+terminal commits: 0
+candidate commit/rejection rows: 0 / 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The planner is nonterminal evidence materialization. It preserves the repeated-object branch as an active evidence acquisition problem rather than a confidence-based commit/reject rule. The next runnable workflow step is a frame/projection smoke over the materialized observation targets. Terminal utility, `first_eval`, policy-scale comparison, candidate commit/rejection, and paper claims remain blocked.
+
+### Repeated-Object Relation-Anchor Consistency Frame/Projection Smoke
+
+사실:
+
+```text
+wrapper: runtime/jobs/repeated_object_relation_anchor_consistency_frame_projection.sh
+verify: manifests/h001_repeated_object_relation_anchor_consistency_frame_projection_v1.verify.json
+frame output: local_dataset/runs/h001_repeated_object_relation_anchor_consistency_frames_v1
+projection output: local_dataset/runs/h001_repeated_object_relation_anchor_consistency_projection_v1
+frame rows/headings: 27 / 180
+nonblank rows/headings: 27 / 180
+removed blank headings: 0
+projection rows/expected: 27 / 27
+projection visible rows/rate: 27 / 1.0
+missing candidate rows: 0
+explicit candidate-id selection rows: 27
+frame revision metadata rows: 27
+view roles:
+  candidate_own_view: 9
+  relation_anchor_context_view: 9
+  orthogonal_axis_challenge_view: 9
+GT action rows: 0
+projection gate: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The frame/projection substrate is ready for detector/SAM2 scoring. This result is still not a relation-anchor consistency proof; it only confirms that the planned viewpoints can be rendered and that target candidate projection anchors are visible without action-label leakage. Terminal utility, candidate commit/rejection, `first_eval`, policy-scale comparison, and paper claims remain blocked.
+
+### Repeated-Object Relation-Anchor Consistency Detector/SAM2 Substrate
+
+사실:
+
+```text
+wrapper: runtime/jobs/repeated_object_relation_anchor_consistency_detector_substrate.sh
+base wrapper: runtime/jobs/expanded_retrieval_detector_substrate.sh
+verify: manifests/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1.verify.json
+detector output: local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1
+docker image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+device: cuda
+max candidates per frame: 2
+frame/detector rows: 27 / 27
+detector box/SAM2/candidate association rates: 1.0 / 1.0 / 0.8889
+rows with candidate association: 24
+associated candidate heading count: 69
+detector boxes/masks: 135 / 135
+association rows: 360
+selected candidate count rows: 2:27
+explicit candidate-id selection rows: 27
+candidate point field: grounded_position
+association depth tolerance: 1.0m
+GT action rows: 0
+detector substrate gate: true
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The detector/SAM2 substrate is now strong enough to freeze a post-detector consistency analyzer contract. It is still substrate evidence only. The analyzer must decide whether target/context support is stable and conflict-free across `candidate_own_view`, `relation_anchor_context_view`, and `orthogonal_axis_challenge_view`; it must not convert visibility or association alone into terminal ObjectNav utility.
+
+### Repeated-Object Relation-Anchor Consistency Detector Evidence Contract
+
+사실:
+
+```text
+contract: manifests/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1.json
+verify: manifests/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1.verify.json
+implementation target: runtime/h001_runtime/analyze_repeated_object_relation_anchor_consistency_evidence.py
+expected output: local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1
+source gates:
+  planner: true
+  projection: true
+  detector substrate: true
+source request/candidate/pair/observation rows: 3 / 9 / 27 / 27
+detector rows: 27
+detector association rows: 360
+detector box/SAM2/candidate association: 1.0 / 1.0 / 0.8889
+rows with candidate association: 24
+associated candidate heading count: 69
+selected candidate count rows: 2:27
+required view/candidate/request evidence rows: 27 / 9 / 3
+required candidate-context pair rows: 27
+target association by role:
+  candidate_own_view: 6/9
+  relation_anchor_context_view: 9/9
+  orthogonal_axis_challenge_view: 9/9
+context association by role:
+  candidate_own_view: 3/9
+  relation_anchor_context_view: 0/9
+  orthogonal_axis_challenge_view: 0/9
+terminal commits: 0
+candidate commit/rejection rows: 0 / 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: The frozen contract turns the detector substrate into a concrete analyzer implementation target. The required analyzer output must distinguish stable target support from repeated-object ambiguity and context leakage. A later terminal-utility contract remains blocked unless this analyzer reports a promotable branch outcome without label leakage.

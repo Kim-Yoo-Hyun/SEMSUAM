@@ -1,0 +1,92 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_unique_support_goal_region_verify.v1",
+  "date_checked": "2026-05-31",
+  "ok": true,
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1.json",
+  "source_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1",
+  "script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_expanded_retrieval_goal_validity_unique_support_goal_region.py",
+  "planner_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1",
+  "verified_router_metrics": {
+    "branch_evidence_router_gate_passed": true,
+    "request_rows": 7,
+    "candidate_rows": 36,
+    "evaluated_branch_request_rows": 7,
+    "request_branch_counts": {
+      "correct_candidate_missing_own_view_support": 7,
+      "negative_missing_support_guard": 7,
+      "partial_relation_depth_true_goal": 6,
+      "unique_support_visibility_not_goal_validity": 4
+    },
+    "candidate_branch_counts": {
+      "correct_candidate_missing_own_view_support": 20,
+      "negative_missing_support_guard": 20,
+      "partial_relation_depth_true_goal": 12,
+      "unique_support_visibility_not_goal_validity": 4
+    },
+    "selected_next_branch": "unique_support_visibility_not_goal_validity",
+    "selected_next_action": "request_contrastive_goal_region_evidence",
+    "uncovered_failure_tags": [],
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "frozen_target_scope": {
+    "target_branch": "unique_support_visibility_not_goal_validity",
+    "target_request_rows": 4,
+    "focus_candidate_rows": 4,
+    "focus_candidate_ids": [
+      "rival_identity:3::vlmaps:export:sofa:spatial_nms:1",
+      "rival_identity:5::vlmaps:export:bed:spatial_nms:2",
+      "rival_identity:7::vlmaps:export:bed:spatial_nms:2",
+      "rival_identity:22::vlmaps:export:sofa:spatial_nms:5"
+    ],
+    "expected_pair_rows_if_all_rivals_materialized": 17,
+    "expected_candidate_target_rows_if_all_rivals_materialized": 21,
+    "terminal_commit_allowed": false,
+    "next_implementation_target": "runtime/h001_runtime/plan_expanded_retrieval_goal_validity_unique_support_goal_region.py"
+  },
+  "verified_planner_smoke_metrics": {
+    "unique_support_goal_region_plan_gate_passed": true,
+    "request_rows": 4,
+    "candidate_target_rows": 21,
+    "focus_candidate_rows": 4,
+    "pair_rows": 17,
+    "observation_target_rows": 51,
+    "skipped_rows": 0,
+    "skipped_request_rows": 0,
+    "candidate_artifact_rows": 4,
+    "candidate_artifact_candidate_count": 21,
+    "view_role_counts": {
+      "common_pair_view": 17,
+      "focus_own_view": 17,
+      "rival_own_view": 17
+    },
+    "viewpoint_source_counts": {
+      "common_pair_navmesh": 17,
+      "standoff_navmesh": 34
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1.verify.json",
+    "jq '.gate.branch_evidence_router_gate_passed' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_evidence_summary.json",
+    "rg 'unique_support_visibility_not_goal_validity' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_request_rows.jsonl",
+    "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -e PYTHONPYCACHEPREFIX=/tmp/h001_pycache research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_expanded_retrieval_goal_validity_unique_support_goal_region.py",
+    "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -e PYTHONPYCACHEPREFIX=/tmp/h001_pycache research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python -m h001_runtime.plan_expanded_retrieval_goal_validity_unique_support_goal_region --out-root local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1",
+    "jq '.gate.unique_support_goal_region_plan_gate_passed' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1/unique_support_goal_region_summary.json"
+  ],
+  "interpretation": {
+    "fact": "The first branch-specific observation contract is frozen from the Docker-verified router output, and the planner smoke now passes in the Habitat Docker image.",
+    "agent_inference": "The next runnable step should run frame/projection smoke for the nonterminal unique-support goal-region observation rows, not a terminal utility policy or threshold revision.",
+    "paper_claim": "No paper claim is allowed from this contract alone."
+  }
+}

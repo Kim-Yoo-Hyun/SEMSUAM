@@ -1,0 +1,48 @@
+{
+  "date_checked": "2026-05-31T16:50:12+09:00",
+  "ok": true,
+  "image": "research3/habitat-h001:20260508-calib-artifacts",
+  "working_directory": "/home/yoohyun/research3",
+  "command": "bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_goal_validity_unique_support_goal_region_frame_projection.sh",
+  "wrapper": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_goal_validity_unique_support_goal_region_frame_projection.sh",
+  "source_plan_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1",
+  "frame_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_frames_v1",
+  "projection_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_projection_v1",
+  "verification_commands": [
+    "bash -n hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_goal_validity_unique_support_goal_region_frame_projection.sh",
+    "jq '{ok, rows_requested, rows_exported, rendered_heading_count, min_headings_per_row, max_headings_per_row, uses_gt_for_action}' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_frames_v1/summary.json",
+    "jq '{input_rows, output_rows, original_heading_count, kept_heading_count, removed_blank_heading_count, row_level_nonblank_gate_passed, strict_no_blank_heading_gate_passed, uses_gt_for_action}' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+    "jq '{rows, expected_rows, projection_anchor_visible_rows, projection_anchor_visible_rate, missing_candidate_rows, gt_action_rows, candidate_selection_source_counts, frame_revision_metadata_rows, gate, uses_gt_for_action, paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_projection_v1/projection_anchor_smoke_summary.json"
+  ],
+  "metrics": {
+    "frame_rows_requested": 51,
+    "frame_rows_exported": 51,
+    "rendered_heading_count": 204,
+    "min_headings_per_row": 4,
+    "max_headings_per_row": 4,
+    "nonblank_input_rows": 51,
+    "nonblank_output_rows": 51,
+    "nonblank_original_heading_count": 204,
+    "nonblank_kept_heading_count": 204,
+    "removed_blank_heading_count": 0,
+    "row_level_nonblank_gate_passed": true,
+    "strict_no_blank_heading_gate_passed": true,
+    "projection_rows": 51,
+    "projection_expected_rows": 51,
+    "projection_anchor_visible_rows": 51,
+    "projection_anchor_visible_rate": 1.0,
+    "missing_candidate_rows": 0,
+    "gt_action_rows": 0,
+    "candidate_selection_source_counts": {
+      "explicit_candidate_ids": 51
+    },
+    "frame_revision_metadata_rows": 51,
+    "projection_anchor_smoke_passed": true,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "notes": [
+    "Habitat emitted semantic .scn load warnings for HM3D scenes, but RGB-D frame export completed and all smoke gates passed.",
+    "Output ownership was normalized back to the host user after Docker execution."
+  ]
+}

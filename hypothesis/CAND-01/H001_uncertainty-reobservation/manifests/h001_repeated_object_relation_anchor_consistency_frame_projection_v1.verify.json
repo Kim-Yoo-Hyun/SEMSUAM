@@ -1,0 +1,124 @@
+{
+  "schema_version": "h001.verify.repeated_object_relation_anchor_consistency_frame_projection.v1",
+  "date_checked": "2026-06-01",
+  "ok": true,
+  "status": "implemented_and_docker_verified",
+  "wrapper": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/repeated_object_relation_anchor_consistency_frame_projection.sh",
+  "source_plan_output": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1",
+  "frame_output": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_frames_v1",
+  "projection_output": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_projection_v1",
+  "docker_image": "research3/habitat-h001:20260508-calib-artifacts",
+  "verified_plan_metrics": {
+    "repeated_object_relation_anchor_consistency_plan_gate_passed": true,
+    "request_rows": 3,
+    "candidate_rows": 9,
+    "candidate_anchor_pair_rows": 27,
+    "observation_target_rows": 27,
+    "candidate_artifact_rows": 1,
+    "candidate_artifact_candidate_count": 5,
+    "skipped_rows": 0,
+    "minimum_context_candidates_per_request": 4,
+    "minimum_observation_roles_per_candidate": 3,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "frame_export_metrics": {
+    "ok": true,
+    "rows_requested": 27,
+    "rows_exported": 27,
+    "rendered_heading_count": 180,
+    "min_headings_per_row": 4,
+    "max_headings_per_row": 7,
+    "unique_scene_count": 1,
+    "candidate_point_field": "grounded_position",
+    "width": 160,
+    "height": 120,
+    "camera_height": 1.5,
+    "hfov": 90.0,
+    "uses_gt_for_action": false
+  },
+  "nonblank_filter_metrics": {
+    "input_rows": 27,
+    "output_rows": 27,
+    "original_heading_count": 180,
+    "kept_heading_count": 180,
+    "removed_blank_heading_count": 0,
+    "dropped_rows": 0,
+    "row_level_nonblank_gate_passed": true,
+    "strict_no_blank_heading_gate_passed": true,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "projection_metrics": {
+    "rows": 27,
+    "expected_rows": 27,
+    "projection_anchor_visible_rows": 27,
+    "projection_anchor_visible_rate": 1.0,
+    "missing_candidate_rows": 0,
+    "gt_action_rows": 0,
+    "candidate_selection_source_counts": {
+      "explicit_candidate_ids": 27
+    },
+    "frame_revision_metadata_rows": 27,
+    "projection_anchor_status_counts": {
+      "behind_camera": 357,
+      "out_of_fov": 573,
+      "visible": 330
+    },
+    "projection_anchor_axis_counts": {
+      "both_axes_or_unknown": 54,
+      "missing_pixel": 357,
+      "visible": 330,
+      "x_in_y_above": 306,
+      "x_in_y_below": 204,
+      "y_in_x_left": 3,
+      "y_in_x_right": 6
+    },
+    "projection_anchor_smoke_passed": true,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "provenance_metrics": {
+    "frame_rows": 27,
+    "candidate_ids_rows": 27,
+    "source_viewpoint_id_rows": 27,
+    "candidate_set_rule_counts": {
+      "explicit_candidate_ids": 27
+    },
+    "view_role_counts": {
+      "candidate_own_view": 9,
+      "orthogonal_axis_challenge_view": 9,
+      "relation_anchor_context_view": 9
+    }
+  },
+  "job_status": {
+    "status": "completed",
+    "expected_frame_rows": 27,
+    "policy": "RepeatedObjectRelationAnchorConsistencyEvidence",
+    "uses_gt_for_action": false
+  },
+  "implementation_notes": [
+    "The frame wrapper renders up to two explicit candidates per decision so target and context candidate bearings are preserved for the later consistency evidence stage.",
+    "Habitat emitted a nonfatal SemanticScene SSD load warning for the HM3D .scn file, but frame export completed with errors=[] and projection gate passed.",
+    "Root-owned Docker artifacts are normalized with a --user 0:0 chmod container before and after the wrapper."
+  ],
+  "docker_commands": [
+    "bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/repeated_object_relation_anchor_consistency_frame_projection.sh"
+  ],
+  "verification_commands": [
+    "bash -n hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/repeated_object_relation_anchor_consistency_frame_projection.sh",
+    "docker run --rm --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/habitat-h001:20260508-calib-artifacts /opt/conda/bin/python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/export_postview_frames_v2.py hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/filter_nonblank_frame_summary.py hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/smoke_expanded_retrieval_projection_anchor.py",
+    "jq '{ok, rows_requested, rows_exported, rendered_heading_count, min_headings_per_row, max_headings_per_row, uses_gt_for_action}' local_dataset/runs/h001_repeated_object_relation_anchor_consistency_frames_v1/summary.json",
+    "jq '{input_rows, output_rows, original_heading_count, kept_heading_count, removed_blank_heading_count, row_gate:.row_level_nonblank_gate_passed, strict_gate:.strict_no_blank_heading_gate_passed, uses_gt_for_action, paper_claim_allowed}' local_dataset/runs/h001_repeated_object_relation_anchor_consistency_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+    "jq '{rows, expected_rows, visible_rows:.projection_anchor_visible_rows, visible_rate:.projection_anchor_visible_rate, missing:.missing_candidate_rows, gt:.gt_action_rows, explicit:.candidate_selection_source_counts.explicit_candidate_ids, revision:.frame_revision_metadata_rows, gate:.gate}' local_dataset/runs/h001_repeated_object_relation_anchor_consistency_projection_v1/projection_anchor_smoke_summary.json",
+    "wc -l local_dataset/runs/h001_repeated_object_relation_anchor_consistency_frames_v1/rival_identity_frame_summary.jsonl local_dataset/runs/h001_repeated_object_relation_anchor_consistency_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl local_dataset/runs/h001_repeated_object_relation_anchor_consistency_projection_v1/projection_anchor_smoke_rows.jsonl",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_repeated_object_relation_anchor_consistency_frame_projection_v1.verify.json local_dataset/runs/h001_repeated_object_relation_anchor_consistency_frames_v1/summary.json local_dataset/runs/h001_repeated_object_relation_anchor_consistency_projection_v1/projection_anchor_smoke_summary.json"
+  ],
+  "next_task": "run_repeated_object_relation_anchor_consistency_detector_sam2_substrate",
+  "interpretation": {
+    "fact": "The repeated-object relation-anchor consistency frame/projection substrate exports all 27 observation rows, keeps all 180 headings after nonblank filtering, and passes projection-anchor smoke with visible rows 27/27.",
+    "agent_inference": "Detector/SAM2 substrate can now run on these frames to test relation-anchor consistency evidence, but terminal ObjectNav utility remains blocked.",
+    "paper_claim": "No paper claim is allowed from this frame/projection smoke alone."
+  }
+}

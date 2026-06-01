@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "schema_version": "h001.expanded_retrieval_goal_validity_object_relation_observation_plan.v1",
+  "observation_target_rows": 36,
+  "plan_rows": 144,
+  "skipped_rows": 0,
+  "planned_request_ids": [
+    "rival_identity:3",
+    "rival_identity:5",
+    "rival_identity:7",
+    "rival_identity:22",
+    "rival_identity:25",
+    "rival_identity:27",
+    "rival_identity:29"
+  ],
+  "plan_rows_by_request": {
+    "rival_identity:22": 24,
+    "rival_identity:25": 20,
+    "rival_identity:27": 20,
+    "rival_identity:29": 20,
+    "rival_identity:3": 16,
+    "rival_identity:5": 20,
+    "rival_identity:7": 24
+  },
+  "candidate_artifact_rows": 5,
+  "candidate_artifact_candidate_count": 26,
+  "action_evidence_forbidden_key_count": 0,
+  "terminal_commit_rows": 0,
+  "uses_gt_for_action": false,
+  "paper_claim_allowed": false,
+  "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1"
+}

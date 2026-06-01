@@ -1,0 +1,102 @@
+{
+  "schema_version": "h001.verify.direction_specific_reobservation_repair.v1",
+  "date_checked": "2026-06-01",
+  "status": "docker_verified",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_direction_specific_reobservation_repair_v1.json",
+  "script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/probe_direction_specific_reobservation_repair.py",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "source_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair_v1",
+  "output": "local_dataset/runs/h001_direction_specific_reobservation_repair_v1",
+  "compile_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/probe_direction_specific_reobservation_repair.py",
+  "run_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.probe_direction_specific_reobservation_repair",
+  "checked_summary": {
+    "direction_specific_reobservation_repair_probe_gate_passed": true,
+    "probe_rows": 4,
+    "probe_request_rows": 1,
+    "target_followup_rows": 1,
+    "target_request_rows": 1,
+    "probe_role_counts": {
+      "failed_requested_direction_anchorless_row": 1,
+      "failed_requested_direction_explicit_anchor_row": 1,
+      "recovered_target_to_relation_anchor_anchorless_row": 1,
+      "recovered_target_to_relation_anchor_explicit_anchor_row": 1
+    },
+    "nonterminal_probe_action_counts": {
+      "request_direction_specific_reobservation_replay": 4
+    },
+    "failed_requested_direction_explicit_anchor_associated_heading_count": 0,
+    "failed_requested_direction_explicit_anchor_depth_consistent_count": 0,
+    "failed_requested_direction_explicit_anchor_inside_mask_count": 1,
+    "failed_requested_direction_anchorless_associated_heading_count": 0,
+    "failed_requested_direction_anchorless_depth_consistent_count": 0,
+    "failed_requested_direction_anchorless_inside_mask_count": 1,
+    "recovered_explicit_anchor_associated_heading_count": 4,
+    "recovered_explicit_anchor_depth_consistent_count": 4,
+    "recovered_explicit_anchor_inside_mask_count": 4,
+    "recovered_anchorless_associated_heading_count": 4,
+    "recovered_anchorless_depth_consistent_count": 4,
+    "recovered_anchorless_inside_mask_count": 4,
+    "same_requested_direction_associated_heading_count": 0,
+    "other_requested_direction_associated_heading_count": 8,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "checked_direction_contrast": {
+    "failed_requested_direction_explicit_anchor": {
+      "decision_id": "bCPU9suPUw9_bed_48b07c346eb4683f",
+      "requested_direction_source": "relation_anchor_to_target",
+      "standoff_direction_source": "compass_315",
+      "relation_anchor_candidate_id": "vlmaps:export:bed:spatial_nms:2",
+      "context_candidate_id": "vlmaps:export:bed:spatial_nms:2",
+      "associated_heading_count": 0,
+      "depth_consistent_count": 0,
+      "inside_mask_count": 1
+    },
+    "failed_requested_direction_anchorless": {
+      "decision_id": "bCPU9suPUw9_bed_54cf4778171bf856",
+      "requested_direction_source": "relation_anchor_to_target",
+      "standoff_direction_source": "compass_315",
+      "relation_anchor_candidate_id": null,
+      "context_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "associated_heading_count": 0,
+      "depth_consistent_count": 0,
+      "inside_mask_count": 1
+    },
+    "recovered_target_to_relation_anchor_explicit_anchor": {
+      "decision_id": "bCPU9suPUw9_bed_4ccded6b70ddf90a",
+      "requested_direction_source": "target_to_relation_anchor",
+      "standoff_direction_source": "target_to_relation_anchor",
+      "relation_anchor_candidate_id": "vlmaps:export:bed:spatial_nms:2",
+      "context_candidate_id": "vlmaps:export:bed:spatial_nms:2",
+      "associated_heading_count": 4,
+      "depth_consistent_count": 4,
+      "inside_mask_count": 4,
+      "associated_projection_anchor_offset_m": 2.4
+    },
+    "recovered_target_to_relation_anchor_anchorless": {
+      "decision_id": "bCPU9suPUw9_bed_a6358d7274ab68e6",
+      "requested_direction_source": "target_to_relation_anchor",
+      "standoff_direction_source": "target_to_relation_anchor",
+      "relation_anchor_candidate_id": null,
+      "context_candidate_id": "vlmaps:export:bed:spatial_nms:1",
+      "associated_heading_count": 4,
+      "depth_consistent_count": 4,
+      "inside_mask_count": 4,
+      "associated_projection_anchor_offset_m": 2.4
+    }
+  },
+  "direction_specific_reobservation_repair_contract_gate_passed": true,
+  "direction_specific_reobservation_repair_probe_gate_passed": true,
+  "terminal_utility_validation_allowed": false,
+  "candidate_commit_allowed": false,
+  "candidate_rejection_allowed": false,
+  "first_eval_rerun_allowed": false,
+  "policy_scale_comparison_allowed": false,
+  "paper_claim_allowed": false,
+  "next_task": "design_repeated_object_relation_anchor_ambiguity_branch_contract"
+}

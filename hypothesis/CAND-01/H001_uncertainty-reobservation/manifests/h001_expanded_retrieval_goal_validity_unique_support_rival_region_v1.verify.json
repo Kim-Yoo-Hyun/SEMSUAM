@@ -1,0 +1,108 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_unique_support_rival_region_verify.v1",
+  "date_checked": "2026-05-31",
+  "ok": true,
+  "status": "implemented_and_docker_verified",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1.json",
+  "script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_expanded_retrieval_goal_validity_unique_support_rival_region.py",
+  "source_plan_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1",
+  "source_inspection_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_inspection_v1",
+  "source_detector_substrate_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1",
+  "planner_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1",
+  "verified_source_metrics": {
+    "source_evidence_gate_passed": true,
+    "source_inspection_gate_passed": true,
+    "inspection_pair_rows": 17,
+    "inspection_request_rows": 4,
+    "ambiguous_goal_region_pair_rows": 10,
+    "contrastive_goal_region_pair_rows": 7,
+    "pair_blocker_counts": {
+      "contrastive_but_request_level_ambiguity_check_required": 2,
+      "contrastive_without_common_focus_support": 5,
+      "rival_own_view_supported": 10
+    },
+    "request_recommendation_counts": {
+      "freeze_second_pass_rival_region_evidence_contract": 4
+    },
+    "terminal_contract_allowed": false,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "verified_planner_metrics": {
+    "unique_support_rival_region_plan_gate_passed": true,
+    "request_rows": 4,
+    "pair_rows": 10,
+    "request_candidate_rows": 14,
+    "observation_plan_rows": 30,
+    "skipped_rows": 0,
+    "candidate_artifact_rows": 4,
+    "candidate_artifact_candidate_count": 14,
+    "candidate_rows_by_request": {
+      "rival_identity:3": 2,
+      "rival_identity:5": 4,
+      "rival_identity:7": 3,
+      "rival_identity:22": 5
+    },
+    "observation_rows_by_request": {
+      "rival_identity:3": 3,
+      "rival_identity:5": 9,
+      "rival_identity:7": 6,
+      "rival_identity:22": 12
+    },
+    "second_pass_view_role_counts": {
+      "focus_from_rival_own_view": 10,
+      "rival_from_common_pair_view": 10,
+      "rival_from_focus_own_view": 10
+    },
+    "source_view_role_counts": {
+      "common_pair_view": 10,
+      "focus_own_view": 10,
+      "rival_own_view": 10
+    },
+    "target_candidate_role_counts": {
+      "focus": 10,
+      "rival": 20
+    },
+    "query_counts": {
+      "bed": 5,
+      "sofa": 5
+    },
+    "scene_counts": {
+      "4ok3usBNeis": 4,
+      "QaLdnwvtxbs": 1,
+      "bCPU9suPUw9": 3,
+      "q3zU7Yy5E5s": 2
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "output_files": {
+    "request_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_request_rows.jsonl",
+    "pair_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_pair_rows.jsonl",
+    "request_candidate_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_request_candidate_rows.jsonl",
+    "candidate_artifact": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_candidate_artifact.jsonl",
+    "observation_plan": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_observation_plan.jsonl",
+    "skipped_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_skipped.jsonl",
+    "summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_plan_summary.json"
+  },
+  "docker_commands": [
+    "docker run --rm --user \"$(id -u):$(id -g)\" -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -e PYTHONPYCACHEPREFIX=/tmp/pycache research3/habitat-h001:20260508-calib-artifacts /opt/conda/bin/python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_expanded_retrieval_goal_validity_unique_support_rival_region.py",
+    "docker run --rm --user \"$(id -u):$(id -g)\" -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -e PYTHONPYCACHEPREFIX=/tmp/pycache research3/habitat-h001:20260508-calib-artifacts /opt/conda/bin/python -m h001_runtime.plan_expanded_retrieval_goal_validity_unique_support_rival_region --out-root local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1"
+  ],
+  "verification_commands": [
+    "wc -l local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_request_rows.jsonl local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_pair_rows.jsonl local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_request_candidate_rows.jsonl local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_observation_plan.jsonl local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_skipped.jsonl local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_candidate_artifact.jsonl",
+    "jq '{gate:.gate.unique_support_rival_region_plan_gate_passed, rows:{requests:.request_rows,pairs:.pair_rows,candidates:.request_candidate_rows,obs:.observation_plan_rows,skipped:.skipped_rows}, second_roles:.second_pass_view_role_counts, source_roles:.source_view_role_counts, forbidden:.action_evidence_forbidden_key_count, terminal:.terminal_commit_rows, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_plan_summary.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1.json hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1.verify.json local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1/unique_support_rival_region_plan_summary.json"
+  ],
+  "interpretation": {
+    "fact": "The second-pass planner materializes only the 10 ambiguous first-pass goal-region pairs and reuses first-pass viewpoint geometry while swapping the target candidate.",
+    "agent_inference": "This passes the nonterminal planner gate and enables a Docker frame/projection smoke for swapped rival-region evidence, but it does not authorize terminal ObjectNav goal-validity arbitration.",
+    "paper_claim": "No paper claim is allowed from this planner alone."
+  }
+}

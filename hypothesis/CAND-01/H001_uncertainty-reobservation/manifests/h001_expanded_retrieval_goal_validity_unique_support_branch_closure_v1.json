@@ -1,0 +1,93 @@
+{
+  "schema_version": "h001.contract.expanded_retrieval_goal_validity_unique_support_branch_closure.v1",
+  "date_checked": "2026-06-01",
+  "status": "frozen_before_implementation",
+  "contract_name": "expanded_retrieval_goal_validity_unique_support_branch_closure_v1",
+  "purpose": "Close the unique-support visibility branch as terminal-blocked after cross-region and shared-common blockers are frozen, then select the next branch-specific evidence route without allowing terminal arbitration.",
+  "implementation_target": "runtime/h001_runtime/close_expanded_retrieval_goal_validity_unique_support_branch.py",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "source": {
+    "object_relation_branch_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_evidence_summary.json",
+    "object_relation_branch_request_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_request_rows.jsonl",
+    "object_relation_branch_candidate_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_candidate_rows.jsonl",
+    "cross_region_branch_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_cross_region_overlap_branch_v1/unique_support_cross_region_overlap_branch_summary.json",
+    "cross_region_failure_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_cross_region_overlap_branch_v1/unique_support_cross_region_overlap_failure_rows.jsonl",
+    "shared_common_view_branch_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch_v1/unique_support_shared_common_view_branch_summary.json",
+    "shared_common_view_failure_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch_v1/unique_support_shared_common_view_failure_rows.jsonl"
+  },
+  "closure_scope": {
+    "closed_branch": "unique_support_visibility_not_goal_validity",
+    "closure_status": "terminal_blocked",
+    "expected_unique_support_request_rows": 4,
+    "expected_cross_region_closed_request_rows": 3,
+    "expected_shared_common_closed_request_rows": 1,
+    "expected_unclosed_unique_support_request_rows": 0,
+    "terminal_commit_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "next_branch_selection": {
+    "remaining_branch_order": [
+      "partial_relation_depth_true_goal",
+      "correct_candidate_missing_own_view_support",
+      "negative_missing_support_guard"
+    ],
+    "selected_next_branch": "partial_relation_depth_true_goal",
+    "selected_next_action": "request_additional_relation_depth_evidence",
+    "selection_reason": "After closing unique-support visibility as terminal-blocked, partial relation-depth true-goal failures are the highest-priority remaining branch with request-level support and direct observation-utility relevance."
+  },
+  "allowed_action_inputs": [
+    "object-relation branch request rows",
+    "object-relation branch candidate rows",
+    "cross-region overlap branch rows",
+    "shared-common-view branch rows",
+    "request and candidate identifiers",
+    "scene/query identifiers",
+    "non-GT branch names and branch actions"
+  ],
+  "forbidden_action_inputs": [
+    "evaluation correctness labels",
+    "GT goal object id",
+    "GT target object position",
+    "success/failure labels",
+    "wrong-goal labels",
+    "shortest path distance",
+    "SPL",
+    "oracle stop/commit decisions",
+    "threshold tuning from joined labels"
+  ],
+  "required_gates": {
+    "source_object_relation_branch_gate_passed": true,
+    "source_cross_region_branch_gate_passed": true,
+    "source_shared_common_view_branch_gate_passed": true,
+    "expected_unique_support_closed_request_rows": 4,
+    "expected_cross_region_closed_request_rows": 3,
+    "expected_shared_common_closed_request_rows": 1,
+    "expected_unclosed_unique_support_request_rows": 0,
+    "expected_next_branch_request_rows": 6,
+    "expected_next_branch_candidate_rows": 12,
+    "terminal_commit_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "blocked_actions": [
+    "terminal_goal_region_arbitration_contract",
+    "direct_commit_unique_support_candidate",
+    "direct_commit_partial_relation_depth_candidate",
+    "threshold_tuning_on_evaluation_labels",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "expected_outputs": {
+    "out_root": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_branch_closure_v1",
+    "closure_request_rows": "unique_support_branch_closure_request_rows.jsonl",
+    "next_branch_request_rows": "unique_support_branch_closure_next_branch_request_rows.jsonl",
+    "next_branch_candidate_rows": "unique_support_branch_closure_next_branch_candidate_rows.jsonl",
+    "summary": "unique_support_branch_closure_summary.json"
+  },
+  "next_step_if_passed": "freeze_partial_relation_depth_true_goal_observation_contract",
+  "next_step_if_failed": "diagnose unique-support branch closure accounting before selecting a new branch.",
+  "paper_claim_allowed": false
+}

@@ -1,0 +1,220 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_unique_support_rival_region_association_repair_contract.v1",
+  "contract_name": "expanded_retrieval_goal_validity_unique_support_rival_region_association_repair_v1",
+  "date_checked": "2026-05-31",
+  "status": "design_contract_only",
+  "source": {
+    "second_pass_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1.json",
+    "frame_projection_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_frame_projection_v1.verify.json",
+    "detector_substrate_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1.verify.json",
+    "detector_substrate_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1",
+    "detector_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "detector_frame_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1/expanded_retrieval_detector_frame_summary.jsonl",
+    "detector_associations": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl",
+    "failure_diagnostic": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1/rival_region_detector_substrate_diagnostic.json",
+    "terminal_commit_allowed": false,
+    "post_detector_evidence_analyzer_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "purpose": {
+    "fact": "The second-pass rival-region detector/SAM2 job completed with detector and mask coverage on every frame row, but failed the fixed candidate-association gate.",
+    "agent_inference": "The next step should explain and repair candidate association under swapped rival-region viewpoints before any post-detector evidence aggregation, terminal arbitration, or threshold tuning."
+  },
+  "frozen_failure_facts": {
+    "frame_rows": 30,
+    "detector_rows": 30,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.26666666666666666,
+    "rows_with_candidate_association": 8,
+    "associated_candidate_heading_count": 18,
+    "association_rows": 120,
+    "projected_pixel_inside_mask_count": 82,
+    "gt_action_rows": 0,
+    "passes_detector_substrate_gate": false,
+    "by_second_pass_view_role": {
+      "focus_from_rival_own_view": {
+        "rows": 10,
+        "rows_with_candidate_association": 3,
+        "candidate_association_rate": 0.3,
+        "associated_candidate_heading_count": 6
+      },
+      "rival_from_common_pair_view": {
+        "rows": 10,
+        "rows_with_candidate_association": 3,
+        "candidate_association_rate": 0.3,
+        "associated_candidate_heading_count": 7
+      },
+      "rival_from_focus_own_view": {
+        "rows": 10,
+        "rows_with_candidate_association": 2,
+        "candidate_association_rate": 0.2,
+        "associated_candidate_heading_count": 5
+      }
+    },
+    "by_query": {
+      "bed": {
+        "rows": 15,
+        "rows_with_candidate_association": 1,
+        "candidate_association_rate": 0.06666666666666667
+      },
+      "sofa": {
+        "rows": 15,
+        "rows_with_candidate_association": 7,
+        "candidate_association_rate": 0.4666666666666667
+      }
+    },
+    "association_depth_status_counts": {
+      "consistent": 18,
+      "depth_mismatch": 77,
+      "out_of_fov": 15,
+      "unavailable": 10
+    },
+    "projection_anchor_status_counts": {
+      "visible": 589,
+      "out_of_fov": 181,
+      "behind_camera": 70
+    }
+  },
+  "diagnostic_upper_bounds_from_existing_rows": {
+    "note": "These are action-time association diagnostics from existing detector rows, not paper claims and not label-tuned thresholds.",
+    "mask_depth_sweep_frame_recovery": {
+      "depth_error_le_1_0_m": "13/30",
+      "depth_error_le_1_25_m": "15/30",
+      "depth_error_le_1_5_m": "17/30",
+      "depth_error_le_1_75_m": "18/30",
+      "depth_error_le_2_0_m": "19/30",
+      "depth_error_le_2_5_m": "23/30",
+      "depth_error_le_3_0_m": "26/30"
+    },
+    "mask_or_box_presence_upper_bounds": {
+      "mask_only_frame_rows": "30/30",
+      "box_only_frame_rows": "30/30",
+      "visible_projection_frame_rows": "30/30"
+    }
+  },
+  "repair_decision": {
+    "selected_next_contract": "association_failure_and_repair_diagnostic_v1",
+    "implementation_target": "runtime/h001_runtime/diagnose_expanded_retrieval_goal_validity_unique_support_rival_region_association.py",
+    "required_before_rerun": [
+      "Recompute association candidates from existing detector associations using fixed, predeclared non-GT variants.",
+      "Report role/query/scene-stratified recovery instead of only global association rate.",
+      "Separate detector availability, projection visibility, mask overlap, depth mismatch, and unavailable-depth failure modes.",
+      "Do not run post-detector evidence analyzer until a repair variant passes the fixed repair gate."
+    ],
+    "allowed_repair_candidates": [
+      {
+        "name": "mask_depth_1_25_v1",
+        "rule": "projected pixel inside SAM2 mask and depth_error_m <= 1.25",
+        "status": "diagnostic_candidate"
+      },
+      {
+        "name": "mask_depth_1_5_v1",
+        "rule": "projected pixel inside SAM2 mask and depth_error_m <= 1.5",
+        "status": "diagnostic_candidate"
+      },
+      {
+        "name": "mask_depth_2_0_v1",
+        "rule": "projected pixel inside SAM2 mask and depth_error_m <= 2.0",
+        "status": "diagnostic_candidate_with_generalization_risk"
+      },
+      {
+        "name": "mask_only_upper_bound_v1",
+        "rule": "projected pixel inside SAM2 mask without depth gate",
+        "status": "upper_bound_only_not_promotable"
+      },
+      {
+        "name": "box_only_upper_bound_v1",
+        "rule": "projected pixel inside detector box without mask/depth gate",
+        "status": "upper_bound_only_not_promotable"
+      }
+    ],
+    "not_allowed_in_this_revision": [
+      "detector box threshold tuning",
+      "text threshold tuning",
+      "query-specific or category-specific thresholds",
+      "role-specific thresholds",
+      "terminal commit from mask or box presence",
+      "post-detector evidence aggregation as a promotion gate before association repair passes",
+      "threshold selection from evaluation labels or ObjectNav success labels",
+      "using candidate_correct, wrong_goal_visit, success, GT object id, or GT goal id for action-time repair"
+    ]
+  },
+  "allowed_action_inputs": [
+    "episode_key",
+    "scene_key",
+    "query",
+    "expanded_retrieval_request_id",
+    "pair_id",
+    "target_candidate_id",
+    "focus_candidate_id",
+    "rival_candidate_id",
+    "second_pass_view_role",
+    "source_view_role",
+    "viewpoint_reused_from_first_pass",
+    "standoff and navmesh metadata",
+    "candidate position and grounded_position",
+    "projected_pixel",
+    "projected_pixel_inside_box",
+    "projected_pixel_inside_mask",
+    "projection_status",
+    "depth_error_m",
+    "mask_depth_median",
+    "camera_forward_m",
+    "detector box and SAM2 mask presence",
+    "fixed predeclared association thresholds"
+  ],
+  "forbidden_action_inputs": [
+    "candidate_correct",
+    "selected_for_goal",
+    "wrong_goal_visit",
+    "success label",
+    "SPL",
+    "GT object id",
+    "GT goal id",
+    "oracle distance to goal",
+    "post-join evaluation labels",
+    "threshold tuning from joined labels",
+    "query-specific threshold selected after inspecting correctness"
+  ],
+  "minimum_diagnostic_gate": {
+    "source_frame_rows": 30,
+    "source_association_rows": 120,
+    "must_report_global_rate": true,
+    "must_report_by_second_pass_view_role": true,
+    "must_report_by_query": true,
+    "must_report_by_scene_key": true,
+    "must_report_depth_status_counts": true,
+    "must_report_upper_bound_controls": true,
+    "uses_gt_for_action": false
+  },
+  "minimum_repair_gate_for_rerun": {
+    "detector_box_rate_minimum": 0.8,
+    "sam2_mask_rate_minimum": 0.8,
+    "global_candidate_association_rate_minimum": 0.4,
+    "minimum_query_candidate_association_rate_minimum": 0.25,
+    "minimum_second_pass_role_candidate_association_rate_minimum": 0.3,
+    "action_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "rerun_gate": {
+    "rerun_allowed_after": "association_failure_and_repair_diagnostic_v1 passes minimum_repair_gate_for_rerun using a fixed non-GT variant",
+    "rerun_not_allowed_for": [
+      "detector threshold tuning only",
+      "query-specific rescue",
+      "role-specific rescue",
+      "terminal utility validation",
+      "first_eval rerun",
+      "policy-scale comparison"
+    ],
+    "rerun_output_name": "h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_v1"
+  },
+  "expected_outputs": [
+    "unique_support_rival_region_association_diagnostic_rows.jsonl",
+    "unique_support_rival_region_association_variant_summary.json",
+    "unique_support_rival_region_association_repair_summary.json"
+  ],
+  "paper_claim_allowed": false
+}

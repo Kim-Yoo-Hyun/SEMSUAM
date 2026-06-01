@@ -1,0 +1,48 @@
+{
+  "ok": true,
+  "date_checked": "2026-05-31",
+  "contract": "h001_expanded_retrieval_goal_validity_object_relation_fresh_frame_projection_v1",
+  "job_status": "completed",
+  "job_wrapper": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_goal_validity_object_relation_fresh_frame_projection.sh",
+  "log": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/fresh-object-relation-frame-projection-20260531-000459.log",
+  "plan_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1",
+  "frame_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_frames_v1",
+  "projection_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_projection_v1",
+  "expected_frame_rows": 144,
+  "rows_exported": 144,
+  "rendered_heading_count": 576,
+  "min_headings_per_row": 4,
+  "max_headings_per_row": 4,
+  "nonblank_output_rows": 144,
+  "kept_heading_count": 573,
+  "removed_blank_heading_count": 3,
+  "rows_with_blank_headings": 3,
+  "blank_heading_scene_counts": {
+    "bxsVRursffK": 3
+  },
+  "blank_heading_query_counts": {
+    "plant": 3
+  },
+  "row_level_nonblank_gate_passed": true,
+  "strict_no_blank_heading_gate_passed": false,
+  "projection_rows": 144,
+  "projection_expected_rows": 144,
+  "projection_anchor_visible_rows": 141,
+  "projection_anchor_visible_rate": 0.9791666666666666,
+  "projection_anchor_visible_rate_gate_passed": true,
+  "missing_candidate_rows": 0,
+  "gt_action_rows": 0,
+  "projection_anchor_status_counts": {
+    "out_of_fov": 2299,
+    "visible": 1712
+  },
+  "projection_anchor_axis_counts": {
+    "visible": 1712,
+    "x_in_y_above": 1248,
+    "x_in_y_below": 1051
+  },
+  "projection_anchor_smoke_passed": true,
+  "uses_gt_for_action": false,
+  "paper_claim_allowed": false,
+  "next_gate": "run detector/SAM2 substrate for fresh object-relation observation rows"
+}

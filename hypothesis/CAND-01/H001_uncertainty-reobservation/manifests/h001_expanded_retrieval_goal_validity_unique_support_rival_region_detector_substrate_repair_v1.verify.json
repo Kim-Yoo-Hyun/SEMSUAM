@@ -1,0 +1,143 @@
+{
+  "date_checked": "2026-05-31T23:55:09+09:00",
+  "ok": false,
+  "status": "failed_substrate_gate_after_mask_depth_1_25_repair",
+  "session": "h001-unique-support-rival-repair-20260531-234903",
+  "image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "device": "cuda",
+  "working_directory": "/home/yoohyun/research3",
+  "command": "TS=20260531-234903 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair.sh",
+  "wrapper": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair.sh",
+  "base_wrapper": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_detector_substrate.sh",
+  "source_plan_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_v1",
+  "frame_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_frames_v1",
+  "source_failed_detector_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1",
+  "source_association_repair_diagnostic": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_association_repair_v1",
+  "detector_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_v1",
+  "log": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/unique-support-rival-region-detector-substrate-repair-20260531-234903.log",
+  "status_file": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_v1/job_status.json",
+  "repair_variant": {
+    "name": "mask_depth_1_25_v1",
+    "association_depth_tolerance_m": 1.25,
+    "reason": "first passing promotable variant in the fixed non-GT offline association repair diagnostic"
+  },
+  "metrics": {
+    "frame_rows": 30,
+    "detector_rows": 30,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.3333333333333333,
+    "rows_with_candidate_association": 10,
+    "associated_candidate_heading_count": 23,
+    "association_rows": 120,
+    "association_depth_tolerance_m": 1.25,
+    "by_query": {
+      "bed": {
+        "rows": 15,
+        "rows_with_candidate_association": 1,
+        "candidate_association_rate": 0.06666666666666667,
+        "associated_candidate_heading_count": 1
+      },
+      "sofa": {
+        "rows": 15,
+        "rows_with_candidate_association": 9,
+        "candidate_association_rate": 0.6,
+        "associated_candidate_heading_count": 22
+      }
+    },
+    "by_second_pass_view_role": {
+      "focus_from_rival_own_view": {
+        "rows": 10,
+        "rows_with_candidate_association": 3,
+        "candidate_association_rate": 0.3,
+        "associated_candidate_heading_count": 7
+      },
+      "rival_from_common_pair_view": {
+        "rows": 10,
+        "rows_with_candidate_association": 4,
+        "candidate_association_rate": 0.4,
+        "associated_candidate_heading_count": 9
+      },
+      "rival_from_focus_own_view": {
+        "rows": 10,
+        "rows_with_candidate_association": 3,
+        "candidate_association_rate": 0.3,
+        "associated_candidate_heading_count": 7
+      }
+    },
+    "by_scene_key": {
+      "4ok3usBNeis": {
+        "rows": 12,
+        "rows_with_candidate_association": 6,
+        "candidate_association_rate": 0.5,
+        "associated_candidate_heading_count": 15
+      },
+      "QaLdnwvtxbs": {
+        "rows": 3,
+        "rows_with_candidate_association": 3,
+        "candidate_association_rate": 1.0,
+        "associated_candidate_heading_count": 7
+      },
+      "bCPU9suPUw9": {
+        "rows": 9,
+        "rows_with_candidate_association": 1,
+        "candidate_association_rate": 0.1111111111111111,
+        "associated_candidate_heading_count": 1
+      },
+      "q3zU7Yy5E5s": {
+        "rows": 6,
+        "rows_with_candidate_association": 0,
+        "candidate_association_rate": 0.0,
+        "associated_candidate_heading_count": 0
+      }
+    },
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false,
+    "gate": {
+      "detector_rows_match": true,
+      "detector_box_rate_pass": true,
+      "sam2_mask_rate_pass": true,
+      "candidate_association_rate_pass": false,
+      "no_gt_action_pass": true,
+      "passes_detector_substrate_gate": false
+    }
+  },
+  "runtime_association_semantics_probe": {
+    "note": "The detector implementation associates candidates by mask overlap and mask-depth agreement, not by the offline diagnostic's depth_error_m-only proxy.",
+    "same_output_depth_agreement_sweep": {
+      "threshold_1_0_m": {
+        "candidate_association_rate": 0.26666666666666666,
+        "minimum_query_candidate_association_rate": 0.06666666666666667,
+        "minimum_second_pass_role_candidate_association_rate": 0.2
+      },
+      "threshold_1_25_m": {
+        "candidate_association_rate": 0.3333333333333333,
+        "minimum_query_candidate_association_rate": 0.06666666666666667,
+        "minimum_second_pass_role_candidate_association_rate": 0.3
+      },
+      "threshold_1_5_m": {
+        "candidate_association_rate": 0.43333333333333335,
+        "minimum_query_candidate_association_rate": 0.2,
+        "minimum_second_pass_role_candidate_association_rate": 0.4
+      },
+      "threshold_2_0_m": {
+        "candidate_association_rate": 0.5333333333333333,
+        "minimum_query_candidate_association_rate": 0.3333333333333333,
+        "minimum_second_pass_role_candidate_association_rate": 0.5
+      }
+    }
+  },
+  "verification_commands": [
+    "bash -n hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair.sh",
+    "cat local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_v1/job_status.json",
+    "jq '{gate:.gate.passes_detector_substrate_gate, rows:.detector_rows, box:.detector_box_rate, sam2:.sam2_mask_rate, assoc:.candidate_association_rate, associated:.rows_with_candidate_association, headings:.associated_candidate_heading_count, depth:.association_depth_tolerance_m, gt:.uses_gt_for_action, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_v1/expanded_retrieval_detector_substrate_summary.json",
+    "wc -l local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_v1/expanded_retrieval_detector_associations.jsonl local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_v1/expanded_retrieval_detector_frame_summary.jsonl"
+  ],
+  "next_task": "freeze a runtime association-semantics diagnostic before any mask_depth_2_0_v1 rerun or post-detector evidence analyzer",
+  "notes": [
+    "This is a negative repaired-substrate result. Detector and SAM2 coverage remain complete, but the candidate association gate still fails.",
+    "The offline repair diagnostic overestimated mask_depth_1_25_v1 because it used depth_error_m as the repair field, while the detector runtime uses depth_agreement_m against the selected mask.",
+    "The same output suggests the predeclared mask_depth_2_0_v1 variant could pass the runtime global/query/role association gate, but it must be documented as a runtime-semantics repair before rerun.",
+    "Post-detector evidence analyzer, terminal utility, first_eval rerun, policy-scale comparison, and paper claims remain blocked."
+  ]
+}

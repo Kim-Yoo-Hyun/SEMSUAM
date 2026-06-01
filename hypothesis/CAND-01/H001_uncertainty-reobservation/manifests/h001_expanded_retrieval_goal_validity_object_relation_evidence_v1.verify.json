@@ -1,0 +1,101 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_object_relation_evidence_verify.v1",
+  "date_checked": "2026-05-30",
+  "ok": true,
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1.json",
+  "preconditions": {
+    "observation_plan": {
+      "summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_plan_v1/goal_validity_object_relation_observation_plan_summary.json",
+      "gate_passed": true,
+      "plan_rows": 8,
+      "skipped_rows": 0,
+      "plan_rows_by_request": {
+        "rival_identity:12": 4,
+        "rival_identity:14": 4
+      },
+      "direction_source_counts": {
+        "orthogonal_relation_axis": 2,
+        "relation_anchor_to_target": 2,
+        "source_viewpoint_to_target": 2,
+        "target_to_relation_anchor": 2
+      },
+      "output_forbidden_action_field_count": 0,
+      "terminal_commit_rows": 0,
+      "uses_gt_for_action": false,
+      "paper_claim_allowed": false
+    },
+    "projection_smoke": {
+      "summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_projection_v1/projection_anchor_smoke_summary.json",
+      "gate_passed": true,
+      "rows": 8,
+      "expected_rows": 8,
+      "projection_visible_rows": 8,
+      "projection_visible_rate": 1.0,
+      "missing_candidate_rows": 0,
+      "frame_revision_metadata_rows": 8,
+      "uses_gt_for_action": false,
+      "paper_claim_allowed": false
+    },
+    "detector_substrate": {
+      "job_status": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_detector_substrate_v1/job_status.json",
+      "summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+      "detector_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_detector_substrate_v1/detector_v3c/summary.json",
+      "gate_passed": true,
+      "detector_rows": 8,
+      "detector_box_rate": 1.0,
+      "sam2_mask_rate": 1.0,
+      "candidate_association_rate": 1.0,
+      "rows_with_candidate_association": 8,
+      "association_rows": 72,
+      "associated_candidate_heading_count": 48,
+      "detector_box_rows": 110,
+      "detector_mask_rows": 110,
+      "projected_pixel_inside_mask_count": 50,
+      "projection_status_counts": {
+        "out_of_fov": 14,
+        "visible": 58
+      },
+      "depth_check_status_counts": {
+        "consistent": 44,
+        "depth_mismatch": 14,
+        "out_of_fov": 14
+      },
+      "associated_to_candidate_counts": {
+        "false": 24,
+        "true": 48
+      },
+      "uses_gt_for_action": false,
+      "paper_claim_allowed": false
+    }
+  },
+  "frozen_decision": {
+    "analyzer_name": "object_relation_detector_depth_evidence_v1",
+    "minimum_evidence_rows": 8,
+    "minimum_request_rows": 2,
+    "minimum_associated_candidate_heading_count": 40,
+    "minimum_depth_consistent_rows": 32,
+    "terminal_commit_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "blocked_actions": [
+      "direct_candidate_commit",
+      "detector_association_best_commit",
+      "relation_signature_best_commit",
+      "threshold_tuning",
+      "first_eval_rerun",
+      "policy_scale_comparison"
+    ],
+    "next_script_target": "runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_evidence.py",
+    "next_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1"
+  },
+  "verification_commands": [
+    "jq '{schema_version, policy, planner_name, gate, plan_rows, skipped_rows, plan_rows_by_request, direction_source_counts, output_forbidden_action_field_count, terminal_commit_rows, uses_gt_for_action, paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_plan_v1/goal_validity_object_relation_observation_plan_summary.json",
+    "jq '{rows, expected_rows, gate, projection_anchor_visible_rows, projection_anchor_visible_rate, missing_candidate_rows, frame_revision_metadata_rows, candidate_selection_source_counts, uses_gt_for_action, paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_projection_v1/projection_anchor_smoke_summary.json",
+    "jq '{associated_candidate_heading_count, candidate_association_rate, detector_box_rate, detector_rows, frame_rows, gate, rows_with_candidate_association, sam2_mask_rate, uses_gt_for_action, paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "jq '{rows, rows_with_detector_box, rows_with_detector_box_rate, rows_with_sam2_mask, rows_with_sam2_mask_rate, rows_with_candidate_association, rows_with_candidate_association_rate, association_rows, associated_candidate_heading_count, detector_box_rows, detector_mask_rows, projected_pixel_inside_mask_count, projection_status_counts}' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_detector_substrate_v1/detector_v3c/summary.json",
+    "jq -s '{rows:length, associated_counts:(map(.associated_to_candidate|tostring) | group_by(.) | map({(.[0]):length}) | add), depth_status:(map(.depth_check_status) | group_by(.) | map({(.[0]):length}) | add), direction_sources:(map(.standoff_direction_source) | group_by(.) | map({(.[0]):length}) | add)}' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_observation_detector_substrate_v1/detector_v3c/detector_candidate_associations.jsonl"
+  ],
+  "interpretation": {
+    "fact": "The object-relation post-detector evidence contract is frozen from Docker-verified plan, projection, and detector substrate outputs.",
+    "agent_inference": "The next implementation should aggregate detector-depth evidence into nonterminal evidence/request rows, then report whether the relation-depth gap is resolved, partial, or still unresolved without committing to a goal."
+  }
+}

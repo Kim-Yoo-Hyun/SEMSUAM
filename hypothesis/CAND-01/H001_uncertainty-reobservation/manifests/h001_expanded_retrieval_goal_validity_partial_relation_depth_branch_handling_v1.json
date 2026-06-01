@@ -1,0 +1,137 @@
+{
+  "schema_version": "h001.contract.expanded_retrieval_goal_validity_partial_relation_depth_branch_handling.v1",
+  "date_checked": "2026-06-01",
+  "status": "frozen_design_contract_before_implementation",
+  "contract_name": "expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1",
+  "purpose": "Freeze nonterminal branch handling for residual partial relation-depth rows before any terminal utility contract.",
+  "source": {
+    "residual_taxonomy_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1.json",
+    "residual_taxonomy_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1.verify.json",
+    "residual_taxonomy_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1",
+    "taxonomy_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1/partial_relation_depth_residual_taxonomy_rows.jsonl",
+    "request_taxonomy_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1/partial_relation_depth_residual_request_taxonomy_rows.jsonl",
+    "taxonomy_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1/partial_relation_depth_residual_taxonomy_summary.json"
+  },
+  "source_gate": {
+    "partial_relation_depth_residual_taxonomy_gate_passed": true,
+    "expected_taxonomy_rows": 15,
+    "expected_request_taxonomy_rows": 6,
+    "expected_residual_failure_class_counts": {
+      "association_present_without_depth_improvement": 7,
+      "depth_signal_not_candidate_associated": 3,
+      "mask_projection_without_association_or_depth": 5
+    },
+    "expected_request_residual_status_counts": {
+      "association_geometry_underlink": 2,
+      "association_present_but_depth_not_improved": 1,
+      "repeated_object_relation_anchor_ambiguity": 3
+    },
+    "expected_rows_with_inside_mask": 15,
+    "expected_rows_with_zero_completion_association": 8,
+    "expected_rows_with_completion_association": 7,
+    "expected_rows_with_completion_depth_consistent": 10,
+    "expected_dominant_scene_query": "bxsVRursffK/plant",
+    "minimum_dominant_scene_query_rows": 12,
+    "max_action_evidence_forbidden_key_count": 0,
+    "max_terminal_commit_rows": 0,
+    "requires_uses_gt_for_action": false,
+    "requires_uses_gt_for_analysis": false
+  },
+  "design_scope": {
+    "target_branch": "partial_relation_depth_true_goal",
+    "input_level": "request-level residual taxonomy rows",
+    "output_level": "nonterminal branch route rows",
+    "allowed_action_inputs": [
+      "request_residual_status",
+      "residual_failure_class_counts",
+      "residual_failure_tag_counts",
+      "rows_with_inside_mask",
+      "rows_with_completion_association",
+      "rows_with_zero_completion_association",
+      "rows_with_completion_depth_consistent",
+      "scene_key",
+      "query",
+      "expanded_retrieval_request_id"
+    ],
+    "forbidden_action_inputs": [
+      "evaluation_correctness",
+      "success_label",
+      "wrong_goal_label",
+      "gt_target_object_id",
+      "gt_goal_position",
+      "posthoc_correct_candidate_id"
+    ]
+  },
+  "branch_mapping": {
+    "association_geometry_underlink": {
+      "expected_request_rows": 2,
+      "branch_action": "route_to_association_geometry_repair_branch",
+      "branch_reason": "Mask projection is available, but the completion view has zero candidate association and no depth-consistent completion signal.",
+      "allowed_next_evidence": [
+        "candidate_association_geometry_repair",
+        "projection_anchor_or_depth_agreement_diagnostic",
+        "defer_if_association_geometry_remains_unrepaired"
+      ],
+      "blocked_shortcuts": [
+        "commit_by_inside_mask_presence",
+        "reject_partial_relation_depth_as_invalid",
+        "relax_depth_threshold_after_label_join"
+      ]
+    },
+    "association_present_but_depth_not_improved": {
+      "expected_request_rows": 1,
+      "branch_action": "route_to_depth_stagnation_branch",
+      "branch_reason": "Candidate association and depth-consistent signal are present, but the relation-depth evidence does not improve enough to establish ObjectNav goal validity.",
+      "allowed_next_evidence": [
+        "depth_stagnation_recheck",
+        "independent_candidate_specific_support",
+        "defer_if_depth_stagnation_persists"
+      ],
+      "blocked_shortcuts": [
+        "commit_by_candidate_association",
+        "commit_by_depth_consistency",
+        "threshold_tuning_from_evaluation_labels"
+      ]
+    },
+    "repeated_object_relation_anchor_ambiguity": {
+      "expected_request_rows": 3,
+      "branch_action": "route_to_repeated_object_relation_anchor_ambiguity_branch",
+      "branch_reason": "Dominant repeated-object slice has mixed association/depth evidence across relation-anchor directions, so the blocker is instance/anchor ambiguity rather than missing observation.",
+      "allowed_next_evidence": [
+        "relation_anchor_disambiguation",
+        "repeated_object_instance_arbitration",
+        "defer_if_anchor_ambiguity_remains"
+      ],
+      "blocked_shortcuts": [
+        "commit_by_any_resolved_relation_depth_row",
+        "commit_by_dominant_scene_query_pattern",
+        "use_gt_anchor_identity_for_action"
+      ]
+    }
+  },
+  "branch_handling_gate": {
+    "all_request_rows_must_be_routed": true,
+    "all_known_request_statuses_must_have_branch_mapping": true,
+    "unknown_request_status_action": "fail_closed_defer_unmapped_partial_relation_depth_status",
+    "terminal_commits_allowed": false,
+    "threshold_tuning_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "required_future_outputs": {
+    "branch_rows": "partial_relation_depth_branch_rows.jsonl",
+    "request_branch_rows": "partial_relation_depth_branch_request_rows.jsonl",
+    "summary": "partial_relation_depth_branch_handling_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "runtime/h001_runtime/route_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling.py",
+    "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1",
+    "verification_command": "python -m h001_runtime.route_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling"
+  },
+  "interpretation_rule": {
+    "fact": "The source taxonomy is nonterminal and contains no evaluation label join.",
+    "agent_inference": "Residual partial relation-depth rows should be routed into association geometry repair, depth stagnation, or repeated-object relation-anchor ambiguity before any terminal utility rule is considered.",
+    "paper_claim_allowed": false
+  }
+}

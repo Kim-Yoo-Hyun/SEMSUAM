@@ -24,6 +24,7 @@ EXPECTED_POLICY=${EXPECTED_POLICY:-ExpandedRetrievalDetectorObservation}
 MAX_HEADINGS_PER_FRAME=${MAX_HEADINGS_PER_FRAME:-0}
 MAX_DETECTOR_BOXES_PER_HEADING=${MAX_DETECTOR_BOXES_PER_HEADING:-3}
 MAX_MASKS_PER_HEADING=${MAX_MASKS_PER_HEADING:-3}
+MAX_CANDIDATES_PER_FRAME=${MAX_CANDIDATES_PER_FRAME:-1}
 CANDIDATE_POINT_FIELD=${CANDIDATE_POINT_FIELD:-grounded_position}
 PROJECTION_ANCHOR_HEIGHT_OFFSETS_M=${PROJECTION_ANCHOR_HEIGHT_OFFSETS_M:-0.0,0.4,0.8,1.2,1.6}
 QUERY_TEMPLATE=${QUERY_TEMPLATE:-"{query}"}
@@ -76,6 +77,7 @@ payload = {
     "max_frames": int("${MAX_FRAMES}"),
     "expected_frame_rows": int("${EXPECTED_FRAME_ROWS}"),
     "expected_policy": "${EXPECTED_POLICY}",
+    "max_candidates_per_frame": int("${MAX_CANDIDATES_PER_FRAME}"),
     "candidate_point_field": "${CANDIDATE_POINT_FIELD}",
     "projection_anchor_height_offsets_m": "${PROJECTION_ANCHOR_HEIGHT_OFFSETS_M}",
     "query_template": "${QUERY_TEMPLATE}",
@@ -111,6 +113,8 @@ echo "out=${OUT}"
 echo "detector_out=${DETECTOR_OUT}"
 echo "log=${LOG}"
 echo "expected_policy=${EXPECTED_POLICY}"
+echo "max_candidates_per_frame=${MAX_CANDIDATES_PER_FRAME}"
+echo "association_depth_tolerance_m=${ASSOCIATION_DEPTH_TOLERANCE_M}"
 echo "expected_files=${DETECTOR_OUT}/summary.json ${DETECTOR_OUT}/detector_candidate_associations.jsonl ${OUT}/expanded_retrieval_detector_associations.jsonl ${OUT}/expanded_retrieval_detector_substrate_summary.json"
 echo "verification_command=cat ${STATUS} && cat ${OUT}/expanded_retrieval_detector_substrate_summary.json"
 
@@ -179,7 +183,7 @@ docker run --rm ${GPU_FLAG} \
     --max-detector-boxes-per-heading "${MAX_DETECTOR_BOXES_PER_HEADING}" \
     --max-masks-per-heading "${MAX_MASKS_PER_HEADING}" \
     --semantic-tie-band 0.01 \
-    --max-candidates-per-frame 1 \
+    --max-candidates-per-frame "${MAX_CANDIDATES_PER_FRAME}" \
     --candidate-point-field "${CANDIDATE_POINT_FIELD}" \
     --projection-anchor-height-offsets-m "${PROJECTION_ANCHOR_HEIGHT_OFFSETS_M}" \
     --box-threshold "${BOX_THRESHOLD}" \
@@ -214,12 +218,14 @@ payload = {
     "candidate_association_rate": detector.get("rows_with_candidate_association_rate"),
     "rows_with_candidate_association": detector.get("rows_with_candidate_association"),
     "associated_candidate_heading_count": detector.get("associated_candidate_heading_count"),
+    "max_candidates_per_frame": int("${MAX_CANDIDATES_PER_FRAME}"),
     "candidate_point_field": detector.get("candidate_point_field"),
     "projection_anchor_height_offsets_m": detector.get("projection_anchor_height_offsets_m"),
     "projection_anchor_policy_counts": detector.get("projection_anchor_policy_counts"),
     "projection_anchor_status_counts": detector.get("projection_anchor_status_counts"),
     "projection_anchor_selected_offset_counts": detector.get("projection_anchor_selected_offset_counts"),
     "query_template": detector.get("query_template"),
+    "association_depth_tolerance_m": float("${ASSOCIATION_DEPTH_TOLERANCE_M}"),
     "uses_gt_for_action": bool(detector.get("uses_gt_for_action")),
     "uses_gt_for_analysis": False,
     "paper_claim_allowed": False,

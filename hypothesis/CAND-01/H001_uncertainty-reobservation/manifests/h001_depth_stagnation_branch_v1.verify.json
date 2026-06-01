@@ -1,0 +1,97 @@
+{
+  "schema_version": "h001.verify.depth_stagnation_branch.v1",
+  "date_checked": "2026-06-01",
+  "status": "docker_verified",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_depth_stagnation_branch_v1.json",
+  "script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/route_depth_stagnation_branch.py",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "source_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1",
+  "output": "local_dataset/runs/h001_depth_stagnation_branch_v1",
+  "compile_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/route_depth_stagnation_branch.py",
+  "run_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.route_depth_stagnation_branch",
+  "output_files": [
+    "local_dataset/runs/h001_depth_stagnation_branch_v1/depth_stagnation_branch_rows.jsonl",
+    "local_dataset/runs/h001_depth_stagnation_branch_v1/depth_stagnation_branch_request_rows.jsonl",
+    "local_dataset/runs/h001_depth_stagnation_branch_v1/depth_stagnation_branch_summary.json"
+  ],
+  "checked_source_summary": {
+    "partial_relation_depth_branch_handling_gate_passed": true,
+    "source_branch_rows": 15,
+    "source_request_branch_rows": 6,
+    "target_branch_action": "route_to_depth_stagnation_branch",
+    "target_request_rows": 1,
+    "target_branch_rows": 1,
+    "request_ids": [
+      "rival_identity:22"
+    ],
+    "scene_query": [
+      "4ok3usBNeis/sofa"
+    ],
+    "candidate_ids": [
+      "vlmaps:export:sofa:spatial_nms:2"
+    ]
+  },
+  "checked_summary": {
+    "depth_stagnation_branch_gate_passed": true,
+    "branch_rows": 1,
+    "request_rows": 1,
+    "residual_failure_class_counts": {
+      "association_present_without_depth_improvement": 1
+    },
+    "direction_counts": {
+      "target_to_relation_anchor": 1
+    },
+    "prior_counts": {
+      "candidate_association_count": 3,
+      "depth_consistent_count": 1,
+      "depth_mismatch_count": 7,
+      "inside_mask_count": 7
+    },
+    "completion_counts": {
+      "associated_depth_consistent_count": 1,
+      "associated_heading_count": 3,
+      "depth_consistent_count": 1,
+      "inside_mask_count": 4
+    },
+    "depth_consistency_delta": 0,
+    "association_delta": 0,
+    "rows_with_completion_association": 1,
+    "rows_with_zero_completion_association": 0,
+    "rows_with_completion_depth_consistent": 1,
+    "rows_with_inside_mask": 1,
+    "nonterminal_branch_action_counts": {
+      "request_depth_stagnation_audit": 1
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "checked_target_branch_row": {
+    "expanded_retrieval_request_id": "rival_identity:22",
+    "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:6:2:sofa",
+    "scene_key": "4ok3usBNeis",
+    "query": "sofa",
+    "candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+    "nonterminal_branch_action": "request_depth_stagnation_audit",
+    "depth_signal_role": "association_present_depth_stagnant",
+    "depth_consistency_improved": false,
+    "depth_consistency_delta": 0,
+    "association_delta": 0,
+    "terminal_commit": false,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "depth_stagnation_contract_gate_passed": true,
+  "depth_stagnation_branch_gate_passed": true,
+  "terminal_utility_validation_allowed": false,
+  "candidate_commit_allowed": false,
+  "candidate_rejection_allowed": false,
+  "first_eval_rerun_allowed": false,
+  "policy_scale_comparison_allowed": false,
+  "paper_claim_allowed": false,
+  "next_task": "define_terminal_utility_contract_only_after_validated_non_gt_branch_outcomes"
+}

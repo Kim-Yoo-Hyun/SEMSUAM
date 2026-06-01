@@ -1,0 +1,172 @@
+{
+  "schema_version": "h001.contract.expanded_retrieval_goal_validity_partial_relation_depth_evidence.v1",
+  "date_checked": "2026-06-01",
+  "status": "frozen_design_contract_before_implementation",
+  "contract_name": "expanded_retrieval_goal_validity_partial_relation_depth_evidence_v1",
+  "purpose": "Freeze the post-detector evidence analyzer contract for the partial_relation_depth_true_goal branch after input, planner, frame/projection, and detector/SAM2 substrate gates passed.",
+  "implementation_target": {
+    "analyzer": "runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_partial_relation_depth_evidence.py",
+    "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_evidence_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_required": true
+  },
+  "source": {
+    "observation_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1.json",
+    "input_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1/partial_relation_depth_input_summary.json",
+    "request_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1/partial_relation_depth_request_rows.jsonl",
+    "target_candidate_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1/partial_relation_depth_target_candidate_rows.jsonl",
+    "failed_evidence_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1/partial_relation_depth_failed_evidence_rows.jsonl",
+    "context_anchor_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1/partial_relation_depth_context_anchor_rows.jsonl",
+    "plan_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1/partial_relation_depth_observation_plan.jsonl",
+    "plan_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1/partial_relation_depth_observation_plan_summary.json",
+    "frame_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_frames_v1/summary.json",
+    "nonblank_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+    "projection_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_projection_v1/projection_anchor_smoke_summary.json",
+    "detector_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "detector_associations": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl"
+  },
+  "problem": {
+    "fact": "The partial relation-depth branch has renderable, detector-backed observation rows but no post-detector evidence interpretation yet.",
+    "source_evidence": {
+      "input_gate_passed": true,
+      "plan_gate_passed": true,
+      "projection_gate_passed": true,
+      "detector_substrate_gate_passed": true,
+      "request_rows": 6,
+      "target_candidate_rows": 12,
+      "failed_relation_depth_evidence_rows": 22,
+      "context_anchor_rows": 48,
+      "plan_rows": 48,
+      "plan_rows_per_target_candidate": 4,
+      "skipped_rows": 0,
+      "failed_evidence_rows_mapped": 22,
+      "failed_evidence_rows_unmapped": 0,
+      "frame_rows": 48,
+      "rendered_heading_count": 192,
+      "projection_rows": 48,
+      "projection_visible_rows": 48,
+      "projection_visible_rate": 1.0,
+      "detector_rows": 48,
+      "detector_box_rate": 1.0,
+      "sam2_mask_rate": 1.0,
+      "candidate_association_rate": 0.8125,
+      "rows_with_candidate_association": 39,
+      "associated_candidate_heading_count": 97,
+      "association_rows": 192,
+      "detector_box_rows": 230,
+      "detector_mask_rows": 230,
+      "projected_pixel_inside_mask_count": 133,
+      "action_evidence_forbidden_key_count": 0,
+      "uses_gt_for_action": false,
+      "paper_claim_allowed": false
+    },
+    "failure_mechanism": "Prior relation-depth evidence was partial or unresolved; detector visibility alone must not be treated as goal validity.",
+    "agent_inference": "The next analyzer should decide whether completion views resolve relation-depth evidence rows, while keeping commit/defer decisions out of scope."
+  },
+  "design_scope": {
+    "target_branch": "partial_relation_depth_true_goal",
+    "analyzer_name": "partial_relation_depth_detector_evidence_v1",
+    "purpose": "Aggregate detector/SAM2 evidence over the relation-depth completion views and report whether each prior partial/unresolved evidence row is resolved, still partial, or unresolved.",
+    "allowed_label_use": "Evaluation labels may be joined only after evidence rows, request summaries, and failure rows are written.",
+    "terminal_commit_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false,
+    "allowed_action_inputs": [
+      "partial relation-depth request rows",
+      "target candidate rows",
+      "failed relation-depth evidence rows",
+      "context anchor rows",
+      "planned completion viewpoints",
+      "detector/SAM2 boxes, masks, projection anchors, depth errors, and candidate associations",
+      "non-GT candidate and relation-anchor geometry"
+    ],
+    "forbidden_action_inputs": [
+      "evaluation_only_candidate_correct",
+      "evaluation_only_request_success",
+      "evaluation_only_failure_tag",
+      "correct_candidate_ids",
+      "valid_candidate_ids",
+      "GT object id",
+      "GT goal id",
+      "GT shortest path",
+      "SPL",
+      "wrong-goal labels",
+      "threshold tuning from joined labels"
+    ],
+    "blocked_shortcuts": [
+      "commit_if_detector_visible",
+      "commit_if_any_depth_match",
+      "reject_if_no_detector_association",
+      "resolve_relation_depth_with_visibility_only",
+      "reuse_previous_relation_depth_evidence_as_terminal_authority",
+      "threshold_tuning",
+      "first_eval_rerun",
+      "policy_scale_comparison",
+      "terminal_utility_contract"
+    ]
+  },
+  "analyzer_contract": {
+    "input_scope": "Every partial relation-depth planned observation row and every prior failed relation-depth evidence row from the frozen branch.",
+    "evidence_row_rule": "Write one analyzer row per planned completion viewpoint and aggregate by failed_evidence_index when present.",
+    "failed_evidence_mapping_rule": "Every prior failed relation-depth evidence row must be mapped to at least one detector-backed completion row or an explicit non-GT missing-detector row.",
+    "resolution_rule": {
+      "resolved": "candidate-associated detector/SAM2 support is present for a failed direction and depth consistency is stronger than the prior partial/unresolved row.",
+      "partial": "detector/SAM2 support is present but depth consistency remains mixed or direction coverage is incomplete.",
+      "unresolved": "projection is visible but candidate association is absent or no usable mask/depth evidence exists."
+    },
+    "request_summary_rule": "Aggregate target candidate evidence by request without selecting a terminal goal.",
+    "blocked": [
+      "evaluation-label join before evidence rows",
+      "candidate-specific threshold tuning",
+      "terminal candidate selection",
+      "dropping unassociated detector rows because they are later evaluation-negative"
+    ]
+  },
+  "minimum_evidence_gate": {
+    "input_gate_passed": true,
+    "plan_gate_passed": true,
+    "projection_gate_passed": true,
+    "detector_substrate_gate_passed": true,
+    "expected_request_rows": 6,
+    "expected_target_candidate_rows": 12,
+    "expected_failed_relation_depth_evidence_rows": 22,
+    "expected_plan_rows": 48,
+    "expected_detector_rows": 48,
+    "expected_detector_association_rows": 192,
+    "minimum_rows_with_candidate_association": 39,
+    "minimum_candidate_association_rate": 0.80,
+    "minimum_associated_candidate_heading_count": 90,
+    "minimum_projected_pixel_inside_mask_count": 120,
+    "failed_evidence_rows_mapped_or_explicitly_unresolved": true,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "uses_gt_for_action": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "required_outputs": {
+    "evidence_rows": "partial_relation_depth_detector_evidence_rows.jsonl",
+    "failed_evidence_summary_rows": "partial_relation_depth_failed_evidence_summary_rows.jsonl",
+    "request_summary_rows": "partial_relation_depth_request_summary_rows.jsonl",
+    "unresolved_rows": "partial_relation_depth_unresolved_rows.jsonl",
+    "summary": "partial_relation_depth_detector_evidence_summary.json"
+  },
+  "required_simpler_alternatives_to_report_later": [
+    "defer_all_partial_relation_depth_rows",
+    "resolve_if_any_detector_box_visible",
+    "resolve_if_any_candidate_association",
+    "resolve_by_depth_consistent_count_only",
+    "resolve_by_best_box_score_only",
+    "relation_anchor_to_target_only",
+    "target_to_relation_anchor_only"
+  ],
+  "next_step_if_passed": "implement_partial_relation_depth_post_detector_evidence_analyzer",
+  "next_step_if_failed": "diagnose detector association coverage before analyzer implementation.",
+  "interpretation_rule": {
+    "fact": "The contract freezes a nonterminal evidence analyzer after detector/SAM2 substrate passed.",
+    "agent_inference": "This branch tests whether partial semantic relation-depth uncertainty can be converted into completion evidence before rejecting plausible true-goal candidates.",
+    "paper_claim": "No paper claim is allowed from this contract alone.",
+    "user_decision_needed": "None for this contract."
+  },
+  "paper_claim_allowed": false
+}

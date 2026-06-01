@@ -1,0 +1,295 @@
+{
+  "schema_version": "h001.contract.repeated_object_relation_anchor_ambiguity.v1",
+  "date_checked": "2026-06-01",
+  "status": "frozen_design_contract_before_implementation",
+  "contract_name": "repeated_object_relation_anchor_ambiguity_v1",
+  "purpose": "Freeze the nonterminal branch contract for repeated-object relation-anchor ambiguity in the dominant `bxsVRursffK/plant` partial relation-depth residual slice, without allowing ObjectNav goal commit or candidate rejection.",
+  "source": {
+    "branch_handling_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1.json",
+    "branch_handling_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1.verify.json",
+    "branch_handling_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1",
+    "branch_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_rows.jsonl",
+    "request_branch_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_request_rows.jsonl",
+    "branch_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_handling_summary.json",
+    "residual_taxonomy_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1",
+    "request_taxonomy_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1/partial_relation_depth_residual_request_taxonomy_rows.jsonl",
+    "taxonomy_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1/partial_relation_depth_residual_taxonomy_summary.json"
+  },
+  "source_gate": {
+    "partial_relation_depth_branch_handling_gate_passed": true,
+    "expected_source_branch_rows": 15,
+    "expected_source_request_branch_rows": 6,
+    "target_branch_action": "route_to_repeated_object_relation_anchor_ambiguity_branch",
+    "expected_target_request_rows": 3,
+    "expected_target_branch_rows": 12,
+    "expected_request_residual_status": "repeated_object_relation_anchor_ambiguity",
+    "expected_recommended_next_action": "freeze_repeated_object_relation_anchor_failure_branch",
+    "expected_scene_key": "bxsVRursffK",
+    "expected_query": "plant",
+    "expected_request_ids": [
+      "rival_identity:25",
+      "rival_identity:27",
+      "rival_identity:29"
+    ],
+    "expected_episode_keys": [
+      "HM3D ObjectNav v2:val:bxsVRursffK:11:1:plant",
+      "HM3D ObjectNav v2:val:bxsVRursffK:18:4:plant",
+      "HM3D ObjectNav v2:val:bxsVRursffK:4:5:plant"
+    ],
+    "expected_candidate_ids": [
+      "vlmaps:export:plant:spatial_nms:0",
+      "vlmaps:export:plant:spatial_nms:2",
+      "vlmaps:export:plant:spatial_nms:4"
+    ],
+    "expected_residual_failure_class_counts": {
+      "association_present_without_depth_improvement": 6,
+      "depth_signal_not_candidate_associated": 3,
+      "mask_projection_without_association_or_depth": 3
+    },
+    "expected_direction_counts": {
+      "orthogonal_relation_axis": 3,
+      "relation_anchor_to_target": 9
+    },
+    "expected_rows_with_completion_association": 6,
+    "expected_rows_with_zero_completion_association": 6,
+    "expected_rows_with_completion_depth_consistent": 9,
+    "expected_rows_with_inside_mask": 12,
+    "expected_completion_associated_heading_count_sum": 18,
+    "expected_completion_depth_consistent_count_sum": 12,
+    "expected_completion_inside_mask_count_sum": 42,
+    "expected_per_request_pattern": {
+      "rows": 4,
+      "candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:2",
+        "vlmaps:export:plant:spatial_nms:4"
+      ],
+      "residual_failure_class_counts": {
+        "association_present_without_depth_improvement": 2,
+        "depth_signal_not_candidate_associated": 1,
+        "mask_projection_without_association_or_depth": 1
+      },
+      "direction_counts": {
+        "orthogonal_relation_axis": 1,
+        "relation_anchor_to_target": 3
+      },
+      "completion_associated_heading_counts": [
+        3,
+        3,
+        0,
+        0
+      ],
+      "completion_depth_consistent_counts": [
+        2,
+        1,
+        0,
+        1
+      ],
+      "completion_inside_mask_counts": [
+        4,
+        3,
+        4,
+        3
+      ]
+    },
+    "max_action_evidence_forbidden_key_count": 0,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "requires_uses_gt_for_action": false,
+    "requires_uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "candidate_pattern": {
+    "vlmaps:export:plant:spatial_nms:0": {
+      "rows": 3,
+      "residual_failure_class_counts": {
+        "association_present_without_depth_improvement": 3
+      },
+      "direction_counts": {
+        "relation_anchor_to_target": 3
+      },
+      "completion_associated_heading_counts": [
+        3,
+        3,
+        3
+      ],
+      "completion_depth_consistent_counts": [
+        2,
+        2,
+        2
+      ],
+      "completion_inside_mask_counts": [
+        4,
+        4,
+        4
+      ]
+    },
+    "vlmaps:export:plant:spatial_nms:2": {
+      "rows": 6,
+      "residual_failure_class_counts": {
+        "association_present_without_depth_improvement": 3,
+        "mask_projection_without_association_or_depth": 3
+      },
+      "direction_counts": {
+        "orthogonal_relation_axis": 3,
+        "relation_anchor_to_target": 3
+      },
+      "completion_associated_heading_counts": [
+        3,
+        0,
+        3,
+        0,
+        3,
+        0
+      ],
+      "completion_depth_consistent_counts": [
+        1,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "completion_inside_mask_counts": [
+        3,
+        4,
+        3,
+        4,
+        3,
+        4
+      ]
+    },
+    "vlmaps:export:plant:spatial_nms:4": {
+      "rows": 3,
+      "residual_failure_class_counts": {
+        "depth_signal_not_candidate_associated": 3
+      },
+      "direction_counts": {
+        "relation_anchor_to_target": 3
+      },
+      "completion_associated_heading_counts": [
+        0,
+        0,
+        0
+      ],
+      "completion_depth_consistent_counts": [
+        1,
+        1,
+        1
+      ],
+      "completion_inside_mask_counts": [
+        3,
+        3,
+        3
+      ]
+    }
+  },
+  "design_scope": {
+    "input_level": "repeated-object branch rows and request-level residual taxonomy rows from partial relation-depth branch handling",
+    "output_level": "nonterminal repeated-object relation-anchor ambiguity branch rows",
+    "target_failure_mechanism": "the same repeated-object scene/query/request pattern contains mixed association-positive, association-zero, depth-consistent, and mask-only rows across relation-anchor directions and candidate ids, so no single positive detector/depth row can be treated as ObjectNav goal validity",
+    "allowed_action_inputs": [
+      "branch_action",
+      "request_residual_status",
+      "scene_key",
+      "query",
+      "episode_key",
+      "expanded_retrieval_request_id",
+      "candidate_id",
+      "prior_standoff_direction_source",
+      "residual_failure_class",
+      "residual_failure_tags",
+      "completion_associated_heading_count",
+      "completion_depth_consistent_count",
+      "completion_inside_mask_count",
+      "request-level residual class counts",
+      "request-level direction counts"
+    ],
+    "forbidden_action_inputs": [
+      "evaluation_correctness",
+      "success_label",
+      "wrong_goal_label",
+      "gt_target_object_id",
+      "gt_goal_position",
+      "posthoc_correct_candidate_id",
+      "oracle relation-anchor identity",
+      "oracle instance identity",
+      "label_tuned_candidate_selection",
+      "category_specific_threshold_from_labels"
+    ]
+  },
+  "branch_contract": {
+    "branch_name": "repeated_object_relation_anchor_ambiguity_v1",
+    "target_route": "route_to_repeated_object_relation_anchor_ambiguity_branch",
+    "required_branch_rows": 12,
+    "required_request_rows": 3,
+    "required_branch_actions": [
+      "request_relation_anchor_candidate_consistency_audit",
+      "request_repeated_object_instance_arbitration_plan",
+      "request_anchor_direction_cross_evidence_replay",
+      "defer_if_anchor_ambiguity_persists"
+    ],
+    "required_comparisons": [
+      "association_positive_rows_vs_association_zero_rows_in_same_request",
+      "depth_consistent_signal_present_without_candidate_association",
+      "orthogonal_relation_axis_vs_relation_anchor_to_target_for_same_candidate",
+      "candidate_id_pattern_across_repeated_plant_requests"
+    ],
+    "blocked_shortcuts": [
+      "commit_by_any_positive_candidate_association",
+      "commit_by_depth_consistent_signal",
+      "commit_by_inside_mask_presence",
+      "commit_by_dominant_bxsVRursffK_plant_pattern",
+      "reject_association_zero_candidate_as_invalid",
+      "choose_anchor_or_instance_from_evaluation_label",
+      "category_specific_threshold_tuning"
+    ],
+    "expected_nonterminal_branch_action": "request_repeated_object_relation_anchor_ambiguity_audit",
+    "terminal_arbitration_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "threshold_tuning_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "repeated_object_relation_anchor_ambiguity_gate": {
+    "source_branch_handling_gate_must_pass": true,
+    "all_target_requests_must_be_accounted": true,
+    "all_target_branch_rows_must_be_accounted": true,
+    "dominant_scene_query_must_be_preserved": true,
+    "mixed_residual_failure_classes_must_be_preserved": true,
+    "mixed_direction_pattern_must_be_preserved": true,
+    "mixed_association_and_depth_pattern_must_be_preserved": true,
+    "branch_output_must_be_label_free": true,
+    "terminal_commits_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "required_future_outputs": {
+    "branch_rows": "repeated_object_relation_anchor_ambiguity_rows.jsonl",
+    "request_rows": "repeated_object_relation_anchor_ambiguity_request_rows.jsonl",
+    "summary": "repeated_object_relation_anchor_ambiguity_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "runtime/h001_runtime/route_repeated_object_relation_anchor_ambiguity.py",
+    "output": "local_dataset/runs/h001_repeated_object_relation_anchor_ambiguity_v1",
+    "verification_command": "python -m h001_runtime.route_repeated_object_relation_anchor_ambiguity"
+  },
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "depth_stagnation_branch_contract",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "The target branch contains three `bxsVRursffK/plant` requests with the same four-row residual pattern: two association-positive rows, two association-zero rows, three depth-consistent rows, and one orthogonal-relation-axis row per request.",
+    "agent_inference": "Repeated-object relation-anchor ambiguity should be handled as a label-free evidence-audit and instance/anchor arbitration branch before any terminal utility, not as a direct commit or reject rule.",
+    "paper_claim_allowed": false
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "schema_version": "h001.verify.repeated_object_relation_anchor_consistency_detector_substrate.v1",
+  "date_checked": "2026-06-01T22:15:41+09:00",
+  "ok": true,
+  "status": "implemented_and_docker_verified",
+  "wrapper": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/repeated_object_relation_anchor_consistency_detector_substrate.sh",
+  "base_wrapper": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_detector_substrate.sh",
+  "source_plan_output": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1",
+  "source_frame_output": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_frames_v1",
+  "source_projection_output": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_projection_v1",
+  "detector_output": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1",
+  "log": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/repeated-object-relation-anchor-consistency-detector-substrate-20260601-221452.log",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "device": "cuda",
+  "command": "TS=20260601-221452 bash hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/repeated_object_relation_anchor_consistency_detector_substrate.sh",
+  "job_status": {
+    "status": "completed",
+    "stage": "completed",
+    "expected_frame_rows": 27,
+    "expected_policy": "RepeatedObjectRelationAnchorConsistencyEvidence",
+    "max_candidates_per_frame": 2,
+    "candidate_point_field": "grounded_position"
+  },
+  "source_frame_projection_metrics": {
+    "frame_rows": 27,
+    "rendered_heading_count": 180,
+    "nonblank_rows": 27,
+    "nonblank_heading_count": 180,
+    "projection_rows": 27,
+    "projection_visible_rows": 27,
+    "projection_visible_rate": 1.0,
+    "missing_candidate_rows": 0,
+    "explicit_candidate_id_rows": 27,
+    "view_role_counts": {
+      "candidate_own_view": 9,
+      "orthogonal_axis_challenge_view": 9,
+      "relation_anchor_context_view": 9
+    },
+    "uses_gt_for_action": false
+  },
+  "detector_metrics": {
+    "frame_rows": 27,
+    "detector_rows": 27,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.8888888888888888,
+    "rows_with_candidate_association": 24,
+    "associated_candidate_heading_count": 69,
+    "detector_box_rows": 135,
+    "detector_mask_rows": 135,
+    "association_rows": 360,
+    "selected_candidate_count_rows": {
+      "2": 27
+    },
+    "candidate_selection_counts": {
+      "explicit_candidate_ids": 27
+    },
+    "view_role_has_association_counts": {
+      "candidate_own_view_false": 3,
+      "candidate_own_view_true": 6,
+      "orthogonal_axis_challenge_view_true": 9,
+      "relation_anchor_context_view_true": 9
+    },
+    "projected_pixel_inside_mask_count": 129,
+    "projection_anchor_status_counts": {
+      "behind_camera": 798,
+      "out_of_fov": 786,
+      "visible": 936
+    },
+    "projection_anchor_selected_offset_counts": {
+      "0.0": 249,
+      "0.4": 6,
+      "1.2": 3,
+      "1.6": 12,
+      "2.0": 24,
+      "2.4": 66
+    },
+    "candidate_point_field": "grounded_position",
+    "max_candidates_per_frame": 2,
+    "association_depth_tolerance_m": 1.0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false,
+    "gate": {
+      "detector_rows_match": true,
+      "detector_box_rate_pass": true,
+      "sam2_mask_rate_pass": true,
+      "candidate_association_rate_pass": true,
+      "no_gt_action_pass": true,
+      "passes_detector_substrate_gate": true
+    }
+  },
+  "implementation_notes": [
+    "The common detector wrapper now accepts MAX_CANDIDATES_PER_FRAME while preserving the previous default of 1 for existing jobs.",
+    "This repeated-object wrapper sets MAX_CANDIDATES_PER_FRAME=2 so the explicit target/context candidate pair in each frame is scored by the detector association stage.",
+    "Detector rows remain frame-level rows; candidate association rows expand to candidate-heading rows."
+  ],
+  "verification_commands": [
+    "bash -n hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/repeated_object_relation_anchor_consistency_detector_substrate.sh",
+    "bash -n hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_detector_substrate.sh",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/detect_postview_groundingdino_sam2.py",
+    "jq '{schema_version, frame_rows, detector_rows, max_candidates_per_frame, detector_box_rate, sam2_mask_rate, candidate_association_rate, rows_with_candidate_association, associated_candidate_heading_count, candidate_point_field, uses_gt_for_action, paper_claim_allowed, gate}' local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "wc -l local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1/detector_v3c/detector_boxes.jsonl local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1/detector_v3c/detector_masks.jsonl local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1/detector_v3c/detector_candidate_associations.jsonl local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1/expanded_retrieval_detector_frame_summary.jsonl",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1.verify.json local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json"
+  ],
+  "next_task": "freeze_repeated_object_relation_anchor_consistency_post_detector_evidence_analyzer_contract",
+  "interpretation": {
+    "fact": "The repeated-object relation-anchor consistency detector/SAM2 substrate passed with 27 detector rows, detector/SAM2 rates 1.0/1.0, candidate association rate 0.8888888888888888, and 360 candidate-heading association rows.",
+    "agent_inference": "The branch now has enough detector substrate to define a post-detector consistency evidence analyzer, but this still cannot support terminal ObjectNav utility by itself.",
+    "paper_claim": "No paper claim is allowed from this substrate alone."
+  }
+}

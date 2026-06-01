@@ -1,0 +1,74 @@
+{
+  "command": "docker run --rm --user \"$(id -u):$(id -g)\" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.analyze_expanded_retrieval_goal_validity_unique_support_rival_region_evidence",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_evidence_v1.json",
+  "date_checked": "2026-06-01",
+  "diagnostic_conclusion": {
+    "reason": "second-pass evidence still shows cross-region overlap for most ambiguous pairs",
+    "recommended_next_action": "inspect_cross_region_overlap_before_terminal_arbitration",
+    "terminal_policy_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "unique_support_rival_region_signal_ready": true
+  },
+  "gate": {
+    "action_evidence_forbidden_key_gate_passed": true,
+    "all_pairs_have_three_roles_passed": true,
+    "expected_pair_evidence_rows_passed": true,
+    "expected_request_evidence_rows_passed": true,
+    "expected_view_evidence_rows_passed": true,
+    "pair_status_accounting_passed": true,
+    "paper_claim_allowed": false,
+    "paper_claim_allowed_passed": true,
+    "request_status_accounting_passed": true,
+    "source_detector_substrate_gate_passed": true,
+    "terminal_commit_rows_passed": true,
+    "terminal_utility_validation_allowed": false,
+    "unique_support_rival_region_evidence_gate_passed": true,
+    "uses_gt_for_action": false,
+    "uses_gt_for_action_passed": true
+  },
+  "implementation": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_unique_support_rival_region_evidence.py",
+  "metrics": {
+    "action_evidence_forbidden_key_count": 0,
+    "associated_rows_by_role": {
+      "focus_from_rival_own_view": 5,
+      "rival_from_common_pair_view": 6,
+      "rival_from_focus_own_view": 5
+    },
+    "pair_evidence_rows": 10,
+    "paper_claim_allowed": false,
+    "request_evidence_rows": 4,
+    "request_nonterminal_action_counts": {
+      "defer_goal_region_unresolved_cross_region_overlap": 3,
+      "request_goal_region_arbitration_after_shared_common_evidence": 1
+    },
+    "rival_region_pair_status_counts": {
+      "cross_region_overlap_pair": 7,
+      "second_pass_rival_region_contrastive_pair": 1,
+      "shared_common_view_rival_support_pair": 2
+    },
+    "source_association_depth_tolerance_m": 2.0,
+    "source_candidate_association_rate": 0.5333333333333333,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "view_evidence_rows": 30
+  },
+  "next_task": "inspect cross-region overlap evidence before any terminal arbitration contract",
+  "notes": [
+    "This analyzer passed the nonterminal evidence gate and emitted zero terminal commits.",
+    "Most second-pass ambiguous pairs remain cross-region overlap pairs; terminal utility remains blocked.",
+    "Only one request has no cross-region overlap but still has shared common-view rival support, so a direct contrastive commit rule is not justified."
+  ],
+  "ok": true,
+  "output": {
+    "pair_evidence_rows": "unique_support_rival_region_pair_evidence_rows.jsonl",
+    "request_evidence_rows": "unique_support_rival_region_request_evidence_rows.jsonl",
+    "root": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_evidence_v1",
+    "summary": "unique_support_rival_region_evidence_summary.json",
+    "view_evidence_rows": "unique_support_rival_region_view_evidence_rows.jsonl"
+  },
+  "schema_version": "h001.verify.unique_support_rival_region_evidence.v1",
+  "source_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_depth2_v1.verify.json",
+  "status": "completed_post_detector_evidence_analyzer_passed_nonterminal_gate",
+  "verification_command": "jq '{gate:.gate.unique_support_rival_region_evidence_gate_passed, rows:{view:.view_evidence_rows,pair:.pair_evidence_rows,request:.request_evidence_rows}, status:.rival_region_pair_status_counts, actions:.request_nonterminal_action_counts, terminal:.terminal_commit_rows, forbidden:.action_evidence_forbidden_key_count, gt:.uses_gt_for_action, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_evidence_v1/unique_support_rival_region_evidence_summary.json",
+  "working_directory": "/home/yoohyun/research3"
+}

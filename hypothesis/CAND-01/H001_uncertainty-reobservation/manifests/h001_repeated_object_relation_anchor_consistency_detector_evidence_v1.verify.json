@@ -1,0 +1,143 @@
+{
+  "schema_version": "h001.verify.repeated_object_relation_anchor_consistency_detector_evidence.v1",
+  "date_checked": "2026-06-01",
+  "ok": true,
+  "status": "implemented_and_docker_verified",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1.json",
+  "source_detector_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1.verify.json",
+  "source_outputs": {
+    "planner": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_v1",
+    "projection": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_projection_v1",
+    "detector": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1"
+  },
+  "source_gate": {
+    "planner_gate_passed": true,
+    "projection_gate_passed": true,
+    "detector_substrate_gate_passed": true,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "verified_source_metrics": {
+    "request_rows": 3,
+    "candidate_rows": 9,
+    "candidate_anchor_pair_rows": 27,
+    "observation_rows": 27,
+    "frame_rows": 27,
+    "detector_rows": 27,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.8888888888888888,
+    "rows_with_candidate_association": 24,
+    "associated_candidate_heading_count": 69,
+    "detector_box_rows": 135,
+    "detector_mask_rows": 135,
+    "association_rows": 360,
+    "selected_candidate_count_rows": {
+      "2": 27
+    },
+    "candidate_selection_counts": {
+      "explicit_candidate_ids": 27
+    },
+    "view_role_counts": {
+      "candidate_own_view": 9,
+      "orthogonal_axis_challenge_view": 9,
+      "relation_anchor_context_view": 9
+    },
+    "frame_has_candidate_association_by_role": {
+      "candidate_own_view": "6/9",
+      "orthogonal_axis_challenge_view": "9/9",
+      "relation_anchor_context_view": "9/9"
+    },
+    "target_association_frames_by_role": {
+      "candidate_own_view": "6/9",
+      "orthogonal_axis_challenge_view": "9/9",
+      "relation_anchor_context_view": "9/9"
+    },
+    "context_association_frames_by_role": {
+      "candidate_own_view": "3/9",
+      "orthogonal_axis_challenge_view": "0/9",
+      "relation_anchor_context_view": "0/9"
+    }
+  },
+  "contract_gates": {
+    "expected_view_evidence_rows": 27,
+    "expected_candidate_context_pair_rows": 27,
+    "expected_candidate_consistency_rows": 9,
+    "expected_request_consistency_rows": 3,
+    "minimum_detector_association_rows": 360,
+    "minimum_candidate_association_rate": 0.8,
+    "minimum_rows_with_candidate_association": 24,
+    "minimum_associated_candidate_heading_count": 69,
+    "all_views_have_two_selected_candidates": true,
+    "all_requests_have_three_required_view_roles_per_candidate": true,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "implementation": {
+    "analyzer": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_repeated_object_relation_anchor_consistency_evidence.py",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "output": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1",
+    "docker_py_compile_passed": true,
+    "docker_run_passed": true
+  },
+  "analyzer_output_metrics": {
+    "relation_anchor_consistency_detector_evidence_gate_passed": true,
+    "view_evidence_rows": 27,
+    "candidate_context_pair_rows": 27,
+    "candidate_consistency_rows": 9,
+    "request_consistency_rows": 3,
+    "detector_association_rows": 360,
+    "target_association_frames_by_role": {
+      "candidate_own_view": "6/9",
+      "orthogonal_axis_challenge_view": "9/9",
+      "relation_anchor_context_view": "9/9"
+    },
+    "context_association_frames_by_role": {
+      "candidate_own_view": "3/9",
+      "orthogonal_axis_challenge_view": "0/9",
+      "relation_anchor_context_view": "0/9"
+    },
+    "candidate_consistency_status_counts": {
+      "ambiguous_repeated_object_candidate": 6,
+      "insufficient_candidate_evidence": 3
+    },
+    "candidate_recommended_action_counts": {
+      "request_candidate_own_view_recovery": 3,
+      "request_repeated_object_ambiguity_followup": 6
+    },
+    "request_recommended_action_counts": {
+      "request_additional_repeated_object_disambiguation": 3
+    },
+    "stable_candidate_rows": 0,
+    "ambiguous_candidate_rows": 6,
+    "insufficient_candidate_rows": 3,
+    "contradicted_candidate_rows": 0,
+    "promotable_branch_outcome_rows": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false,
+    "next_allowed_task": "diagnose_repeated_object_relation_anchor_consistency_residual"
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1.json hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1.verify.json",
+    "jq '{gate:.gate.passes_detector_substrate_gate, rows:.detector_rows, box:.detector_box_rate, sam2:.sam2_mask_rate, assoc:.candidate_association_rate, associated:.rows_with_candidate_association, heading:.associated_candidate_heading_count, max_candidates_per_frame, gt:.uses_gt_for_action, paper:.paper_claim_allowed}' local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "docker run --rm -v /home/yoohyun/research3:/workspace:ro -w /workspace -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_repeated_object_relation_anchor_consistency_evidence.py",
+    "docker run --rm --user $(id -u):$(id -g) -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_repeated_object_relation_anchor_consistency_evidence.py",
+    "jq '{gate:.gate.relation_anchor_consistency_detector_evidence_gate_passed, rows:[.view_evidence_rows,.candidate_context_pair_rows,.candidate_consistency_rows,.request_consistency_rows], status:.candidate_consistency_status_counts, promotable:.promotable_branch_outcome_rows, forbidden:.action_evidence_forbidden_key_count, gt:.uses_gt_for_action, paper:.paper_claim_allowed}' local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1/relation_anchor_consistency_detector_evidence_summary.json",
+    "wc -l local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1/relation_anchor_consistency_view_evidence_rows.jsonl local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1/relation_anchor_consistency_candidate_context_pair_rows.jsonl local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1/relation_anchor_consistency_candidate_rows.jsonl local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1/relation_anchor_consistency_request_rows.jsonl"
+  ],
+  "next_task": "diagnose_repeated_object_relation_anchor_consistency_residual",
+  "interpretation": {
+    "fact": "The post-detector analyzer is implemented and Docker-verified. It passes the nonterminal evidence gate with zero terminal/candidate commits, but produces no promotable branch outcome.",
+    "agent_inference": "Repeated-object relation-anchor consistency evidence still indicates ambiguity or insufficient own-view support, so the branch should continue as residual diagnosis rather than terminal utility.",
+    "paper_claim": "No paper claim is allowed from this contract alone."
+  }
+}

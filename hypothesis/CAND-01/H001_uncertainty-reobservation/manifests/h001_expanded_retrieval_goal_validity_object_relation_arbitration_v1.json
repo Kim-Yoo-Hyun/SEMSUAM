@@ -1,0 +1,115 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_object_relation_arbitration_contract.v1",
+  "contract_name": "expanded_retrieval_goal_validity_object_relation_arbitration_v1",
+  "date_checked": "2026-05-30",
+  "status": "frozen_contract_and_bounded_rule_smoke_passed",
+  "source": {
+    "interpretation_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_object_relation_interpretation_v1.json",
+    "object_relation_request_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1/goal_validity_object_relation_request_rows.jsonl",
+    "object_relation_evaluation_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1/goal_validity_object_relation_evaluated_rows.jsonl",
+    "object_relation_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1/goal_validity_object_relation_evidence_summary.json",
+    "full_objective_candidate_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_full_v1/goal_validity_objective_candidate_rows.jsonl",
+    "full_objective_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_full_v1/goal_validity_objective_summary.json"
+  },
+  "policy": {
+    "name": "relation_depth_guarded_non_gt_arbitration_v1",
+    "purpose": "Reject relation-depth-resolved candidates when the same candidate lacks independent candidate-specific support in the full candidate-specific substrate.",
+    "non_gt_action_features": [
+      "relation_depth_recheck_status",
+      "relation_direction_source_coverage",
+      "relation_depth_consistent_count",
+      "candidate_specific_support",
+      "base_candidate_association",
+      "base_consistent_depth_count",
+      "candidate_support_saturation_count",
+      "candidate_support_saturation_rate"
+    ],
+    "action_rule": [
+      {
+        "if": "relation_depth_recheck_status != relation_depth_recheck_resolved",
+        "then": "defer_relation_depth_unresolved_or_partial"
+      },
+      {
+        "if": "relation_depth_recheck_status == relation_depth_recheck_resolved and candidate_specific_support != true",
+        "then": "reject_relation_depth_resolved_without_independent_candidate_support"
+      },
+      {
+        "if": "relation_depth_recheck_status == relation_depth_recheck_resolved and base_candidate_association != true",
+        "then": "reject_relation_depth_resolved_without_base_detector_association"
+      },
+      {
+        "if": "relation_depth_recheck_status == relation_depth_recheck_resolved and base_consistent_depth_count < 1",
+        "then": "reject_relation_depth_resolved_without_base_depth_consistency"
+      },
+      {
+        "if": "more_than_one_candidate_satisfies_candidate_specific_support_and_base_association",
+        "then": "defer_support_saturation_no_unique_goal_identity"
+      },
+      {
+        "if": "exactly_one_candidate_satisfies_all_non_gt_gates",
+        "then": "provisional_unique_goal_validity_candidate_requires_fresh_validation"
+      }
+    ],
+    "terminal_commit_allowed_in_this_smoke": false,
+    "terminal_utility_validation_allowed": false,
+    "uses_gt_for_action": false
+  },
+  "minimum_rule_gate": {
+    "expected_request_rows": 2,
+    "expected_relation_depth_resolved_rows": 2,
+    "minimum_rejected_relation_depth_resolved_rows": 2,
+    "minimum_evaluation_only_rejected_negative_rows": 2,
+    "terminal_commit_rows_maximum": 0,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "forbidden_action_inputs": [
+    "correct_candidate_ids",
+    "valid_candidate_ids",
+    "evaluation_only_candidate_correct",
+    "evaluation_only_success",
+    "evaluation_only_wrong_goal",
+    "evaluation_only_no_valid",
+    "GT object id",
+    "GT goal id",
+    "GT shortest path",
+    "oracle candidate rank",
+    "post-join evaluation rows before decision rows are written"
+  ],
+  "simpler_alternatives_to_report": [
+    "relation_depth_resolved_commit",
+    "box_or_mask_presence_commit",
+    "high_association_count_commit",
+    "candidate_specific_support_best_commit",
+    "defer_all"
+  ],
+  "required_outputs": {
+    "decision_rows": "object_relation_arbitration_decision_rows.jsonl",
+    "evaluated_rows": "object_relation_arbitration_evaluated_rows.jsonl",
+    "summary": "object_relation_arbitration_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "runtime/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_arbitration.py",
+    "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_arbitration_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_required": true
+  },
+  "interpretation_rule": {
+    "fact": "The current object-relation evidence branch has two relation-depth-resolved request rows.",
+    "agent_inference": "A non-GT arbitration rule is acceptable only as a rejection/defer rule at this stage. It must reject the resolved-but-negative candidates without using evaluation labels, and it still cannot claim terminal utility until a fresh/predeclared source shows nonzero safe utility.",
+    "user_decision_needed": "None for the bounded smoke. User judgment is needed only before promoting any future non-inert terminal rule."
+  },
+  "bounded_smoke_result": {
+    "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_arbitration_v1",
+    "object_relation_arbitration_rule_gate_passed": true,
+    "decision_rows": 2,
+    "rejected_rows": 2,
+    "evaluation_only_rejected_negative_rows": 2,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "paper_claim_allowed": false
+}

@@ -1,0 +1,181 @@
+{
+  "schema_version": "h001.contract.depth_stagnation_branch.v1",
+  "date_checked": "2026-06-01",
+  "status": "frozen_design_contract_before_implementation",
+  "contract_name": "depth_stagnation_branch_v1",
+  "purpose": "Freeze the nonterminal depth-stagnation branch for the residual partial relation-depth row where candidate association and depth-consistent evidence are present but do not improve relation-depth goal validity enough to justify ObjectNav goal commit.",
+  "source": {
+    "branch_handling_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1.json",
+    "branch_handling_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1.verify.json",
+    "branch_handling_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1",
+    "branch_handling_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_handling_summary.json",
+    "branch_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_rows.jsonl",
+    "request_branch_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_request_rows.jsonl",
+    "residual_taxonomy_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1",
+    "taxonomy_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1/partial_relation_depth_residual_taxonomy_rows.jsonl",
+    "request_taxonomy_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1/partial_relation_depth_residual_request_taxonomy_rows.jsonl",
+    "taxonomy_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1/partial_relation_depth_residual_taxonomy_summary.json"
+  },
+  "source_gate": {
+    "partial_relation_depth_branch_handling_gate_passed": true,
+    "expected_source_branch_rows": 15,
+    "expected_source_request_branch_rows": 6,
+    "target_branch_action": "route_to_depth_stagnation_branch",
+    "expected_target_request_rows": 1,
+    "expected_target_branch_rows": 1,
+    "expected_request_residual_status": "association_present_but_depth_not_improved",
+    "expected_recommended_next_action": "freeze_depth_stagnation_failure_branch",
+    "expected_scene_key": "4ok3usBNeis",
+    "expected_scene_id": "hm3d_v0.2/val/00877-4ok3usBNeis/4ok3usBNeis.basis.glb",
+    "expected_query": "sofa",
+    "expected_request_id": "rival_identity:22",
+    "expected_episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:6:2:sofa",
+    "expected_candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+    "expected_residual_failure_class_counts": {
+      "association_present_without_depth_improvement": 1
+    },
+    "expected_residual_failure_tags": [
+      "association_present_after_completion",
+      "association_present_without_depth_improvement",
+      "depth_consistent_signal_present",
+      "direction_target_to_relation_anchor",
+      "mask_projection_available",
+      "no_depth_consistency_improvement"
+    ],
+    "expected_direction_counts": {
+      "target_to_relation_anchor": 1
+    },
+    "expected_prior_counts": {
+      "candidate_association_count": 3,
+      "depth_consistent_count": 1,
+      "depth_mismatch_count": 7,
+      "inside_mask_count": 7,
+      "relation_depth_evidence_status": "relation_depth_recheck_partial"
+    },
+    "expected_completion_counts": {
+      "associated_heading_count": 3,
+      "associated_depth_consistent_count": 1,
+      "depth_consistent_count": 1,
+      "inside_mask_count": 4,
+      "completion_status": "relation_depth_completion_partial"
+    },
+    "expected_rows_with_completion_association": 1,
+    "expected_rows_with_zero_completion_association": 0,
+    "expected_rows_with_completion_depth_consistent": 1,
+    "expected_rows_with_inside_mask": 1,
+    "max_action_evidence_forbidden_key_count": 0,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "requires_uses_gt_for_action": false,
+    "requires_uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "design_scope": {
+    "input_level": "single request-level and row-level partial relation-depth branch rows from residual branch handling",
+    "output_level": "nonterminal depth-stagnation branch rows",
+    "target_failure_mechanism": "candidate association, depth-consistent signal, and mask projection are present, but the post-completion evidence remains partial and does not improve over prior relation-depth evidence, so positive detector/depth evidence cannot be treated as ObjectNav goal validity",
+    "allowed_action_inputs": [
+      "branch_action",
+      "request_residual_status",
+      "scene_key",
+      "query",
+      "episode_key",
+      "expanded_retrieval_request_id",
+      "candidate_id",
+      "prior_standoff_direction_source",
+      "residual_failure_class",
+      "residual_failure_tags",
+      "prior_candidate_association_count",
+      "prior_depth_consistent_count",
+      "prior_depth_mismatch_count",
+      "prior_inside_mask_count",
+      "completion_associated_heading_count",
+      "completion_associated_depth_consistent_count",
+      "completion_depth_consistent_count",
+      "completion_inside_mask_count",
+      "request-level residual class counts"
+    ],
+    "forbidden_action_inputs": [
+      "evaluation_correctness",
+      "success_label",
+      "wrong_goal_label",
+      "gt_target_object_id",
+      "gt_goal_position",
+      "posthoc_correct_candidate_id",
+      "oracle goal-region identity",
+      "label_tuned_depth_delta",
+      "category_specific_depth_threshold_from_labels"
+    ]
+  },
+  "branch_contract": {
+    "branch_name": "depth_stagnation_branch_v1",
+    "target_route": "route_to_depth_stagnation_branch",
+    "required_branch_rows": 1,
+    "required_request_rows": 1,
+    "required_branch_actions": [
+      "request_depth_stagnation_recheck",
+      "request_independent_candidate_specific_support",
+      "defer_if_depth_stagnation_persists"
+    ],
+    "required_comparisons": [
+      "prior_relation_depth_evidence_vs_completion_relation_depth_evidence",
+      "association_present_not_equal_goal_validity",
+      "depth_consistent_signal_present_not_equal_depth_improvement",
+      "target_to_relation_anchor_direction_with_stagnant_depth"
+    ],
+    "blocked_shortcuts": [
+      "commit_by_candidate_association",
+      "commit_by_depth_consistency",
+      "commit_by_inside_mask_presence",
+      "reject_candidate_because_depth_did_not_improve",
+      "relax_depth_threshold_after_label_join",
+      "choose_commit_or_reject_from_evaluation_label",
+      "category_specific_depth_threshold_tuning"
+    ],
+    "expected_nonterminal_branch_action": "request_depth_stagnation_audit",
+    "terminal_arbitration_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "threshold_tuning_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "depth_stagnation_branch_gate": {
+    "source_branch_handling_gate_must_pass": true,
+    "all_target_requests_must_be_accounted": true,
+    "all_target_branch_rows_must_be_accounted": true,
+    "association_must_be_present": true,
+    "depth_consistent_signal_must_be_present": true,
+    "depth_improvement_must_remain_stagnant": true,
+    "branch_output_must_be_label_free": true,
+    "terminal_commits_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "required_future_outputs": {
+    "branch_rows": "depth_stagnation_branch_rows.jsonl",
+    "request_rows": "depth_stagnation_branch_request_rows.jsonl",
+    "summary": "depth_stagnation_branch_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "runtime/h001_runtime/route_depth_stagnation_branch.py",
+    "output": "local_dataset/runs/h001_depth_stagnation_branch_v1",
+    "verification_command": "python -m h001_runtime.route_depth_stagnation_branch"
+  },
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "The target depth-stagnation branch contains one `4ok3usBNeis/sofa` request where candidate association, depth consistency, and mask projection are present both before and after relation-depth completion, but the evidence remains partial and no depth improvement is established.",
+    "agent_inference": "Depth stagnation should be handled as a label-free evidence audit and independent-support request branch before any terminal utility, not as direct candidate validity, invalidity, or depth-threshold tuning.",
+    "paper_claim_allowed": false
+  }
+}
