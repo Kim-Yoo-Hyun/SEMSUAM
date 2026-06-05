@@ -1,0 +1,116 @@
+{
+  "schema_version": "h001.contract.semantic_slam_strict_edge_variant_proxy.v1",
+  "date_checked": "2026-06-04",
+  "status": "frozen_contract",
+  "contract_name": "semantic_slam_strict_edge_variant_proxy_v1",
+  "purpose": "Recompute pose graph connectivity under strict edge variants so candidate-id overlap cannot be mistaken for pose/SLAM evidence.",
+  "source": {
+    "connectivity_gate_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_pose_graph_connectivity_proxy_gate_v1.json",
+    "connectivity_gate_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_pose_graph_connectivity_proxy_gate_v1.verify.json",
+    "connectivity_gate_summary": "local_dataset/runs/h001_semantic_slam_pose_graph_connectivity_proxy_gate_v1/semantic_slam_pose_graph_connectivity_proxy_gate_summary.json",
+    "source_audit_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_map_pose_consistency_probe_v1.json",
+    "source_audit_summary": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_consistency_probe_summary.json",
+    "source_inventory_rows": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_source_inventory_rows.jsonl"
+  },
+  "edge_variants": [
+    {
+      "name": "all_edges",
+      "allowed_reasons": [
+        "spatial_proximity",
+        "loop_closure_opportunity",
+        "target_position_neighborhood",
+        "candidate_id_overlap"
+      ],
+      "paper_role": "diagnostic_reference"
+    },
+    {
+      "name": "pose_spatial",
+      "allowed_reasons": [
+        "spatial_proximity"
+      ],
+      "paper_role": "pose_graph_proxy_signal"
+    },
+    {
+      "name": "pose_loop",
+      "allowed_reasons": [
+        "loop_closure_opportunity"
+      ],
+      "paper_role": "loop_closure_proxy_signal"
+    },
+    {
+      "name": "pose_spatial_or_loop",
+      "allowed_reasons": [
+        "spatial_proximity",
+        "loop_closure_opportunity"
+      ],
+      "paper_role": "canonical_strict_pose_proxy"
+    },
+    {
+      "name": "map_pose_context_no_candidate",
+      "allowed_reasons": [
+        "spatial_proximity",
+        "loop_closure_opportunity",
+        "target_position_neighborhood"
+      ],
+      "paper_role": "pose_plus_map_context_without_candidate_shortcut"
+    },
+    {
+      "name": "target_context",
+      "allowed_reasons": [
+        "target_position_neighborhood"
+      ],
+      "paper_role": "semantic_map_context_diagnostic"
+    },
+    {
+      "name": "candidate_overlap_only",
+      "allowed_reasons": [
+        "candidate_id_overlap"
+      ],
+      "paper_role": "shortcut_diagnostic_only"
+    }
+  ],
+  "gate_thresholds": {
+    "min_request_groups": 50,
+    "min_source_family_count": 5,
+    "canonical_variant": "pose_spatial_or_loop",
+    "context_variant": "map_pose_context_no_candidate",
+    "loop_variant": "pose_loop",
+    "shortcut_variant": "candidate_overlap_only",
+    "min_canonical_ready_rate": 0.9,
+    "min_canonical_min_source_ready_rate": 0.8,
+    "min_context_ready_rate": 0.9,
+    "min_loop_ready_rate": 0.5,
+    "max_action_evidence_forbidden_key_count": 0,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "requires_uses_gt_for_action": false
+  },
+  "required_outputs": {
+    "variant_rows": "semantic_slam_strict_edge_variant_proxy_rows.jsonl",
+    "variant_summary_rows": "semantic_slam_strict_edge_variant_proxy_summary_rows.jsonl",
+    "summary": "semantic_slam_strict_edge_variant_proxy_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "runtime/h001_runtime/analyze_semantic_slam_strict_edge_variants.py",
+    "output": "local_dataset/runs/h001_semantic_slam_strict_edge_variant_proxy_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "verification_command": "python -m h001_runtime.analyze_semantic_slam_strict_edge_variants"
+  },
+  "allowed_next_step_if_gate_passes": "define_semantic_slam_proxy_comparison_contract",
+  "blocked_until_gate_passes": [
+    "SemanticOnly_SlamOnly_SemanticSLAM_proxy_comparison_contract",
+    "SemanticOnly_SlamOnly_SemanticSLAM_comparison_run",
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "The prior connectivity gate passed but candidate_id_overlap still contributed a large share of edge reasons.",
+    "agent_inference": "A reviewer-facing Step 4-5 path needs connectivity to remain usable when candidate-id overlap is excluded.",
+    "paper_claim": "No SLAM benefit or SemanticSLAM complementarity claim is allowed from this strict variant gate alone."
+  }
+}

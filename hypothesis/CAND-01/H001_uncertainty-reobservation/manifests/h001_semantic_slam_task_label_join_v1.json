@@ -1,0 +1,270 @@
+{
+  "schema_version": "h001.contract.semantic_slam_task_label_join.v1",
+  "date_checked": "2026-06-05",
+  "status": "frozen_contract",
+  "contract_name": "semantic_slam_task_label_join_v1",
+  "purpose": "Freeze the evaluation-only label join needed after the task/map outcome probe showed map-side deltas but zero label-backed task proxy rows.",
+  "stage": "P4-design",
+  "source": {
+    "task_map_outcome_probe_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_outcome_probe_v1.json",
+    "task_map_outcome_probe_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_outcome_probe_v1.verify.json",
+    "task_map_outcome_probe_summary": "local_dataset/runs/h001_semantic_slam_task_map_outcome_probe_v1/semantic_slam_task_map_outcome_probe_summary.json",
+    "task_map_outcome_probe_rows": "local_dataset/runs/h001_semantic_slam_task_map_outcome_probe_v1/semantic_slam_task_map_outcome_probe_rows.jsonl",
+    "task_map_probe_request_rows": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_probe_request_rows.jsonl",
+    "primary_label_backbone": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_evaluated_rows.jsonl"
+  },
+  "triggering_result": {
+    "request_policy_rows": 150,
+    "slam_only_rich_current_rows": 50,
+    "unique_request_keys": 21,
+    "source_family_rows": {
+      "expanded_retrieval_local_context_frames_v1": 21,
+      "instance_arbitration_evidence_frames_v1": 9,
+      "missing_own_view_recheck_observation_frames_v1": 7,
+      "object_relation_fresh_observation_frames_v1": 7,
+      "partial_relation_depth_observation_frames_v1": 6
+    },
+    "map_metric_positive_rows": 50,
+    "task_proxy_evaluable_rows": 0,
+    "label_join_available_rows": 0,
+    "map_task_alignment_rows": 0,
+    "primary_blocker": "task_proxy_label_join_missing",
+    "outcome_probe_gate_passed": false,
+    "revised_slam_formula_allowed": false
+  },
+  "label_inventory": {
+    "primary_backbone_request_rows": 21,
+    "primary_backbone_request_key_coverage": "21/21 unique Semantic-SLAM request keys",
+    "primary_backbone_candidate_rows_materializable": 113,
+    "primary_backbone_correct_candidate_labels": 37,
+    "primary_backbone_wrong_candidate_labels": 76,
+    "primary_backbone_unlabeled_candidates": 0,
+    "primary_backbone_valid_request_rows": 17,
+    "primary_backbone_no_valid_request_rows": 4,
+    "source_request_rows": 50,
+    "source_request_candidate_rows": 255,
+    "source_request_candidate_id_preview_full": true,
+    "auxiliary_label_sources": [
+      {
+        "source_name": "object_relation_fresh_observation_frames_v1",
+        "path": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_evidence_v1/object_relation_fresh_candidate_labels.jsonl",
+        "request_key_coverage": "7/21 unique request keys",
+        "role": "candidate-level evaluation-only cross-check"
+      },
+      {
+        "source_name": "expanded_retrieval_local_context_frames_v1",
+        "path": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_evaluated_rows.jsonl",
+        "request_key_coverage": "21/21 unique request keys",
+        "role": "primary request-level and candidate-level label backbone"
+      }
+    ],
+    "action_evidence_sources_without_direct_candidate_labels": [
+      "missing_own_view_recheck_observation_frames_v1",
+      "instance_arbitration_evidence_frames_v1",
+      "partial_relation_depth_observation_frames_v1"
+    ]
+  },
+  "join_keys": {
+    "request_identity_key": [
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key"
+    ],
+    "request_id_normalization": [
+      "request_id",
+      "rival_identity_request_id",
+      "expanded_retrieval_request_id"
+    ],
+    "source_policy_key": [
+      "source_name",
+      "policy_name",
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key"
+    ],
+    "candidate_identity_key": [
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key",
+      "candidate_id"
+    ],
+    "candidate_id_aliases": [
+      "candidate_id",
+      "target_candidate_id",
+      "selected_candidate_id",
+      "final_candidate_id_before",
+      "final_candidate_id_after"
+    ]
+  },
+  "label_definitions": {
+    "candidate_correctness_label": {
+      "definition": "candidate_id is in evaluation_only_correct_candidate_ids from the primary label backbone or a consistent auxiliary candidate-label source",
+      "analysis_only": true,
+      "action_use_allowed": false
+    },
+    "candidate_wrong_label": {
+      "definition": "candidate_id is in evaluation_only_wrong_candidate_ids from the primary label backbone or evaluation_only_candidate_correct is false in an auxiliary label source",
+      "analysis_only": true,
+      "action_use_allowed": false
+    },
+    "no_valid_candidate_pool": {
+      "definition": "evaluation_only_no_valid_candidate_pool from the primary label backbone",
+      "analysis_only": true,
+      "action_use_allowed": false
+    },
+    "wrong_goal_visit_proxy": {
+      "definition": "commit-based evaluation-only proxy; true only if a frozen policy selector explicitly commits/stops on a selected candidate and that selected candidate is labeled wrong. Near-candidate pass-through is not counted.",
+      "analysis_only": true,
+      "action_use_allowed": false,
+      "requires_policy_selected_candidate_id": true,
+      "requires_terminal_commit_proxy": true
+    },
+    "wasted_path_proxy_m": {
+      "definition": "evaluation-only distance proxy charged for wrong-goal or no-valid commits after policy decisions are fixed. If a policy-specific goal travel distance is unavailable, the row must use reobserve_travel_cost_m only as re-observation cost and keep wrong-goal path distance null rather than inventing a value.",
+      "analysis_only": true,
+      "action_use_allowed": false,
+      "requires_policy_selected_candidate_id": true,
+      "requires_travel_cost_field": true
+    }
+  },
+  "policy_binding_contract": {
+    "required_policies": [
+      "NoReobserveReference",
+      "SemanticOnly",
+      "SLAMOnlyRich_current"
+    ],
+    "label_join_allowed_for_all_policies": true,
+    "task_proxy_evaluable_rule": "A policy row is task-proxy evaluable only when candidate labels are joined and a frozen non-GT policy selector provides policy_selected_candidate_id plus terminal_commit_proxy before evaluation labels are attached.",
+    "selector_missing_behavior": "Keep wrong_goal_visit_proxy, wasted_path_proxy_m, and task_side_delta null; mark failure_tag policy_selector_missing rather than treating missing selector as success or failure.",
+    "calibration_variant_allowed_only_for_label_audit": {
+      "NoReobserveReference_seed": "semantic_top from evaluation_only_variant_outcomes may be used to sanity-check the label backbone, but it does not by itself define the final NoReobserveReference policy for future formula revision.",
+      "available_variant_counts": {
+        "semantic_top_terminal_commit": 21,
+        "semantic_top_success_commit": 11,
+        "semantic_top_wrong_goal_commit": 10,
+        "defer_all_terminal_commit": 0,
+        "previous_local_context_unique_own_view_advantage_terminal_commit": 10,
+        "previous_local_context_unique_own_view_advantage_wrong_goal_commit": 7
+      }
+    }
+  },
+  "required_future_outputs": {
+    "out_root": "local_dataset/runs/h001_semantic_slam_task_label_join_v1",
+    "row_files": {
+      "request_label_rows": "semantic_slam_task_label_request_rows.jsonl",
+      "candidate_label_rows": "semantic_slam_task_label_candidate_rows.jsonl",
+      "policy_label_join_rows": "semantic_slam_task_label_policy_rows.jsonl",
+      "failure_rows": "semantic_slam_task_label_failure_rows.jsonl",
+      "summary": "semantic_slam_task_label_join_summary.json"
+    },
+    "minimum_policy_row_fields": [
+      "schema_version",
+      "row_type",
+      "source_name",
+      "policy_name",
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key",
+      "label_backbone_join_available",
+      "candidate_label_join_available",
+      "policy_selected_candidate_id",
+      "terminal_commit_proxy",
+      "wrong_goal_visit_proxy",
+      "wasted_path_proxy_m",
+      "task_proxy_evaluable",
+      "uses_gt_for_action",
+      "paper_claim_allowed",
+      "failure_tag"
+    ],
+    "summary_required_fields": [
+      "unique_request_keys",
+      "source_policy_rows",
+      "request_label_rows",
+      "candidate_label_rows",
+      "policy_label_join_rows",
+      "label_backbone_join_rows",
+      "task_proxy_evaluable_rows",
+      "policy_selector_missing_rows",
+      "action_evidence_forbidden_key_count",
+      "uses_gt_for_action",
+      "task_label_join_gate_passed",
+      "outcome_proxy_gate_passed",
+      "revised_slam_formula_allowed",
+      "paper_claim_allowed"
+    ]
+  },
+  "success_gates": {
+    "label_join_gate": {
+      "unique_request_keys_required": 21,
+      "source_policy_rows_required": 150,
+      "request_label_rows_min": 21,
+      "candidate_label_rows_min": 113,
+      "policy_label_join_rows_min": 150,
+      "label_backbone_join_rows_min": 150,
+      "action_evidence_forbidden_key_count": 0,
+      "uses_gt_for_action": false,
+      "paper_claim_allowed": false
+    },
+    "outcome_proxy_gate": {
+      "task_proxy_evaluable_rows_min": 35,
+      "wrong_goal_visit_proxy_nonnull_rows_min": 35,
+      "wasted_path_proxy_nonnull_rows_min": 35,
+      "policy_selector_missing_rows_max": 0,
+      "revised_slam_formula_allowed_after_pass": true,
+      "paper_claim_allowed": false
+    }
+  },
+  "failure_taxonomy": [
+    {
+      "tag": "request_label_missing",
+      "meaning": "A Semantic-SLAM request key does not join to the primary label backbone."
+    },
+    {
+      "tag": "candidate_label_missing",
+      "meaning": "A candidate id in the source request rows cannot be labeled correct, wrong, no-valid, or unlabeled from evaluation-only sources."
+    },
+    {
+      "tag": "policy_selector_missing",
+      "meaning": "Labels are available but a policy row has no frozen selected candidate / terminal-commit proxy, so task metrics must remain null."
+    },
+    {
+      "tag": "travel_cost_missing",
+      "meaning": "A row has a policy selector and wrong/no-valid outcome label but no valid travel-cost proxy for wasted_path."
+    },
+    {
+      "tag": "no_valid_pool_dominates",
+      "meaning": "No-valid candidate pools dominate the joined labels, making wrong-goal reduction hard to interpret."
+    },
+    {
+      "tag": "action_label_leakage",
+      "meaning": "Evaluation-only labels appear in action-time selection, graph construction, viewpoint choice, or utility weights."
+    }
+  ],
+  "implementation_permissions": {
+    "task_label_join_materializer_allowed": true,
+    "policy_selector_definition_allowed": false,
+    "revised_slam_only_formula_implementation_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "blocked_until_label_join_and_outcome_proxy_gates": {
+    "revised_slam_only_formula_implementation": true,
+    "step_4_5_promotion": true,
+    "terminal_utility_validation": true,
+    "first_eval_rerun": true,
+    "policy_scale_comparison": true,
+    "paper_claim": true
+  },
+  "interpretation": {
+    "fact": "The existing primary label backbone covers all 21 unique Semantic-SLAM request keys and can materialize candidate correctness labels for 113 backbone candidates.",
+    "agent_inference": "The next safe implementation is a label-join materializer. It should join labels to the 150 policy rows while keeping task proxies null wherever policy selected-candidate ids are missing.",
+    "paper_claim": "No navigation utility, SemanticSLAM complementarity, SLAM benefit, formula revision, Step 4-5 promotion, or paper claim is allowed from this label-join contract alone."
+  },
+  "next_task": "implement_semantic_slam_task_label_join_materializer"
+}

@@ -5216,6 +5216,113 @@ Suggested first proxy margins:
 | map/pose metrics are noisy or unavailable | instrumentation failure | keep Step 4-5 at `P4-design`, do not claim SLAM benefit |
 | real-world `ATE/RPE` lacks external GT | weak deployment evidence | report qualitative or event-level diagnostics only |
 
+### Current Proxy Comparison Result
+
+사실:
+
+- Date checked: 2026-06-04
+- Implementation: `runtime/h001_runtime/compare_semantic_slam_proxy_policies.py`
+- Contract / verify: `manifests/h001_semantic_slam_proxy_comparison_v1.json`, `manifests/h001_semantic_slam_proxy_comparison_v1.verify.json`
+- Output: `local_dataset/runs/h001_semantic_slam_proxy_comparison_v1`
+- Rows: comparison/policy summary `200/4`
+- Request groups: `50`
+- Canonical/loop proxy ready rates: `0.92/0.72`
+- Policy utility means: `NoReobserveReference 0.0`, `SemanticOnly 0.6092`, `SLAMOnly 0.3871`, `SemanticSLAM 0.4981`
+- Rank-1 rows/rates: `SemanticOnly 36/0.72`, `SLAMOnly 14/0.28`, `SemanticSLAM 0/0.0`
+- Action forbidden key count: `0`
+- Terminal/candidate commit/rejection rows: `0/0/0`
+- `uses_gt_for_action`: `false`
+- Proxy comparison gate: `true`
+- Step 4-5 promotion: `false`
+- Paper claim allowed: `false`
+
+에이전트 추론:
+
+The current proxy comparison is a plumbing-positive but complementarity-negative diagnostic. It shows the same request groups can support separated semantic-only, SLAM-only, and combined proxy scoring without GT action leakage. It does not yet show that `SemanticSLAM` is better than either component policy. Before promotion, evaluate whether the failure comes from fixed utility weights, a too-coarse SLAM proxy, missing task-behavior coupling, or a request pool that lacks semantic-SLAM complementarity cases.
+
+논문 주장:
+
+No Step 4-5 paper claim is allowed from this result. A future positive signal must show map/pose improvement over `SemanticOnly` while preserving task behavior and not being fully explained by `SLAMOnly`.
+
+### Current Proxy Output Evaluation
+
+사실:
+
+- Date checked: 2026-06-04
+- Implementation / verify: `runtime/h001_runtime/evaluate_semantic_slam_proxy_comparison_output.py`, `manifests/h001_semantic_slam_proxy_comparison_output_evaluation_v1.verify.json`
+- Output: `local_dataset/runs/h001_semantic_slam_proxy_comparison_output_evaluation_v1`
+- Group evaluation rows: `50`
+- Component winners: `SemanticOnly 36/0.72`, `SLAMOnly 14/0.28`
+- Dominance class: `semantic_slam_midpoint_strictly_dominated_by_best_component 50/1.0`
+- `SemanticSLAM` midpoint identity max absolute error: `1.11e-16`
+- Best-component margin over `SemanticSLAM`: min/mean/max `0.0159/0.1536/0.3995`
+- Output evaluation gate: `true`
+- Step 4-5 promotion: `false`
+- Paper claim allowed: `false`
+
+에이전트 추론:
+
+The current `SemanticSLAM` proxy is structurally dominated because it is the midpoint of `SemanticOnly` and `SLAMOnly` under the score-only proxy ranking. This means simple fixed-weight averaging is not an acceptable Step 4-5 utility design. The next contract should require a non-dominated design and explicitly reject midpoint, linear interpolation without an interaction term, and post-hoc component-max selection as paper-facing `SemanticSLAM` evidence.
+
+사용자 판단 필요:
+
+No immediate user decision is required. The default next step is to freeze a non-dominated `SemanticSLAM` proxy redesign contract before any new implementation.
+
+### Non-Dominated Proxy Redesign Contract
+
+사실:
+
+- Date checked: 2026-06-04
+- Contract / verify: `manifests/h001_semantic_slam_non_dominated_proxy_redesign_v1.json`, `manifests/h001_semantic_slam_non_dominated_proxy_redesign_v1.verify.json`
+- Policies: `NoReobserveReference`, `SemanticOnly`, `SLAMOnly`, `SemanticSLAMInteraction`
+- Expected rows: `200`
+- Prior failure recorded: midpoint dominance rows/rate `50/1.0`
+- Forbidden patterns: midpoint or linear interpolation only, component-max shortcut, constant bonus scale trick, label-tuned weight search
+- Primary interaction terms: `semantic_pressure`, `map_pose_pressure`, `interaction = semantic_pressure * map_pose_pressure`
+- Required future diagnostics: `non_dominated_by_component`, `midpoint_identity_error`, `component_max_shortcut_used`, `component_dominance_margin`
+- Minimum non-dominated interaction rows/rate: `10/0.2`
+- Maximum midpoint identity rows: `0`
+- Maximum component-max shortcut rows: `0`
+- Step 4-5 promotion: `false`
+- Paper claim allowed: `false`
+
+에이전트 추론:
+
+This contract is the right next step because it turns the failed midpoint result into a falsifiable design constraint. A valid redesigned proxy must show that the combined semantic-SLAM utility is not just selecting or averaging components. Passing this proxy redesign gate would only justify a later task/map validation; it would not prove navigation or SLAM benefit.
+
+논문 주장:
+
+No paper-facing `SemanticSLAM` contribution is allowed until a later implementation passes this non-dominated proxy gate and then links the signal to map/pose and task behavior metrics.
+
+### Non-Dominated Proxy Implementation Result
+
+사실:
+
+- Date checked: 2026-06-04
+- Implementation / verify: `runtime/h001_runtime/compare_semantic_slam_non_dominated_proxy.py`, `manifests/h001_semantic_slam_non_dominated_proxy_redesign_v1.verify.json`
+- Output: `local_dataset/runs/h001_semantic_slam_non_dominated_proxy_redesign_v1`
+- Rows: comparison/policy summary/diagnostic `200/4/50`
+- Policy rank-1 rows/rates: `SemanticSLAMInteraction 42/0.84`, `SLAMOnly 8/0.16`, `SemanticOnly 0/0.0`, `NoReobserveReference 0/0.0`
+- Non-dominated interaction rows/rate: `42/0.84`
+- Interaction-positive rows: `50`
+- Midpoint identity rows: `0`
+- Component-max shortcut rows: `0`
+- Component reference rank-1 rows: `8`
+- Action forbidden key count: `0`
+- Terminal/candidate commit/rejection rows: `0/0/0`
+- `uses_gt_for_action`: `false`
+- Non-dominated proxy redesign gate: `true`
+- Step 4-5 promotion: `false`
+- Paper claim allowed: `false`
+
+에이전트 추론:
+
+This implementation passes the structural redesign gate, so the previous midpoint failure is repaired at the proxy-score level. The remaining risk is the opposite failure mode: `SemanticSLAMInteraction` may be too dominant because it wins `42/50` rows and `SemanticOnly` wins `0`. The next output evaluation must decide whether the high interaction rank-1 rate reflects meaningful semantic-map/pose complementarity or a too-permissive semantic-first bonus.
+
+논문 주장:
+
+Passing this proxy gate does not establish Step 4-5 benefit. A paper-facing claim still requires task/map outcome validation and failure analysis.
+
 ## Current Nonterminal Branch Gate
 
 ### 사실
@@ -5543,6 +5650,1537 @@ The detector/SAM2 gate confirms that the repeated-object branch has enough actio
 ### 에이전트 추론
 
 The contract freezes a nonterminal evidence analyzer. It should aggregate target/context support per view role, then classify each candidate as stable, ambiguous, insufficient, or contradicted without using labels. A promotable branch outcome can only unlock a later terminal-utility contract design; this analyzer itself must not commit or reject any candidate.
+
+## Repeated-Object Relation-Anchor Consistency Detector Evidence Analyzer
+
+### 사실
+
+- Analyzer: `runtime/h001_runtime/analyze_repeated_object_relation_anchor_consistency_evidence.py`
+- Verify: `manifests/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1.verify.json`
+- Output: `local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Docker `py_compile`: passed
+- Docker run: passed
+- Evidence gate: `true`
+- View / pair / candidate / request rows: `27 / 27 / 9 / 3`
+- Detector association rows: `360`
+- Target association by role: `candidate_own_view 6/9`, `relation_anchor_context_view 9/9`, `orthogonal_axis_challenge_view 9/9`
+- Context association by role: `candidate_own_view 3/9`, `relation_anchor_context_view 0/9`, `orthogonal_axis_challenge_view 0/9`
+- Candidate consistency status: `ambiguous_repeated_object_candidate 6`, `insufficient_candidate_evidence 3`
+- Candidate recommended actions: `request_repeated_object_ambiguity_followup 6`, `request_candidate_own_view_recovery 3`
+- Request recommended action: `request_additional_repeated_object_disambiguation 3`
+- Stable candidate rows: `0`
+- Promotable branch outcome rows: `0`
+- Action forbidden keys: `0`
+- Terminal commits: `0`
+- Candidate commit/rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The analyzer satisfies the frozen nonterminal evidence contract but does not unlock terminal utility. The repeated-object branch still needs residual diagnosis because own-view context leakage and missing own-view target support prevent a conflict-free promotable branch outcome.
+
+## Repeated-Object Relation-Anchor Consistency Residual Diagnostic
+
+### 사실
+
+- Analyzer: `runtime/h001_runtime/diagnose_repeated_object_relation_anchor_consistency_residual.py`
+- Verify: `manifests/h001_repeated_object_relation_anchor_consistency_residual_diagnostic_v1.verify.json`
+- Output: `local_dataset/runs/h001_repeated_object_relation_anchor_consistency_residual_diagnostic_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Docker `py_compile`: passed
+- Docker run: passed
+- Residual diagnostic gate: `true`
+- Candidate / request rows: `9 / 3`
+- Residual failure classes: `own_view_context_leakage 3`, `same_request_stable_rule_tie 3`, `missing_own_view_target_support 3`
+- Request residual status: `same_request_stable_tie_with_own_view_context_leakage 3`
+- Stable-rule candidate count: `2` per request
+- Promotable branch outcome rows: `0`
+- Recommended request action: `close_repeated_object_priority_branch_without_promotion 3`
+- Next branch after closure: `association_geometry_underlink 3`
+- Action forbidden keys: `0`
+- Terminal commits: `0`
+- Candidate commit/rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The repeated-object priority branch is closed as non-promotable. The next evaluation contract should move to `association_geometry_underlink` repair-followup evidence and keep terminal utility, candidate commit/rejection, `first_eval`, policy-scale comparison, and paper claims blocked.
+
+## Association-Geometry Underlink Repair-Followup Evidence Contract
+
+### 사실
+
+- Contract: `manifests/h001_association_geometry_underlink_repair_followup_evidence_v1.json`
+- Verify: `manifests/h001_association_geometry_underlink_repair_followup_evidence_v1.verify.json`
+- Status: frozen design contract before implementation
+- Source gates: repeated-object residual diagnostic `true`, repeated-object promotable rows `0`, promotion requirement `true`, branch synthesis `true`, association-geometry follow-up `true`, relation-anchor selection repair `true`, direction-specific re-observation repair `true`
+- Target family: `association_geometry_underlink`
+- Source branch/request/materialized rows: `2 / 2 / 8`
+- Expected probe/request rows: `6 / 2`
+- Follow-up routes: `route_to_relation_anchor_selection_repair 1`, `route_to_direction_specific_reobservation_repair 1`
+- Required probe roles: `failed_explicit_relation_anchor_row`, `same_direction_anchorless_recovery_row`, `failed_requested_direction_explicit_anchor_row`, `failed_requested_direction_anchorless_row`, `recovered_target_to_relation_anchor_explicit_anchor_row`, `recovered_target_to_relation_anchor_anchorless_row`
+- Minimum recovered associated/depth-consistent heading counts: `10 / 9`
+- Terminal commits: `0`
+- Candidate commit/rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract makes the next analyzer a repairability audit, not an ObjectNav goal-validity rule. It should show whether association-geometry underlink can be explained by anchor selection or direction-specific viewpoint failure, while rejecting shortcuts such as `commit_if_any_repair_recovers_association`, `commit_if_inside_mask_projection_exists`, and `choose_direction_with_highest_association`.
+
+## Association-Geometry Underlink Repair-Followup Evidence Analyzer
+
+### 사실
+
+- Analyzer: `runtime/h001_runtime/analyze_association_geometry_underlink_repair_followup_evidence.py`
+- Verify: `manifests/h001_association_geometry_underlink_repair_followup_evidence_v1.verify.json`
+- Output: `local_dataset/runs/h001_association_geometry_underlink_repair_followup_evidence_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Docker `py_compile`: passed
+- Docker run: passed
+- Evidence gate: `true`
+- Evidence / request rows: `6 / 2`
+- Evidence classes: `explicit_anchor_underlink 1`, `requested_direction_underlink 2`, `same_direction_anchorless_recovery 1`, `target_to_relation_anchor_recovery 2`
+- Evidence status: `repair_recovered_association_and_depth 3`, `underlink_inside_mask_without_candidate_association 3`
+- Request outcomes: `anchor_selection_repair_supported_but_nonterminal 1`, `direction_specific_reobservation_supported_but_nonterminal 1`
+- Recovered associated/depth-consistent heading counts: `10 / 9`
+- Promotable branch outcome rows: `0`
+- Action forbidden keys: `0`
+- Terminal commits: `0`
+- Candidate commit/rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The analyzer confirms association-geometry underlink is repairable as active evidence acquisition, but it still does not provide ObjectNav goal-validity authority. The next contract should either define depth-stagnation independent support or close the residual branch family set as terminal-blocking evidence.
+
+## Residual Branch Closure Contract
+
+### 사실
+
+- Contract: `manifests/h001_residual_branch_closure_v1.json`
+- Verify: `manifests/h001_residual_branch_closure_v1.verify.json`
+- Status: frozen design contract before implementation
+- Selected path: `residual_branch_closure_before_terminal_utility`
+- Deferred path: `depth_stagnation_independent_support_probe`
+- Source gates: residual branch synthesis `true`, promotion requirement `true`, repeated-object residual diagnostic `true`, association-geometry underlink repair-followup evidence `true`, depth-stagnation branch `true`
+- Residual family / request / source-branch rows: `3 / 6 / 15`
+- Family output rows: `association_geometry_underlink 8`, `repeated_object_relation_anchor_ambiguity 12`, `depth_stagnation 1`
+- Promotion requirement status: `defined_not_satisfied 3`
+- Repeated-object promotable branch outcome rows: `0`
+- Association-geometry promotable branch outcome rows: `0`
+- Depth-stagnation request rows: `1`
+- Depth-stagnation association/depth-consistency delta: `0 / 0`
+- Terminal commits: `0`
+- Candidate commit/rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+Depth-stagnation independent-support is not the best immediate next probe because the current evidence is a single stagnant `sofa` row and would produce weak reviewer-defense if promoted now. Closing the residual branch family is stronger: repeated-object ambiguity, association-geometry underlink, and depth-stagnation are all recorded as terminal-blocking mechanism evidence before any terminal utility, `first_eval`, policy-scale comparison, or paper claim is reopened. The next implementation should write closure rows and a closure summary from the frozen contract.
+
+## Residual Branch Closure Analyzer
+
+### 사실
+
+- Analyzer: `runtime/h001_runtime/close_residual_partial_relation_depth_branches.py`
+- Verify: `manifests/h001_residual_branch_closure_v1.verify.json`
+- Output: `local_dataset/runs/h001_residual_branch_closure_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Docker `py_compile`: passed
+- Docker run: passed
+- Closure gate: `true`
+- Closure rows: `3`
+- Closure status counts: `closed_without_promotion_after_relation_anchor_consistency_residual_diagnostic 1`, `closed_as_repairable_but_nonpromotable_anchor_direction_underlink 1`, `closed_as_one_row_stagnant_evidence_audit_without_independent_support_probe 1`
+- Closure failure mechanisms: `same_request_repeated_object_stable_tie_with_own_view_context_leakage 1`, `own_view_context_leakage 1`, `missing_own_view_target_support 1`, `anchor_selection_underlink_repairable_but_nonterminal 1`, `direction_specific_reobservation_repairable_but_nonterminal 1`, `association_present_depth_stagnant_without_evidence_delta 1`
+- Terminal commits: `0`
+- Candidate commit/rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The residual partial relation-depth branch family is now explicitly closed as terminal-blocking failure taxonomy. This is useful for paper novelty defense because it explains why repeated-object relation-anchor consistency, association-geometry repairability, and stagnant positive depth evidence are not valid terminal shortcuts. It still does not unlock terminal utility, `first_eval`, policy-scale comparison, or paper claims. This closure led to the next label-free selector below.
+
+## Next Label-Free Evidence Family Selection
+
+### 사실
+
+- Contract: `manifests/h001_next_label_free_evidence_family_v1.json`
+- Verify: `manifests/h001_next_label_free_evidence_family_v1.verify.json`
+- Selector: `runtime/h001_runtime/select_next_label_free_evidence_family.py`
+- Output: `local_dataset/runs/h001_next_label_free_evidence_family_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Docker `py_compile`: passed
+- Docker run: passed
+- Selection gate: `true`
+- Selected family: `missing_own_view_support_recheck`
+- Selected branch/action: `correct_candidate_missing_own_view_support` / `request_missing_own_view_recheck`
+- Selected request/candidate rows: `7 / 20`
+- Companion guard branch/action: `negative_missing_support_guard` / `guard_negative_missing_support`
+- Companion request/candidate rows: `7 / 20`
+- Closed/deferred branches: `unique_support_visibility_not_goal_validity`, `partial_relation_depth_true_goal`, `depth_stagnation_independent_support_probe`
+- Terminal commits: `0`
+- Candidate commit/rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- Uses GT for analysis: `true`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The next branch should test missing own-view support through active observation before any rejection shortcut is introduced. `negative_missing_support_guard` touches the same `7/20` request/candidate rows, but promoting it first would turn missing evidence into a candidate rejection rule. `missing_own_view_support_recheck` is more aligned with H001 because it asks whether mobility can acquire independent candidate evidence without using labels, terminal commits, or threshold tuning.
+
+## Missing Own-View Recheck Observation Contract
+
+### 사실
+
+- Contract: `manifests/h001_missing_own_view_recheck_observation_v1.json`
+- Verify: `manifests/h001_missing_own_view_recheck_observation_v1.verify.json`
+- Status: Docker-verified materializer/planner smoke
+- Input builder: `runtime/h001_runtime/build_missing_own_view_recheck_inputs.py`
+- Planner: `runtime/h001_runtime/plan_missing_own_view_recheck.py`
+- Output: `local_dataset/runs/h001_missing_own_view_recheck_observation_v1`
+- Target branch/action: `correct_candidate_missing_own_view_support` / `request_missing_own_view_recheck`
+- Target request/candidate rows: `7 / 20`
+- Companion guard: `negative_missing_support_guard`
+- Companion guard request/candidate rows: `7 / 20`
+- Fresh base support rows: `20`
+- Fresh base support class: `weak_or_partial_candidate_specific_support 20`
+- Strong own-view evidence false rows: `20`
+- Candidate-specific support false rows: `20`
+- Base candidate association true/false rows: `18 / 2`
+- Existing source plan rows for selected candidates: `80`
+- Existing source plan rows per target candidate: `4`
+- Materialized request/candidate/base/source-plan rows: `7 / 20 / 20 / 80`
+- Observation plan rows: `80`
+- Observation plan rows per target candidate: `4`
+- Skipped rows: `0`
+- Candidate artifact rows / unique candidates: `5 / 16`
+- View role: `candidate_own_view_recheck 80`
+- Query counts: `bed 8`, `plant 6`, `sofa 6`
+- Scene counts: `4ok3usBNeis 4`, `QaLdnwvtxbs 2`, `bCPU9suPUw9 3`, `bxsVRursffK 6`, `q3zU7Yy5E5s 5`
+- Terminal commits: `0`
+- Candidate rejection rows: `0`
+- Action forbidden key count: `0`
+- Uses GT for action: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This materializer/planner smoke turns missing own-view support into candidate-centered active observation rows while preserving `negative_missing_support_guard` only as a deferred safety counterfactual. It explicitly blocks `reject_missing_own_view_without_recheck`, `commit_after_relation_depth_resolved_without_own_view_support`, and promotion of the guard to candidate rejection. The next gate is frame/projection smoke; any detector evidence, correctness-label join, terminal utility, `first_eval`, policy-scale comparison, or paper claim must wait until render/projection rows exist.
+
+## Missing Own-View Recheck Frame/Projection Smoke
+
+### 사실
+
+- Verify: `manifests/h001_missing_own_view_recheck_frame_projection_v1.verify.json`
+- Job: `runtime/jobs/missing_own_view_recheck_frame_projection.sh`
+- Frame output: `local_dataset/runs/h001_missing_own_view_recheck_observation_frames_v1`
+- Projection output: `local_dataset/runs/h001_missing_own_view_recheck_observation_projection_v1`
+- Docker image: `research3/habitat-h001:20260508-calib-artifacts`
+- Frame rows / rendered headings: `80 / 320`
+- Nonblank rows / kept headings: `80 / 317`
+- Removed blank headings: `3`
+- Dropped rows: `0`
+- Projection rows / expected rows: `80 / 80`
+- Projection visible rows / rate: `80 / 1.0`
+- Missing candidate rows: `0`
+- Candidate selection source: `explicit_candidate_ids 80`
+- GT action rows: `0`
+- Projection gate: `true`
+- Uses GT for action: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This smoke confirms renderability and projection anchors for all missing-own-view recheck rows. The `3` blank headings are a viewpoint/rendering limitation isolated by the nonblank filter, not a row-level failure. The next gate is detector/SAM2 substrate; terminal utility, candidate rejection, `first_eval`, policy-scale comparison, and paper claims remain blocked.
+
+## Missing Own-View Recheck Detector/SAM2 Substrate
+
+### 사실
+
+- Verify: `manifests/h001_missing_own_view_recheck_detector_substrate_v1.verify.json`
+- Job: `runtime/jobs/missing_own_view_recheck_detector_substrate.sh`
+- Output: `local_dataset/runs/h001_missing_own_view_recheck_observation_detector_substrate_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Device: `cuda`
+- Detector rows: `80`
+- Detector box / SAM2 / candidate association rates: `1.0 / 1.0 / 0.9625`
+- Rows with candidate association: `77`
+- Rows without candidate association: `3`
+- Unassociated rows: `QaLdnwvtxbs sofa rival_identity:3 spatial_nms:0`, `4ok3usBNeis sofa rival_identity:22 spatial_nms:9`, `4ok3usBNeis sofa rival_identity:22 spatial_nms:3`
+- Associated candidate heading count: `236`
+- Detector boxes / masks: `562 / 562`
+- Projected pixels inside mask: `263`
+- Association rows: `317`
+- Candidate selection source: `explicit_candidate_ids 80`
+- GT action rows: `0`
+- Detector substrate gate: `true`
+- Uses GT for action: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The substrate now provides enough detector/SAM2 evidence to write a post-detector analyzer contract. That contract must aggregate acquired own-view support and separately report the `3` unassociated `sofa` rows. It must not convert detector visibility or missing association directly into candidate commit/rejection, terminal utility, `first_eval`, policy-scale comparison, or paper claims.
+
+## Missing Own-View Recheck Post-Detector Evidence Contract
+
+### 사실
+
+- Contract: `manifests/h001_missing_own_view_recheck_evidence_v1.json`
+- Verify: `manifests/h001_missing_own_view_recheck_evidence_v1.verify.json`
+- Analyzer target: `runtime/h001_runtime/analyze_missing_own_view_recheck_evidence.py`
+- Output target: `local_dataset/runs/h001_missing_own_view_recheck_evidence_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Source gates: input/materializer `true`, plan `true`, projection `true`, detector/SAM2 substrate `true`
+- Expected view / target-candidate / request / unassociated-frame rows: `80 / 20 / 7 / 3`
+- Target candidates with any association: `20`
+- Target candidates with full `4/4` association: `17`
+- Target candidates with partial `3/4` association: `3`
+- Target candidates with zero association: `0`
+- Minimum candidate association rate: `0.95`
+- Minimum rows with candidate association: `77`
+- Minimum associated candidate heading count: `236`
+- Minimum projected pixels inside mask: `260`
+- Required audit rows: `3` unassociated `sofa` frames
+- Action forbidden key count maximum: `0`
+- Terminal commits maximum: `0`
+- Candidate commit / rejection rows maximum: `0 / 0`
+- Uses GT for action: `false`
+- Terminal utility validation allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract converts the missing-own-view branch from substrate evidence into a nonterminal evidence aggregation problem. The analyzer may report `candidate_own_view_support_acquired`, `partial`, or `absent` states, but it must not turn acquired support into a goal commit or turn one unassociated view into candidate rejection. The reviewer-facing question is whether active mobility acquired the missing evidence state; `ObjectNav` goal validity remains a later arbitration problem.
+
+## Missing Own-View Recheck Post-Detector Evidence Analyzer
+
+### 사실
+
+- Analyzer: `runtime/h001_runtime/analyze_missing_own_view_recheck_evidence.py`
+- Verify: `manifests/h001_missing_own_view_recheck_evidence_v1.verify.json`
+- Output: `local_dataset/runs/h001_missing_own_view_recheck_evidence_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- View / target-candidate / request / unassociated-frame rows: `80 / 20 / 7 / 3`
+- Candidate status: `candidate_own_view_support_acquired 20`
+- Request action: `keep_nonterminal_own_view_support_for_guard_arbitration_contract 7`
+- Rows with candidate association: `77`
+- Candidate association rate: `0.9625`
+- Target candidates with any association: `20`
+- Target candidates with at least three associated views: `20`
+- Target candidates with full `4/4` association: `17`
+- Target candidates with partial `3/4` association: `3`
+- Target candidates with zero association: `0`
+- Associated candidate heading count: `236`
+- Projected pixels inside mask: `263`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Action forbidden key count: `0`
+- Uses GT for action: `false`
+- Evidence gate: `true`
+- Paper claim allowed: `false`
+- Recommended next action: `design_missing_own_view_guard_arbitration_contract`
+
+### 에이전트 추론
+
+The analyzer shows that active re-observation can acquire own-view support state for all selected candidates, including the three candidates with one unassociated frame. This is a mechanism result for evidence acquisition, not `ObjectNav` goal validity. The next contract should decide how to interpret `negative_missing_support_guard` after support acquisition without allowing direct candidate commit/rejection, `first_eval`, policy-scale comparison, terminal utility, or paper claims.
+
+## Missing Own-View Guard Arbitration Contract
+
+### 사실
+
+- Contract: `manifests/h001_missing_own_view_guard_arbitration_v1.json`
+- Verify: `manifests/h001_missing_own_view_guard_arbitration_v1.verify.json`
+- Analyzer target: `runtime/h001_runtime/analyze_missing_own_view_guard_arbitration.py`
+- Output target: `local_dataset/runs/h001_missing_own_view_guard_arbitration_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Source evidence gate: `true`
+- Candidate / request guard rows: `20 / 7`
+- Preserved unassociated-frame audit rows: `3`
+- Expected guard-deactivated candidate / request rows: `20 / 7`
+- Expected guard-deferred candidate rows: `0`
+- Expected candidate commit / rejection rows: `0 / 0`
+- Expected terminal commits: `0`
+- Expected promotable terminal outcome rows: `0`
+- Action forbidden key count maximum: `0`
+- Uses GT for action: `false`
+- Terminal utility validation allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The contract turns acquired support into guard deactivation, not candidate selection. This preserves the paper-relevant mechanism: missing own-view support should trigger active observation before rejection. Since every selected request still has multiple acquired-support candidates or unresolved goal-validity context, terminal utility remains blocked.
+
+## Missing Own-View Guard Arbitration Analyzer
+
+### 사실
+
+- Analyzer: `runtime/h001_runtime/analyze_missing_own_view_guard_arbitration.py`
+- Verify: `manifests/h001_missing_own_view_guard_arbitration_v1.verify.json`
+- Output: `local_dataset/runs/h001_missing_own_view_guard_arbitration_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Source missing-own-view recheck evidence gate: `true`
+- Candidate / request guard rows: `20 / 7`
+- Preserved unassociated-frame audit rows: `3`
+- Guard-deactivated candidate / request rows: `20 / 7`
+- Guard-deferred candidate rows: `0`
+- Guard arbitration decision: `deactivate_negative_missing_support_guard_after_recheck 20`
+- Request guard status: `missing_own_view_guard_closed_as_nonterminal_evidence 7`
+- Candidate nonterminal actions: `deactivate_negative_missing_support_guard_after_recheck 17`, `keep_guard_deactivated_but_report_unassociated_view_audit 3`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Promotable terminal outcome rows: `0`
+- Action forbidden key count: `0`
+- Uses GT for action: `false`
+- Gate: `true`
+- Paper claim allowed: `false`
+- Recommended next task: `freeze_missing_own_view_guard_branch_closure_or_select_next_label_free_family`
+
+### 에이전트 추론
+
+This analyzer closes the deferred `negative_missing_support_guard` as nonterminal evidence after recheck support acquisition. The result supports the method principle that missing own-view support should trigger active observation before rejection. It does not establish `ObjectNav` goal validity, terminal utility, `first_eval`, policy-scale comparison, or paper claims.
+
+## Missing Own-View Guard Branch Closure
+
+### 사실
+
+- Contract: `manifests/h001_missing_own_view_guard_branch_closure_v1.json`
+- Analyzer: `runtime/h001_runtime/close_missing_own_view_guard_branch.py`
+- Verify: `manifests/h001_missing_own_view_guard_branch_closure_v1.verify.json`
+- Output: `local_dataset/runs/h001_missing_own_view_guard_branch_closure_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Selected branch: `correct_candidate_missing_own_view_support`
+- Paired guard branch: `negative_missing_support_guard`
+- Branch / request / candidate closure rows: `2 / 7 / 20`
+- Closed request / candidate rows: `7 / 20`
+- Branch status counts: `closed_as_evidence_acquired_but_nonpromotable_goal_validity 1`, `closed_as_deactivated_after_recheck_support_acquisition 1`
+- Request closure status: `missing_own_view_and_negative_guard_branches_closed_nonterminal 7`
+- Guard-deactivated candidate / request rows: `20 / 7`
+- Guard-deferred candidate rows: `0`
+- Unassociated-frame audit rows preserved: `3`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Promotable terminal outcome rows: `0`
+- Action forbidden key count: `0`
+- Uses GT for action: `false`
+- Closure gate: `true`
+- Paper claim allowed: `false`
+- Recommended next task: `select_next_label_free_evidence_family_after_object_relation_branch_family_closure`
+
+### 에이전트 추론
+
+This closes the missing-own-view route as mechanism evidence: active re-observation acquired the missing support state and then removed the negative guard. It does not produce a promotable terminal outcome because own-view support acquisition still does not establish `ObjectNav` goal validity. The next step should select a new label-free evidence family or close the broader object-relation branch family, not unlock `first_eval`, policy-scale comparison, terminal utility, or paper claims.
+
+## Next Label-Free Evidence Family After Object-Relation Closure
+
+### 사실
+
+- Contract: `manifests/h001_next_label_free_evidence_family_after_object_relation_v1.json`
+- Selector: `runtime/h001_runtime/select_next_evidence_family_after_object_relation.py`
+- Verify: `manifests/h001_next_label_free_evidence_family_after_object_relation_v1.verify.json`
+- Output: `local_dataset/runs/h001_next_label_free_evidence_family_after_object_relation_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Selection gate: `true`
+- Selected family: `instance_arbitration_defer_v1`
+- Selected action: `freeze_instance_arbitration_label_free_evidence_contract`
+- Route branch counts: `source_pool_repair_v1 5`, `goal_validity_confirmation_v1 7`, `instance_arbitration_defer_v1 9`
+- Selected family stats: request rows `9`, scenes `5`, queries `3`, candidate count sum `51`, strong own-view candidate count sum `28`, detector-strong candidate count sum `36`
+- Object-relation closure check: unique-support closed/unclosed request rows `4/0`, residual closure/promotable rows `3/0`, missing-own-view closed/promotable rows `7/0`
+- Source-pool status: route branch rows `5`, second fallback gate `true`, backend/source-map blind spot after second fallback `true`, goal-validity confirmation unblocked `false`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Action forbidden key count: `0`
+- Uses GT for action: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This selector is not a utility result. It is a branch-priority gate after object-relation closure. It selects `instance_arbitration_defer_v1` because source-pool repair and object-relation evidence are already followed to terminal-blocking or backend-blind-spot outcomes, while multi-candidate instance arbitration remains the largest unprocessed label-free branch. The next contract must define what evidence could reduce this ambiguity without using evaluation labels, threshold tuning, candidate commit/rejection, `first_eval`, policy-scale comparison, or paper claims.
+
+## Instance-Arbitration Evidence Contract
+
+### 사실
+
+- Contract: `manifests/h001_instance_arbitration_evidence_v1.json`
+- Static verify: `manifests/h001_instance_arbitration_evidence_v1.verify.json`
+- Status: frozen design contract before implementation
+- Target branch/action: `instance_arbitration_defer_v1` / `defer_instance_arbitration_unresolved`
+- Source route rows: `local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_rows.jsonl`
+- Source candidate artifact: `local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl`
+- Request rows / scenes / queries: `9 / 5 / 3`
+- Unique target scene/query artifact rows: `7`
+- Candidate reference rows: `51`
+- Unordered candidate pair rows: `121`
+- Source-top / strong own-view / detector-strong / local-context refs: `9 / 28 / 36 / 11`
+- Candidate count distribution: `4:1`, `5:1`, `6:7`
+- Required candidate observation rows minimum: `51`
+- Required pair observation rows minimum: `121`
+- Required total observation rows minimum: `172`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Action forbidden key count: `0`
+- Uses GT for action: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract freezes instance arbitration as pair-level evidence acquisition rather than candidate reranking. The next implementation must write request, candidate, pair, and observation-plan rows for all selected rows. It must preserve duplicate request rows that share a scene/query, and it must not drop candidates because a simpler non-GT signal is weak or strong. This keeps the novelty path focused on converting repeated-instance semantic uncertainty into active evidence, not on source-top, detector-score, own-support, local-context-only, or threshold-tuned shortcut commits.
+
+## Instance-Arbitration Evidence Materializer And Planner
+
+### 사실
+
+- Input materializer: `runtime/h001_runtime/build_instance_arbitration_inputs.py`
+- Observation planner: `runtime/h001_runtime/plan_instance_arbitration_evidence.py`
+- Verify: `manifests/h001_instance_arbitration_evidence_v1.verify.json`
+- Output: `local_dataset/runs/h001_instance_arbitration_evidence_v1`
+- Docker images: `research3/openvocab-perception:20260513-v3c-gdino-sam2` for materialization, `research3/habitat-h001:20260508-calib-artifacts` for Habitat observation planning
+- Request / candidate / pair / candidate-artifact / observation rows: `9 / 51 / 121 / 7 / 172`
+- Candidate / pair observation rows: `51 / 121`
+- Skipped rows: `0`
+- Pair probe types: `pair_common_view 57`, `pair_dual_standoff_fallback 64`
+- Viewpoint sources: `common_pair_navmesh 57`, `standoff_navmesh 115`
+- Target distance min / mean / max: `1.5926m / 1.9894m / 3.2408m`
+- Action forbidden key count: `0`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- Input materializer gate: `true`
+- Observation plan gate: `true`
+- Paper claim allowed: `false`
+- Planning warning: Habitat printed `.basis.scn` semantic scene descriptor load warnings, but the observation plan gate passed.
+
+### 에이전트 추론
+
+The materializer/planner turns the frozen instance-arbitration branch into a complete nonterminal observation substrate. This is still substrate evidence only: it does not choose a candidate, reject a candidate, validate terminal utility, rerun `first_eval`, unlock policy-scale comparison, or support a paper claim. The next gate is frame/projection smoke for the `172` planned observations.
+
+## Instance-Arbitration Frame / Projection Smoke
+
+### 사실
+
+- Job: `runtime/jobs/instance_arbitration_frame_projection.sh`
+- Verify: `manifests/h001_instance_arbitration_frame_projection_v1.verify.json`
+- Plan output: `local_dataset/runs/h001_instance_arbitration_evidence_v1`
+- Frame output: `local_dataset/runs/h001_instance_arbitration_evidence_frames_v1`
+- Projection output: `local_dataset/runs/h001_instance_arbitration_evidence_projection_v1`
+- Docker image: `research3/habitat-h001:20260508-calib-artifacts`
+- Policy: `InstanceArbitrationPairEvidence`
+- Frame rows requested / exported: `172 / 172`
+- Rendered heading count: `1012`
+- Min / max headings per row: `4 / 7`
+- RGB / depth / pose / metadata files: `1012 / 1012 / 1012 / 1012`
+- Nonblank input / output rows: `172 / 172`
+- Dropped rows: `0`
+- Removed blank heading count: `0`
+- Row-level nonblank gate: `true`
+- Strict no-blank-heading gate: `true`
+- Projection rows / expected rows: `172 / 172`
+- Projection visible rows / rate: `172 / 1.0`
+- Candidate selection source: `explicit_candidate_ids 172`
+- Missing candidate rows: `0`
+- GT action rows: `0`
+- Uses GT for action: `false`
+- Projection gate: `true`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The frame/projection smoke shows the pair-level instance-arbitration observation plan is renderable and every target candidate has at least one visible projection anchor. This enables detector/SAM2 substrate on the same fixed observation rows. It still does not establish detector evidence quality, terminal utility, candidate commitment, candidate rejection, `first_eval`, policy-scale comparison, or a paper claim.
+
+## Instance-Arbitration Detector / SAM2 Substrate
+
+### 사실
+
+- Job: `runtime/jobs/instance_arbitration_detector_substrate.sh`
+- Verify: `manifests/h001_instance_arbitration_detector_substrate_v1.verify.json`
+- Output: `local_dataset/runs/h001_instance_arbitration_evidence_detector_substrate_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Policy: `InstanceArbitrationPairEvidence`
+- Frame / detector rows: `172 / 172`
+- Detector box / SAM2 / candidate association rates: `1.0 / 1.0 / 0.8081`
+- Rows with candidate association: `139`
+- Associated candidate heading count: `483`
+- Association rows: `1820`
+- Detector boxes / masks: `2562 / 2562`
+- Projected pixels inside mask: `963`
+- View-role rows: `candidate_own_view_refresh 51`, `source_top_contrast_view 42`, `pair_common_view_or_dual_standoff 39`, `local_context_contrast_view 40`
+- Frame association by role: `43/51`, `32/42`, `30/39`, `34/40`
+- Selected candidate count rows: `1:51`, `2:121`
+- Candidate selection source: `explicit_candidate_ids 172`
+- GT action rows: `0`
+- Uses GT for action: `false`
+- Detector substrate gate: `true`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The detector/SAM2 substrate is sufficient to implement a post-detector evidence analyzer because every planned frame row produced detector boxes and masks, and candidate association clears the fixed `0.80` gate. This still does not prove candidate identity or ObjectNav goal validity. The analyzer must aggregate evidence across own-view refresh, source-top contrast, local-context contrast, and pair/common-or-standoff roles without allowing detector-score, SAM2 presence, any-association, own-view-only, or source-top shortcut commits.
+
+## Instance-Arbitration Post-Detector Evidence Contract
+
+### 사실
+
+- Contract: `manifests/h001_instance_arbitration_detector_evidence_v1.json`
+- Status: `frozen_before_implementation`
+- Target analyzer: `runtime/h001_runtime/analyze_instance_arbitration_detector_evidence.py`
+- Target output: `local_dataset/runs/h001_instance_arbitration_detector_evidence_v1`
+- Required view / candidate / pair / request rows: `172 / 51 / 121 / 9`
+- Minimum detector association rows: `1820`
+- Minimum candidate association rate: `0.80`
+- Minimum associated candidate heading count: `483`
+- Required view roles: `candidate_own_view_refresh`, `source_top_contrast_view`, `local_context_contrast_view`, `pair_common_view_or_dual_standoff`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- Terminal utility validation allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract turns repeated-instance ambiguity into a nonterminal evidence aggregation problem. The analyzer should report view, candidate, pair, request, and unresolved-case evidence. A promotable branch outcome, if it appears, only permits a later terminal utility contract. It does not permit immediate commit/rejection, `first_eval` rerun, policy-scale comparison, or paper claim.
+
+## Instance-Arbitration Post-Detector Evidence Analyzer
+
+### 사실
+
+- Analyzer: `runtime/h001_runtime/analyze_instance_arbitration_detector_evidence.py`
+- Verify: `manifests/h001_instance_arbitration_detector_evidence_v1.verify.json`
+- Output: `local_dataset/runs/h001_instance_arbitration_detector_evidence_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- View / candidate / pair / request / unresolved rows: `172 / 51 / 121 / 9 / 9`
+- Candidate evidence statuses: `ambiguous_rival_leakage_candidate 32`, `contradicted_by_pair_or_contrast_evidence 18`, `partial_instance_support 1`
+- Pair evidence statuses: `ambiguous_both_candidates_supported 36`, `ambiguous_no_candidate_support 25`, `resolved_in_favor_of_candidate_a_nonterminal 49`, `resolved_in_favor_of_candidate_b_nonterminal 11`
+- Request action: `diagnose_instance_arbitration_residual_evidence 9`
+- Promotable branch outcome rows: `0`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Action forbidden key count: `0`
+- Uses GT for action: `false`
+- Analyzer gate: `true`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The analyzer verifies the aggregation harness, but it does not produce a promotable instance-arbitration branch. All nine requests remain unresolved because no request has a unique candidate-specific instance-support outcome with all pair contexts resolved. The next gate is residual diagnosis: separate rival leakage, pair ambiguity, contradiction-by-pair/contrast, missing support, and backend/source-pool limitations before designing any further observation or terminal utility contract.
+
+## Instance-Arbitration Residual Diagnostic
+
+### 사실
+
+- Diagnostic: `runtime/h001_runtime/diagnose_instance_arbitration_residual.py`
+- Verify: `manifests/h001_instance_arbitration_residual_diagnostic_v1.verify.json`
+- Output: `local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Candidate / pair / request rows: `51 / 121 / 9`
+- Candidate residual classes: `own_view_support_with_rival_leakage 20`, `pair_or_contrast_contradiction 18`, `source_top_shortcut_rival_leakage 8`, `contrast_support_with_rival_leakage 4`, `partial_support_without_pair_resolution 1`
+- Pair residual classes: `one_sided_pair_support_nonterminal 53`, `common_view_both_candidates_supported 36`, `dual_standoff_no_candidate_support 14`, `common_view_no_candidate_support 11`, `one_sided_pair_support_with_leakage 7`
+- Request residual statuses: `multiple_lossless_pair_graph_candidates 7`, `unique_lossless_pair_graph_candidate_blocked_by_common_view_overlap 2`
+- Pair-graph follow-up request rows: `9`
+- Unique / multiple lossless pair-graph request rows: `2 / 7`
+- Promotable branch outcome rows: `0`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Action forbidden key count: `0`
+- Uses GT for action: `false`
+- Diagnostic gate: `true`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The residual diagnostic identifies a label-free graph signal but no terminal outcome. Pair evidence can produce lossless graph candidates, yet `7/9` requests have multiple lossless candidates and `2/9` unique candidates are still blocked by common-view overlap. The next contract should test pair-graph consistency as a nonterminal follow-up and must explicitly block `commit_graph_winner`, `commit_lossless_candidate`, and `commit_max_pair_win_candidate`.
+
+## Instance-Arbitration Pair-Graph Consistency Follow-Up Contract
+
+### 사실
+
+- Contract: `manifests/h001_instance_arbitration_pair_graph_consistency_followup_v1.json`
+- Static verify: `manifests/h001_instance_arbitration_pair_graph_consistency_followup_v1.verify.json`
+- Status: `frozen_design_contract_before_implementation`
+- Target analyzer: `runtime/h001_runtime/analyze_instance_arbitration_pair_graph_consistency_followup.py`
+- Target output: `local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1`
+- Source residual candidate / pair / request rows: `51 / 121 / 9`
+- Pair-graph follow-up request rows: `9`
+- Lossless / max-pair-winner candidate memberships: `17 / 14`
+- Unique / multiple lossless request rows: `2 / 7`
+- Pair graph winner / no-winner pair rows: `60 / 61`
+- Expected candidate / pair / request graph rows: `51 / 121 / 9`
+- Expected shortcut audit rows minimum: `17`
+- Expected promotable branch outcome rows: `0`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Action forbidden key count: `0`
+- Uses GT for action: `false`
+- Terminal utility validation allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract turns pair-graph signal into a nonterminal consistency audit. It intentionally blocks `commit_graph_winner`, `commit_lossless_candidate`, `commit_max_pair_win_candidate`, source-top or detector-strong shortcut commits, candidate rejection by pair loss, threshold tuning, `first_eval`, policy-scale comparison, terminal utility, and paper claims. The next implementation should write candidate graph, pair graph, request graph, shortcut-audit, and summary rows; if it still produces zero promotable outcomes, the instance-arbitration pair-graph branch should be closed or routed to the next label-free evidence family.
+
+## Instance-Arbitration Pair-Graph Consistency Follow-Up Analyzer
+
+### 사실
+
+- Analyzer: `runtime/h001_runtime/analyze_instance_arbitration_pair_graph_consistency_followup.py`
+- Verify: `manifests/h001_instance_arbitration_pair_graph_consistency_followup_v1.verify.json`
+- Output: `local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Candidate / pair / request graph rows: `51 / 121 / 9`
+- Shortcut audit rows: `357`
+- Candidate graph statuses: `lossless_blocked_by_common_view_overlap 2`, `lossless_but_multiple_graph_candidates 15`, `max_pair_win_nonterminal_due_pair_losses 4`, `pair_or_contrast_contradiction_nonterminal 18`, `rival_leakage_nonterminal 12`
+- Pair graph statuses: `common_view_overlap_blocks_pair_resolution 36`, `no_candidate_support_blocks_pair_resolution 25`, `one_sided_support_nonterminal_graph_edge 53`, `one_sided_support_with_leakage_nonterminal 7`
+- Request graph statuses: `multiple_lossless_pair_graph_candidates_unresolved 7`, `unique_lossless_candidate_blocked_by_common_view_overlap 2`
+- Shortcut would-select counts: `graph_winner_commit 14`, `lossless_candidate_commit 17`, `max_pair_win_count_commit 14`, `reject_candidate_with_pair_loss 33`, `source_top_lossless_commit 7`, `detector_strong_lossless_commit 4`
+- Promotable branch outcome rows: `0`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Action forbidden key count: `0`
+- Uses GT for action: `false`
+- Follow-up gate: `true`
+- Paper claim allowed: `false`
+- Recommended next task: `close_instance_arbitration_pair_graph_branch_or_select_next_label_free_evidence_family`
+
+### 에이전트 추론
+
+Graph winners and lossless candidates remain useful as failure-taxonomy evidence, but they are not goal-validity authority. Multiple lossless candidates, common-view overlap, rival leakage, and pair losses block shortcut commitment or rejection. The next step should close this pair-graph branch or select another label-free evidence family; terminal utility, `first_eval`, policy-scale comparison, and paper claims remain blocked.
+
+## Instance-Arbitration Pair-Graph Branch Closure
+
+### 사실
+
+- Contract: `manifests/h001_instance_arbitration_pair_graph_branch_closure_v1.json`
+- Analyzer: `runtime/h001_runtime/close_instance_arbitration_pair_graph_branch.py`
+- Verify: `manifests/h001_instance_arbitration_pair_graph_branch_closure_v1.verify.json`
+- Output: `local_dataset/runs/h001_instance_arbitration_pair_graph_branch_closure_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Branch / request / candidate / pair / shortcut closure rows: `1 / 9 / 51 / 121 / 357`
+- Request closure statuses: `closed_as_multiple_lossless_pair_graph_candidates_unresolved 7`, `closed_as_unique_lossless_candidate_blocked_by_common_view_overlap 2`
+- Candidate closure statuses: `closed_as_lossless_blocked_by_common_view_overlap 2`, `closed_as_lossless_but_multiple_graph_candidates 15`, `closed_as_max_pair_win_nonterminal_due_pair_losses 4`, `closed_as_pair_or_contrast_contradiction_nonterminal 18`, `closed_as_rival_leakage_nonterminal 12`
+- Pair closure statuses: `closed_as_common_view_overlap_blocks_pair_resolution 36`, `closed_as_no_candidate_support_blocks_pair_resolution 25`, `closed_as_one_sided_support_nonterminal_graph_edge 53`, `closed_as_one_sided_support_with_leakage_nonterminal 7`
+- Shortcut blocked reason counts: `candidate_rejection_by_pair_loss_forbidden_without_goal_validity_evidence 33`, `common_view_overlap_blocks_shortcut_commit 10`, `defer_all_is_control_baseline_not_utility_evidence 51`, `multiple_lossless_pair_graph_candidates_block_shortcut_commit 46`, `shortcut_rule_not_applicable_to_candidate 217`
+- Promotable branch outcome rows: `0`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Action forbidden key count: `0`
+- Uses GT for action: `false`
+- Closure gate: `true`
+- Paper claim allowed: `false`
+- Recommended next task: `select_next_label_free_evidence_family_after_instance_arbitration_pair_graph_closure`
+
+### 에이전트 추론
+
+This closes the instance-arbitration pair-graph branch as terminal-blocking shortcut taxonomy. The branch is useful for reviewer-defense because it explains why graph winners, lossless candidates, max-pair wins, and pair-loss rejection are not valid goal-commit rules. It does not unlock terminal utility, `first_eval`, policy-scale comparison, or paper claims.
+
+## Next Label-Free Evidence Family After Instance-Arbitration Closure
+
+### 사실
+
+- Contract: `manifests/h001_next_label_free_evidence_family_after_instance_arbitration_v1.json`
+- Selector: `runtime/h001_runtime/select_next_evidence_family_after_instance_arbitration.py`
+- Verify: `manifests/h001_next_label_free_evidence_family_after_instance_arbitration_v1.verify.json`
+- Output: `local_dataset/runs/h001_next_label_free_evidence_family_after_instance_arbitration_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Selected family: `semantic_slam_map_pose_consistency_probe_v1`
+- Selected action: `freeze_semantic_slam_map_pose_consistency_probe_contract`
+- Route branch counts: `source_pool_repair_v1 5`, `goal_validity_confirmation_v1 7`, `instance_arbitration_defer_v1 9`
+- Semantic branch promotable rows: `0`
+- Semantic object branches exhausted: `true`
+- Selection rows: `5`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Action forbidden key count: `0`
+- Uses GT for action: `false`
+- Selection gate: `true`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The current semantic object evidence route is exhausted as terminal utility. Source-pool repair ends in a backend/source-map blind spot, object-relation and missing-own-view branches close without promotable terminal outcomes, and instance-arbitration pair-graph evidence closes as shortcut taxonomy. The next evaluation contract should therefore freeze a Step 4-5 semantic-SLAM map/pose consistency probe rather than reopening semantic object commit/reject shortcuts or rerunning `first_eval`.
+
+The probe contract must keep the same separation rules:
+
+- no terminal commit or candidate rejection from this selection result;
+- no `first_eval` rerun or policy-scale comparison until a new probe has measurable evidence;
+- action-time inputs must be label-free;
+- map/pose metrics may use GT only as evaluation/reference, not as action input;
+- `SemanticOnly`, `SLAMOnly`, and `SemanticSLAM` must be compared on the same rows or replay episodes.
+
+## Semantic-SLAM Map/Pose Consistency Probe Contract
+
+### 사실
+
+- Contract: `manifests/h001_semantic_slam_map_pose_consistency_probe_v1.json`
+- Verify: `manifests/h001_semantic_slam_map_pose_consistency_probe_v1.verify.json`
+- Status: implemented and Docker-verified source audit
+- Stage: `P4-design`
+- Step 4-5 promotion satisfied: `false`
+- First proxy metric: `pose_graph_connectivity`
+- Primary source: `local_dataset/runs/h001_instance_arbitration_evidence_frames_v1`
+- Primary source rows / headings: `172 / 1012`
+- Primary source unique scenes: `5`
+- RGB / depth / pose / metadata files: `1012 / 1012 / 1012 / 1012`
+- Required first output: source audit completed
+- Implementation: `runtime/h001_runtime/audit_semantic_slam_map_pose_consistency_sources.py`
+- Target output: `local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract does not mean H001 has passed the Step 4-5 promotion gate. It only freezes the minimum source-audit and proxy-metric requirements for moving from exhausted semantic object shortcut branches toward map/pose-side uncertainty. The implemented source audit proves that existing RGB/depth/pose/metadata artifacts can support a label-free pose graph connectivity proxy. The next gate must define how this proxy is judged before any `SemanticOnly`, `SLAMOnly`, or `SemanticSLAM` comparison is implemented.
+
+The first source audit should report:
+
+- source inventory rows for primary and support frame families;
+- RGB/depth/pose/metadata file counts;
+- request/scene/query grouping;
+- candidate or viewpoint node counts;
+- candidate pose graph proxy readiness;
+- forbidden action-label key count;
+- whether a later `P4-proxy` implementation is justified.
+
+## Semantic-SLAM Source Audit Result
+
+### 사실
+
+- Date checked: `2026-06-04`
+- Implementation: `runtime/h001_runtime/audit_semantic_slam_map_pose_consistency_sources.py`
+- Verify: `manifests/h001_semantic_slam_map_pose_consistency_probe_v1.verify.json`
+- Output: `local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Source inventory / probe request / pose graph proxy rows: `5 / 50 / 50`
+- Source-ready rows: `5`
+- Primary source ready: `true`
+- Pose/depth/metadata ready: `true`
+- Non-GT action gate: `true`
+- Pose graph proxy ready rows: `50`
+- Max node / edge count: `24 / 236`
+- Pose graph proxy source counts:
+  - `expanded_retrieval_local_context_frames_v1`: `21`
+  - `instance_arbitration_evidence_frames_v1`: `9`
+  - `missing_own_view_recheck_observation_frames_v1`: `7`
+  - `object_relation_fresh_observation_frames_v1`: `7`
+  - `partial_relation_depth_observation_frames_v1`: `6`
+- Action forbidden key count: `0`
+- Terminal commit rows: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- Source audit gate: `true`
+- P4 proxy readiness gate: `true`
+- Step 4-5 promotion satisfied: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The source audit unblocked the formal pose graph connectivity proxy gate below because the existing label-free frame artifacts have synchronized RGB/depth/pose/metadata and enough request-level nodes/edges. It does not prove SLAM utility, task improvement, or semantic-SLAM complementarity. The next evaluation step is strict edge variant analysis before any `SemanticOnly` / `SLAMOnly` / `SemanticSLAM` comparison.
+
+## Semantic-SLAM Pose Graph Connectivity Proxy Gate
+
+### 사실
+
+- Date checked: `2026-06-04`
+- Contract: `manifests/h001_semantic_slam_pose_graph_connectivity_proxy_gate_v1.json`
+- Verify: `manifests/h001_semantic_slam_pose_graph_connectivity_proxy_gate_v1.verify.json`
+- Implementation: `runtime/h001_runtime/evaluate_semantic_slam_pose_graph_connectivity_proxy_gate.py`
+- Output: `local_dataset/runs/h001_semantic_slam_pose_graph_connectivity_proxy_gate_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Gate rows: `13`
+- Pose graph proxy rows / ready rows: `50 / 50`
+- Source family count: `5`
+- Primary source proxy rows: `9`
+- Spatial edge rows: `46`
+- Loop-closure proxy edge rows: `36`
+- Spatial-or-loop edge rows: `46`
+- Candidate-overlap-only rows / rate: `4 / 0.08`
+- Candidate-overlap edge share: `0.5746`
+- Dependency gate: `true`
+- Proxy plumbing gate: `true`
+- Edge quality gate: `true`
+- Action safety gate: `true`
+- Pose graph connectivity proxy gate: `true`
+- Action forbidden key count: `0`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- Step 4-5 promotion satisfied: `false`
+- `SemanticOnly` / `SLAMOnly` / `SemanticSLAM` comparison allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This gate is a proxy-definition gate, not a SLAM result. The first proxy gate passes because most rows contain spatial or loop-closure proxy edges and candidate-overlap-only rows are rare. However, `candidate_id_overlap` still accounts for `57.46%` of edge reasons, so a reviewer-facing Step 4-5 path must recompute strict edge variants before any `SemanticOnly`, `SLAMOnly`, or `SemanticSLAM` comparison.
+
+Edge roles:
+
+- `spatial_proximity`: pose graph proxy signal
+- `loop_closure_opportunity`: pose graph proxy signal
+- `target_position_neighborhood`: semantic-map geometric context signal
+- `candidate_id_overlap`: shortcut diagnostic only
+
+### 논문 주장
+
+No SLAM benefit, navigation utility, or semantic-SLAM complementarity claim is allowed from this gate alone.
+
+### Next Gate
+
+Implement a strict edge variant proxy analyzer that reports connectivity under at least:
+
+- all reported edges;
+- spatial-only edges;
+- loop-closure-only edges;
+- spatial-or-loop edges;
+- target-neighborhood context edges;
+- candidate-overlap-only diagnostic edges.
+
+The analyzer must keep action-label leakage, terminal commits, candidate commit/rejection, `first_eval`, policy-scale comparison, and paper claims blocked.
+
+## Semantic-SLAM Strict Edge Variant Proxy Gate
+
+### 사실
+
+- Date checked: `2026-06-04`
+- Contract: `manifests/h001_semantic_slam_strict_edge_variant_proxy_v1.json`
+- Verify: `manifests/h001_semantic_slam_strict_edge_variant_proxy_v1.verify.json`
+- Implementation: `runtime/h001_runtime/analyze_semantic_slam_strict_edge_variants.py`
+- Output: `local_dataset/runs/h001_semantic_slam_strict_edge_variant_proxy_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Request groups: `50`
+- Variant rows / summary rows: `350 / 7`
+- Source family count: `5`
+- Canonical variant: `pose_spatial_or_loop`
+- Canonical ready rows / rate: `46 / 0.92`
+- Canonical minimum source ready rate: `0.8095`
+- Context variant `map_pose_context_no_candidate` ready rows / rate: `46 / 0.92`
+- Loop variant `pose_loop` ready rows / rate: `36 / 0.72`
+- Shortcut variant `candidate_overlap_only` ready rows / rate: `50 / 1.0`
+- Variant ready rates:
+  - `all_edges`: `1.0`
+  - `candidate_overlap_only`: `1.0`
+  - `map_pose_context_no_candidate`: `0.92`
+  - `pose_loop`: `0.72`
+  - `pose_spatial`: `0.92`
+  - `pose_spatial_or_loop`: `0.92`
+  - `target_context`: `0.58`
+- Dependency gate: `true`
+- Strict edge variant gate: `true`
+- Action safety gate: `true`
+- Strict edge variant proxy gate: `true`
+- Action forbidden key count: `0`
+- Terminal commits: `0`
+- Candidate commit / rejection rows: `0 / 0`
+- Uses GT for action: `false`
+- `SemanticOnly` / `SLAMOnly` / `SemanticSLAM` proxy comparison contract allowed: `true`
+- `SemanticOnly` / `SLAMOnly` / `SemanticSLAM` comparison run allowed: `false`
+- Step 4-5 promotion satisfied: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The strict edge variant gate passes because the canonical pose-only proxy remains available on `46/50` groups after excluding `candidate_id_overlap`. This removes the most obvious shortcut objection to defining a proxy comparison contract. It does not mean `SemanticSLAM` improves map/pose consistency; it only means the comparison can now be specified without relying on candidate-id overlap as pose evidence.
+
+### Next Contract Requirements
+
+The next `SemanticOnly` / `SLAMOnly` / `SemanticSLAM` proxy comparison contract must define:
+
+- same request groups and source split for all compared policies;
+- `NoReobserve` or source artifact reference as a non-active baseline;
+- `SemanticOnly` utility based on semantic uncertainty terms only;
+- `SLAMOnly` utility based on strict pose/map proxy terms only;
+- `SemanticSLAM` utility combining semantic and strict pose/map proxy terms;
+- fixed metric outputs: canonical strict proxy ready rate, edge count, largest component fraction, loop edge availability, travel-cost proxy, and blocked task-behavior metrics;
+- no candidate commit/rejection, terminal utility, `first_eval`, policy-scale comparison, or paper claim until the comparison run is separately implemented and verified.
+
+## Semantic-SLAM Proxy Comparison Contract
+
+### 사실
+
+- Date checked: `2026-06-04`
+- Contract: `manifests/h001_semantic_slam_proxy_comparison_v1.json`
+- Verify: `manifests/h001_semantic_slam_proxy_comparison_v1.verify.json`
+- Status: frozen proxy comparison contract before implementation
+- Stage: `P4-design`
+- Request groups: `50`
+- Join key: `(source_name, scene_key, query, request_id, episode_key)`
+- Policies:
+  - `NoReobserveReference`
+  - `SemanticOnly`
+  - `SLAMOnly`
+  - `SemanticSLAM`
+- Expected future comparison rows: `200`
+- Canonical pose variant: `pose_spatial_or_loop`
+- Semantic family weights: fixed in the manifest
+- `SemanticOnly` formula: semantic uncertainty proxy plus travel penalty
+- `SLAMOnly` formula: strict pose/map proxy gap plus travel penalty
+- `SemanticSLAM` formula: fixed `0.5 * U_sem + 0.5 * U_slam - travel_penalty`
+- Future implementation target: `runtime/h001_runtime/compare_semantic_slam_proxy_policies.py`
+- Future output: `local_dataset/runs/h001_semantic_slam_proxy_comparison_v1`
+- Implementation allowed: `true`
+- Step 4-5 promotion satisfied: `false`
+- Terminal utility allowed: `false`
+- Candidate commit / rejection allowed: `false / false`
+- `first_eval` rerun allowed: `false`
+- Policy-scale comparison allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract turns the strict edge variant gate into an implementable proxy comparison. It fixes which policy sees which information channel, preventing the comparison from becoming a tuned module combination:
+
+- `SemanticOnly` cannot use strict pose graph connectivity metrics.
+- `SLAMOnly` cannot use semantic uncertainty family as a utility term and cannot use `candidate_id_overlap` as pose evidence.
+- `SemanticSLAM` combines the two fixed proxy terms but cannot tune weights on evaluation labels.
+
+### 논문 주장
+
+No SLAM benefit, ObjectNav utility, or `SemanticSLAM` complementarity claim is allowed from the contract alone. The next step is Docker implementation and a separate result gate.
+
+## SemanticSLAMInteraction Output Evaluation
+
+### 사실
+
+- Date checked: `2026-06-04`
+- Implementation: `runtime/h001_runtime/evaluate_semantic_slam_non_dominated_proxy_output.py`
+- Verify: `manifests/h001_semantic_slam_non_dominated_proxy_output_evaluation_v1.verify.json`
+- Output: `local_dataset/runs/h001_semantic_slam_non_dominated_proxy_output_evaluation_v1`
+- Group evaluation rows: `50`
+- `SemanticSLAMInteraction` rank-1 rows/rate: `42/0.84`
+- `SemanticOnly` rank-1 rows/rate: `0/0.0`
+- `SLAMOnly` rank-1 rows/rate: `8/0.16`
+- `SemanticSLAMInteraction` strictly exceeds `SemanticOnly` on `50/50` groups.
+- Diagnostic classes: `semantic_first_bonus_shadows_semantic_only 36`, `interaction_overrides_slam_component 6`, `interaction_loses_to_component 8`
+- Output evaluation integrity gate: `true`
+- Reviewer-defense gate: `false`
+- Step 4-5 promotion allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The non-dominated proxy repair is structurally useful but not yet paper-defensible. The current formula creates semantic-first additive shadowing because `SemanticSLAMInteraction` is always `SemanticOnly` plus a nonnegative interaction bonus. This makes the high rank-1 rate a design-risk signal, not a complementarity result.
+
+### Next Contract Requirements
+
+The next reviewer-defense contract should choose one primary path before Step 4-5 promotion:
+
+- Stricter cap: prevent `SemanticSLAMInteraction` from strictly shadowing `SemanticOnly` on all rows unless task/map outcome evidence is available.
+- Richer SLAM proxy: replace the current scalar `slam_gap_score` with a map/pose outcome proxy that can independently explain benefit.
+- Task/map outcome validation: link the proxy to `wrong-goal visit`, `wasted path`, map error, semantic accuracy, ATE/RPE, or pose graph connectivity before any paper claim.
+
+## SemanticSLAMInteraction Reviewer-Defense Path Decision
+
+### 사실
+
+- Date checked: `2026-06-04`
+- Current additive `SemanticSLAMInteraction` output evaluation has request groups `50`.
+- `SemanticSLAMInteraction` rank-1 rows/rate: `42/0.84`
+- `SemanticOnly` rank-1 rows/rate: `0/0.0`
+- `SLAMOnly` rank-1 rows/rate: `8/0.16`
+- `SemanticSLAMInteraction` strictly exceeds `SemanticOnly` on `50/50` groups.
+- Diagnostic classes: `semantic_first_bonus_shadows_semantic_only 36`, `interaction_overrides_slam_component 6`, `interaction_loses_to_component 8`
+- Output evaluation integrity gate: `true`
+- Reviewer-defense gate: `false`
+- Step 4-5 promotion allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The best next path is not a cap-only patch. A stricter cap can stop the current all-row shadowing failure, but it does not by itself create a paper-facing mechanism. A task/map outcome validation is ultimately required, but running it directly on the current additive utility would validate a known shadowing-prone design. Therefore the next contract should use a richer SLAM/outcome-linked proxy as the primary design, with a non-shadowing cap as a guard and task/map outcome validation as the promotion gate.
+
+### Decision
+
+Primary path: richer SLAM/outcome-linked proxy.
+
+Guard path: stricter non-shadowing cap.
+
+Promotion path: task/map outcome validation.
+
+Rejected as primary path:
+
+- Cap-only redesign: too easy to tune and weak as novelty.
+- Direct task/map validation of the current additive proxy: risks validating semantic-first bonus rather than semantic-SLAM complementarity.
+
+### Next Contract Requirements
+
+The next frozen contract should require:
+
+- `SemanticSLAMInteraction` must not be expressible as `SemanticOnly + nonnegative bonus` on every row.
+- Any interaction gain over `SemanticOnly` must be justified by an independent map/pose-side signal, not by semantic family weight alone.
+- The SLAM term should use richer map/pose proxies such as pose graph connectivity change, loop-edge availability, connected-component fragmentation, source-view coverage, or pre/post map consistency.
+- A stricter cap should be diagnostic, not the main method: if `SemanticOnly` is shadowed on all rows again, the contract fails unless task/map outcome evidence is already attached.
+- Promotion to Step 4-5 requires at least one map-side metric and one task-side metric, for example pose graph connectivity plus wrong-goal visit or wasted path.
+- `first_eval`, policy-scale comparison, terminal utility, and paper claims remain blocked until this reviewer-defense contract and its Docker output pass.
+
+## SemanticSLAM Reviewer-Defense Contract Freeze
+
+### 사실
+
+- Date checked: `2026-06-05`
+- Contract: `manifests/h001_semantic_slam_reviewer_defense_contract_v1.json`
+- Verify: `manifests/h001_semantic_slam_reviewer_defense_contract_v1.verify.json`
+- Status: frozen contract before implementation
+- Stage: `P4-design`
+- Request groups: `50`
+- Expected future comparison rows: `200`
+- Policies: `NoReobserveReference`, `SemanticOnly`, `SLAMOnlyRich`, `SemanticSLAMInteractionGuarded`
+- Primary path: richer SLAM/outcome-linked proxy
+- Guard path: stricter non-shadowing cap
+- Promotion path: task/map outcome validation
+- Previous failure captured: `SemanticSLAMInteraction` rank-1 `42/50`, `SemanticOnly` shadowed `50/50`, reviewer-defense gate `false`
+- Main forbidden pattern: `SemanticOnly + nonnegative bonus` on every row
+- Additional forbidden patterns: cap-only contribution, component-max shortcut, candidate-overlap pose evidence, label-tuned weight search
+- Required map/pose terms: fragmentation, largest-component gap, loop gap, source coverage gap, context gap
+- Required gates: max semantic shadowing rate without outcome `0.85`, max interaction rank-1 rate without outcome `0.75`, max unexplained positive bonus rows `0`, min map-pose explained interaction rows `10`
+- Future implementation target: `runtime/h001_runtime/compare_semantic_slam_reviewer_defense_proxy.py`
+- Future output: `local_dataset/runs/h001_semantic_slam_reviewer_defense_v1`
+- Step 4-5 promotion allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract converts the previous semantic-first shadowing failure into an implementable reviewer-defense gate. The next implementation must show that interaction gain is explained by map/pose-side evidence and must fail if it reproduces the all-row `SemanticOnly` shadowing pattern.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, or SLAM benefit claim is allowed from this contract alone.
+
+## SemanticSLAM Reviewer-Defense Implementation
+
+### 사실
+
+- Date checked: `2026-06-05`
+- Implementation: `runtime/h001_runtime/compare_semantic_slam_reviewer_defense_proxy.py`
+- Contract / verify: `manifests/h001_semantic_slam_reviewer_defense_contract_v1.json`, `manifests/h001_semantic_slam_reviewer_defense_contract_v1.verify.json`
+- Output: `local_dataset/runs/h001_semantic_slam_reviewer_defense_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Docker compile/run: passed
+- Comparison / policy summary / diagnostic rows: `200 / 4 / 50`
+- Request groups: `50`
+- Policy rank-1 rows / rates:
+  - `SemanticSLAMInteractionGuarded`: `37 / 0.74`
+  - `SemanticOnly`: `10 / 0.20`
+  - `SLAMOnlyRich`: `3 / 0.06`
+  - `NoReobserveReference`: `0 / 0.0`
+- `SemanticOnly` shadowed by interaction rows / rate: `40 / 0.80`
+- Map-pose explained interaction rows / rate: `40 / 0.80`
+- Interaction rank-1 rows / rate: `37 / 0.74`
+- Unexplained positive bonus rows: `0`
+- Map-pose outcome proxy positive rows: `47`
+- Canonical / loop proxy ready rates: `0.92 / 0.72`
+- Action forbidden keys: `0`
+- Terminal / candidate commit / candidate rejection rows: `0 / 0 / 0`
+- `uses_gt_for_action`: `false`
+- Reviewer-defense gate: `false`
+- Failed gate: `SLAMOnlyRich` rank-1 rows are `3`, below frozen minimum `5`
+- Step 4-5 promotion allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The guarded interaction no longer reproduces the prior all-row `SemanticOnly` shadowing failure: shadowing is `40/50`, below the frozen maximum `0.85`, and interaction rank-1 is `37/50`, below the frozen maximum `0.75`. However, the independent SLAM-side component is still weak because `SLAMOnlyRich` wins only `3/50` groups. This means the current richer proxy is better behaved than the additive proxy, but not yet strong enough to support Step 4-5 promotion or a semantic-SLAM complementarity claim.
+
+The next evaluation should inspect whether the failed `SLAMOnlyRich` gate is caused by proxy scaling, request-pool composition, missing map-side outcome terms, or real absence of independent SLAM utility. The next step should be diagnostic evaluation, not weight tuning or paper-scale rerun.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, or policy-scale comparison claim is allowed from this implementation output.
+
+## SemanticSLAM Reviewer-Defense Output Evaluation
+
+### 사실
+
+- Date checked: `2026-06-05`
+- Implementation: `runtime/h001_runtime/evaluate_semantic_slam_reviewer_defense_output.py`
+- Verify: `manifests/h001_semantic_slam_reviewer_defense_output_evaluation_v1.verify.json`
+- Input: `local_dataset/runs/h001_semantic_slam_reviewer_defense_v1`
+- Output: `local_dataset/runs/h001_semantic_slam_reviewer_defense_output_evaluation_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Docker compile/run: passed
+- Evaluation rows: `50`
+- Action-safety gate: `true`
+- Comparison gate: `true`
+- Reviewer-defense output gate: `false`
+- Primary blocker: `slam_only_rich_underpowered`
+- `SLAMOnlyRich` rank-1 rows / required / deficit: `3 / 5 / 2`
+- `SemanticSLAMInteractionGuarded` rank-1 rows / rate: `37 / 0.74`
+- `SemanticOnly` shadowed rows / rate: `40 / 0.80`
+- Map-pose explained interaction rows: `40`
+- Unexplained positive bonus rows: `0`
+- Blocker classes:
+  - `semantic_wins_but_guarded_interaction_adds_small_map_pose_bonus`: `29`
+  - `semantic_wins_with_weak_map_pose_proxy`: `17`
+  - `slam_only_wins_but_insufficient_count`: `3`
+  - `interaction_overrides_slam_component`: `1`
+- `slam_minus_semantic_utility` min / mean / max: `-0.84 / -0.3230 / 0.1483`
+- `map_pose_outcome_proxy` min / mean / max: `0.0 / 0.3646 / 0.8083`
+- Step 4-5 promotion allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The evaluation confirms that the guarded proxy fixed the most obvious reviewer objection from the additive proxy: it no longer shadows `SemanticOnly` on every row, interaction rank-1 stays under the frozen cap, and unexplained positive bonus rows remain `0`. The remaining blocker is not action leakage or row mismatch. It is that the independent map/pose component is too weak relative to semantic utility on most rows: `SemanticOnly` is the component winner for `46/50` rows, and `SLAMOnlyRich` is rank-1 on only `3/50`.
+
+The next step should diagnose whether this is caused by utility scaling, request-pool composition, saturated source coverage/context terms, missing map-side outcome terms, or genuine absence of independent SLAM utility in the current proxy source. Formula changes, threshold tuning, `first_eval`, and policy-scale comparison remain premature.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, or policy-scale comparison claim is allowed from this output evaluation.
+
+## SemanticSLAM SLAMOnlyRich Underpowered Diagnostic
+
+### 사실
+
+- Date checked: `2026-06-05`
+- Implementation: `runtime/h001_runtime/diagnose_semantic_slam_slam_only_rich_underpowered.py`
+- Verify: `manifests/h001_semantic_slam_slam_only_rich_underpowered_diagnostic_v1.verify.json`
+- Input: `local_dataset/runs/h001_semantic_slam_reviewer_defense_v1` and `local_dataset/runs/h001_semantic_slam_reviewer_defense_output_evaluation_v1`
+- Output: `local_dataset/runs/h001_semantic_slam_slam_only_rich_underpowered_diagnostic_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Docker compile/run: passed
+- Diagnostic/query/scene rows: `50 / 6 / 9`
+- Diagnostic gate: `true`
+- Rank-1 rows/rates:
+  - `SLAMOnlyRich`: `3 / 0.06`
+  - `SemanticOnly`: `10 / 0.20`
+  - `SemanticSLAMInteractionGuarded`: `37 / 0.74`
+- Dominant causes:
+  - `map_pose_terms_saturated`: `19`
+  - `weak_map_pose_proxy`: `17`
+  - `near_miss_scale`: `8`
+  - `positive_slam_cases_too_sparse`: `3`
+  - `mixed_or_request_pool_effect`: `3`
+- Saturated map-pose term rows/rate: `46 / 0.92`
+- Weak map-pose proxy rows/rate: `17 / 0.34`
+- Scale near-miss rows/rate: `12 / 0.24`
+- `slam_scale_needed_to_match_semantic_score` min/mean/max: `0.8140 / 2.4315 / 16.5333`
+- `map_pose_outcome_proxy` min/mean/max: `0.0 / 0.3646 / 0.8083`
+- Primary conclusion: `semantic_score_dominates_current_map_pose_proxy`
+- Secondary conclusion: `map_pose_terms_often_saturated_or_weak_without_task_map_outcome`
+- Formula change allowed: `false`
+- Step 4-5 promotion allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This diagnostic rejects immediate scale tuning. The `SLAMOnlyRich` deficit is not just a two-row threshold issue: most rows either have saturated map/pose terms, weak map/pose outcome proxy, or semantic scores that dominate the current map/pose proxy. The next gate should freeze a `SLAMOnlyRich` revision contract that separates scale-only tuning from outcome-linked map/pose evidence.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, or paper claim is allowed from this diagnostic.
+
+## SemanticSLAM SLAMOnlyRich Revision Contract
+
+### 사실
+
+- Date checked: `2026-06-05`
+- Contract: `manifests/h001_semantic_slam_slam_only_rich_revision_contract_v1.json`
+- Verify: `manifests/h001_semantic_slam_slam_only_rich_revision_contract_v1.verify.json`
+- Status: frozen contract before any revised utility formula
+- Source diagnostic: `semantic_slam_slam_only_rich_underpowered_diagnostic_v1`
+- Source `SLAMOnlyRich` rank-1 rows/rate: `3 / 0.06`
+- Saturated map-pose term rows/rate: `46 / 0.92`
+- Weak map-pose proxy rows/rate: `17 / 0.34`
+- Primary cause: `semantic_score_dominates_current_map_pose_proxy`
+- Secondary cause: `map_pose_terms_often_saturated_or_weak_without_task_map_outcome`
+- Scale-only tuning allowed: `false`
+- Revised formula implementation allowed now: `false`
+- Next allowed work: `define_small_task_map_outcome_probe_contract`
+- Required next probe minimum:
+  - one map-side metric
+  - one task-side metric
+  - baselines: `SemanticOnly`, `SLAMOnlyRich_current`, `NoReobserveReference`
+  - failure taxonomy
+  - allowed/forbidden input contract
+- Forbidden patterns:
+  - multiply `SLAMOnlyRich` score by a constant
+  - weaken semantic score to help `SLAMOnlyRich`
+  - tune request pool so `SLAMOnlyRich` wins
+  - use candidate correctness or wrong-goal labels for action
+  - use candidate-overlap as pose evidence
+  - make terminal or policy-scale claim from proxy-only evidence
+- Step 4-5 promotion allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The revision contract turns the underpowered diagnostic into a reviewer-defense rule: the next method step cannot be a scale patch. The required task/map outcome probe contract is frozen and has been Docker-implemented; that implementation now blocks formula revision until label-backed task proxy joins are defined.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, or paper claim is allowed from this contract.
+
+## SemanticSLAM Task/Map Outcome Probe Contract
+
+### 사실
+
+- Date checked: `2026-06-05`
+- Contract: `manifests/h001_semantic_slam_task_map_outcome_probe_v1.json`
+- Verify: `manifests/h001_semantic_slam_task_map_outcome_probe_v1.verify.json`
+- Status: frozen contract
+- Source contract: `semantic_slam_slam_only_rich_revision_contract_v1`
+- Request group rule: same `50` request groups
+- Required baselines: `NoReobserveReference`, `SemanticOnly`, `SLAMOnlyRich_current`
+- Map-side metrics:
+  - `pose_graph_connectivity_delta`
+  - `map_pose_consistency_delta`
+- Task-side metrics:
+  - `wrong_goal_visit_proxy_delta`
+  - `wasted_path_proxy_delta`
+- Bridge metrics:
+  - `map_task_alignment_rate`
+  - `slam_independent_value_rows`
+- Required future output root: `local_dataset/runs/h001_semantic_slam_task_map_outcome_probe_v1`
+- Action/evaluation input separation: frozen
+- Failure taxonomy count: `7`
+- Task/map outcome probe implementation allowed: `true`
+- Revised `SLAMOnlyRich` formula implementation allowed now: `false`
+- Step 4-5 promotion allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract closed the previous contract-definition TODO and led to the Docker implementation below. The probe must check whether strict map/pose evidence aligns with wrong-goal and wasted-path proxies before any `SLAMOnlyRich` formula is revised. If map metrics improve but task-side proxies do not, pose graph connectivity should not be presented as navigation utility.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, or paper claim is allowed from this contract.
+
+## SemanticSLAM Task/Map Outcome Probe Implementation
+
+### 사실
+
+- Date checked: `2026-06-05`
+- Script: `runtime/h001_runtime/evaluate_semantic_slam_task_map_outcome_probe.py`
+- Verify: `manifests/h001_semantic_slam_task_map_outcome_probe_v1.verify.json`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Output root: `local_dataset/runs/h001_semantic_slam_task_map_outcome_probe_v1`
+- Probe / policy summary / failure rows: `150 / 3 / 50`
+- Request groups: `50`
+- Required policies present: `NoReobserveReference`, `SemanticOnly`, `SLAMOnlyRich_current`
+- `SLAMOnlyRich_current` map-positive rows: `50 / 50`
+- Label-backed task proxy rows: `0 / 50`
+- Label-free risk proxy rows: `50 / 50`
+- Map-task alignment rows: `0`
+- Failure taxonomy: `map_delta_not_task_aligned 50`
+- Secondary failure: `task_proxy_label_join_missing 50`
+- Action forbidden keys: `0`
+- Terminal / candidate commit / candidate rejection rows: `0 / 0 / 0`
+- `uses_gt_for_action`: `false`
+- `outcome_probe_gate_passed`: `false`
+- `revised_slam_formula_allowed`: `false`
+- `paper_claim_allowed`: `false`
+
+### 에이전트 추론
+
+The implementation confirms that strict map/pose evidence can be joined to the same `50` request groups and produces nonzero map-side deltas. However, the current artifacts do not include separated label-backed `wrong_goal_visit` or `wasted_path` task proxies. Therefore the failure is not evidence against semantic-SLAM utility yet; it is a measurement blocker. The next defensible step is a task-label join contract that defines evaluation-only labels and deltas without allowing those labels into action-time policy.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, or paper claim is allowed from this failed gate.
+
+## SemanticSLAM Task Label Join Materializer
+
+### 사실
+
+- Date checked: `2026-06-05`
+- Contract: `manifests/h001_semantic_slam_task_label_join_v1.json`
+- Verify: `manifests/h001_semantic_slam_task_label_join_v1.verify.json`
+- Script: `runtime/h001_runtime/materialize_semantic_slam_task_label_join.py`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Output root: `local_dataset/runs/h001_semantic_slam_task_label_join_v1`
+- Request / candidate / policy / failure rows: `21 / 113 / 150 / 150`
+- Candidate labels: correct `37`, wrong `76`, unlabeled `0`
+- No-valid request pools: `4`
+- Label backbone join rows: `150`
+- Candidate label join rows: `150`
+- Task proxy evaluable rows: `0`
+- Policy selector missing rows: `150`
+- Action forbidden keys: `0`
+- `uses_gt_for_action`: `false`
+- `task_label_join_gate_passed`: `true`
+- `outcome_proxy_gate_passed`: `false`
+- `revised_slam_formula_allowed`: `false`
+- `paper_claim_allowed`: `false`
+
+### 에이전트 추론
+
+The label coverage blocker is resolved, but task outcome evaluation is still blocked because no frozen non-GT policy selector provides `policy_selected_candidate_id` and `terminal_commit_proxy`. The next defensible gate is a selector contract that defines how `NoReobserveReference`, `SemanticOnly`, and `SLAMOnlyRich_current` select or defer candidates without using evaluation labels. It is still not valid to revise the `SLAMOnlyRich` formula or claim task/map benefit.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, or paper claim is allowed from this materializer.
+
+## SemanticSLAM Task Policy Selector Contract
+
+### 사실
+
+- Date checked: `2026-06-05`
+- Contract: `manifests/h001_semantic_slam_task_policy_selector_v1.json`
+- Verify: `manifests/h001_semantic_slam_task_policy_selector_v1.verify.json`
+- Status: frozen contract
+- Source action feature backbone: `local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_evaluated_rows.jsonl`
+- Unique request keys: `21`
+- Source request rows: `50`
+- Source policy rows: `150`
+- `NoReobserveReference` selector: `source_top_direct_commit_v1`
+- Expected `NoReobserveReference` terminal commits on expanded source rows: `49 / 50`
+- `SemanticOnly` selector: `local_context_then_unique_own_view_v1`
+- Expected `SemanticOnly` terminal commits on expanded source rows: `41 / 50`
+- `SLAMOnlyRich_current` selector: `candidate_specific_slam_selector_missing_v1`
+- Expected `SLAMOnlyRich_current` selector-missing rows: `50 / 50`
+- Forbidden action inputs include `evaluation_candidate_summary`, `evaluation_only_variant_outcomes`, correctness labels, wrong-goal labels, no-valid labels, oracle fields, and shortest-path labels.
+- Forbidden shortcut: source-top, semantic-top, detector-best, local-context, or any other semantic selector cannot be substituted for `SLAMOnlyRich_current`.
+- Policy selector materializer allowed: `true`
+- Candidate-specific SLAM selector contract allowed: `true`
+- Revised `SLAMOnlyRich` formula implementation allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The selector contract can make `NoReobserveReference` and `SemanticOnly` task proxies evaluable in the next materializer, but it intentionally leaves `SLAMOnlyRich_current` unevaluable as a candidate selector. This is the conservative top-tier path: row-level map/pose utility is not the same as a candidate-specific navigation decision. A later candidate-specific SLAM/map-pose selector contract is required before formula revision can be considered.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this selector contract.
+
+## SemanticSLAM Task Policy Selector Materializer
+
+### 사실
+
+- Date checked: `2026-06-05`
+- Contract: `manifests/h001_semantic_slam_task_policy_selector_v1.json`
+- Verify: `manifests/h001_semantic_slam_task_policy_selector_v1.verify.json`
+- Script: `runtime/h001_runtime/materialize_semantic_slam_task_policy_selector.py`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Output root: `local_dataset/runs/h001_semantic_slam_task_policy_selector_v1`
+- Selector / failure rows: `150 / 60`
+- `NoReobserveReference` terminal commit proxy rows: `49 / 50`
+- `SemanticOnly` terminal commit proxy rows: `41 / 50`
+- `SemanticOnly` local-context / own-view commit sources: `23 / 18`
+- `SLAMOnlyRich_current` selector-missing rows: `50 / 50`
+- Total terminal commit / defer / selector-missing rows: `90 / 10 / 50`
+- Action forbidden keys: `0`
+- `uses_gt_for_action`: `false`
+- `selector_contract_gate_passed`: `true`
+- `partial_task_proxy_join_after_selector_allowed`: `true`
+- Candidate-specific SLAM selector contract allowed: `true`
+- Revised `SLAMOnlyRich` formula implementation allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The materializer resolves selected-candidate / terminal-commit plumbing for `NoReobserveReference` and `SemanticOnly`, but intentionally preserves the real `SLAMOnlyRich_current` blocker. The next defensible gate is a candidate-specific SLAM/map-pose selector contract, because row-level map/pose utility still cannot choose an ObjectNav goal candidate.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer.
+
+## SemanticSLAM Candidate Map-Pose Selector Contract
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Contract: `manifests/h001_semantic_slam_candidate_map_pose_selector_v1.json`
+- Verify: `manifests/h001_semantic_slam_candidate_map_pose_selector_v1.verify.json`
+- Status: frozen contract verified
+- Source inventory rows: `5`
+- Source request rows: `50`
+- Frame request keys: `50`
+- Request keys without frame rows: `0`
+- Frame rows total: `557`
+- Candidate feature rows expected: `232`
+- Candidate request groups: `50`
+- Missing required candidate geometry fields: `0`
+- Current `SLAMOnlyRich_current` selector-missing rows from upstream selector materializer: `50 / 50`
+- Frozen selector id: `candidate_map_pose_unique_ready_v1`
+- Selector rule: select only when exactly one candidate in the request is strict candidate-map-pose-ready; defer when zero or multiple candidates are ready.
+- Forbidden selector evidence: semantic rank/score, detector score, source-top, local-context, `evaluation_only_variant_outcomes`, correctness labels, wrong-goal labels, no-valid labels, oracle fields, and task outcome fields.
+- Candidate map-pose selector materializer allowed: `true`
+- Task proxy join after candidate selector allowed: `true`
+- Revised `SLAMOnlyRich` formula implementation allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract converts the `SLAMOnlyRich_current` blocker from "no candidate-specific selector exists" into an implementable geometry-only measurement gate. It is intentionally conservative: geometry availability may expose candidate-specific map/pose evidence, but it cannot establish ObjectNav goal validity by itself. Ambiguous geometry must defer rather than fall back to semantic or detector shortcuts.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this contract.
+
+## SemanticSLAM Candidate Map-Pose Selector Materializer Result
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Script: `runtime/h001_runtime/materialize_semantic_slam_candidate_map_pose_selector.py`
+- Verify: `manifests/h001_semantic_slam_candidate_map_pose_selector_v1.verify.json`
+- Output: `local_dataset/runs/h001_semantic_slam_candidate_map_pose_selector_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Docker compile/run/artifact validation: passed
+- Candidate / request / failure rows: `232 / 50 / 50`
+- `SLAMOnlyRich_current` request rows: `50`
+- Selector-missing rows: `0`
+- Candidate geometry missing rows: `0`
+- Strict candidate-map-pose-ready rows: `232`
+- Geometry-only single-candidate commit rows: `3`
+- Multi-ready defer rows: `47`
+- Action forbidden key count: `0`
+- `uses_gt_for_action`: `false`
+- `candidate_map_pose_feature_gate_passed`: `true`
+- `task_proxy_join_after_candidate_selector_allowed`: `true`
+- Revised `SLAMOnlyRich` formula implementation allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The materializer resolves the selector-missing blocker, but it also shows that candidate-specific map/pose evidence is mostly availability evidence: every candidate is strict-ready, so `47/50` requests remain ambiguous and must defer. The next gate is a label-backed task proxy join to test wrong-goal, wasted-path, and map-task alignment for the `3` geometry-only commits and to diagnose geometry-availability bias.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer.
+
+## SemanticSLAM Candidate Task Proxy Join Result
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Script: `runtime/h001_runtime/materialize_semantic_slam_candidate_task_proxy_join.py`
+- Contract: `manifests/h001_semantic_slam_candidate_task_proxy_join_v1.json`
+- Verify: `manifests/h001_semantic_slam_candidate_task_proxy_join_v1.verify.json`
+- Output: `local_dataset/runs/h001_semantic_slam_candidate_task_proxy_join_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Docker compile/run/artifact validation: passed
+- Policy / failure rows: `150 / 100`
+- Decision-evaluable task proxy rows: `150`
+- Commit-evaluable task proxy rows: `93`
+- Selector-missing rows: `0`
+- `NoReobserveReference` terminal / success / wrong-goal rows: `49 / 28 / 21`
+- `SemanticOnly` terminal / success / wrong-goal rows: `41 / 20 / 21`
+- `SLAMOnlyRich_current` terminal / success / wrong-goal / defer / map-task alignment rows: `3 / 2 / 1 / 47 / 2`
+- Action forbidden key count: `0`
+- `uses_gt_for_action`: `false`
+- `uses_gt_for_analysis`: `true`
+- Task proxy join gate passed: `true`
+- Formula revision unlock gate passed: `false`
+- Primary blocker: `slam_only_terminal_commits_too_sparse`
+- Revised `SLAMOnlyRich` formula implementation allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The task proxy join resolves the measurement plumbing blocker: every policy decision now has label-backed evaluation proxies without using labels as action evidence. However, the conservative `SLAMOnlyRich_current` selector is safe-but-sparse. It reduces wrong-goal exposure mainly by deferring `47/50` rows, not by producing a nontrivial candidate-level map/pose utility. The next gate should diagnose whether label-free candidate map/pose evidence can become discriminative; formula revision remains premature.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this task proxy join.
 
 ## User Decision Needed
 

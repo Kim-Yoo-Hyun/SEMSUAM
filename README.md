@@ -16,17 +16,17 @@
 
 ### 사실
 
-- Date checked: 2026-06-01
+- Date checked: 2026-06-06
 - Primary candidate: `CAND-01`
 - Active hypothesis: `H001_uncertainty-reobservation`
-- Current gate: implement and Docker-run repeated-object relation-anchor consistency post-detector evidence analyzer after contract freeze
+- Current gate: close geometry-only `SLAMOnlyRich_current` selector path as non-promotable and define candidate-relative map/pose evidence requirements
 - Current `Now`: [TODO.md](TODO.md)
 - Active hypothesis entrypoint: [hypothesis/CAND-01/H001_uncertainty-reobservation/README.md](hypothesis/CAND-01/H001_uncertainty-reobservation/README.md)
 - Current detailed workflow: [workflow-20260521-dense-conflict.md](hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260521-dense-conflict.md)
 
 ### 에이전트 추론
 
-현재 연구 방향은 semantic uncertainty를 단순 confidence score가 아니라 active SLAM/navigation utility로 바꾸는 것이다. Paper-scale local-context detector/SAM2 substrate는 통과했지만 post-observation terminal rule은 wrong-goal/no-valid commit 때문에 실패했다. Candidate-specific, object-relation, unique-support, partial relation-depth branch들은 terminal commit을 막는 방향으로 세분화되어 있다. 최신 repeated-object relation-anchor consistency post-detector evidence analyzer contract는 `manifests/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1.json`에 frozen 상태이며, source detector substrate는 frame/detector rows `27/27`, detector box/SAM2/candidate association `1.0/1.0/0.8889`, association rows `360`, selected candidate count rows `2:27`, and `uses_gt_for_action false`로 통과했다. 따라서 다음 gate는 terminal utility가 아니라 이 contract에 맞는 analyzer를 Docker에서 구현/실행하는 것이다. `first_eval`, policy-scale comparison, terminal utility, and paper claims remain blocked.
+현재 연구 방향은 semantic uncertainty를 단순 confidence score가 아니라 active SLAM/navigation utility로 바꾸는 것이다. Paper-scale local-context detector/SAM2 substrate는 통과했지만 post-observation terminal rule은 wrong-goal/no-valid commit 때문에 실패했다. Candidate-specific, object-relation, unique-support, partial relation-depth, missing-own-view, and instance-arbitration pair-graph branches는 terminal commit을 막는 방향으로 세분화되어 있다. Instance-arbitration pair-graph closure 뒤 selector는 semantic object branch promotable rows `0`과 semantic object branches exhausted `true`를 확인했고, 다음 label-free evidence family로 `semantic_slam_map_pose_consistency_probe_v1`를 선택했다. Source audit, pose graph connectivity proxy gate, strict edge variant proxy gate, proxy comparison contract/implementation/output evaluation, non-dominated proxy redesign, reviewer-defense proxy sequence, `SLAMOnlyRich` underpowered diagnostic, revision contract, task/map outcome probe implementation, label-backed task proxy join materializer, non-GT task policy selector materializer, candidate-specific SLAM/map-pose selector materializer, candidate-specific task proxy join, and safe-but-sparse selector diagnostic are Docker-verified. The latest diagnostic shows current geometry-only map/pose evidence is available but not discriminative: `top_map_pose_tuple` can commit all `50` rows but produces `21` wrong-goal rows and `4` no-valid commits. Formula change, `first_eval`, policy-scale comparison, terminal utility, Step 4-5 promotion, and paper claims remain blocked until a new label-free candidate-relative map/pose signal separates correct goal candidates from same-category rivals.
 
 ## Key Documents
 

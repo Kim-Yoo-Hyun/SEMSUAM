@@ -1,0 +1,320 @@
+{
+  "schema_version": "h001.contract.instance_arbitration_evidence.v1",
+  "date_checked": "2026-06-02",
+  "status": "frozen_design_contract_before_implementation",
+  "contract_name": "instance_arbitration_evidence_v1",
+  "purpose": "Freeze a label-free, nonterminal active evidence contract for the instance_arbitration_defer_v1 branch after object-relation branch-family closure.",
+  "implementation_target": {
+    "input_builder": "runtime/h001_runtime/build_instance_arbitration_inputs.py",
+    "planner": "runtime/h001_runtime/plan_instance_arbitration_evidence.py",
+    "output": "local_dataset/runs/h001_instance_arbitration_evidence_v1",
+    "docker_image_for_input_builder": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_image_for_planner": "research3/habitat-h001:20260508-calib-artifacts",
+    "docker_required": true
+  },
+  "source": {
+    "selection_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_evidence_family_after_object_relation_v1.json",
+    "selection_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_evidence_family_after_object_relation_v1.verify.json",
+    "selection_output": "local_dataset/runs/h001_next_label_free_evidence_family_after_object_relation_v1",
+    "selection_summary": "local_dataset/runs/h001_next_label_free_evidence_family_after_object_relation_v1/next_label_free_evidence_family_after_object_relation_summary.json",
+    "route_specific_rows": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_rows.jsonl",
+    "route_specific_summary": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_summary.json",
+    "candidate_artifact": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl",
+    "local_context_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_expanded_retrieval_local_context_route_contract_v1.json"
+  },
+  "problem": {
+    "fact": "The post-object-relation selector chose instance_arbitration_defer_v1 with 9 request rows, 5 scenes, 3 queries, candidate count sum 51, strong own-view candidate count sum 28, detector-strong candidate count sum 36, terminal commits 0, candidate commit/rejection rows 0/0, action forbidden key count 0, and uses_gt_for_action false.",
+    "failure_mechanism": "Multiple same-category candidates remain compatible with source-top, detector-strong, own-view, and local-context evidence. Visibility or detector support for one candidate does not establish which physical instance is the ObjectNav goal.",
+    "agent_inference": "The next method component should materialize candidate-level and pair-level instance arbitration evidence before any terminal utility, candidate commit, candidate rejection, first_eval rerun, policy-scale comparison, or paper claim is considered."
+  },
+  "design_scope": {
+    "target_branch": "instance_arbitration_defer_v1",
+    "target_action": "defer_instance_arbitration_unresolved",
+    "purpose": "Convert unresolved repeated-instance semantic uncertainty into explicit candidate and candidate-pair observation targets.",
+    "allowed_label_use": "Evaluation labels may be joined only after request rows, candidate rows, pair rows, and observation-plan rows are written.",
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false,
+    "allowed_action_inputs": [
+      "selection summary and selection rows",
+      "route-specific rows where route_branch == instance_arbitration_defer_v1",
+      "action_candidate_summary candidate ids",
+      "source_top_candidate_ids",
+      "strong_own_view_candidate_ids",
+      "detector_strong_candidate_ids",
+      "local_context_candidate_ids",
+      "scene_key, scene_id, query, episode_key, and request ids",
+      "candidate artifact fields from the local-context plan",
+      "non-GT candidate position and visit_position",
+      "non-GT semantic score, semantic rank, detector evidence score, support class, reachability, path-to-candidate, and local-context distance",
+      "Habitat navmesh/standoff metadata"
+    ],
+    "forbidden_action_inputs": [
+      "candidate_correct",
+      "selected_for_goal",
+      "valid_candidate_ids",
+      "correct_candidate_ids",
+      "wrong_goal_visit",
+      "success label",
+      "SPL",
+      "oracle geodesic distance",
+      "GT object id",
+      "GT goal id",
+      "GT shortest path",
+      "post-join evaluation labels",
+      "threshold tuning from joined labels"
+    ],
+    "blocked_shortcuts": [
+      "commit_source_top_candidate",
+      "commit_detector_score_best",
+      "commit_own_support_best",
+      "commit_local_context_only_best",
+      "commit_semantic_rank_best",
+      "reject_candidate_without_pair_evidence",
+      "merge_candidates_by_category_only",
+      "merge_nearby_candidates_without_observation",
+      "threshold_tuning",
+      "terminal_utility_contract",
+      "first_eval_rerun",
+      "policy_scale_comparison"
+    ]
+  },
+  "target_scope": {
+    "expected_request_rows": 9,
+    "expected_scene_count": 5,
+    "expected_query_count": 3,
+    "expected_unique_scene_query_artifact_rows": 7,
+    "expected_candidate_reference_rows": 51,
+    "expected_unordered_candidate_pair_rows": 121,
+    "expected_source_top_candidate_refs": 9,
+    "expected_strong_own_view_candidate_refs": 28,
+    "expected_detector_strong_candidate_refs": 36,
+    "expected_local_context_candidate_refs": 11,
+    "candidate_count_distribution": {
+      "4": 1,
+      "5": 1,
+      "6": 7
+    },
+    "strong_own_view_count_distribution": {
+      "2": 5,
+      "3": 1,
+      "5": 3
+    },
+    "detector_strong_count_distribution": {
+      "4": 9
+    },
+    "local_context_count_distribution": {
+      "0": 1,
+      "1": 5,
+      "2": 3
+    },
+    "target_scene_queries": [
+      "4ok3usBNeis:bed",
+      "4ok3usBNeis:chair",
+      "BAbdmeyTvMZ:bed",
+      "BAbdmeyTvMZ:chair",
+      "Dd4bFSTQ8gi:chair",
+      "HY1NcmCgn3n:chair",
+      "QaLdnwvtxbs:toilet"
+    ],
+    "target_requests": [
+      {
+        "expanded_retrieval_request_id": "rival_identity:0",
+        "scene_key": "4ok3usBNeis",
+        "query": "chair",
+        "candidate_count": 6,
+        "unordered_pair_count": 15,
+        "strong_own_view_candidate_count": 5,
+        "detector_strong_candidate_count": 4,
+        "source_top_candidate_count": 1,
+        "local_context_candidate_count": 1
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:1",
+        "scene_key": "4ok3usBNeis",
+        "query": "bed",
+        "candidate_count": 4,
+        "unordered_pair_count": 6,
+        "strong_own_view_candidate_count": 2,
+        "detector_strong_candidate_count": 4,
+        "source_top_candidate_count": 1,
+        "local_context_candidate_count": 0
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:2",
+        "scene_key": "4ok3usBNeis",
+        "query": "chair",
+        "candidate_count": 6,
+        "unordered_pair_count": 15,
+        "strong_own_view_candidate_count": 5,
+        "detector_strong_candidate_count": 4,
+        "source_top_candidate_count": 1,
+        "local_context_candidate_count": 1
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:20",
+        "scene_key": "QaLdnwvtxbs",
+        "query": "toilet",
+        "candidate_count": 6,
+        "unordered_pair_count": 15,
+        "strong_own_view_candidate_count": 5,
+        "detector_strong_candidate_count": 4,
+        "source_top_candidate_count": 1,
+        "local_context_candidate_count": 1
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:21",
+        "scene_key": "BAbdmeyTvMZ",
+        "query": "chair",
+        "candidate_count": 6,
+        "unordered_pair_count": 15,
+        "strong_own_view_candidate_count": 3,
+        "detector_strong_candidate_count": 4,
+        "source_top_candidate_count": 1,
+        "local_context_candidate_count": 2
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:23",
+        "scene_key": "BAbdmeyTvMZ",
+        "query": "bed",
+        "candidate_count": 6,
+        "unordered_pair_count": 15,
+        "strong_own_view_candidate_count": 2,
+        "detector_strong_candidate_count": 4,
+        "source_top_candidate_count": 1,
+        "local_context_candidate_count": 2
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:24",
+        "scene_key": "HY1NcmCgn3n",
+        "query": "chair",
+        "candidate_count": 6,
+        "unordered_pair_count": 15,
+        "strong_own_view_candidate_count": 2,
+        "detector_strong_candidate_count": 4,
+        "source_top_candidate_count": 1,
+        "local_context_candidate_count": 1
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:26",
+        "scene_key": "Dd4bFSTQ8gi",
+        "query": "chair",
+        "candidate_count": 5,
+        "unordered_pair_count": 10,
+        "strong_own_view_candidate_count": 2,
+        "detector_strong_candidate_count": 4,
+        "source_top_candidate_count": 1,
+        "local_context_candidate_count": 1
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:28",
+        "scene_key": "BAbdmeyTvMZ",
+        "query": "bed",
+        "candidate_count": 6,
+        "unordered_pair_count": 15,
+        "strong_own_view_candidate_count": 2,
+        "detector_strong_candidate_count": 4,
+        "source_top_candidate_count": 1,
+        "local_context_candidate_count": 2
+      }
+    ]
+  },
+  "input_builder_contract": {
+    "builder_name": "instance_arbitration_inputs_v1",
+    "input_scope": "route-specific rows where route_branch == instance_arbitration_defer_v1 and route_action == defer_instance_arbitration_unresolved",
+    "candidate_join_rule": "Join the local-context candidate artifact by scene_key, query, and candidate_id. Duplicate request rows sharing a scene/query must remain separate request rows but may reuse the same artifact row.",
+    "candidate_row_rule": "Materialize every action_candidate_summary candidate id for every selected request. Preserve role tags source_top, strong_own_view, detector_strong, local_context, and unmatched_candidate.",
+    "pair_row_rule": "Materialize every unordered candidate pair within each selected request, using all action-time candidates rather than only source-top or detector-strong candidates.",
+    "expected_request_rows": 9,
+    "expected_candidate_rows": 51,
+    "expected_pair_rows": 121,
+    "expected_artifact_scene_query_rows": 7,
+    "blocked": [
+      "evaluation-label join before action rows",
+      "dropping duplicate request rows that share the same scene/query",
+      "dropping candidates because they are not detector-strong",
+      "dropping candidates because they are later evaluation-negative",
+      "committing source_top or detector-best candidates",
+      "candidate-specific threshold changes"
+    ]
+  },
+  "planner_contract": {
+    "planner_name": "instance_arbitration_pair_evidence_v1",
+    "planner_goal": "Plan candidate-centered and pair-disambiguating observations for all selected requests without selecting a terminal goal.",
+    "required_view_roles": [
+      "candidate_own_view_refresh",
+      "pair_common_view_or_dual_standoff",
+      "source_top_contrast_view",
+      "local_context_contrast_view"
+    ],
+    "candidate_observation_rule": "Write at least one candidate_own_view_refresh target for each materialized candidate row.",
+    "pair_observation_rule": "Write one pair-level observation target for every unordered candidate pair. If a shared common view is not navigable/renderable, write a matched dual-standoff pair target with both candidate ids and the fallback reason.",
+    "source_top_contrast_rule": "For each request, include source-top-vs-rival pair metadata so source-top shortcut behavior can be audited later without becoming an action rule.",
+    "local_context_contrast_rule": "For each request with local_context candidates, include local-context-vs-nonlocal pair metadata so local-context shortcut behavior can be audited later without becoming an action rule.",
+    "minimum_candidate_observation_rows": 51,
+    "minimum_pair_observation_rows": 121,
+    "minimum_observation_rows": 172,
+    "maximum_skipped_request_rows": 0,
+    "maximum_skipped_candidate_rows": 0,
+    "maximum_unreported_pair_rows": 0,
+    "allowed_skip_reasons": [
+      "none_for_request_or_candidate_rows",
+      "pair_common_view_fallback_to_dual_standoff"
+    ],
+    "blocked": [
+      "single-candidate confidence ranking",
+      "source-top-only planning",
+      "detector-score-only planning",
+      "terminal utility scoring",
+      "candidate rejection",
+      "GT-view oracle"
+    ]
+  },
+  "evaluation_gates": {
+    "source_selection_gate_passed": true,
+    "route_contract_gate_passed": true,
+    "expected_request_rows": 9,
+    "expected_candidate_rows": 51,
+    "expected_pair_rows": 121,
+    "expected_artifact_scene_query_rows": 7,
+    "candidate_artifact_must_cover_all_target_scene_queries": true,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "candidate_commit_rows_maximum": 0,
+    "candidate_rejection_rows_maximum": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed_before_branch_validation": false
+  },
+  "required_outputs": {
+    "request_rows": "instance_arbitration_request_rows.jsonl",
+    "candidate_rows": "instance_arbitration_candidate_rows.jsonl",
+    "pair_rows": "instance_arbitration_pair_rows.jsonl",
+    "observation_plan": "instance_arbitration_observation_plan.jsonl",
+    "candidate_artifact_rows": "instance_arbitration_candidate_artifact_rows.jsonl",
+    "skipped_rows": "instance_arbitration_skipped_rows.jsonl",
+    "summary": "instance_arbitration_evidence_summary.json"
+  },
+  "required_simpler_alternatives_to_report_later": [
+    "defer_all",
+    "semantic_rank_best",
+    "source_top_commit",
+    "detector_score_best",
+    "own_support_best",
+    "local_context_only_best",
+    "nearest_candidate",
+    "merge_nearby_candidates_without_observation"
+  ],
+  "next_step_if_passed": "Implement and Docker-run the instance-arbitration evidence materializer/planner from this contract.",
+  "next_step_if_failed": "Repair candidate-artifact coverage or reduce to a smaller predeclared scene/query subset before any detector substrate, terminal utility, first_eval, policy-scale comparison, or paper claim.",
+  "interpretation_rule": {
+    "fact": "Passing this contract freezes a branch-specific active-evidence design only.",
+    "paper_claim": "No paper claim is allowed from the frozen design contract.",
+    "agent_inference": "The paper-facing value is the mechanism framing: repeated-instance semantic uncertainty should trigger candidate-pair evidence acquisition rather than confidence reranking."
+  },
+  "paper_claim_allowed": false
+}

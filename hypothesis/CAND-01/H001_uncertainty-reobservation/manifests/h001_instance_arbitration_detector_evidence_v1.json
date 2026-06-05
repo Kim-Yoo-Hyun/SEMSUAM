@@ -1,0 +1,317 @@
+{
+  "schema_version": "h001.contract.instance_arbitration_detector_evidence.v1",
+  "date_checked": "2026-06-02",
+  "status": "frozen_before_implementation",
+  "contract_name": "instance_arbitration_detector_evidence_v1",
+  "purpose": "Freeze the post-detector evidence analyzer contract for the instance-arbitration branch after materializer, planner, frame/projection, and detector/SAM2 substrate gates passed.",
+  "implementation_target": {
+    "analyzer": "runtime/h001_runtime/analyze_instance_arbitration_detector_evidence.py",
+    "output": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_required": true
+  },
+  "source": {
+    "evidence_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_instance_arbitration_evidence_v1.json",
+    "evidence_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_instance_arbitration_evidence_v1.verify.json",
+    "frame_projection_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_instance_arbitration_frame_projection_v1.verify.json",
+    "detector_substrate_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_instance_arbitration_detector_substrate_v1.verify.json",
+    "observation_output": "local_dataset/runs/h001_instance_arbitration_evidence_v1",
+    "request_rows": "local_dataset/runs/h001_instance_arbitration_evidence_v1/instance_arbitration_request_rows.jsonl",
+    "candidate_rows": "local_dataset/runs/h001_instance_arbitration_evidence_v1/instance_arbitration_candidate_rows.jsonl",
+    "pair_rows": "local_dataset/runs/h001_instance_arbitration_evidence_v1/instance_arbitration_pair_rows.jsonl",
+    "candidate_artifact_rows": "local_dataset/runs/h001_instance_arbitration_evidence_v1/instance_arbitration_candidate_artifact_rows.jsonl",
+    "observation_targets": "local_dataset/runs/h001_instance_arbitration_evidence_v1/instance_arbitration_observation_targets.jsonl",
+    "frame_output": "local_dataset/runs/h001_instance_arbitration_evidence_frames_v1",
+    "projection_output": "local_dataset/runs/h001_instance_arbitration_evidence_projection_v1",
+    "detector_output": "local_dataset/runs/h001_instance_arbitration_evidence_detector_substrate_v1",
+    "detector_summary": "local_dataset/runs/h001_instance_arbitration_evidence_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "detector_frame_summary": "local_dataset/runs/h001_instance_arbitration_evidence_detector_substrate_v1/expanded_retrieval_detector_frame_summary.jsonl",
+    "detector_associations": "local_dataset/runs/h001_instance_arbitration_evidence_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl"
+  },
+  "source_metrics": {
+    "input_materializer_gate_passed": true,
+    "observation_plan_gate_passed": true,
+    "projection_gate_passed": true,
+    "detector_substrate_gate_passed": true,
+    "request_rows": 9,
+    "candidate_rows": 51,
+    "pair_rows": 121,
+    "candidate_artifact_rows": 7,
+    "observation_plan_rows": 172,
+    "candidate_observation_rows": 51,
+    "pair_observation_rows": 121,
+    "frame_rows": 172,
+    "detector_rows": 172,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.8081395348837209,
+    "rows_with_candidate_association": 139,
+    "associated_candidate_heading_count": 483,
+    "association_rows": 1820,
+    "detector_box_rows": 2562,
+    "detector_mask_rows": 2562,
+    "projected_pixel_inside_mask_true": 963,
+    "view_role_counts": {
+      "candidate_own_view_refresh": 51,
+      "source_top_contrast_view": 42,
+      "pair_common_view_or_dual_standoff": 39,
+      "local_context_contrast_view": 40
+    },
+    "frame_has_candidate_association_by_role": {
+      "candidate_own_view_refresh": "43/51",
+      "source_top_contrast_view": "32/42",
+      "pair_common_view_or_dual_standoff": "30/39",
+      "local_context_contrast_view": "34/40"
+    },
+    "association_rows_by_role": {
+      "candidate_own_view_refresh": {
+        "associated": 126,
+        "not_associated": 78
+      },
+      "source_top_contrast_view": {
+        "associated": 130,
+        "not_associated": 434
+      },
+      "pair_common_view_or_dual_standoff": {
+        "associated": 113,
+        "not_associated": 423
+      },
+      "local_context_contrast_view": {
+        "associated": 114,
+        "not_associated": 402
+      }
+    },
+    "selected_candidate_count_rows": {
+      "1": 51,
+      "2": 121
+    },
+    "candidate_selection_source_counts": {
+      "explicit_candidate_ids": 172
+    },
+    "pair_probe_type_counts": {
+      "none": 51,
+      "pair_common_view": 57,
+      "pair_dual_standoff_fallback": 64
+    },
+    "projection_status_counts": {
+      "visible": 1100,
+      "behind_camera": 458,
+      "out_of_fov": 262
+    },
+    "depth_check_status_counts": {
+      "consistent": 365,
+      "depth_mismatch": 733,
+      "out_of_fov": 260,
+      "unavailable": 462
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "problem": {
+    "fact": "The instance-arbitration branch contains 9 unresolved request rows with 51 candidate references and 121 unordered candidate pairs after local-context route-specific analysis. Detector/SAM2 substrate is available for candidate-own, source-top contrast, local-context contrast, and pair/common-or-standoff views.",
+    "failure_mechanism": "Repeated same-category candidates can have support in multiple views, and detector or mask presence alone does not establish ObjectNav goal validity. The analyzer must separate identity-support, rival leakage, source-top shortcut failure, and unresolved pair ambiguity.",
+    "agent_inference": "This branch tests whether semantic uncertainty can be converted into additional mobility evidence without turning the evidence into a direct commit or rejection shortcut."
+  },
+  "design_scope": {
+    "target_branch": "instance_arbitration_defer_v1",
+    "target_action": "defer_instance_arbitration_unresolved",
+    "analyzer_name": "instance_arbitration_detector_evidence_v1",
+    "input_scope": "All 172 detector-backed observation rows and all 1820 candidate-heading association rows from the frozen instance-arbitration substrate.",
+    "allowed_label_use": "Evaluation labels may be joined only after view, candidate, pair, request, unresolved-case, and summary evidence rows are written.",
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false,
+    "allowed_action_inputs": [
+      "instance-arbitration request, candidate, pair, candidate-artifact, and observation rows",
+      "detector frame summary rows",
+      "detector candidate association rows",
+      "target_candidate_id and selected_candidate_ids",
+      "view_role and pair_probe_type",
+      "candidate_selection_source",
+      "box, mask, projection, depth-agreement, projected-pixel, and association fields",
+      "non-GT candidate rank, source-top marker, own-view support marker, detector-strong marker, local-context support marker, and candidate geometry",
+      "request, scene, query, episode, decision, and standoff metadata"
+    ],
+    "forbidden_action_inputs": [
+      "evaluation_correctness",
+      "evaluation_only_candidate_correct",
+      "evaluation_only_request_success",
+      "evaluation_only_failure_tag",
+      "correct_candidate_ids",
+      "valid_candidate_ids",
+      "GT object id",
+      "GT goal id",
+      "GT target position",
+      "GT shortest path",
+      "oracle instance identity",
+      "oracle stop or commit decisions",
+      "posthoc positive or negative candidate labels",
+      "label_tuned_candidate_selection",
+      "category_specific_threshold_from_labels"
+    ]
+  },
+  "row_contract": {
+    "view_evidence_rows": 172,
+    "candidate_evidence_rows": 51,
+    "pair_evidence_rows": 121,
+    "request_evidence_rows": 9,
+    "unresolved_case_rows_minimum": 0,
+    "required_view_roles": [
+      "candidate_own_view_refresh",
+      "source_top_contrast_view",
+      "local_context_contrast_view",
+      "pair_common_view_or_dual_standoff"
+    ],
+    "required_view_fields": [
+      "expanded_retrieval_request_id",
+      "episode_key",
+      "scene_id",
+      "query",
+      "decision_id",
+      "target_candidate_id",
+      "selected_candidate_ids",
+      "view_role",
+      "pair_probe_type",
+      "candidate_selection_source",
+      "detector_box_count",
+      "sam2_mask_count",
+      "target_associated_heading_count",
+      "non_target_associated_heading_count",
+      "target_projected_inside_mask_count",
+      "non_target_projected_inside_mask_count",
+      "target_depth_consistent_count",
+      "non_target_depth_consistent_count",
+      "view_evidence_status"
+    ],
+    "required_candidate_fields": [
+      "expanded_retrieval_request_id",
+      "episode_key",
+      "scene_id",
+      "query",
+      "target_candidate_id",
+      "source_top_candidate",
+      "strong_own_view_candidate",
+      "detector_strong_candidate",
+      "local_context_candidate",
+      "own_view_support",
+      "source_top_contrast_support",
+      "local_context_contrast_support",
+      "pair_support_count",
+      "pair_contradiction_count",
+      "rival_leakage_count",
+      "candidate_evidence_status",
+      "recommended_nonterminal_action"
+    ],
+    "required_pair_fields": [
+      "expanded_retrieval_request_id",
+      "episode_key",
+      "scene_id",
+      "query",
+      "candidate_id_a",
+      "candidate_id_b",
+      "pair_probe_type",
+      "candidate_a_support_count",
+      "candidate_b_support_count",
+      "candidate_a_leakage_count",
+      "candidate_b_leakage_count",
+      "pair_evidence_status",
+      "recommended_nonterminal_action"
+    ],
+    "required_request_fields": [
+      "expanded_retrieval_request_id",
+      "episode_key",
+      "scene_id",
+      "query",
+      "candidate_count",
+      "pair_count",
+      "supported_candidate_count",
+      "contradicted_candidate_count",
+      "ambiguous_candidate_count",
+      "unresolved_pair_count",
+      "promotable_branch_outcome_count",
+      "recommended_nonterminal_action"
+    ]
+  },
+  "evidence_definitions": {
+    "candidate_support_in_view": "For a view row, a candidate has at least one associated_to_candidate true association row for its candidate_id.",
+    "candidate_inside_mask_support": "For a view row, a candidate has at least one association row with projected_pixel_inside_mask true for its candidate_id.",
+    "candidate_depth_consistent_support": "For a view row, a candidate has at least one association row with depth_check_status equal to consistent for its candidate_id.",
+    "rival_leakage": "A non-target selected candidate has candidate_support_in_view in a view intended to refresh or contrast the target candidate.",
+    "source_top_shortcut_failure": "The source-top candidate has support but at least one rival also has support in source-top contrast, local-context contrast, or pair/common-or-standoff views.",
+    "candidate_specific_support": "The candidate has own-view support and at least one contrast role with target support and no rival leakage.",
+    "pair_resolved_in_favor_of_candidate": "Within a pair, one candidate has support in the pair/common-or-standoff evidence while the rival has no support or has explicit leakage/contradiction in the same evidence context.",
+    "ambiguous_pair": "Both candidates have support, neither candidate has support, or support is missing only because of unavailable projection/detector evidence.",
+    "promotable_branch_outcome": "Exactly one candidate in a request has candidate_specific_support, all pair contexts involving that candidate are resolved in its favor, and no shortcut evidence path is the only support source. This outcome only permits a later terminal-utility contract design; it does not permit a commit here."
+  },
+  "required_gates": {
+    "source_materializer_planner_gate_passed": true,
+    "source_frame_projection_gate_passed": true,
+    "source_detector_substrate_gate_passed": true,
+    "expected_view_evidence_rows": 172,
+    "expected_candidate_evidence_rows": 51,
+    "expected_pair_evidence_rows": 121,
+    "expected_request_evidence_rows": 9,
+    "minimum_detector_association_rows": 1820,
+    "minimum_candidate_association_rate": 0.80,
+    "minimum_rows_with_candidate_association": 139,
+    "minimum_associated_candidate_heading_count": 483,
+    "all_candidate_views_have_one_selected_candidate": true,
+    "all_pair_views_have_two_selected_candidates": true,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "blocked_actions": [
+    "direct_commit_source_top_candidate",
+    "direct_commit_detector_score_best_candidate",
+    "direct_commit_sam2_mask_present_candidate",
+    "direct_commit_candidate_with_any_association",
+    "direct_commit_candidate_with_own_view_support_only",
+    "direct_commit_local_context_best_candidate",
+    "direct_reject_candidate_without_candidate_association",
+    "direct_reject_candidate_from_pair_loss",
+    "threshold_tune_from_evaluation_labels",
+    "category_specific_instance_rule",
+    "rerun_first_eval",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "simpler_alternatives_to_report": [
+    "source_top_candidate",
+    "detector_score_best",
+    "sam2_mask_presence",
+    "any_candidate_association",
+    "own_view_support_only",
+    "local_context_support_only",
+    "pair_support_only",
+    "defer_all"
+  ],
+  "expected_outputs": {
+    "view_evidence_jsonl": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1/instance_arbitration_view_evidence.jsonl",
+    "candidate_evidence_jsonl": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1/instance_arbitration_candidate_evidence.jsonl",
+    "pair_evidence_jsonl": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1/instance_arbitration_pair_evidence.jsonl",
+    "request_evidence_jsonl": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1/instance_arbitration_request_evidence.jsonl",
+    "unresolved_case_jsonl": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1/instance_arbitration_unresolved_cases.jsonl",
+    "summary_json": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1/instance_arbitration_detector_evidence_summary.json",
+    "verify_json": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_instance_arbitration_detector_evidence_v1.verify.json"
+  },
+  "interpretation_rule": {
+    "if_gate_passes": "Treat the analyzer output as nonterminal instance-arbitration evidence. If a promotable_branch_outcome exists, write a separate terminal utility contract before any commit rule is implemented.",
+    "if_gate_fails": "Diagnose whether failure comes from missing own-view support, rival leakage, pair-view ambiguity, detector association failure, or source-pool/backend limitation. Do not tune thresholds or promote terminal utility.",
+    "not_a_paper_claim": "This contract and any passing analyzer output are mechanism evidence only."
+  },
+  "next_step_if_passed": "implement_and_docker_run_instance_arbitration_post_detector_evidence_analyzer",
+  "next_step_if_failed": "diagnose_instance_arbitration_detector_evidence_contract_or_substrate_failure",
+  "paper_claim_allowed": false
+}

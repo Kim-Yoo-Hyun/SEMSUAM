@@ -1,0 +1,137 @@
+{
+  "schema_version": "h001.contract.residual_branch_closure.v1",
+  "date_checked": "2026-06-02",
+  "status": "frozen_design_contract_before_implementation",
+  "contract_name": "residual_branch_closure_v1",
+  "purpose": "Close the residual partial relation-depth branch family as terminal-blocking mechanism evidence after repeated-object and association-geometry promotion probes produced zero promotable branch outcomes.",
+  "source": {
+    "residual_branch_synthesis_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_residual_partial_relation_depth_branch_synthesis_v1.json",
+    "residual_branch_synthesis_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_residual_partial_relation_depth_branch_synthesis_v1.verify.json",
+    "residual_branch_synthesis_output": "local_dataset/runs/h001_residual_partial_relation_depth_branch_synthesis_v1",
+    "residual_branch_synthesis_summary": "local_dataset/runs/h001_residual_partial_relation_depth_branch_synthesis_v1/residual_partial_relation_depth_branch_synthesis_summary.json",
+    "promotion_requirement_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_residual_branch_promotion_requirement_v1.json",
+    "promotion_requirement_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_residual_branch_promotion_requirement_v1.verify.json",
+    "promotion_requirement_output": "local_dataset/runs/h001_residual_branch_promotion_requirement_v1",
+    "promotion_requirement_summary": "local_dataset/runs/h001_residual_branch_promotion_requirement_v1/residual_branch_promotion_requirement_summary.json",
+    "promotion_requirement_rows": "local_dataset/runs/h001_residual_branch_promotion_requirement_v1/residual_branch_promotion_requirement_rows.jsonl",
+    "repeated_object_residual_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_repeated_object_relation_anchor_consistency_residual_diagnostic_v1.verify.json",
+    "repeated_object_residual_output": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_residual_diagnostic_v1",
+    "repeated_object_residual_summary": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_residual_diagnostic_v1/relation_anchor_consistency_residual_summary.json",
+    "association_geometry_evidence_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_association_geometry_underlink_repair_followup_evidence_v1.json",
+    "association_geometry_evidence_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_association_geometry_underlink_repair_followup_evidence_v1.verify.json",
+    "association_geometry_evidence_output": "local_dataset/runs/h001_association_geometry_underlink_repair_followup_evidence_v1",
+    "association_geometry_evidence_summary": "local_dataset/runs/h001_association_geometry_underlink_repair_followup_evidence_v1/association_geometry_underlink_repair_followup_summary.json",
+    "depth_stagnation_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_depth_stagnation_branch_v1.json",
+    "depth_stagnation_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_depth_stagnation_branch_v1.verify.json",
+    "depth_stagnation_output": "local_dataset/runs/h001_depth_stagnation_branch_v1",
+    "depth_stagnation_summary": "local_dataset/runs/h001_depth_stagnation_branch_v1/depth_stagnation_branch_summary.json",
+    "depth_stagnation_rows": "local_dataset/runs/h001_depth_stagnation_branch_v1/depth_stagnation_branch_rows.jsonl"
+  },
+  "source_gate": {
+    "residual_branch_synthesis_gate_passed": true,
+    "promotion_requirement_gate_passed": true,
+    "repeated_object_residual_diagnostic_gate_passed": true,
+    "association_geometry_underlink_repair_followup_evidence_gate_passed": true,
+    "depth_stagnation_branch_gate_passed": true,
+    "expected_family_rows": 3,
+    "expected_request_rows": 6,
+    "expected_source_branch_rows": 15,
+    "expected_family_output_rows": {
+      "association_geometry_underlink": 8,
+      "depth_stagnation": 1,
+      "repeated_object_relation_anchor_ambiguity": 12
+    },
+    "expected_requirement_status_counts": {
+      "defined_not_satisfied": 3
+    },
+    "expected_repeated_object_promotable_branch_outcome_rows": 0,
+    "expected_association_geometry_promotable_branch_outcome_rows": 0,
+    "expected_depth_stagnation_request_rows": 1,
+    "expected_depth_stagnation_association_delta": 0,
+    "expected_depth_stagnation_depth_consistency_delta": 0,
+    "max_action_evidence_forbidden_key_count": 0,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "requires_uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "design_decision": {
+    "selected_path": "residual_branch_closure_before_terminal_utility",
+    "rejected_path_now": "depth_stagnation_independent_support_probe",
+    "selected_path_reason": [
+      "repeated-object relation-anchor consistency evidence and residual diagnostic closed the dominant branch with zero promotable outcomes",
+      "association-geometry underlink repair-followup evidence showed anchor/direction repairability but zero promotable outcomes",
+      "depth-stagnation has only one row and both association and depth-consistency deltas remain zero",
+      "a one-row depth-stagnation independent-support probe would be weak reviewer-defense evidence and risks overfitting the method shape to a single sofa case",
+      "the stronger top-tier framing is to close the current residual family as terminal-blocking mechanism taxonomy before opening a new evidence family"
+    ],
+    "depth_stagnation_probe_deferred_until": [
+      "at least three independent depth-stagnation rows are available from a broader split",
+      "an action-time map-side or pose-side signal is available to explain stagnant depth evidence",
+      "the proposed probe can predeclare success and failure conditions without changing candidate commit/rejection rules",
+      "the probe can produce a branch outcome beyond repeating association/depth-consistency counts"
+    ]
+  },
+  "closure_contract": {
+    "closure_name": "residual_partial_relation_depth_branch_closure_v1",
+    "target_branch_families": [
+      "repeated_object_relation_anchor_ambiguity",
+      "association_geometry_underlink",
+      "depth_stagnation"
+    ],
+    "required_branch_status": {
+      "repeated_object_relation_anchor_ambiguity": "closed_without_promotion_after_relation_anchor_consistency_residual_diagnostic",
+      "association_geometry_underlink": "closed_as_repairable_but_nonpromotable_anchor_direction_underlink",
+      "depth_stagnation": "closed_as_one_row_stagnant_evidence_audit_without_independent_support_probe"
+    },
+    "required_failure_mechanisms": [
+      "same_request_repeated_object_stable_tie_with_own_view_context_leakage",
+      "missing_own_view_target_support",
+      "anchor_selection_underlink_repairable_but_nonterminal",
+      "direction_specific_reobservation_repairable_but_nonterminal",
+      "association_present_depth_stagnant_without_evidence_delta"
+    ],
+    "blocked_shortcuts": [
+      "commit_after_any_repeated_object_stable_rule",
+      "commit_after_any_anchor_or_direction_repair",
+      "commit_association_present_depth_stagnant",
+      "commit_depth_consistency_present",
+      "reject_no_depth_improvement",
+      "rerun_first_eval_from_nonpromotable_branch_evidence",
+      "open_policy_scale_comparison_from_repairability_evidence",
+      "tune_thresholds_after_label_join"
+    ],
+    "allowed_next_claim_type": "failure_taxonomy_and_method_derivation_only",
+    "terminal_arbitration_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "threshold_tuning_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "required_future_outputs": {
+    "closure_rows": "residual_branch_closure_rows.jsonl",
+    "summary": "residual_branch_closure_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "runtime/h001_runtime/close_residual_partial_relation_depth_branches.py",
+    "output": "local_dataset/runs/h001_residual_branch_closure_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "verification_command": "python -m h001_runtime.close_residual_partial_relation_depth_branches"
+  },
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "Residual branch synthesis accounts for six request rows and fifteen source branch rows, and the completed repeated-object, association-geometry, and depth-stagnation branch gates preserve zero terminal commits and zero candidate commit/rejection rows.",
+    "agent_inference": "Residual partial relation-depth uncertainty should now be treated as a closed terminal-blocking failure family. The next implementation should write explicit closure rows before any new terminal utility or policy-scale work is considered.",
+    "paper_claim_allowed": false
+  }
+}

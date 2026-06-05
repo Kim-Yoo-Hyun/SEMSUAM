@@ -1,0 +1,108 @@
+{
+  "schema_version": "h001.verify.instance_arbitration_residual_diagnostic.v1",
+  "checked_at": "2026-06-02",
+  "ok": true,
+  "status": "docker_verified_residual_diagnostic",
+  "source_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_instance_arbitration_detector_evidence_v1.verify.json",
+  "source_output": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1",
+  "implementation": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/diagnose_instance_arbitration_residual.py",
+  "output": "local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1",
+  "summary": "local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1/instance_arbitration_residual_summary.json",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "source_metrics": {
+    "source_detector_evidence_gate_passed": true,
+    "source_promotable_branch_outcome_rows": 0,
+    "source_view_candidate_pair_request_unresolved_rows": "172/51/121/9/9",
+    "source_candidate_evidence_status_counts": {
+      "ambiguous_rival_leakage_candidate": 32,
+      "contradicted_by_pair_or_contrast_evidence": 18,
+      "partial_instance_support": 1
+    },
+    "source_pair_evidence_status_counts": {
+      "ambiguous_both_candidates_supported": 36,
+      "ambiguous_no_candidate_support": 25,
+      "resolved_in_favor_of_candidate_a_nonterminal": 49,
+      "resolved_in_favor_of_candidate_b_nonterminal": 11
+    }
+  },
+  "observed_output_counts": {
+    "candidate_rows": 51,
+    "pair_rows": 121,
+    "request_rows": 9,
+    "jsonl_total_rows": 181,
+    "candidate_residual_class_counts": {
+      "contrast_support_with_rival_leakage": 4,
+      "own_view_support_with_rival_leakage": 20,
+      "pair_or_contrast_contradiction": 18,
+      "partial_support_without_pair_resolution": 1,
+      "source_top_shortcut_rival_leakage": 8
+    },
+    "pair_residual_class_counts": {
+      "common_view_both_candidates_supported": 36,
+      "common_view_no_candidate_support": 11,
+      "dual_standoff_no_candidate_support": 14,
+      "one_sided_pair_support_nonterminal": 53,
+      "one_sided_pair_support_with_leakage": 7
+    },
+    "request_residual_status_counts": {
+      "multiple_lossless_pair_graph_candidates": 7,
+      "unique_lossless_pair_graph_candidate_blocked_by_common_view_overlap": 2
+    },
+    "recommended_request_action_counts": {
+      "freeze_pair_graph_consistency_followup_contract": 9
+    },
+    "lossless_pair_graph_candidate_count_by_request": {
+      "rival_identity:0": 2,
+      "rival_identity:1": 1,
+      "rival_identity:2": 2,
+      "rival_identity:20": 2,
+      "rival_identity:21": 3,
+      "rival_identity:23": 2,
+      "rival_identity:24": 2,
+      "rival_identity:26": 1,
+      "rival_identity:28": 2
+    },
+    "unique_lossless_pair_graph_candidate_request_rows": 2,
+    "multiple_lossless_pair_graph_candidate_request_rows": 7,
+    "pair_graph_followup_request_rows": 9,
+    "promotable_branch_outcome_rows": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "gate": {
+    "py_compile_passed": true,
+    "docker_run_passed": true,
+    "source_detector_evidence_gate_passed": true,
+    "source_zero_promotable_outcomes_passed": true,
+    "expected_candidate_rows_passed": true,
+    "expected_pair_rows_passed": true,
+    "expected_request_rows_passed": true,
+    "all_requests_diagnosed_passed": true,
+    "pair_graph_followup_signal_passed": true,
+    "no_promotable_branch_outcome_passed": true,
+    "action_evidence_forbidden_key_gate_passed": true,
+    "terminal_commit_rows_passed": true,
+    "candidate_commit_rows_passed": true,
+    "candidate_rejection_rows_passed": true,
+    "uses_gt_for_action_passed": true,
+    "paper_claim_allowed_passed": true,
+    "instance_arbitration_residual_diagnostic_gate_passed": true
+  },
+  "verification_commands": [
+    "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/diagnose_instance_arbitration_residual.py",
+    "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.diagnose_instance_arbitration_residual",
+    "jq '{gate:.gate.instance_arbitration_residual_diagnostic_gate_passed,candidate_rows,pair_rows,request_rows,candidate_residual_class_counts,pair_residual_class_counts,request_residual_status_counts,recommended_request_action_counts,lossless_pair_graph_candidate_count_by_request,unique_lossless_pair_graph_candidate_request_rows,multiple_lossless_pair_graph_candidate_request_rows,pair_graph_followup_request_rows,promotable_branch_outcome_rows,terminal_commit_rows,candidate_commit_rows,candidate_rejection_rows,action_evidence_forbidden_key_count,uses_gt_for_action,paper_claim_allowed,next_allowed_task}' local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1/instance_arbitration_residual_summary.json",
+    "wc -l local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1/*.jsonl"
+  ],
+  "next_allowed_task": "freeze_instance_arbitration_pair_graph_consistency_followup_contract",
+  "interpretation": {
+    "fact": "The residual diagnostic gate passed and classified all candidate, pair, and request rows without terminal commits, candidate commit/rejection, action-label leakage, or paper claims.",
+    "agent_inference": "The branch still has no promotable terminal outcome. Pairwise evidence shows a label-free graph signal in all 9 requests, but 7 requests have multiple lossless graph candidates and 2 unique candidates remain blocked by common-view overlap. This supports a nonterminal pair-graph consistency follow-up contract, not a commit rule.",
+    "paper_claim": "No paper claim is allowed from this residual diagnostic alone."
+  },
+  "paper_claim_allowed": false
+}

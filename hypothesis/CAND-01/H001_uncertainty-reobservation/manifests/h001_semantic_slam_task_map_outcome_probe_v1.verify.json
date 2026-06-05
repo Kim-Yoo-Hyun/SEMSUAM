@@ -1,0 +1,89 @@
+{
+  "schema_version": "h001.verify.semantic_slam_task_map_outcome_probe.v1",
+  "date_checked": "2026-06-05",
+  "ok": true,
+  "verified_artifact": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_outcome_probe_v1.json",
+  "status": "docker_implementation_completed_gate_failed",
+  "implementation": {
+    "script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/evaluate_semantic_slam_task_map_outcome_probe.py",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "out_root": "local_dataset/runs/h001_semantic_slam_task_map_outcome_probe_v1",
+    "output_files": {
+      "probe_rows": "semantic_slam_task_map_outcome_probe_rows.jsonl",
+      "policy_summary_rows": "semantic_slam_task_map_outcome_policy_summary_rows.jsonl",
+      "failure_rows": "semantic_slam_task_map_outcome_failure_rows.jsonl",
+      "summary": "semantic_slam_task_map_outcome_probe_summary.json"
+    },
+    "compile_passed": true,
+    "run_passed": true,
+    "artifact_validation_passed": true
+  },
+  "source_files_checked": [
+    "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_slam_only_rich_revision_contract_v1.json",
+    "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_slam_only_rich_revision_contract_v1.verify.json",
+    "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_slam_only_rich_underpowered_diagnostic_v1.verify.json",
+    "local_dataset/runs/h001_semantic_slam_slam_only_rich_underpowered_diagnostic_v1/semantic_slam_slam_only_rich_underpowered_diagnostic_rows.jsonl",
+    "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_probe_request_rows.jsonl",
+    "local_dataset/runs/h001_semantic_slam_strict_edge_variant_proxy_v1/semantic_slam_strict_edge_variant_proxy_rows.jsonl"
+  ],
+  "contract_checks": {
+    "same_request_groups_required": true,
+    "request_group_count_required": 50,
+    "map_side_metric_count": 2,
+    "task_side_metric_count": 2,
+    "bridge_metric_count": 2,
+    "required_baselines_present": [
+      "NoReobserveReference",
+      "SemanticOnly",
+      "SLAMOnlyRich_current"
+    ],
+    "failure_taxonomy_count": 7,
+    "action_time_and_analysis_inputs_separated": true,
+    "task_map_outcome_probe_implementation_allowed": true,
+    "revised_slam_only_formula_implementation_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "implementation_checks": {
+    "request_groups": 50,
+    "policy_count": 3,
+    "probe_rows": 150,
+    "policy_summary_rows": 3,
+    "failure_rows": 50,
+    "map_metric_positive_rows": 50,
+    "task_proxy_evaluable_rows": 0,
+    "label_join_available_rows": 0,
+    "label_free_risk_proxy_rows": 50,
+    "map_task_alignment_rows": 0,
+    "failure_taxonomy_counts": {
+      "map_delta_not_task_aligned": 50
+    },
+    "secondary_failure_counts": {
+      "task_proxy_label_join_missing": 50
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "outcome_probe_gate_passed": false,
+    "revised_slam_formula_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "verification_commands": [
+    "docker run --rm --ipc=host -v \"$PWD\":/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m compileall hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/evaluate_semantic_slam_task_map_outcome_probe.py",
+    "docker run --rm --ipc=host -v \"$PWD\":/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.evaluate_semantic_slam_task_map_outcome_probe",
+    "docker run --rm --ipc=host -v \"$PWD\":/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -c \"validate row counts, required fields, action safety, and expected gate failure for local_dataset/runs/h001_semantic_slam_task_map_outcome_probe_v1\"",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_outcome_probe_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_outcome_probe_v1.verify.json"
+  ],
+  "interpretation": {
+    "fact": "The Docker implementation joins the same 50 request groups and writes required probe, policy-summary, failure, and summary artifacts without action-time GT labels.",
+    "agent_inference": "The current source artifacts show map-side deltas for SLAMOnlyRich_current, but they do not include separated label-backed wrong-goal or wasted-path task proxies. The correct next gate is therefore a task-label join contract, not a SLAMOnlyRich formula revision.",
+    "paper_claim": "No ObjectNav, SLAM, SemanticSLAM complementarity, Step 4-5, terminal utility, first_eval, policy-scale, or paper claim is allowed from this failed outcome probe gate."
+  },
+  "next_task": "freeze_label_backed_task_proxy_join_contract_before_revising_slam_only_rich"
+}

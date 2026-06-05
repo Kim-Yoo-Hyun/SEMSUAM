@@ -1,0 +1,219 @@
+{
+  "schema_version": "h001.contract.missing_own_view_guard_arbitration.v1",
+  "date_checked": "2026-06-02",
+  "status": "frozen_before_implementation",
+  "contract_name": "missing_own_view_guard_arbitration_v1",
+  "purpose": "Freeze a nonterminal guard arbitration contract after the missing-own-view recheck analyzer showed acquired own-view support for all selected candidates.",
+  "implementation_target": {
+    "analyzer": "runtime/h001_runtime/analyze_missing_own_view_guard_arbitration.py",
+    "output": "local_dataset/runs/h001_missing_own_view_guard_arbitration_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_required": true
+  },
+  "source": {
+    "missing_own_view_recheck_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_missing_own_view_recheck_evidence_v1.json",
+    "missing_own_view_recheck_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_missing_own_view_recheck_evidence_v1.verify.json",
+    "missing_own_view_recheck_output": "local_dataset/runs/h001_missing_own_view_recheck_evidence_v1",
+    "missing_own_view_recheck_summary": "local_dataset/runs/h001_missing_own_view_recheck_evidence_v1/missing_own_view_recheck_evidence_summary.json",
+    "candidate_evidence_rows": "local_dataset/runs/h001_missing_own_view_recheck_evidence_v1/missing_own_view_recheck_candidate_rows.jsonl",
+    "request_summary_rows": "local_dataset/runs/h001_missing_own_view_recheck_evidence_v1/missing_own_view_recheck_request_rows.jsonl",
+    "unassociated_frame_audit_rows": "local_dataset/runs/h001_missing_own_view_recheck_evidence_v1/missing_own_view_recheck_unassociated_frame_rows.jsonl",
+    "object_relation_branch_candidate_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_candidate_rows.jsonl",
+    "next_label_free_selection_summary": "local_dataset/runs/h001_next_label_free_evidence_family_v1/next_label_free_evidence_family_summary.json"
+  },
+  "source_metrics": {
+    "missing_own_view_recheck_evidence_gate_passed": true,
+    "candidate_evidence_rows": 20,
+    "request_summary_rows": 7,
+    "unassociated_frame_audit_rows": 3,
+    "candidate_status_counts": {
+      "candidate_own_view_support_acquired": 20
+    },
+    "candidate_nonterminal_action_counts": {
+      "keep_nonterminal_acquired_own_view_support_for_later_arbitration": 20
+    },
+    "request_nonterminal_action_counts": {
+      "keep_nonterminal_own_view_support_for_guard_arbitration_contract": 7
+    },
+    "companion_guard_branch": "negative_missing_support_guard",
+    "companion_guard_candidate_rows": 20,
+    "negative_missing_support_guard_ready_candidate_rows": 20,
+    "target_candidates_with_any_association": 20,
+    "target_candidates_with_at_least_three_associated_views": 20,
+    "target_candidates_with_full_4_of_4_association": 17,
+    "target_candidates_with_partial_3_of_4_association": 3,
+    "target_candidates_with_zero_association": 0,
+    "rows_with_candidate_association": 77,
+    "candidate_association_rate": 0.9625,
+    "associated_candidate_heading_count": 236,
+    "projected_pixel_inside_mask_count": 263,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "problem": {
+    "fact": "The missing-own-view recheck analyzer acquired own-view support state for all 20 candidates that carried the deferred negative_missing_support_guard.",
+    "failure_mechanism": "A missing-support guard is unsafe if it is applied before active re-observation. After re-observation, acquired support should deactivate the missing-support rejection guard rather than become a goal-validity commit rule.",
+    "agent_inference": "This branch can support a method design choice: absence of own-view support should trigger mobility, and the guard should be interpreted only after the recheck evidence state is written."
+  },
+  "policy": {
+    "name": "negative_missing_support_guard_after_recheck_v1",
+    "purpose": "Interpret the deferred negative_missing_support_guard after candidate-centered own-view recheck evidence has been aggregated.",
+    "non_gt_action_features": [
+      "own_view_support_status",
+      "negative_missing_support_guard_ready",
+      "companion_guard_branch",
+      "recheck_candidate_associated_view_count",
+      "recheck_view_count",
+      "recheck_unassociated_view_count",
+      "recheck_depth_consistent_association_count",
+      "base_candidate_specific_support",
+      "base_strong_own_view_evidence",
+      "relation_depth_evidence_status"
+    ],
+    "action_rule": [
+      {
+        "if": "own_view_support_status == candidate_own_view_support_acquired and companion_guard_branch == negative_missing_support_guard",
+        "then": "deactivate_negative_missing_support_guard_after_recheck"
+      },
+      {
+        "if": "own_view_support_status == candidate_own_view_support_partial",
+        "then": "defer_guard_interpretation_pending_partial_own_view_support_audit"
+      },
+      {
+        "if": "own_view_support_status == candidate_own_view_support_absent",
+        "then": "defer_guard_interpretation_pending_absent_own_view_support_audit"
+      },
+      {
+        "if": "recheck_unassociated_view_count > 0 and own_view_support_status == candidate_own_view_support_acquired",
+        "then": "keep_guard_deactivated_but_report_unassociated_view_audit"
+      },
+      {
+        "if": "all request candidates have deactivate_negative_missing_support_guard_after_recheck",
+        "then": "close_missing_own_view_guard_as_nonterminal_evidence"
+      }
+    ],
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "row_contract": {
+    "candidate_guard_decision_rows": 20,
+    "request_guard_summary_rows": 7,
+    "unassociated_frame_audit_rows_preserved": 3,
+    "required_candidate_fields": [
+      "expanded_retrieval_request_id",
+      "episode_key",
+      "scene_key",
+      "query",
+      "target_candidate_id",
+      "own_view_support_status",
+      "companion_guard_branch",
+      "negative_missing_support_guard_ready",
+      "recheck_view_count",
+      "recheck_candidate_associated_view_count",
+      "recheck_unassociated_view_count",
+      "guard_arbitration_decision",
+      "guard_arbitration_reason",
+      "recommended_nonterminal_action"
+    ],
+    "required_request_fields": [
+      "expanded_retrieval_request_id",
+      "episode_key",
+      "scene_key",
+      "query",
+      "target_candidate_count",
+      "guard_deactivated_candidate_count",
+      "guard_deferred_candidate_count",
+      "candidate_rejection_count",
+      "terminal_commit_count",
+      "request_guard_status",
+      "recommended_nonterminal_action"
+    ]
+  },
+  "minimum_rule_gate": {
+    "source_missing_own_view_recheck_evidence_gate_passed": true,
+    "expected_candidate_guard_decision_rows": 20,
+    "expected_request_guard_summary_rows": 7,
+    "expected_unassociated_frame_audit_rows_preserved": 3,
+    "expected_guard_deactivated_candidate_rows": 20,
+    "expected_guard_deactivated_request_rows": 7,
+    "expected_guard_deferred_candidate_rows": 0,
+    "expected_candidate_rejection_rows": 0,
+    "expected_candidate_commit_rows": 0,
+    "expected_terminal_commit_rows": 0,
+    "expected_promotable_terminal_outcome_rows": 0,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "uses_gt_for_action": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "allowed_action_inputs": [
+    "missing-own-view recheck candidate evidence rows",
+    "missing-own-view recheck request summary rows",
+    "unassociated-frame audit rows",
+    "own-view support status",
+    "candidate association counts",
+    "unassociated recheck view counts",
+    "base support fields written before recheck",
+    "relation-depth evidence status written before recheck",
+    "companion guard metadata from action-time branch routing"
+  ],
+  "forbidden_action_inputs": [
+    "evaluation_only_candidate_correct",
+    "evaluation_only_request_success",
+    "evaluation_only_failure_tag",
+    "correct_candidate_ids",
+    "valid_candidate_ids",
+    "GT object id",
+    "GT goal id",
+    "GT shortest path",
+    "SPL",
+    "wrong-goal labels",
+    "oracle stop or commit decisions",
+    "posthoc positive or negative candidate labels",
+    "threshold tuning from joined labels"
+  ],
+  "blocked_shortcuts": [
+    "reject_missing_own_view_without_recheck",
+    "reject_if_any_recheck_view_unassociated",
+    "reject_after_partial_recheck_without_audit",
+    "commit_if_guard_deactivated",
+    "commit_if_candidate_own_view_support_acquired",
+    "commit_if_all_recheck_views_associated",
+    "association_count_best_after_recheck",
+    "relation_depth_resolved_plus_own_view_support_commit",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "terminal_utility_contract"
+  ],
+  "required_simpler_alternatives_to_report_later": [
+    "reject_missing_own_view_without_recheck",
+    "reject_if_any_recheck_view_unassociated",
+    "commit_if_candidate_own_view_support_acquired",
+    "commit_if_all_recheck_views_associated",
+    "association_count_best_after_recheck",
+    "defer_all_guard_rows"
+  ],
+  "required_outputs": {
+    "candidate_guard_decision_rows": "missing_own_view_guard_candidate_rows.jsonl",
+    "request_guard_summary_rows": "missing_own_view_guard_request_rows.jsonl",
+    "summary": "missing_own_view_guard_arbitration_summary.json"
+  },
+  "next_step_if_passed": "implement_missing_own_view_guard_arbitration_analyzer",
+  "next_step_after_implementation_if_passed": "freeze_missing_own_view_guard_branch_closure_or_select_next_label_free_family",
+  "next_step_if_failed": "diagnose guard interpretation mismatch before any terminal utility or candidate rejection rule.",
+  "interpretation_rule": {
+    "fact": "The contract freezes a nonterminal guard arbitration rule after recheck evidence acquisition.",
+    "agent_inference": "The expected outcome is guard deactivation, not goal commitment: the branch shows that missing own-view support should trigger active observation before rejection.",
+    "paper_claim": "No paper claim is allowed from this contract alone.",
+    "user_decision_needed": "None for this contract."
+  },
+  "paper_claim_allowed": false
+}

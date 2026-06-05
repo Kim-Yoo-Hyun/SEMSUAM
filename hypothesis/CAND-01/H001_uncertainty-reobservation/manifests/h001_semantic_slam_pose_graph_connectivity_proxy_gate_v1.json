@@ -1,0 +1,85 @@
+{
+  "schema_version": "h001.contract.semantic_slam_pose_graph_connectivity_proxy_gate.v1",
+  "date_checked": "2026-06-04",
+  "status": "frozen_gate_contract",
+  "contract_name": "semantic_slam_pose_graph_connectivity_proxy_gate_v1",
+  "purpose": "Define the first formal pose graph connectivity proxy gate after the semantic-SLAM source audit, while keeping shortcut edge reasons and paper claims separated.",
+  "source": {
+    "source_audit_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_map_pose_consistency_probe_v1.json",
+    "source_audit_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_map_pose_consistency_probe_v1.verify.json",
+    "source_audit_output": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1",
+    "source_audit_summary": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_consistency_probe_summary.json",
+    "source_inventory_rows": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_source_inventory_rows.jsonl",
+    "probe_request_rows": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_probe_request_rows.jsonl",
+    "pose_graph_proxy_rows": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_graph_proxy_rows.jsonl"
+  },
+  "gate_scope": {
+    "stage": "P4-design",
+    "proxy_name": "pose_graph_connectivity_proxy_v1",
+    "what_this_gate_allows": [
+      "treat existing label-free frame/pose/depth artifacts as sufficient for a first pose graph connectivity proxy",
+      "separate candidate-overlap shortcut connectivity from spatial and loop-closure proxy connectivity",
+      "define the next strict edge-variant ablation before any SemanticOnly, SLAMOnly, or SemanticSLAM comparison"
+    ],
+    "what_this_gate_does_not_allow": [
+      "claim SLAM benefit",
+      "claim ObjectNav policy utility",
+      "open terminal utility validation",
+      "commit or reject candidates",
+      "rerun first_eval as paper evidence",
+      "run policy-scale comparison",
+      "treat candidate_id_overlap edges as pose/SLAM evidence"
+    ],
+    "requires_strict_edge_ablation_before_policy_comparison": true,
+    "step_4_5_promotion_satisfied": false,
+    "paper_claim_allowed": false
+  },
+  "gate_thresholds": {
+    "min_source_inventory_rows": 5,
+    "min_source_ready_rows": 5,
+    "min_source_family_count": 5,
+    "min_proxy_rows": 50,
+    "min_proxy_ready_rate": 1.0,
+    "min_primary_source_proxy_rows": 9,
+    "min_max_node_count": 4,
+    "min_max_edge_count": 1,
+    "min_spatial_edge_row_rate": 0.8,
+    "min_loop_edge_row_rate": 0.5,
+    "min_spatial_or_loop_edge_row_rate": 0.9,
+    "max_candidate_overlap_only_row_rate": 0.1,
+    "max_action_evidence_forbidden_key_count": 0,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "requires_uses_gt_for_action": false
+  },
+  "edge_reason_roles": {
+    "spatial_proximity": "pose_graph_proxy_signal",
+    "loop_closure_opportunity": "pose_graph_proxy_signal",
+    "target_position_neighborhood": "semantic_map_geometric_context_signal",
+    "candidate_id_overlap": "shortcut_diagnostic_only"
+  },
+  "required_outputs": {
+    "gate_rows": "semantic_slam_pose_graph_connectivity_proxy_gate_rows.jsonl",
+    "summary": "semantic_slam_pose_graph_connectivity_proxy_gate_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "runtime/h001_runtime/evaluate_semantic_slam_pose_graph_connectivity_proxy_gate.py",
+    "output": "local_dataset/runs/h001_semantic_slam_pose_graph_connectivity_proxy_gate_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "verification_command": "python -m h001_runtime.evaluate_semantic_slam_pose_graph_connectivity_proxy_gate"
+  },
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "The source audit already wrote row-level pose graph proxy rows from label-free frame/pose/depth artifacts.",
+    "agent_inference": "The proxy gate should pass only if spatial or loop-closure proxy edges are present on most rows and candidate-overlap-only rows remain rare.",
+    "paper_claim": "No SLAM benefit, SemanticSLAM complementarity, or ObjectNav utility claim is allowed from this gate alone."
+  }
+}

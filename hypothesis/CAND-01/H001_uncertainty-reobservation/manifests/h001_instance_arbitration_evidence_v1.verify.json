@@ -1,0 +1,111 @@
+{
+  "schema_version": "h001.contract.verify.instance_arbitration_evidence.v1",
+  "date_checked": "2026-06-02",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_instance_arbitration_evidence_v1.json",
+  "status": "docker_verified_materializer_planner",
+  "source_files": {
+    "selection_summary": "local_dataset/runs/h001_next_label_free_evidence_family_after_object_relation_v1/next_label_free_evidence_family_after_object_relation_summary.json",
+    "route_specific_rows": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_rows.jsonl",
+    "route_specific_summary": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_summary.json",
+    "candidate_artifact": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl"
+  },
+  "implementation_files": {
+    "input_materializer": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/build_instance_arbitration_inputs.py",
+    "observation_planner": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_instance_arbitration_evidence.py"
+  },
+  "observed_source_counts": {
+    "selected_family": "instance_arbitration_defer_v1",
+    "selected_action": "freeze_instance_arbitration_label_free_evidence_contract",
+    "route_action": "defer_instance_arbitration_unresolved",
+    "request_rows": 9,
+    "scene_count": 5,
+    "query_count": 3,
+    "unique_scene_query_artifact_rows_required": 7,
+    "candidate_reference_rows": 51,
+    "unordered_candidate_pair_rows": 121,
+    "source_top_candidate_refs": 9,
+    "strong_own_view_candidate_refs": 28,
+    "detector_strong_candidate_refs": 36,
+    "local_context_candidate_refs": 11,
+    "candidate_artifact_rows_total": 16,
+    "candidate_artifact_candidate_refs_total": 88,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "request_pair_counts": {
+    "rival_identity:0": 15,
+    "rival_identity:1": 6,
+    "rival_identity:2": 15,
+    "rival_identity:20": 15,
+    "rival_identity:21": 15,
+    "rival_identity:23": 15,
+    "rival_identity:24": 15,
+    "rival_identity:26": 10,
+    "rival_identity:28": 15
+  },
+  "observed_output_counts": {
+    "output_root": "local_dataset/runs/h001_instance_arbitration_evidence_v1",
+    "request_rows": 9,
+    "candidate_rows": 51,
+    "pair_rows": 121,
+    "candidate_artifact_rows": 7,
+    "observation_plan_rows": 172,
+    "candidate_observation_rows": 51,
+    "pair_observation_rows": 121,
+    "skipped_rows": 0,
+    "pair_probe_type_counts": {
+      "pair_common_view": 57,
+      "pair_dual_standoff_fallback": 64
+    },
+    "viewpoint_source_counts": {
+      "common_pair_navmesh": 57,
+      "standoff_navmesh": 115
+    },
+    "target_distance_stats_m": {
+      "min": 1.5925607195353937,
+      "mean": 1.989397787136081,
+      "max": 3.2407560898768333
+    }
+  },
+  "docker_verification": {
+    "input_materializer_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "observation_planner_image": "research3/habitat-h001:20260508-calib-artifacts",
+    "input_materializer_run_passed": true,
+    "observation_planner_run_passed": true,
+    "py_compile_passed": true,
+    "notes": "Planner run used the canonical host data mount local_dataset/data:/data:ro because /tmp/research3-data is a symlink. Habitat printed .basis.scn semantic scene descriptor warnings, but observation planning and all gates passed."
+  },
+  "gate": {
+    "contract_json_valid": true,
+    "selection_gate_passed": true,
+    "selected_branch_matches_contract": true,
+    "selected_action_matches_contract": true,
+    "request_rows_match": true,
+    "candidate_reference_rows_match": true,
+    "pair_rows_match": true,
+    "candidate_artifact_covers_target_scene_queries": true,
+    "action_evidence_forbidden_key_gate_passed": true,
+    "terminal_commit_rows_passed": true,
+    "candidate_commit_rows_passed": true,
+    "candidate_rejection_rows_passed": true,
+    "uses_gt_for_action_passed": true,
+    "input_materializer_gate_passed": true,
+    "observation_plan_gate_passed": true,
+    "minimum_observation_rows_passed": true,
+    "minimum_candidate_observation_rows_passed": true,
+    "minimum_pair_observation_rows_passed": true,
+    "skipped_rows_passed": true,
+    "paper_claim_allowed": false
+  },
+  "interpretation": {
+    "fact": "The materializer and planner are Docker-verified and produce request, candidate, pair, candidate-artifact, and observation-plan rows for instance_arbitration_defer_v1 without skipped rows or action-time label keys.",
+    "agent_inference": "The next implementation should run frame/projection smoke on the 172 planned observation rows; terminal utility, candidate selection, candidate rejection, first_eval, policy-scale comparison, and paper claims remain blocked.",
+    "paper_claim": "No paper claim is allowed from this substrate verification."
+  },
+  "recommended_next_task": "run_frame_projection_smoke_for_instance_arbitration_evidence_plan",
+  "paper_claim_allowed": false
+}

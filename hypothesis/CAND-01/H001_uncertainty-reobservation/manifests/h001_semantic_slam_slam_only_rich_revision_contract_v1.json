@@ -1,0 +1,193 @@
+{
+  "schema_version": "h001.contract.semantic_slam_slam_only_rich_revision.v1",
+  "date_checked": "2026-06-05",
+  "status": "frozen_contract",
+  "contract_name": "semantic_slam_slam_only_rich_revision_contract_v1",
+  "purpose": "Freeze the next SLAMOnlyRich revision contract after the underpowered diagnostic showed that scale-only tuning would not be paper-defensible.",
+  "stage": "P4-design",
+  "source": {
+    "reviewer_defense_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_reviewer_defense_contract_v1.json",
+    "reviewer_defense_output_evaluation_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_reviewer_defense_output_evaluation_v1.verify.json",
+    "slam_only_rich_underpowered_diagnostic_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_slam_only_rich_underpowered_diagnostic_v1.verify.json",
+    "slam_only_rich_underpowered_diagnostic_summary": "local_dataset/runs/h001_semantic_slam_slam_only_rich_underpowered_diagnostic_v1/semantic_slam_slam_only_rich_underpowered_diagnostic_summary.json",
+    "source_audit_summary": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_consistency_probe_summary.json",
+    "pose_graph_connectivity_summary": "local_dataset/runs/h001_semantic_slam_pose_graph_connectivity_proxy_gate_v1/semantic_slam_pose_graph_connectivity_proxy_gate_summary.json",
+    "strict_edge_variant_summary": "local_dataset/runs/h001_semantic_slam_strict_edge_variant_proxy_v1/semantic_slam_strict_edge_variant_proxy_summary.json"
+  },
+  "source_diagnostic": {
+    "request_groups": 50,
+    "slam_only_rich_rank1_rows": 3,
+    "slam_only_rich_rank1_rate": 0.06,
+    "semantic_only_rank1_rows": 10,
+    "semantic_only_rank1_rate": 0.2,
+    "interaction_rank1_rows": 37,
+    "interaction_rank1_rate": 0.74,
+    "dominant_cause_counts": {
+      "map_pose_terms_saturated": 19,
+      "weak_map_pose_proxy": 17,
+      "near_miss_scale": 8,
+      "positive_slam_cases_too_sparse": 3,
+      "mixed_or_request_pool_effect": 3
+    },
+    "saturated_map_pose_term_rows": 46,
+    "saturated_map_pose_term_rate": 0.92,
+    "weak_map_pose_proxy_rows": 17,
+    "weak_map_pose_proxy_rate": 0.34,
+    "scale_near_miss_rows": 12,
+    "scale_near_miss_rate": 0.24,
+    "slam_scale_needed_to_match_semantic_score_mean": 2.4315265676649185,
+    "primary_cause": "semantic_score_dominates_current_map_pose_proxy",
+    "secondary_cause": "map_pose_terms_often_saturated_or_weak_without_task_map_outcome"
+  },
+  "revision_decision": {
+    "formula_change_allowed_now": false,
+    "scale_only_tuning_allowed": false,
+    "next_allowed_work": "define_small_task_map_outcome_probe_contract",
+    "revision_implementation_allowed_after": "a small task/map outcome probe contract is frozen",
+    "reason": "The current blocker is dominated by saturated or weak map/pose terms and missing task/map outcome linkage, not by a two-row threshold deficit."
+  },
+  "required_revision_principles": [
+    {
+      "principle": "outcome_linked_map_pose_evidence",
+      "requirement": "Any new SLAMOnlyRich term must be tied to a predeclared map-side or task-side outcome proxy, not only to utility scale."
+    },
+    {
+      "principle": "semantic_separation",
+      "requirement": "SLAMOnlyRich must not use semantic uncertainty family, semantic score, object correctness, or category label outcomes as utility terms."
+    },
+    {
+      "principle": "predeclared_probe_before_formula",
+      "requirement": "The next probe must define map-side metric, task-side metric, rows, baselines, and failure interpretation before implementing a revised utility formula."
+    },
+    {
+      "principle": "no_request_pool_tuning",
+      "requirement": "Do not change the request pool to make SLAMOnlyRich look stronger. Use the same 50 request groups unless a separate split contract is frozen."
+    },
+    {
+      "principle": "no_deleted_artifact_dependency",
+      "requirement": "Do not depend on failed or superseded run outputs deleted from local_dataset/runs; regenerate from source contracts if an old negative artifact is needed for provenance."
+    }
+  ],
+  "allowed_future_evidence_families": [
+    {
+      "family": "pose_graph_outcome_delta",
+      "examples": [
+        "connected_component_count_delta",
+        "largest_component_fraction_delta",
+        "edge_count_delta",
+        "loop_edge_count_delta"
+      ],
+      "required_link": "map-side metric"
+    },
+    {
+      "family": "map_consistency_delta",
+      "examples": [
+        "pre_post_depth_consistency_delta",
+        "viewpoint_coverage_delta",
+        "source_coverage_gap_delta"
+      ],
+      "required_link": "map-side metric"
+    },
+    {
+      "family": "task_behavior_delta",
+      "examples": [
+        "wrong_goal_visit_delta",
+        "wasted_path_delta",
+        "decision_defer_delta"
+      ],
+      "required_link": "task-side metric"
+    },
+    {
+      "family": "trajectory_quality_delta",
+      "examples": [
+        "ATE_delta_if_available",
+        "RPE_delta_if_available",
+        "pose_graph_connectivity_delta"
+      ],
+      "required_link": "SLAM-side metric"
+    }
+  ],
+  "forbidden_patterns": [
+    {
+      "pattern": "multiply_slam_only_score_by_constant",
+      "reason": "Scale-only tuning does not explain why semantic uncertainty becomes SLAM/navigation utility."
+    },
+    {
+      "pattern": "lower_semantic_score_to_help_slam_only",
+      "reason": "Weakening the semantic baseline is not a SLAM contribution."
+    },
+    {
+      "pattern": "select_rows_where_slam_wins",
+      "reason": "Request-pool tuning would invalidate reviewer-defense evidence."
+    },
+    {
+      "pattern": "use_candidate_correctness_or_wrong_goal_labels_for_action",
+      "reason": "Evaluation labels must remain analysis-only."
+    },
+    {
+      "pattern": "candidate_overlap_as_pose_evidence",
+      "reason": "Candidate-id overlap is not independent map/pose evidence."
+    },
+    {
+      "pattern": "terminal_or_policy_scale_claim_from_proxy_only",
+      "reason": "The revision must first pass task/map outcome probing."
+    }
+  ],
+  "required_next_probe_contract": {
+    "name": "semantic_slam_task_map_outcome_probe_v1",
+    "must_define_before_implementation": [
+      "same_or_predeclared_request_groups",
+      "map_side_metric",
+      "task_side_metric",
+      "baselines",
+      "failure_taxonomy",
+      "allowed_action_inputs",
+      "forbidden_evaluation_inputs",
+      "minimum_success_gate",
+      "negative_result_interpretation"
+    ],
+    "minimum_map_side_metrics": 1,
+    "minimum_task_side_metrics": 1,
+    "minimum_baselines": [
+      "SemanticOnly",
+      "SLAMOnlyRich_current",
+      "NoReobserveReference"
+    ],
+    "preferred_metrics": [
+      "pose_graph_connectivity_delta",
+      "wrong_goal_visit_delta",
+      "wasted_path_delta",
+      "map_pose_outcome_proxy_delta"
+    ],
+    "allowed_small_probe_scope": [
+      "same_50_request_groups",
+      "small scene-disjoint subset if separately frozen",
+      "one-scene replay only as schema smoke, not promotion"
+    ]
+  },
+  "blocked_until_probe_contract": {
+    "revised_slam_only_formula_implementation": true,
+    "step_4_5_promotion": true,
+    "terminal_utility_validation": true,
+    "first_eval_rerun": true,
+    "policy_scale_comparison": true,
+    "paper_claim": true
+  },
+  "success_gate_for_future_revision": {
+    "action_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "same_request_groups_required": true,
+    "scale_only_change_rows": 0,
+    "outcome_linked_term_count_min": 1,
+    "paper_claim_allowed": false
+  },
+  "interpretation": {
+    "fact": "The current SLAMOnlyRich proxy is rank-1 on 3 of 50 request groups and has saturated map/pose terms on 46 of 50 rows.",
+    "agent_inference": "The next research move should define a small task/map outcome probe before implementing a revised SLAMOnlyRich utility.",
+    "paper_claim": "This contract is not a SemanticSLAM complementarity, ObjectNav benefit, SLAM benefit, or Step 4-5 promotion claim."
+  },
+  "next_task": "define_small_task_map_outcome_probe_after_slam_only_rich_revision_contract"
+}

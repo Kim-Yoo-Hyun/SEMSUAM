@@ -1,0 +1,298 @@
+{
+  "schema_version": "h001.contract.semantic_slam_reviewer_defense.v1",
+  "date_checked": "2026-06-05",
+  "status": "frozen_contract",
+  "contract_name": "semantic_slam_reviewer_defense_v1",
+  "purpose": "Freeze the next SemanticSLAMInteraction reviewer-defense contract after the additive non-dominated proxy removed midpoint dominance but failed because it shadowed SemanticOnly on all request groups.",
+  "source": {
+    "source_audit_summary": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_consistency_probe_summary.json",
+    "source_audit_probe_request_rows": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_probe_request_rows.jsonl",
+    "source_audit_pose_graph_proxy_rows": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_graph_proxy_rows.jsonl",
+    "strict_edge_variant_summary": "local_dataset/runs/h001_semantic_slam_strict_edge_variant_proxy_v1/semantic_slam_strict_edge_variant_proxy_summary.json",
+    "strict_edge_variant_rows": "local_dataset/runs/h001_semantic_slam_strict_edge_variant_proxy_v1/semantic_slam_strict_edge_variant_proxy_rows.jsonl",
+    "previous_non_dominated_summary": "local_dataset/runs/h001_semantic_slam_non_dominated_proxy_redesign_v1/semantic_slam_non_dominated_proxy_redesign_summary.json",
+    "previous_output_evaluation_summary": "local_dataset/runs/h001_semantic_slam_non_dominated_proxy_output_evaluation_v1/semantic_slam_non_dominated_proxy_output_evaluation_summary.json",
+    "previous_output_evaluation_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_non_dominated_proxy_output_evaluation_v1.verify.json"
+  },
+  "source_diagnostic": {
+    "request_groups": 50,
+    "previous_interaction_rank1_rows": 42,
+    "previous_interaction_rank1_rate": 0.84,
+    "previous_semantic_only_rank1_rows": 0,
+    "previous_slam_only_rank1_rows": 8,
+    "previous_semantic_only_shadowed_by_interaction_rows": 50,
+    "previous_semantic_only_shadowed_by_interaction_rate": 1.0,
+    "previous_interaction_bonus_positive_rows": 50,
+    "previous_diagnostic_class_counts": {
+      "semantic_first_bonus_shadows_semantic_only": 36,
+      "interaction_overrides_slam_component": 6,
+      "interaction_loses_to_component": 8
+    },
+    "previous_output_integrity_gate_passed": true,
+    "previous_reviewer_defense_gate_passed": false,
+    "previous_step_4_5_promotion_allowed": false,
+    "promotion_decision": "do_not_promote_current_additive_proxy"
+  },
+  "path_decision": {
+    "primary_path": "richer_slam_outcome_linked_proxy",
+    "guard_path": "stricter_non_shadowing_cap",
+    "promotion_path": "task_map_outcome_validation",
+    "rejected_primary_paths": [
+      {
+        "path": "cap_only_redesign",
+        "reason": "A cap can prevent all-row semantic shadowing, but it is easy to tune and weak as a paper contribution."
+      },
+      {
+        "path": "direct_task_map_validation_of_current_additive_proxy",
+        "reason": "The current additive proxy is already known to shadow SemanticOnly, so validating it directly would not isolate semantic-SLAM complementarity."
+      }
+    ]
+  },
+  "reviewer_defense_scope": {
+    "stage": "P4-design",
+    "comparison_name": "semantic_slam_reviewer_defense_v1",
+    "request_group_count": 50,
+    "join_key": [
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key"
+    ],
+    "same_request_groups_required_for_all_policies": true,
+    "canonical_pose_variant": "pose_spatial_or_loop",
+    "context_pose_variant": "map_pose_context_no_candidate",
+    "loop_variant": "pose_loop",
+    "shortcut_diagnostic_variant": "candidate_overlap_only",
+    "paper_claim_allowed": false,
+    "step_4_5_promotion_satisfied": false
+  },
+  "design_principle": {
+    "fact": "The previous non-dominated proxy was rank-1 on 42/50 groups but strictly exceeded SemanticOnly on all 50/50 groups.",
+    "agent_inference": "The next proxy must make any interaction gain over SemanticOnly depend on an independently measurable map/pose signal and must fail if the combined policy shadows SemanticOnly on every row again.",
+    "paper_claim": "A reviewer-defense proxy can only become paper evidence after later task/map outcome validation; this contract alone is not a contribution claim."
+  },
+  "policy_definitions": [
+    {
+      "policy_name": "NoReobserveReference",
+      "role": "non_active_reference",
+      "utility_formula": "U = 0",
+      "allowed_action_inputs": [
+        "request group identity",
+        "source artifact group",
+        "pre-existing proxy rows"
+      ],
+      "forbidden_action_inputs": [
+        "candidate correctness",
+        "GT pose error",
+        "ObjectNav success or wrong-goal labels"
+      ]
+    },
+    {
+      "policy_name": "SemanticOnly",
+      "role": "semantic_component_reference",
+      "semantic_score_formula": "0.6 * semantic_family_weight + 0.4 * min(candidate_id_count / 10, 1)",
+      "travel_penalty_formula": "0.1 * normalized_travel_cost_proxy",
+      "utility_formula": "U_sem = semantic_score - travel_penalty",
+      "allowed_action_inputs": [
+        "semantic_uncertainty_family",
+        "candidate_id_count",
+        "candidate_set_rule_counts",
+        "view_role_counts",
+        "viewpoint_source_counts",
+        "travel_cost_proxy_m"
+      ],
+      "forbidden_action_inputs": [
+        "strict pose graph connectivity metrics",
+        "candidate correctness",
+        "GT pose error",
+        "ObjectNav success or wrong-goal labels"
+      ]
+    },
+    {
+      "policy_name": "SLAMOnlyRich",
+      "role": "map_pose_component_reference",
+      "fragmentation_formula": "clip((connected_component_count - 1) / 4, 0, 1)",
+      "largest_component_gap_formula": "1 - largest_component_fraction",
+      "loop_gap_formula": "1 if pose_loop edge_count == 0 else 0",
+      "source_coverage_gap_formula": "1 - min(unique_viewpoint_count / 4, 1)",
+      "context_gap_formula": "clip(1 - context_edge_count / max(canonical_edge_count, 1), 0, 1)",
+      "map_pose_outcome_proxy_formula": "0.30 * fragmentation + 0.25 * largest_component_gap + 0.20 * loop_gap + 0.15 * source_coverage_gap + 0.10 * context_gap",
+      "travel_penalty_formula": "0.1 * normalized_travel_cost_proxy",
+      "utility_formula": "U_slam_rich = map_pose_outcome_proxy - travel_penalty",
+      "allowed_action_inputs": [
+        "pose_spatial_or_loop connected_component_count",
+        "pose_spatial_or_loop largest_component_fraction",
+        "pose_spatial_or_loop edge_count",
+        "pose_loop edge_count",
+        "map_pose_context_no_candidate edge_count",
+        "unique_viewpoint_count",
+        "frame_row_count",
+        "travel_cost_proxy_m"
+      ],
+      "forbidden_action_inputs": [
+        "semantic_uncertainty_family as a utility term",
+        "candidate_id_overlap edges",
+        "candidate correctness",
+        "GT pose error",
+        "ObjectNav success or wrong-goal labels"
+      ]
+    },
+    {
+      "policy_name": "SemanticSLAMInteractionGuarded",
+      "role": "reviewer_defense_interaction_proxy",
+      "semantic_score_formula": "0.6 * semantic_family_weight + 0.4 * min(candidate_id_count / 10, 1)",
+      "map_pose_outcome_proxy_formula": "same as SLAMOnlyRich",
+      "semantic_pressure_formula": "clip((semantic_score - 0.55) / 0.35, 0, 1)",
+      "map_pose_pressure_formula": "clip(map_pose_outcome_proxy / 0.8, 0, 1)",
+      "map_pose_explanation_gate_formula": "map_pose_pressure >= 0.25 and at least one of fragmentation, largest_component_gap, loop_gap, source_coverage_gap, context_gap is >= 0.25",
+      "interaction_gain_formula": "0.30 * semantic_pressure * map_pose_pressure * map_pose_outcome_proxy",
+      "non_shadowing_cap_formula": "if no task/map outcome validation is attached, U_guarded <= U_sem + 0.75 * max(0, U_slam_rich - U_sem) + interaction_gain_formula",
+      "travel_penalty_formula": "0.1 * normalized_travel_cost_proxy",
+      "utility_formula": "U_guarded = semantic_score - travel_penalty + interaction_gain_formula, then apply non_shadowing_cap_formula",
+      "design_intent": "Interaction gain is allowed only when semantic pressure and independently measured map/pose pressure co-exist. The cap is a guard against semantic-first additive shadowing, not the main contribution.",
+      "allowed_action_inputs": [
+        "all SemanticOnly allowed inputs",
+        "all SLAMOnlyRich allowed inputs",
+        "semantic_pressure derived before evaluation labels",
+        "map_pose_pressure derived before evaluation labels",
+        "map_pose_explanation_gate derived before evaluation labels"
+      ],
+      "forbidden_action_inputs": [
+        "candidate_id_overlap edges as pose evidence",
+        "candidate correctness",
+        "GT pose error",
+        "ObjectNav success or wrong-goal labels",
+        "weights tuned on evaluation labels",
+        "post-hoc component winner labels",
+        "unconditional positive bonus over SemanticOnly"
+      ]
+    }
+  ],
+  "forbidden_patterns": [
+    {
+      "pattern": "semantic_only_plus_nonnegative_bonus_on_every_row",
+      "reason": "This reproduces the previous semantic-first shadowing failure."
+    },
+    {
+      "pattern": "cap_only_contribution",
+      "reason": "A cap is only a reviewer-defense guard and does not explain why SLAM/map evidence changes utility."
+    },
+    {
+      "pattern": "component_max_shortcut",
+      "reason": "Choosing the best component is a policy-selection shortcut, not complementarity."
+    },
+    {
+      "pattern": "candidate_overlap_as_pose_evidence",
+      "reason": "Candidate-id overlap is not independent SLAM/map evidence."
+    },
+    {
+      "pattern": "label_tuned_weight_search",
+      "reason": "Evaluation labels must not determine action-evidence weights."
+    }
+  ],
+  "fixed_semantic_family_weights": {
+    "instance_arbitration_defer_v1": 1.0,
+    "partial_relation_depth_true_goal": 0.9,
+    "missing_own_view_support_recheck": 0.8,
+    "object_relation_goal_validity_confirmation": 0.8,
+    "expanded_retrieval_source_pool": 0.7,
+    "unknown_semantic_uncertainty_family": 0.5
+  },
+  "required_future_outputs": {
+    "comparison_rows": "semantic_slam_reviewer_defense_rows.jsonl",
+    "policy_summary_rows": "semantic_slam_reviewer_defense_policy_summary_rows.jsonl",
+    "diagnostic_rows": "semantic_slam_reviewer_defense_diagnostic_rows.jsonl",
+    "summary": "semantic_slam_reviewer_defense_summary.json"
+  },
+  "required_row_outputs": [
+    "policy_name",
+    "source_name",
+    "scene_key",
+    "query",
+    "request_id",
+    "episode_key",
+    "semantic_score",
+    "map_pose_outcome_proxy",
+    "fragmentation_score",
+    "largest_component_gap",
+    "loop_gap",
+    "source_coverage_gap",
+    "context_gap",
+    "semantic_pressure",
+    "map_pose_pressure",
+    "map_pose_explanation_gate",
+    "interaction_gain",
+    "non_shadowing_cap_active",
+    "travel_penalty",
+    "policy_proxy_utility",
+    "semantic_only_utility",
+    "slam_only_rich_utility",
+    "interaction_gain_over_semantic",
+    "interaction_margin_over_component",
+    "semantic_only_shadowed_by_interaction",
+    "unexplained_positive_bonus",
+    "component_max_shortcut_used",
+    "candidate_overlap_used_as_pose_evidence",
+    "uses_gt_for_action",
+    "terminal_commit",
+    "candidate_commit",
+    "candidate_rejection",
+    "paper_claim_allowed"
+  ],
+  "gate_thresholds": {
+    "expected_policy_count": 4,
+    "expected_request_groups": 50,
+    "expected_comparison_rows": 200,
+    "min_canonical_proxy_ready_rate": 0.9,
+    "min_loop_proxy_ready_rate": 0.5,
+    "max_action_evidence_forbidden_key_count": 0,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "requires_uses_gt_for_action": false,
+    "max_component_max_shortcut_rows": 0,
+    "max_candidate_overlap_pose_evidence_rows": 0,
+    "max_unexplained_positive_bonus_rows": 0,
+    "max_semantic_only_shadowed_by_interaction_rate_without_outcome": 0.85,
+    "max_interaction_rank1_rate_without_outcome": 0.75,
+    "min_map_pose_explained_interaction_rows": 10,
+    "min_slam_only_rich_rank1_rows": 5,
+    "min_component_reference_rank1_rows": 5,
+    "min_map_pose_outcome_proxy_positive_rows": 10
+  },
+  "promotion_gate": {
+    "step_4_5_promotion_requires_future_task_map_validation": true,
+    "required_map_side_metrics": [
+      "pose graph connectivity",
+      "connected-component fragmentation",
+      "loop-edge availability",
+      "map error",
+      "semantic accuracy",
+      "ATE/RPE if available"
+    ],
+    "required_task_side_metrics": [
+      "wrong_goal_visit",
+      "wasted_path",
+      "Success Rate",
+      "SPL"
+    ],
+    "minimum_evidence_for_paper_claim": "At least one map-side metric and one task-side metric must improve or reveal a controlled tradeoff against SemanticOnly and SLAMOnly references."
+  },
+  "next_implementation_target": {
+    "script": "runtime/h001_runtime/compare_semantic_slam_reviewer_defense_proxy.py",
+    "output": "local_dataset/runs/h001_semantic_slam_reviewer_defense_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "verification_command": "python -m h001_runtime.compare_semantic_slam_reviewer_defense_proxy"
+  },
+  "allowed_next_step_if_contract_frozen": "implement_semantic_slam_reviewer_defense_proxy",
+  "blocked_downstream_tasks": [
+    "step_4_5_promotion",
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ]
+}

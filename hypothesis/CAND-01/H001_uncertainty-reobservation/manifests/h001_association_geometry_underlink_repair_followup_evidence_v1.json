@@ -1,0 +1,175 @@
+{
+  "schema_version": "h001.contract.association_geometry_underlink_repair_followup_evidence.v1",
+  "date_checked": "2026-06-02",
+  "status": "frozen_design_contract_before_implementation",
+  "contract_name": "association_geometry_underlink_repair_followup_evidence_v1",
+  "purpose": "Freeze the next nonterminal association-geometry underlink evidence audit after the repeated-object priority branch closed with zero promotable outcomes.",
+  "source": {
+    "repeated_object_residual_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_repeated_object_relation_anchor_consistency_residual_diagnostic_v1.verify.json",
+    "repeated_object_residual_output": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_residual_diagnostic_v1",
+    "repeated_object_residual_summary": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_residual_diagnostic_v1/relation_anchor_consistency_residual_summary.json",
+    "promotion_requirement_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_residual_branch_promotion_requirement_v1.json",
+    "promotion_requirement_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_residual_branch_promotion_requirement_v1.verify.json",
+    "promotion_requirement_output": "local_dataset/runs/h001_residual_branch_promotion_requirement_v1",
+    "promotion_requirement_summary": "local_dataset/runs/h001_residual_branch_promotion_requirement_v1/residual_branch_promotion_requirement_summary.json",
+    "promotion_requirement_rows": "local_dataset/runs/h001_residual_branch_promotion_requirement_v1/residual_branch_promotion_requirement_rows.jsonl",
+    "branch_synthesis_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_residual_partial_relation_depth_branch_synthesis_v1.json",
+    "branch_synthesis_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_residual_partial_relation_depth_branch_synthesis_v1.verify.json",
+    "branch_synthesis_output": "local_dataset/runs/h001_residual_partial_relation_depth_branch_synthesis_v1",
+    "branch_synthesis_summary": "local_dataset/runs/h001_residual_partial_relation_depth_branch_synthesis_v1/residual_partial_relation_depth_branch_synthesis_summary.json",
+    "branch_synthesis_rows": "local_dataset/runs/h001_residual_partial_relation_depth_branch_synthesis_v1/residual_partial_relation_depth_branch_synthesis_rows.jsonl",
+    "association_geometry_followup_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair_v1",
+    "association_geometry_followup_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair_v1/partial_relation_depth_association_geometry_followup_repair_summary.json",
+    "association_geometry_followup_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair_v1/partial_relation_depth_association_geometry_followup_repair_rows.jsonl",
+    "association_geometry_followup_request_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair_v1/partial_relation_depth_association_geometry_followup_repair_request_rows.jsonl",
+    "relation_anchor_selection_output": "local_dataset/runs/h001_relation_anchor_selection_repair_v1",
+    "relation_anchor_selection_summary": "local_dataset/runs/h001_relation_anchor_selection_repair_v1/relation_anchor_selection_repair_summary.json",
+    "relation_anchor_selection_probe_rows": "local_dataset/runs/h001_relation_anchor_selection_repair_v1/relation_anchor_selection_repair_probe_rows.jsonl",
+    "direction_specific_output": "local_dataset/runs/h001_direction_specific_reobservation_repair_v1",
+    "direction_specific_summary": "local_dataset/runs/h001_direction_specific_reobservation_repair_v1/direction_specific_reobservation_repair_summary.json",
+    "direction_specific_probe_rows": "local_dataset/runs/h001_direction_specific_reobservation_repair_v1/direction_specific_reobservation_repair_probe_rows.jsonl"
+  },
+  "source_gate": {
+    "repeated_object_residual_diagnostic_gate_passed": true,
+    "repeated_object_promotable_branch_outcome_rows": 0,
+    "next_branch_after_repeated_object_closure": "association_geometry_underlink",
+    "promotion_requirement_gate_passed": true,
+    "branch_synthesis_gate_passed": true,
+    "association_geometry_followup_repair_gate_passed": true,
+    "relation_anchor_selection_repair_probe_gate_passed": true,
+    "direction_specific_reobservation_repair_probe_gate_passed": true,
+    "expected_family": "association_geometry_underlink",
+    "expected_source_branch_rows": 2,
+    "expected_request_rows": 2,
+    "expected_materialized_output_rows": 8,
+    "expected_probe_rows": 6,
+    "expected_probe_request_rows": 2,
+    "expected_route_counts": {
+      "route_to_relation_anchor_selection_repair": 1,
+      "route_to_direction_specific_reobservation_repair": 1
+    },
+    "expected_failed_probe_rows": 3,
+    "minimum_recovered_associated_heading_count": 10,
+    "minimum_recovered_depth_consistent_count": 9,
+    "max_action_evidence_forbidden_key_count": 0,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "requires_uses_gt_for_action": false,
+    "requires_uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "design_scope": {
+    "input_level": "existing nonterminal repair route/probe rows for association-geometry underlink",
+    "output_level": "bounded repair-followup evidence audit rows and request summary rows",
+    "target_failure_mechanism": "mask/projection evidence can be present while candidate association and relation-depth support underlink; anchor selection or observation direction can repair association, but repairability is not ObjectNav goal validity.",
+    "allowed_action_inputs": [
+      "branch_family",
+      "followup_repair_action",
+      "nonterminal_probe_action",
+      "scene_key",
+      "query",
+      "episode_key",
+      "rival_identity_request_id",
+      "target_candidate_id",
+      "context_candidate_id",
+      "relation_anchor_candidate_id",
+      "requested_direction_source",
+      "standoff_direction_source",
+      "viewpoint_id",
+      "decision_id",
+      "association_profile",
+      "projection/mask/depth counts",
+      "navmesh standoff status"
+    ],
+    "forbidden_action_inputs": [
+      "evaluation_correctness",
+      "success_label",
+      "wrong_goal_label",
+      "gt_target_object_id",
+      "gt_goal_position",
+      "posthoc_correct_candidate_id",
+      "oracle view or shortest path target",
+      "label_tuned_anchor_selection",
+      "label_tuned_direction_selection",
+      "category_specific_threshold_from_labels"
+    ]
+  },
+  "evidence_contract": {
+    "evidence_name": "association_geometry_underlink_repair_followup_evidence_v1",
+    "target_family": "association_geometry_underlink",
+    "required_request_rows": 2,
+    "required_probe_rows": 6,
+    "required_route_families": [
+      "relation_anchor_selection_repair",
+      "direction_specific_reobservation_repair"
+    ],
+    "required_probe_roles": [
+      "failed_explicit_relation_anchor_row",
+      "same_direction_anchorless_recovery_row",
+      "failed_requested_direction_explicit_anchor_row",
+      "failed_requested_direction_anchorless_row",
+      "recovered_target_to_relation_anchor_explicit_anchor_row",
+      "recovered_target_to_relation_anchor_anchorless_row"
+    ],
+    "required_classifications": [
+      "explicit_anchor_underlink",
+      "same_direction_anchorless_recovery",
+      "requested_direction_underlink",
+      "target_to_relation_anchor_recovery",
+      "repairable_association_geometry_underlink",
+      "nonpromotable_repair_without_goal_validity"
+    ],
+    "required_request_outcomes": [
+      "anchor_selection_repair_supported_but_nonterminal",
+      "direction_specific_reobservation_supported_but_nonterminal"
+    ],
+    "blocked_shortcuts": [
+      "commit_if_any_repair_recovers_association",
+      "commit_if_recovered_depth_consistent",
+      "commit_if_inside_mask_projection_exists",
+      "accept_anchorless_recovery_as_goal_validity",
+      "choose_direction_with_highest_association",
+      "reject_failed_explicit_anchor_candidate_as_invalid",
+      "threshold_tune_association_depth_tolerance"
+    ],
+    "simpler_alternatives_to_report": [
+      "commit_after_any_repair_association",
+      "commit_after_inside_mask_projection",
+      "reject_after_failed_explicit_anchor",
+      "choose_direction_with_highest_association",
+      "defer_all_association_geometry_underlink"
+    ],
+    "terminal_arbitration_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "threshold_tuning_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "required_future_outputs": {
+    "evidence_rows": "association_geometry_underlink_repair_followup_evidence_rows.jsonl",
+    "request_rows": "association_geometry_underlink_repair_followup_request_rows.jsonl",
+    "summary": "association_geometry_underlink_repair_followup_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "runtime/h001_runtime/analyze_association_geometry_underlink_repair_followup_evidence.py",
+    "output": "local_dataset/runs/h001_association_geometry_underlink_repair_followup_evidence_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "verification_command": "python -m h001_runtime.analyze_association_geometry_underlink_repair_followup_evidence"
+  },
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "Relation-anchor selection and direction-specific re-observation repair probes both materialize label-free association recovery patterns with zero terminal commits and zero candidate commit/rejection rows.",
+    "agent_inference": "Association-geometry underlink can be framed as a repairable evidence-acquisition failure, but the current evidence still cannot distinguish valid ObjectNav goals from repairable geometry alone.",
+    "paper_claim_allowed": false
+  }
+}

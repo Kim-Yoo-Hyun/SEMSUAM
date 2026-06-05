@@ -1,0 +1,127 @@
+{
+  "schema_version": "h001.contract.semantic_slam_safe_sparse_selector_diagnostic.v1",
+  "date_checked": "2026-06-06",
+  "status": "frozen_contract",
+  "contract_name": "semantic_slam_safe_sparse_selector_diagnostic_v1",
+  "purpose": "Diagnose why the conservative SLAMOnlyRich_current candidate map/pose selector is safe but sparse before any formula revision. The diagnostic may evaluate label-free selector alternatives with labels, but labels remain evaluation-only and cannot become action evidence.",
+  "stage": "P4-diagnostic",
+  "source": {
+    "candidate_map_pose_selector_candidate_rows": "local_dataset/runs/h001_semantic_slam_candidate_map_pose_selector_v1/semantic_slam_candidate_map_pose_selector_candidate_rows.jsonl",
+    "candidate_map_pose_selector_request_rows": "local_dataset/runs/h001_semantic_slam_candidate_map_pose_selector_v1/semantic_slam_candidate_map_pose_selector_request_rows.jsonl",
+    "candidate_task_proxy_policy_rows": "local_dataset/runs/h001_semantic_slam_candidate_task_proxy_join_v1/semantic_slam_candidate_task_proxy_policy_rows.jsonl",
+    "candidate_task_proxy_summary": "local_dataset/runs/h001_semantic_slam_candidate_task_proxy_join_v1/semantic_slam_candidate_task_proxy_summary.json",
+    "task_label_request_rows": "local_dataset/runs/h001_semantic_slam_task_label_join_v1/semantic_slam_task_label_request_rows.jsonl",
+    "task_label_candidate_rows": "local_dataset/runs/h001_semantic_slam_task_label_join_v1/semantic_slam_task_label_candidate_rows.jsonl"
+  },
+  "diagnostic_definition": {
+    "current_selector": "current_unique_ready",
+    "alternative_selectors": [
+      "top_map_pose_tuple",
+      "top_projection_visible_heading",
+      "top_pose_heading",
+      "closest_target_distance",
+      "top_projection_status_visible"
+    ],
+    "allowed_action_inputs": [
+      "candidate_map_pose_score_tuple",
+      "projection_visible_heading_count",
+      "pose_heading_count",
+      "target_distance_from_viewpoint_m.mean",
+      "projection_status_counts.visible",
+      "strict_candidate_map_pose_ready",
+      "candidate_count",
+      "ready_candidate_count"
+    ],
+    "evaluation_only_labels": [
+      "candidate_correctness_label",
+      "candidate_wrong_label",
+      "no_valid_candidate_pool",
+      "success_commit_proxy",
+      "wrong_goal_visit_proxy",
+      "wasted_path_proxy_m"
+    ],
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true
+  },
+  "expected_materializer_counts": {
+    "request_diagnostic_rows": 50,
+    "alternative_rows": 300,
+    "candidate_rows": 232,
+    "source_request_rows": 50,
+    "current_unique_ready_commit_rows": 3,
+    "current_unique_ready_success_rows": 2,
+    "current_unique_ready_wrong_goal_rows": 1,
+    "current_unique_ready_defer_rows": 47,
+    "top_map_pose_tuple_commit_rows": 50,
+    "top_map_pose_tuple_success_rows": 29,
+    "top_map_pose_tuple_wrong_goal_rows": 21,
+    "top_map_pose_tuple_no_valid_commit_rows": 4,
+    "top_projection_visible_heading_success_rows": 29,
+    "top_projection_visible_heading_wrong_goal_rows": 21,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "success_gates": {
+    "diagnostic_gate": {
+      "request_diagnostic_rows": 50,
+      "alternative_rows": 300,
+      "candidate_rows": 232,
+      "source_request_rows": 50,
+      "action_evidence_forbidden_key_count": 0,
+      "uses_gt_for_action": false,
+      "paper_claim_allowed": false
+    },
+    "candidate_separability_gate": {
+      "best_commit_all_success_rows_min": 35,
+      "best_commit_all_wrong_goal_rows_max": 5,
+      "best_commit_all_no_valid_commit_rows_max": 0,
+      "wrong_goal_not_increased_vs_current": true,
+      "wrong_goal_lower_than_NoReobserveReference": true,
+      "uses_gt_for_action": false
+    }
+  },
+  "allowed_next_steps_after_diagnostic": {
+    "close_geometry_only_selector_as_non_promotable": true,
+    "freeze_discriminative_candidate_map_pose_revision": false,
+    "revised_slam_formula_implementation": false,
+    "terminal_utility_validation": false,
+    "first_eval_rerun": false,
+    "policy_scale_comparison": false,
+    "paper_claim": false
+  },
+  "forbidden_action_inputs": [
+    "candidate_correctness_label",
+    "candidate_wrong_label",
+    "correctness_label",
+    "evaluation_candidate_summary",
+    "evaluation_only_correct_candidate_ids",
+    "evaluation_only_no_valid_candidate_pool",
+    "evaluation_only_variant_outcomes",
+    "evaluation_only_wrong_candidate_ids",
+    "gt_action",
+    "gt_candidate",
+    "gt_goal",
+    "gt_label",
+    "no_valid_candidate_pool",
+    "oracle_action",
+    "shortest_path_distance",
+    "success_commit",
+    "wasted_path_proxy_m",
+    "wrong_goal_commit",
+    "wrong_goal_visit_proxy"
+  ],
+  "expected_future_outputs": {
+    "out_root": "local_dataset/runs/h001_semantic_slam_safe_sparse_selector_diagnostic_v1",
+    "row_files": {
+      "request_rows": "semantic_slam_safe_sparse_selector_request_rows.jsonl",
+      "alternative_rows": "semantic_slam_safe_sparse_selector_alternative_rows.jsonl",
+      "summary": "semantic_slam_safe_sparse_selector_summary.json"
+    }
+  },
+  "interpretation_rule": {
+    "fact": "The diagnostic may report current and alternative selector counts.",
+    "agent_inference": "If label-free geometry alternatives increase commits only by reintroducing wrong-goal and no-valid commits, current map/pose evidence is availability evidence rather than discriminative candidate utility.",
+    "paper_claim": "No formula revision, Step 4-5 promotion, terminal utility, first_eval, policy-scale comparison, or paper claim is allowed unless the candidate_separability_gate passes."
+  }
+}

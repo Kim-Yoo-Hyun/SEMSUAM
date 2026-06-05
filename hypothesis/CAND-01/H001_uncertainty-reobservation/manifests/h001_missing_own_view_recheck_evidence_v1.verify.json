@@ -1,0 +1,98 @@
+{
+  "schema_version": "h001.verify.missing_own_view_recheck_evidence.v1",
+  "checked_at": "2026-06-02",
+  "ok": true,
+  "status": "docker_verified_post_detector_evidence_analyzer",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_missing_own_view_recheck_evidence_v1.json",
+  "implementation": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_missing_own_view_recheck_evidence.py",
+  "output": "local_dataset/runs/h001_missing_own_view_recheck_evidence_v1",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "source_gates": {
+    "input_materializer_gate_passed": true,
+    "observation_plan_gate_passed": true,
+    "projection_gate_passed": true,
+    "detector_substrate_gate_passed": true
+  },
+  "result": {
+    "view_evidence_rows": 80,
+    "target_candidate_evidence_rows": 20,
+    "request_summary_rows": 7,
+    "unassociated_frame_audit_rows": 3,
+    "detector_rows": 80,
+    "association_rows": 317,
+    "rows_with_candidate_association": 77,
+    "candidate_association_rate": 0.9625,
+    "target_candidates_with_any_association": 20,
+    "target_candidates_with_at_least_three_associated_views": 20,
+    "target_candidates_with_full_4_of_4_association": 17,
+    "target_candidates_with_partial_3_of_4_association": 3,
+    "target_candidates_with_zero_association": 0,
+    "associated_candidate_heading_count": 236,
+    "projected_pixel_inside_mask_count": 263,
+    "candidate_status_counts": {
+      "candidate_own_view_support_acquired": 20
+    },
+    "request_nonterminal_action_counts": {
+      "keep_nonterminal_own_view_support_for_guard_arbitration_contract": 7
+    },
+    "unassociated_frame_rows": [
+      {
+        "expanded_retrieval_request_id": "rival_identity:3",
+        "scene_key": "QaLdnwvtxbs",
+        "query": "sofa",
+        "target_candidate_id": "vlmaps:export:sofa:spatial_nms:0",
+        "source_plan_index": 3
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:22",
+        "scene_key": "4ok3usBNeis",
+        "query": "sofa",
+        "target_candidate_id": "vlmaps:export:sofa:spatial_nms:3",
+        "source_plan_index": 51
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:22",
+        "scene_key": "4ok3usBNeis",
+        "query": "sofa",
+        "target_candidate_id": "vlmaps:export:sofa:spatial_nms:9",
+        "source_plan_index": 53
+      }
+    ],
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "gate": {
+    "missing_own_view_recheck_evidence_gate_passed": true,
+    "expected_view_evidence_rows_passed": true,
+    "expected_target_candidate_evidence_rows_passed": true,
+    "expected_request_summary_rows_passed": true,
+    "expected_unassociated_frame_audit_rows_passed": true,
+    "minimum_candidate_association_rate_passed": true,
+    "minimum_target_candidates_with_any_association_passed": true,
+    "minimum_target_candidates_with_at_least_three_associated_views_passed": true,
+    "action_evidence_forbidden_key_gate_passed": true,
+    "terminal_commit_rows_passed": true,
+    "candidate_commit_rows_passed": true,
+    "candidate_rejection_rows_passed": true,
+    "uses_gt_for_action_passed": true,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "verification_commands": [
+    "PYTHONPATH=hypothesis/CAND-01/H001_uncertainty-reobservation/runtime PYTHONPYCACHEPREFIX=/tmp/pycache-research3 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_missing_own_view_recheck_evidence.py",
+    "docker run --rm --user \"$(id -u):$(id -g)\" -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -e PYTHONPYCACHEPREFIX=/tmp/pycache -v \"$PWD\":/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_missing_own_view_recheck_evidence.py",
+    "docker run --rm --user \"$(id -u):$(id -g)\" -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -e PYTHONPYCACHEPREFIX=/tmp/pycache -v \"$PWD\":/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_missing_own_view_recheck_evidence.py",
+    "jq '{gate:.gate.missing_own_view_recheck_evidence_gate_passed,view_evidence_rows,target_candidate_evidence_rows,request_summary_rows,unassociated_frame_audit_rows,candidate_status_counts,rows_with_candidate_association,candidate_association_rate,terminal_commit_rows,candidate_commit_rows,candidate_rejection_rows,action_evidence_forbidden_key_count,uses_gt_for_action,paper_claim_allowed}' local_dataset/runs/h001_missing_own_view_recheck_evidence_v1/missing_own_view_recheck_evidence_summary.json"
+  ],
+  "next_task": "write_missing_own_view_guard_arbitration_contract",
+  "interpretation": {
+    "fact": "The Docker-verified analyzer converts the missing-own-view recheck branch into explicit nonterminal support state for all 20 target candidates.",
+    "agent_inference": "The next contract can test how the deferred negative_missing_support_guard should be interpreted, but acquired own-view support is still not ObjectNav goal validity.",
+    "paper_claim": "No paper claim is allowed from this analyzer alone."
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "schema_version": "h001.contract.next_label_free_evidence_family.v1",
+  "date_checked": "2026-06-02",
+  "status": "frozen_selection_contract_before_observation_contract",
+  "contract_name": "next_label_free_evidence_family_v1",
+  "purpose": "Select the next label-free evidence family after residual partial relation-depth branch closure, before any terminal utility, first_eval rerun, or policy-scale comparison is reopened.",
+  "source": {
+    "object_relation_branch_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_evidence_summary.json",
+    "object_relation_branch_request_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_request_rows.jsonl",
+    "object_relation_branch_candidate_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_candidate_rows.jsonl",
+    "fresh_arbitration_failure_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_failure_v1/object_relation_fresh_arbitration_failure_summary.json",
+    "unique_support_branch_closure_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_branch_closure_v1/unique_support_branch_closure_summary.json",
+    "residual_branch_closure_summary": "local_dataset/runs/h001_residual_branch_closure_v1/residual_branch_closure_summary.json"
+  },
+  "source_gate": {
+    "object_relation_branch_router_gate_passed": true,
+    "unique_support_branch_closure_gate_passed": true,
+    "residual_branch_closure_gate_passed": true,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "max_action_evidence_forbidden_key_count": 0,
+    "requires_uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "selection_decision": {
+    "selected_family": "missing_own_view_support_recheck",
+    "selected_branch": "correct_candidate_missing_own_view_support",
+    "selected_action": "request_missing_own_view_recheck",
+    "selected_output_status": "selected_next_label_free_evidence_family",
+    "companion_guard_branch": "negative_missing_support_guard",
+    "companion_guard_action": "guard_negative_missing_support",
+    "companion_guard_status": "defer_candidate_rejection_until_missing_own_view_recheck_evidence",
+    "minimum_selected_request_rows": 7,
+    "minimum_selected_candidate_rows": 20,
+    "minimum_selected_preferred_action_rows": 20,
+    "expected_remaining_request_branches": {
+      "correct_candidate_missing_own_view_support": 7,
+      "negative_missing_support_guard": 7
+    },
+    "expected_remaining_candidate_branches": {
+      "correct_candidate_missing_own_view_support": 20,
+      "negative_missing_support_guard": 20
+    },
+    "closed_or_deferred_branches": {
+      "unique_support_visibility_not_goal_validity": "closed_as_terminal_blocked_by_cross_region_overlap_and_shared_common_view_support",
+      "partial_relation_depth_true_goal": "closed_as_residual_partial_relation_depth_family_after_zero_promotable_outcomes",
+      "depth_stagnation_independent_support_probe": "deferred_until_broader_rows_or_map_pose_side_support"
+    },
+    "selected_reason": [
+      "unique-support visibility was closed as terminal-blocked for 4/4 requests",
+      "partial relation-depth was followed through observation, detector evidence, branch synthesis, promotion requirement, repeated-object consistency, association-geometry repair, depth-stagnation audit, and residual closure without producing a promotable branch outcome",
+      "the remaining largest action-time branch family has 7 request rows and 20 candidate rows with preferred action request_missing_own_view_recheck",
+      "the same rows also trigger negative_missing_support_guard, but immediate candidate rejection would reopen a terminal shortcut before checking whether missing own-view evidence can be acquired label-free",
+      "missing-own-view recheck is an active mobility/evidence acquisition family, so it better matches the H001 novelty path than a rejection guard or threshold rule"
+    ]
+  },
+  "blocked_shortcuts": [
+    "promote_negative_missing_support_guard_to_candidate_rejection_without_recheck",
+    "commit_after_relation_depth_resolved_without_own_view_support",
+    "treat_missing_own_view_support_as_invalid_goal_label",
+    "rerun_first_eval_from_branch_selection_only",
+    "open_policy_scale_comparison_from_selection_only",
+    "define_terminal_utility_before_missing_own_view_recheck_evidence",
+    "tune_thresholds_after_label_join"
+  ],
+  "required_future_outputs": {
+    "selection_rows": "next_label_free_evidence_family_rows.jsonl",
+    "summary": "next_label_free_evidence_family_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "runtime/h001_runtime/select_next_label_free_evidence_family.py",
+    "output": "local_dataset/runs/h001_next_label_free_evidence_family_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "verification_command": "python -m h001_runtime.select_next_label_free_evidence_family"
+  },
+  "next_research_task_after_selection": "freeze_missing_own_view_recheck_observation_contract",
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "The selected branch is recorded from existing action-time branch rows and closure summaries; evaluation labels may be used only to audit branch coverage, not to choose an action inside the next evidence family.",
+    "agent_inference": "The next label-free evidence family should test whether missing own-view support can be actively acquired before a candidate is rejected or committed.",
+    "paper_claim_allowed": false
+  }
+}

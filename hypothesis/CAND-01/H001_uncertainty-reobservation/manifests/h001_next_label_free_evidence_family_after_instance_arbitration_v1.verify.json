@@ -1,0 +1,122 @@
+{
+  "schema_version": "h001.verify.next_label_free_evidence_family_after_instance_arbitration.v1",
+  "date_checked": "2026-06-03",
+  "ok": true,
+  "status": "implemented_and_docker_verified",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_evidence_family_after_instance_arbitration_v1.json",
+  "implementation": {
+    "selector": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/select_next_evidence_family_after_instance_arbitration.py",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "output": "local_dataset/runs/h001_next_label_free_evidence_family_after_instance_arbitration_v1",
+    "docker_py_compile_passed": true,
+    "docker_run_passed": true
+  },
+  "checked_sources": {
+    "route_specific_summary": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_summary.json",
+    "route_specific_rows": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_rows.jsonl",
+    "post_object_relation_selector_summary": "local_dataset/runs/h001_next_label_free_evidence_family_after_object_relation_v1/next_label_free_evidence_family_after_object_relation_summary.json",
+    "source_pool_second_fallback_summary": "local_dataset/runs/h001_expanded_retrieval_pool_validity_second_fallback_v1/second_fallback_summary.json",
+    "residual_branch_closure_summary": "local_dataset/runs/h001_residual_branch_closure_v1/residual_branch_closure_summary.json",
+    "missing_own_view_guard_branch_closure_summary": "local_dataset/runs/h001_missing_own_view_guard_branch_closure_v1/missing_own_view_guard_branch_closure_summary.json",
+    "instance_arbitration_pair_graph_branch_closure_summary": "local_dataset/runs/h001_instance_arbitration_pair_graph_branch_closure_v1/instance_arbitration_pair_graph_branch_closure_summary.json"
+  },
+  "verified_metrics": {
+    "next_label_free_evidence_family_after_instance_arbitration_gate_passed": true,
+    "selected_family": "semantic_slam_map_pose_consistency_probe_v1",
+    "selected_action": "freeze_semantic_slam_map_pose_consistency_probe_contract",
+    "route_branch_counts": {
+      "source_pool_repair_v1": 5,
+      "goal_validity_confirmation_v1": 7,
+      "instance_arbitration_defer_v1": 9
+    },
+    "semantic_object_branch_closure": {
+      "source_pool_route_rows": 5,
+      "source_pool_second_fallback_gate_passed": true,
+      "backend_source_map_blind_spot_after_second_fallback": true,
+      "residual_closure_promotable_rows": 0,
+      "missing_own_view_promotable_terminal_outcome_rows": 0,
+      "instance_arbitration_promotable_branch_outcome_rows": 0,
+      "semantic_branch_promotable_rows": 0,
+      "semantic_object_branches_exhausted": true
+    },
+    "instance_arbitration_closure": {
+      "request_closure_rows": 9,
+      "candidate_closure_rows": 51,
+      "pair_closure_rows": 121,
+      "shortcut_closure_rows": 357,
+      "request_closure_status_counts": {
+        "closed_as_multiple_lossless_pair_graph_candidates_unresolved": 7,
+        "closed_as_unique_lossless_candidate_blocked_by_common_view_overlap": 2
+      },
+      "candidate_closure_status_counts": {
+        "closed_as_lossless_blocked_by_common_view_overlap": 2,
+        "closed_as_lossless_but_multiple_graph_candidates": 15,
+        "closed_as_max_pair_win_nonterminal_due_pair_losses": 4,
+        "closed_as_pair_or_contrast_contradiction_nonterminal": 18,
+        "closed_as_rival_leakage_nonterminal": 12
+      },
+      "pair_closure_status_counts": {
+        "closed_as_common_view_overlap_blocks_pair_resolution": 36,
+        "closed_as_no_candidate_support_blocks_pair_resolution": 25,
+        "closed_as_one_sided_support_nonterminal_graph_edge": 53,
+        "closed_as_one_sided_support_with_leakage_nonterminal": 7
+      }
+    },
+    "selection_rows": 5,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "checked_gate": {
+    "route_contract_gate_passed": true,
+    "expected_route_branch_counts_passed": {
+      "source_pool_repair_v1": true,
+      "goal_validity_confirmation_v1": true,
+      "instance_arbitration_defer_v1": true
+    },
+    "post_object_relation_selector_gate_passed": true,
+    "source_pool_second_fallback_gate_passed": true,
+    "source_pool_blind_spot_recorded_passed": true,
+    "residual_branch_closure_gate_passed": true,
+    "missing_own_view_guard_branch_closure_gate_passed": true,
+    "instance_arbitration_pair_graph_branch_closure_gate_passed": true,
+    "semantic_branch_promotable_rows_passed": true,
+    "semantic_object_branches_exhausted_passed": true,
+    "selected_family_is_step_4_5_probe_passed": true,
+    "selected_action_is_contract_freeze_passed": true,
+    "action_evidence_forbidden_key_gate_passed": true,
+    "terminal_commit_rows_passed": true,
+    "candidate_commit_rows_passed": true,
+    "candidate_rejection_rows_passed": true,
+    "uses_gt_for_action_passed": true,
+    "next_label_free_evidence_family_after_instance_arbitration_gate_passed": true
+  },
+  "decision": {
+    "selected_next_family": "semantic_slam_map_pose_consistency_probe_v1",
+    "selected_reason": "Source-pool repair, object-relation/missing-own-view branches, and instance-arbitration pair-graph evidence are all closed as nonterminal with zero promotable semantic branch outcomes. The next H001 label-free family should therefore test Step 4-5 semantic-SLAM map/pose consistency instead of reopening terminal semantic object shortcuts.",
+    "next_task": "freeze_semantic_slam_map_pose_consistency_probe_contract"
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_evidence_family_after_instance_arbitration_v1.json",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/select_next_evidence_family_after_instance_arbitration.py",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.select_next_evidence_family_after_instance_arbitration",
+    "jq '{gate:.gate.next_label_free_evidence_family_after_instance_arbitration_gate_passed, selected_family, selected_action, semantic_object_branch_closure, selection_rows, terminal_commit_rows, candidate_commit_rows, candidate_rejection_rows, uses_gt_for_action, paper_claim_allowed, next:.diagnostic_conclusion.recommended_next_task}' local_dataset/runs/h001_next_label_free_evidence_family_after_instance_arbitration_v1/next_label_free_evidence_family_after_instance_arbitration_summary.json",
+    "wc -l local_dataset/runs/h001_next_label_free_evidence_family_after_instance_arbitration_v1/next_label_free_evidence_family_after_instance_arbitration_rows.jsonl"
+  ],
+  "next_task": "freeze_semantic_slam_map_pose_consistency_probe_contract",
+  "terminal_utility_validation_allowed": false,
+  "candidate_commit_allowed": false,
+  "candidate_rejection_allowed": false,
+  "first_eval_rerun_allowed": false,
+  "policy_scale_comparison_allowed": false,
+  "paper_claim_allowed": false,
+  "interpretation": {
+    "fact": "The Docker-verified selector writes five family-status rows and passes all gates with zero terminal commits and zero candidate commit/rejection rows.",
+    "agent_inference": "The next work should freeze a semantic-SLAM map/pose consistency probe contract. This moves H001 from exhausted semantic object shortcut branches toward the Step 4-5 uncertainty axis.",
+    "paper_claim": "No paper claim is allowed from this selection output alone."
+  }
+}

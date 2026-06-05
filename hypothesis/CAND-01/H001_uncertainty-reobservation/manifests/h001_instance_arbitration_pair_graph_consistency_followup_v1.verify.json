@@ -1,0 +1,128 @@
+{
+  "schema_version": "h001.contract.verify.instance_arbitration_pair_graph_consistency_followup.v1",
+  "date_checked": "2026-06-02",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_instance_arbitration_pair_graph_consistency_followup_v1.json",
+  "status": "docker_verified_pair_graph_consistency_followup",
+  "source_files": {
+    "detector_evidence_summary": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1/instance_arbitration_detector_evidence_summary.json",
+    "residual_diagnostic_summary": "local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1/instance_arbitration_residual_summary.json",
+    "residual_candidate_rows": "local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1/instance_arbitration_residual_candidate_rows.jsonl",
+    "residual_pair_rows": "local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1/instance_arbitration_residual_pair_rows.jsonl",
+    "residual_request_rows": "local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1/instance_arbitration_residual_request_rows.jsonl"
+  },
+  "implementation": {
+    "script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_instance_arbitration_pair_graph_consistency_followup.py",
+    "output": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1",
+    "summary": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1/instance_arbitration_pair_graph_consistency_summary.json",
+    "candidate_graph_rows": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1/instance_arbitration_pair_graph_candidate_rows.jsonl",
+    "pair_graph_rows": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1/instance_arbitration_pair_graph_pair_rows.jsonl",
+    "request_graph_rows": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1/instance_arbitration_pair_graph_request_rows.jsonl",
+    "shortcut_audit_rows": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1/instance_arbitration_pair_graph_shortcut_audit_rows.jsonl"
+  },
+  "docker_verification": {
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "py_compile_passed": true,
+    "analyzer_run_passed": true,
+    "py_compile_command": "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_instance_arbitration_pair_graph_consistency_followup.py",
+    "analyzer_command": "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.analyze_instance_arbitration_pair_graph_consistency_followup"
+  },
+  "observed_source_counts": {
+    "candidate_rows": 51,
+    "pair_rows": 121,
+    "request_rows": 9,
+    "pair_graph_followup_request_rows": 9,
+    "lossless_pair_graph_candidate_memberships": 17,
+    "max_pair_winner_candidate_memberships": 14,
+    "unique_lossless_request_rows": 2,
+    "multiple_lossless_request_rows": 7,
+    "pair_graph_winner_pair_rows": 60,
+    "pair_graph_no_winner_pair_rows": 61,
+    "promotable_branch_outcome_rows": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "observed_output_counts": {
+    "candidate_graph_rows": 51,
+    "pair_graph_rows": 121,
+    "request_graph_rows": 9,
+    "shortcut_audit_rows": 357,
+    "promotable_branch_outcome_rows": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "observed_status_counts": {
+    "candidate_graph_status_counts": {
+      "lossless_blocked_by_common_view_overlap": 2,
+      "lossless_but_multiple_graph_candidates": 15,
+      "max_pair_win_nonterminal_due_pair_losses": 4,
+      "pair_or_contrast_contradiction_nonterminal": 18,
+      "rival_leakage_nonterminal": 12
+    },
+    "pair_graph_status_counts": {
+      "common_view_overlap_blocks_pair_resolution": 36,
+      "no_candidate_support_blocks_pair_resolution": 25,
+      "one_sided_support_nonterminal_graph_edge": 53,
+      "one_sided_support_with_leakage_nonterminal": 7
+    },
+    "request_graph_status_counts": {
+      "multiple_lossless_pair_graph_candidates_unresolved": 7,
+      "unique_lossless_candidate_blocked_by_common_view_overlap": 2
+    },
+    "recommended_request_action_counts": {
+      "keep_multiple_lossless_pair_graph_candidates_unresolved": 7,
+      "request_common_view_overlap_audit": 2
+    },
+    "shortcut_rule_would_select_counts": {
+      "detector_strong_lossless_commit": 4,
+      "graph_winner_commit": 14,
+      "lossless_candidate_commit": 17,
+      "max_pair_win_count_commit": 14,
+      "reject_candidate_with_pair_loss": 33,
+      "source_top_lossless_commit": 7
+    },
+    "shortcut_blocked_reason_counts": {
+      "candidate_rejection_by_pair_loss_forbidden_without_goal_validity_evidence": 33,
+      "common_view_overlap_blocks_shortcut_commit": 10,
+      "defer_all_is_control_baseline_not_utility_evidence": 51,
+      "multiple_lossless_pair_graph_candidates_block_shortcut_commit": 46,
+      "shortcut_rule_not_applicable_to_candidate": 217
+    }
+  },
+  "gate": {
+    "contract_json_valid": true,
+    "docker_py_compile_passed": true,
+    "docker_analyzer_run_passed": true,
+    "source_residual_diagnostic_gate_passed": true,
+    "expected_candidate_graph_rows_passed": true,
+    "expected_pair_graph_rows_passed": true,
+    "expected_request_graph_rows_passed": true,
+    "expected_shortcut_audit_rows_passed": true,
+    "expected_lossless_candidate_membership_rows_passed": true,
+    "expected_max_pair_winner_candidate_membership_rows_passed": true,
+    "expected_promotable_branch_outcome_rows_passed": true,
+    "terminal_commit_rows_passed": true,
+    "candidate_commit_rows_passed": true,
+    "candidate_rejection_rows_passed": true,
+    "action_evidence_forbidden_key_gate_passed": true,
+    "uses_gt_for_action_passed": true,
+    "pair_graph_consistency_followup_gate_passed": true,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "interpretation": {
+    "fact": "The pair-graph consistency follow-up analyzer was Docker-verified and audits all frozen residual candidate, pair, and request rows.",
+    "agent_inference": "Graph winners and lossless candidates remain nonterminal because multiple lossless candidates, common-view overlap, rival leakage, or pair losses block shortcut goal commitment.",
+    "paper_claim": "No paper claim is allowed from this follow-up analyzer alone."
+  },
+  "recommended_next_task": "close_instance_arbitration_pair_graph_branch_or_select_next_label_free_evidence_family",
+  "paper_claim_allowed": false
+}

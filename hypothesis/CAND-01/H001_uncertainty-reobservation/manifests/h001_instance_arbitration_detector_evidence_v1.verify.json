@@ -1,0 +1,110 @@
+{
+  "schema_version": "h001.verify.instance_arbitration_detector_evidence.v1",
+  "checked_at": "2026-06-02",
+  "ok": true,
+  "status": "docker_verified_post_detector_evidence_analyzer",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_instance_arbitration_detector_evidence_v1.json",
+  "implementation": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_instance_arbitration_detector_evidence.py",
+  "output": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1",
+  "summary": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1/instance_arbitration_detector_evidence_summary.json",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "source_verify": {
+    "materializer_planner": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_instance_arbitration_evidence_v1.verify.json",
+    "frame_projection": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_instance_arbitration_frame_projection_v1.verify.json",
+    "detector_substrate": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_instance_arbitration_detector_substrate_v1.verify.json"
+  },
+  "source_metrics": {
+    "frame_rows": 172,
+    "detector_rows": 172,
+    "detector_association_rows": 1820,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.8081395348837209,
+    "rows_with_candidate_association": 139,
+    "associated_candidate_heading_count": 483,
+    "selected_candidate_count_rows": {
+      "1": 51,
+      "2": 121
+    },
+    "view_role_counts": {
+      "candidate_own_view_refresh": 51,
+      "source_top_contrast_view": 42,
+      "pair_common_view_or_dual_standoff": 39,
+      "local_context_contrast_view": 40
+    },
+    "frame_has_candidate_association_by_role": {
+      "candidate_own_view_refresh": "43/51",
+      "source_top_contrast_view": "32/42",
+      "pair_common_view_or_dual_standoff": "30/39",
+      "local_context_contrast_view": "34/40"
+    }
+  },
+  "observed_output_counts": {
+    "view_evidence_rows": 172,
+    "candidate_evidence_rows": 51,
+    "pair_evidence_rows": 121,
+    "request_evidence_rows": 9,
+    "unresolved_case_rows": 9,
+    "jsonl_total_rows": 362,
+    "candidate_evidence_status_counts": {
+      "ambiguous_rival_leakage_candidate": 32,
+      "contradicted_by_pair_or_contrast_evidence": 18,
+      "partial_instance_support": 1
+    },
+    "pair_evidence_status_counts": {
+      "ambiguous_both_candidates_supported": 36,
+      "ambiguous_no_candidate_support": 25,
+      "resolved_in_favor_of_candidate_a_nonterminal": 49,
+      "resolved_in_favor_of_candidate_b_nonterminal": 11
+    },
+    "request_recommended_action_counts": {
+      "diagnose_instance_arbitration_residual_evidence": 9
+    },
+    "promotable_branch_outcome_rows": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "gate": {
+    "py_compile_passed": true,
+    "docker_run_passed": true,
+    "source_materializer_planner_gate_passed": true,
+    "source_frame_projection_gate_passed": true,
+    "source_detector_substrate_gate_passed": true,
+    "expected_view_evidence_rows_passed": true,
+    "expected_candidate_evidence_rows_passed": true,
+    "expected_pair_evidence_rows_passed": true,
+    "expected_request_evidence_rows_passed": true,
+    "minimum_detector_association_rows_passed": true,
+    "minimum_candidate_association_rate_passed": true,
+    "minimum_rows_with_candidate_association_passed": true,
+    "minimum_associated_candidate_heading_count_passed": true,
+    "all_candidate_views_have_one_selected_candidate_passed": true,
+    "all_pair_views_have_two_selected_candidates_passed": true,
+    "action_evidence_forbidden_key_gate_passed": true,
+    "terminal_commit_rows_passed": true,
+    "candidate_commit_rows_passed": true,
+    "candidate_rejection_rows_passed": true,
+    "uses_gt_for_action_passed": true,
+    "terminal_utility_validation_allowed_passed": true,
+    "paper_claim_allowed_passed": true,
+    "instance_arbitration_detector_evidence_gate_passed": true
+  },
+  "verification_commands": [
+    "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_instance_arbitration_detector_evidence.py",
+    "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.analyze_instance_arbitration_detector_evidence",
+    "jq '{gate:.gate.instance_arbitration_detector_evidence_gate_passed,view_evidence_rows,candidate_evidence_rows,pair_evidence_rows,request_evidence_rows,unresolved_case_rows,candidate_evidence_status_counts,pair_evidence_status_counts,request_recommended_action_counts,promotable_branch_outcome_rows,terminal_commit_rows,candidate_commit_rows,candidate_rejection_rows,action_evidence_forbidden_key_count,uses_gt_for_action,paper_claim_allowed,next_allowed_task}' local_dataset/runs/h001_instance_arbitration_detector_evidence_v1/instance_arbitration_detector_evidence_summary.json",
+    "wc -l local_dataset/runs/h001_instance_arbitration_detector_evidence_v1/*.jsonl"
+  ],
+  "next_allowed_task": "diagnose_instance_arbitration_residual_evidence",
+  "interpretation": {
+    "fact": "The Docker analyzer gate passed and produced the expected view, candidate, pair, request, and unresolved-case rows without terminal commits, candidate commit/rejection, action-label leakage, or paper claims.",
+    "agent_inference": "All nine requests remain unresolved because no request has a unique candidate-specific instance-support outcome with all pair contexts resolved. The next useful work is residual diagnosis, not terminal utility.",
+    "paper_claim": "No paper claim is allowed from this analyzer alone."
+  },
+  "paper_claim_allowed": false
+}

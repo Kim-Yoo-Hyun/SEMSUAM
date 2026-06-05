@@ -1,0 +1,142 @@
+{
+  "schema_version": "h001.contract.semantic_slam_candidate_task_proxy_join.v1",
+  "date_checked": "2026-06-06",
+  "status": "frozen_contract",
+  "contract_name": "semantic_slam_candidate_task_proxy_join_v1",
+  "purpose": "Join the conservative candidate-specific SLAM/map-pose selector to the existing label-backed task proxy rows, replacing only the previous SLAMOnlyRich_current selector-missing branch while keeping NoReobserveReference and SemanticOnly frozen.",
+  "stage": "P4-design",
+  "source": {
+    "task_policy_selector_rows": "local_dataset/runs/h001_semantic_slam_task_policy_selector_v1/semantic_slam_task_policy_selector_rows.jsonl",
+    "task_policy_selector_summary": "local_dataset/runs/h001_semantic_slam_task_policy_selector_v1/semantic_slam_task_policy_selector_summary.json",
+    "candidate_map_pose_selector_request_rows": "local_dataset/runs/h001_semantic_slam_candidate_map_pose_selector_v1/semantic_slam_candidate_map_pose_selector_request_rows.jsonl",
+    "candidate_map_pose_selector_summary": "local_dataset/runs/h001_semantic_slam_candidate_map_pose_selector_v1/semantic_slam_candidate_map_pose_selector_summary.json",
+    "task_label_request_rows": "local_dataset/runs/h001_semantic_slam_task_label_join_v1/semantic_slam_task_label_request_rows.jsonl",
+    "task_label_candidate_rows": "local_dataset/runs/h001_semantic_slam_task_label_join_v1/semantic_slam_task_label_candidate_rows.jsonl",
+    "task_label_join_summary": "local_dataset/runs/h001_semantic_slam_task_label_join_v1/semantic_slam_task_label_join_summary.json"
+  },
+  "join_definition": {
+    "policy_rows_to_keep_from_task_policy_selector": [
+      "NoReobserveReference",
+      "SemanticOnly"
+    ],
+    "policy_rows_to_replace": {
+      "SLAMOnlyRich_current": "candidate_map_pose_selector_request_rows"
+    },
+    "request_label_key": [
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key"
+    ],
+    "candidate_label_key": [
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key",
+      "candidate_id"
+    ],
+    "source_policy_key": [
+      "source_name",
+      "policy_name",
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key"
+    ],
+    "wrong_goal_visit_rule": "Only an explicit terminal commit to a label-wrong selected candidate counts as wrong_goal_visit_proxy. Near-candidate pass-through and nonterminal defer rows are diagnostic-only and count as false.",
+    "wasted_path_rule": "wasted_path_proxy_m equals reobserve_travel_cost_m only for terminal wrong-goal commits; otherwise it is 0.0.",
+    "success_commit_rule": "success_commit_proxy is true only for terminal commits to a label-correct selected candidate.",
+    "no_valid_commit_rule": "no_valid_commit_proxy is true only when the request label says no_valid_candidate_pool and the policy still terminal-commits.",
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true
+  },
+  "expected_materializer_counts": {
+    "policy_task_proxy_rows": 150,
+    "NoReobserveReference_rows": 50,
+    "SemanticOnly_rows": 50,
+    "SLAMOnlyRich_current_rows": 50,
+    "policy_selector_missing_rows": 0,
+    "task_proxy_decision_evaluable_rows": 150,
+    "task_proxy_commit_evaluable_rows": 93,
+    "NoReobserveReference_terminal_commit_rows": 49,
+    "SemanticOnly_terminal_commit_rows": 41,
+    "SLAMOnlyRich_current_terminal_commit_rows": 3,
+    "NoReobserveReference_defer_rows": 1,
+    "SemanticOnly_defer_rows": 9,
+    "SLAMOnlyRich_current_defer_rows": 47,
+    "NoReobserveReference_wrong_goal_visit_rows": 21,
+    "SemanticOnly_wrong_goal_visit_rows": 21,
+    "SLAMOnlyRich_current_wrong_goal_visit_rows": 1,
+    "NoReobserveReference_success_commit_rows": 28,
+    "SemanticOnly_success_commit_rows": 20,
+    "SLAMOnlyRich_current_success_commit_rows": 2,
+    "wrong_goal_visit_proxy_nonnull_rows": 150,
+    "wasted_path_proxy_nonnull_rows": 150,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "success_gates": {
+    "task_proxy_join_gate": {
+      "policy_task_proxy_rows": 150,
+      "policy_selector_missing_rows_max": 0,
+      "task_proxy_decision_evaluable_rows_min": 150,
+      "task_proxy_commit_evaluable_rows_min": 90,
+      "wrong_goal_visit_proxy_nonnull_rows_min": 150,
+      "wasted_path_proxy_nonnull_rows_min": 150,
+      "action_evidence_forbidden_key_count": 0,
+      "uses_gt_for_action": false,
+      "paper_claim_allowed": false
+    },
+    "formula_revision_unlock_gate": {
+      "SLAMOnlyRich_current_terminal_commit_rows_min": 35,
+      "SLAMOnlyRich_current_map_task_alignment_rows_min": 10,
+      "wrong_goal_visit_not_increased_vs_baselines": true,
+      "wasted_path_not_increased_vs_baselines": true,
+      "uses_gt_for_action": false
+    }
+  },
+  "allowed_next_steps_after_materializer": {
+    "task_proxy_join_gate_verification": true,
+    "diagnose_safe_but_sparse_slam_selector": true,
+    "revised_slam_formula_implementation": false,
+    "terminal_utility_validation": false,
+    "first_eval_rerun": false,
+    "policy_scale_comparison": false,
+    "paper_claim": false
+  },
+  "forbidden_action_inputs": [
+    "candidate_correctness_label",
+    "candidate_wrong_label",
+    "correctness_label",
+    "evaluation_candidate_summary",
+    "evaluation_only_correct_candidate_ids",
+    "evaluation_only_no_valid_candidate_pool",
+    "evaluation_only_variant_outcomes",
+    "evaluation_only_wrong_candidate_ids",
+    "gt_action",
+    "gt_candidate",
+    "gt_goal",
+    "gt_label",
+    "no_valid_candidate_pool",
+    "oracle_action",
+    "shortest_path_distance",
+    "success_commit",
+    "wasted_path_proxy_m",
+    "wrong_goal_commit",
+    "wrong_goal_visit_proxy"
+  ],
+  "expected_future_outputs": {
+    "out_root": "local_dataset/runs/h001_semantic_slam_candidate_task_proxy_join_v1",
+    "row_files": {
+      "policy_rows": "semantic_slam_candidate_task_proxy_policy_rows.jsonl",
+      "failure_rows": "semantic_slam_candidate_task_proxy_failure_rows.jsonl",
+      "summary": "semantic_slam_candidate_task_proxy_summary.json"
+    }
+  },
+  "interpretation_rule": {
+    "fact": "The materializer may state counts and joined proxy labels.",
+    "agent_inference": "If SLAMOnlyRich_current remains mostly deferred, this is safe plumbing but not evidence that semantic uncertainty improves navigation utility.",
+    "paper_claim": "No formula revision, Step 4-5 promotion, terminal utility validation, first_eval, policy-scale comparison, or paper claim is allowed unless the formula_revision_unlock_gate also passes."
+  }
+}

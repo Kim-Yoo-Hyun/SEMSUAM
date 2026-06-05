@@ -1,0 +1,318 @@
+{
+  "schema_version": "h001.contract.semantic_slam_task_map_outcome_probe.v1",
+  "date_checked": "2026-06-05",
+  "status": "frozen_contract",
+  "contract_name": "semantic_slam_task_map_outcome_probe_v1",
+  "purpose": "Predeclare the smallest task/map outcome probe required after the SLAMOnlyRich revision contract and before any revised SLAMOnlyRich utility formula.",
+  "stage": "P4-design",
+  "source": {
+    "slam_only_rich_revision_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_slam_only_rich_revision_contract_v1.json",
+    "slam_only_rich_revision_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_slam_only_rich_revision_contract_v1.verify.json",
+    "slam_only_rich_underpowered_diagnostic_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_slam_only_rich_underpowered_diagnostic_v1.verify.json",
+    "slam_only_rich_underpowered_diagnostic_summary": "local_dataset/runs/h001_semantic_slam_slam_only_rich_underpowered_diagnostic_v1/semantic_slam_slam_only_rich_underpowered_diagnostic_summary.json",
+    "source_audit_summary": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_consistency_probe_summary.json",
+    "pose_graph_connectivity_summary": "local_dataset/runs/h001_semantic_slam_pose_graph_connectivity_proxy_gate_v1/semantic_slam_pose_graph_connectivity_proxy_gate_summary.json",
+    "strict_edge_variant_summary": "local_dataset/runs/h001_semantic_slam_strict_edge_variant_proxy_v1/semantic_slam_strict_edge_variant_proxy_summary.json"
+  },
+  "triggering_diagnostic": {
+    "request_groups": 50,
+    "slam_only_rich_rank1_rows": 3,
+    "slam_only_rich_rank1_rate": 0.06,
+    "semantic_only_rank1_rows": 10,
+    "semantic_only_rank1_rate": 0.2,
+    "interaction_rank1_rows": 37,
+    "interaction_rank1_rate": 0.74,
+    "saturated_map_pose_term_rows": 46,
+    "saturated_map_pose_term_rate": 0.92,
+    "weak_map_pose_proxy_rows": 17,
+    "weak_map_pose_proxy_rate": 0.34,
+    "primary_cause": "semantic_score_dominates_current_map_pose_proxy",
+    "secondary_cause": "map_pose_terms_often_saturated_or_weak_without_task_map_outcome"
+  },
+  "probe_question": {
+    "fact": "Existing source audit and strict edge proxy rows are available for the same 50 request groups, but the current SLAMOnlyRich score is underpowered.",
+    "agent_inference": "The next probe should test whether map/pose evidence has measurable outcome value when separated from semantic confidence, before changing the SLAMOnlyRich formula.",
+    "paper_claim": "This contract is not an ObjectNav, SLAM, SemanticSLAM complementarity, or Step 4-5 benefit claim."
+  },
+  "scope": {
+    "request_group_rule": "same_50_request_groups",
+    "request_group_count_required": 50,
+    "join_key": [
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key"
+    ],
+    "source_family_count_required_min": 5,
+    "split_change_allowed": false,
+    "row_selection_tuning_allowed": false,
+    "one_scene_replay_role": "schema_smoke_only_not_promotion"
+  },
+  "policies": [
+    {
+      "name": "NoReobserveReference",
+      "role": "zero-observation reference",
+      "required": true,
+      "uses_semantic_score": false,
+      "uses_map_pose_proxy": false
+    },
+    {
+      "name": "SemanticOnly",
+      "role": "semantic uncertainty baseline",
+      "required": true,
+      "uses_semantic_score": true,
+      "uses_map_pose_proxy": false
+    },
+    {
+      "name": "SLAMOnlyRich_current",
+      "role": "current independent map/pose baseline before formula revision",
+      "required": true,
+      "uses_semantic_score": false,
+      "uses_map_pose_proxy": true
+    },
+    {
+      "name": "RandomReachableReobserve",
+      "role": "extra-view negative control",
+      "required": false,
+      "uses_semantic_score": false,
+      "uses_map_pose_proxy": false
+    },
+    {
+      "name": "NearestReachableReobserve",
+      "role": "travel-cost negative control",
+      "required": false,
+      "uses_semantic_score": false,
+      "uses_map_pose_proxy": false
+    }
+  ],
+  "metric_contract": {
+    "map_side_metrics": [
+      {
+        "name": "pose_graph_connectivity_delta",
+        "role": "primary_map_metric",
+        "definition": "Compare each policy against NoReobserveReference using strict edge variants; positive evidence is lower connected component count, higher largest component fraction, higher spatial/loop edge count, or higher mean degree without candidate-overlap-only evidence.",
+        "required_fields": [
+          "connected_component_count_delta",
+          "largest_component_fraction_delta",
+          "spatial_edge_count_delta",
+          "loop_edge_count_delta",
+          "mean_degree_delta"
+        ],
+        "forbidden_shortcut": "candidate_overlap_only_edges"
+      },
+      {
+        "name": "map_pose_consistency_delta",
+        "role": "secondary_map_metric",
+        "definition": "Measure whether the selected re-observation adds non-overlapping pose/depth/map context rather than only repeating the same candidate support.",
+        "required_fields": [
+          "source_coverage_gap_delta",
+          "context_gap_delta",
+          "viewpoint_coverage_delta",
+          "depth_pose_consistency_proxy_delta"
+        ],
+        "forbidden_shortcut": "candidate_id_overlap_as_pose_evidence"
+      }
+    ],
+    "task_side_metrics": [
+      {
+        "name": "wrong_goal_visit_proxy_delta",
+        "role": "primary_task_metric",
+        "definition": "Evaluation-only proxy for whether the selected evidence would reduce wrong semantic goal commitment relative to NoReobserveReference and SemanticOnly. It must be computed from separated labels after action-time decisions are fixed.",
+        "required_fields": [
+          "wrong_goal_visit_proxy",
+          "wrong_goal_visit_proxy_delta_vs_no_reobserve",
+          "wrong_goal_visit_proxy_delta_vs_semantic_only",
+          "label_join_available"
+        ],
+        "action_use_allowed": false
+      },
+      {
+        "name": "wasted_path_proxy_delta",
+        "role": "secondary_task_metric",
+        "definition": "Evaluation-only proxy for whether map/pose-informed re-observation reduces avoidable travel to wrong or low-value evidence after charging re-observation travel cost.",
+        "required_fields": [
+          "wasted_path_proxy_m",
+          "wasted_path_proxy_delta_vs_no_reobserve_m",
+          "wasted_path_proxy_delta_vs_semantic_only_m",
+          "reobserve_travel_cost_m"
+        ],
+        "action_use_allowed": false
+      }
+    ],
+    "bridge_metrics": [
+      {
+        "name": "map_task_alignment_rate",
+        "definition": "Fraction of evaluable rows where map-side delta is positive and task-side proxy is non-worse than SemanticOnly.",
+        "required": true
+      },
+      {
+        "name": "slam_independent_value_rows",
+        "definition": "Rows where SLAMOnlyRich_current or the future revised SLAM-only policy improves map-side metric without using semantic score.",
+        "required": true
+      }
+    ]
+  },
+  "input_separation": {
+    "action_time_allowed_inputs": [
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key",
+      "candidate_ids",
+      "candidate_positions",
+      "camera_pose",
+      "depth_metadata",
+      "strict_spatial_edges",
+      "strict_loop_edges",
+      "travel_cost_proxy",
+      "semantic_uncertainty_features_for_semantic_baselines_only"
+    ],
+    "analysis_only_allowed_inputs": [
+      "candidate_correctness_label",
+      "wrong_goal_label",
+      "accepted_target_or_synonym_group",
+      "shortest_path_reference",
+      "success_or_failure_label",
+      "posthoc_outcome_delta"
+    ],
+    "forbidden_action_inputs": [
+      "candidate_correctness_label",
+      "wrong_goal_label",
+      "accepted_target_or_synonym_group",
+      "shortest_path_reference",
+      "GT target id",
+      "GT action label",
+      "posthoc outcome delta",
+      "candidate overlap as independent pose evidence",
+      "semantic score inside SLAMOnlyRich"
+    ],
+    "uses_gt_for_action": false
+  },
+  "required_future_outputs": {
+    "out_root": "local_dataset/runs/h001_semantic_slam_task_map_outcome_probe_v1",
+    "row_files": {
+      "probe_rows": "semantic_slam_task_map_outcome_probe_rows.jsonl",
+      "policy_summary_rows": "semantic_slam_task_map_outcome_policy_summary_rows.jsonl",
+      "failure_rows": "semantic_slam_task_map_outcome_failure_rows.jsonl",
+      "summary": "semantic_slam_task_map_outcome_probe_summary.json"
+    },
+    "minimum_row_fields": [
+      "schema_version",
+      "row_type",
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key",
+      "policy_name",
+      "uses_gt_for_action",
+      "terminal_commit",
+      "candidate_commit",
+      "candidate_rejection",
+      "map_side_metric_name",
+      "map_side_delta",
+      "task_side_metric_name",
+      "task_side_delta",
+      "map_task_alignment",
+      "label_join_available",
+      "failure_tag",
+      "paper_claim_allowed"
+    ],
+    "summary_required_fields": [
+      "request_groups",
+      "policy_count",
+      "map_metric_positive_rows",
+      "task_proxy_evaluable_rows",
+      "map_task_alignment_rows",
+      "failure_taxonomy_counts",
+      "action_evidence_forbidden_key_count",
+      "terminal_commit_rows",
+      "candidate_commit_rows",
+      "candidate_rejection_rows",
+      "uses_gt_for_action",
+      "outcome_probe_gate_passed",
+      "revised_slam_formula_allowed",
+      "paper_claim_allowed"
+    ]
+  },
+  "minimum_success_gate_for_future_implementation": {
+    "request_groups": 50,
+    "same_request_groups_required": true,
+    "required_policy_names": [
+      "NoReobserveReference",
+      "SemanticOnly",
+      "SLAMOnlyRich_current"
+    ],
+    "map_side_metric_count_min": 1,
+    "task_side_metric_count_min": 1,
+    "task_proxy_evaluable_rows_min": 35,
+    "map_metric_positive_rows_min": 10,
+    "map_task_alignment_rows_min": 5,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "failure_taxonomy": [
+    {
+      "tag": "no_independent_map_pose_delta",
+      "meaning": "Strict map/pose metrics do not improve over NoReobserveReference or SemanticOnly.",
+      "what_failure_teaches": "The current source may not expose a useful SLAM-side re-observation signal."
+    },
+    {
+      "tag": "map_delta_not_task_aligned",
+      "meaning": "Map-side metrics improve, but wrong-goal or wasted-path proxy is worse or unavailable.",
+      "what_failure_teaches": "Pose graph connectivity alone is not enough to justify navigation utility."
+    },
+    {
+      "tag": "semantic_score_dominance_persists",
+      "meaning": "SemanticOnly still dominates all useful rows after the outcome metrics are attached.",
+      "what_failure_teaches": "The method should remain semantic-only or the SLAM utility needs a different observable."
+    },
+    {
+      "tag": "travel_cost_too_high",
+      "meaning": "Any map-side benefit is erased by re-observation travel cost.",
+      "what_failure_teaches": "The active SLAM utility needs a reachability-aware or budgeted objective."
+    },
+    {
+      "tag": "request_pool_not_map_sensitive",
+      "meaning": "The same 50 request groups are too object-ambiguity-heavy and do not contain enough map-sensitive cases.",
+      "what_failure_teaches": "A separate split contract is required before changing the request pool."
+    },
+    {
+      "tag": "measurement_proxy_saturated",
+      "meaning": "Map/pose metrics are saturated or weak on most rows, as in the prior SLAMOnlyRich diagnostic.",
+      "what_failure_teaches": "Outcome metrics must be refined before revising the SLAM utility formula."
+    },
+    {
+      "tag": "action_label_leakage",
+      "meaning": "Evaluation-only labels appear in action-time decisions.",
+      "what_failure_teaches": "The implementation is invalid and must be fixed before interpretation."
+    }
+  ],
+  "implementation_permissions": {
+    "task_map_outcome_probe_implementation_allowed": true,
+    "revised_slam_only_formula_implementation_allowed": false,
+    "revised_slam_only_formula_allowed_after": "task_map_outcome_probe_implementation_passes_minimum_success_gate_or_failure_taxonomy_justifies_a_new_contract",
+    "formula_scale_only_tuning_allowed": false,
+    "request_pool_tuning_allowed": false
+  },
+  "blocked_until_probe_implementation": {
+    "revised_slam_only_formula_implementation": true,
+    "step_4_5_promotion": true,
+    "terminal_utility_validation": true,
+    "first_eval_rerun": true,
+    "policy_scale_comparison": true,
+    "paper_claim": true
+  },
+  "interpretation": {
+    "fact": "This contract defines map-side and task-side outcome metrics, required baselines, allowed and forbidden inputs, output schema, and failure taxonomy for the next probe.",
+    "agent_inference": "The most defensible next engineering step is to implement this probe in Docker and inspect whether strict map/pose evidence aligns with task-side wrong-goal and wasted-path proxies before any utility formula revision.",
+    "paper_claim": "No final H001, ObjectNav, SLAM, or SemanticSLAM contribution claim is allowed from this contract alone."
+  },
+  "next_task": "implement_small_task_map_outcome_probe_from_frozen_contract"
+}
