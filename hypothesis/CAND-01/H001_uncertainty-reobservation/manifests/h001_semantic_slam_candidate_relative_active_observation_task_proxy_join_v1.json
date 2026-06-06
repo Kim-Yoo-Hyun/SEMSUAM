@@ -1,0 +1,382 @@
+{
+  "schema_version": "h001.contract.semantic_slam_candidate_relative_active_observation_task_proxy_join.v1",
+  "date_checked": "2026-06-06",
+  "status": "frozen_contract_before_implementation",
+  "contract_name": "semantic_slam_candidate_relative_active_observation_task_proxy_join_v1",
+  "purpose": "Freeze an evaluation-only task-proxy join for already-frozen candidate-relative active-observation action rows before any terminal utility, formula revision, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim.",
+  "stage": "P4-design",
+  "source": {
+    "active_observation_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_active_observation_utility_v1.json",
+    "active_observation_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_active_observation_utility_v1.verify.json",
+    "active_observation_summary": "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_utility_summary.json",
+    "active_observation_priority_rows": "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_priority_rows.jsonl",
+    "active_observation_request_rows": "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_request_rows.jsonl",
+    "active_observation_alternative_rows": "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_alternative_rows.jsonl",
+    "active_observation_failure_rows": "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_failure_rows.jsonl",
+    "task_label_summary": "local_dataset/runs/h001_semantic_slam_task_label_join_v1/semantic_slam_task_label_join_summary.json",
+    "task_label_request_rows": "local_dataset/runs/h001_semantic_slam_task_label_join_v1/semantic_slam_task_label_request_rows.jsonl",
+    "task_label_candidate_rows": "local_dataset/runs/h001_semantic_slam_task_label_join_v1/semantic_slam_task_label_candidate_rows.jsonl",
+    "candidate_task_proxy_summary": "local_dataset/runs/h001_semantic_slam_candidate_task_proxy_join_v1/semantic_slam_candidate_task_proxy_summary.json",
+    "candidate_task_proxy_policy_rows": "local_dataset/runs/h001_semantic_slam_candidate_task_proxy_join_v1/semantic_slam_candidate_task_proxy_policy_rows.jsonl",
+    "candidate_relative_task_proxy_summary": "local_dataset/runs/h001_semantic_slam_candidate_relative_task_proxy_join_v1/semantic_slam_candidate_relative_task_proxy_summary.json"
+  },
+  "source_gate": {
+    "active_observation_materializer_gate_passed": true,
+    "active_observation_promotion_gate_passed": false,
+    "active_observation_primary_blocker": "task_proxy_join_after_active_observation_action_freeze_required",
+    "expected_priority_rows": 232,
+    "expected_request_rows": 50,
+    "expected_alternative_rows": 300,
+    "expected_failure_rows": 50,
+    "expected_selected_candidate_eval_rows": 97,
+    "expected_alternative_rows_with_audit_selected_candidate": 100,
+    "selected_candidate_count_distribution": {
+      "1": 3,
+      "2": 47
+    },
+    "selected_observation_action_counts": {
+      "observe_candidate": 3,
+      "observe_candidate_pair": 26,
+      "observe_request_context": 21
+    },
+    "candidate_observation_action_counts": {
+      "audit_only": 48,
+      "observe_candidate": 19,
+      "observe_candidate_pair": 52,
+      "observe_request_context": 113
+    },
+    "selected_candidate_action_counts": {
+      "observe_candidate": 3,
+      "observe_candidate_pair": 52,
+      "observe_request_context": 42
+    },
+    "task_label_join_gate_passed": true,
+    "expected_task_label_request_rows": 21,
+    "expected_task_label_candidate_rows": 113,
+    "expected_task_label_unique_request_keys": 21,
+    "expected_task_label_candidate_correct_rows": 37,
+    "expected_task_label_candidate_wrong_rows": 76,
+    "expected_task_label_candidate_unlabeled_rows": 0,
+    "expected_task_label_request_no_valid_pool_rows": 4,
+    "candidate_task_proxy_policy_rows": 150,
+    "candidate_task_proxy_policy_rows_per_policy": 50,
+    "candidate_task_proxy_decision_evaluable_rows": 150,
+    "candidate_task_proxy_commit_evaluable_rows": 93,
+    "max_action_evidence_forbidden_key_count": 0,
+    "requires_uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "contract_scope": {
+    "contract_type": "evaluation_only_task_proxy_join_after_active_observation_action_freeze",
+    "implementation_allowed_next": true,
+    "implementation_target_script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_task_proxy_join.py",
+    "implementation_target_output_root": "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1",
+    "not_allowed_to_define": [
+      "terminal_goal_candidate_selector",
+      "candidate_rejection_rule",
+      "SLAMOnlyRich_formula_weight_update",
+      "ObjectNav_final_policy",
+      "first_eval_rerun_config",
+      "policy_scale_comparison",
+      "paper_claim"
+    ]
+  },
+  "join_keys": {
+    "source_request_key": [
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key"
+    ],
+    "source_candidate_key": [
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key",
+      "candidate_id"
+    ],
+    "evaluation_request_key_after_action_freeze": [
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key"
+    ],
+    "evaluation_candidate_key_after_action_freeze": [
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key",
+      "candidate_id"
+    ],
+    "alternative_audit_key": [
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key",
+      "alternative_id"
+    ],
+    "baseline_policy_key": [
+      "source_name",
+      "policy_name",
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key"
+    ]
+  },
+  "allowed_frozen_action_inputs": {
+    "priority_fields": [
+      "candidate_id",
+      "observation_action",
+      "utility_score",
+      "utility_terms",
+      "risk_tags",
+      "selected_for_request_action",
+      "request_selected_candidate_ids",
+      "map_pose_score_tuple_rank",
+      "map_pose_score_tuple_tie_count",
+      "projection_visible_fraction",
+      "projection_visible_heading_rank",
+      "pose_heading_rank",
+      "target_distance_mean_m",
+      "separability_status",
+      "separability_tag"
+    ],
+    "request_fields": [
+      "selected_observation_action",
+      "selected_candidate_count",
+      "selected_candidate_ids",
+      "selected_candidate_utility_scores",
+      "request_risk_tags",
+      "candidate_count",
+      "ready_candidate_count",
+      "separability_status"
+    ],
+    "alternative_fields": [
+      "alternative_id",
+      "audit_selected_candidate_id",
+      "audit_selection_reason",
+      "alternative_allowed_as_nonterminal_audit",
+      "alternative_allowed_as_terminal_action",
+      "fallback_shortcut_forbidden"
+    ],
+    "usage_rule": "These are frozen before evaluation labels are joined. The task-proxy join may copy and diagnose them but may not change selected_observation_action, selected_candidate_ids, observation_action, utility_score, or risk_tags."
+  },
+  "evaluation_only_inputs_after_action_freeze": {
+    "request_label_fields": [
+      "correct_candidate_count",
+      "wrong_candidate_count",
+      "candidate_label_count",
+      "no_valid_candidate_pool"
+    ],
+    "candidate_label_fields": [
+      "candidate_correctness_label",
+      "candidate_wrong_label",
+      "candidate_label_join_available",
+      "no_valid_candidate_pool"
+    ],
+    "baseline_policy_proxy_fields": [
+      "terminal_commit_proxy",
+      "success_commit_proxy",
+      "wrong_goal_visit_proxy",
+      "no_valid_commit_proxy",
+      "wasted_path_proxy_m",
+      "map_task_alignment_proxy"
+    ],
+    "usage_rule": "Evaluation-only fields may be joined only after action rows are frozen and must be marked as evaluation_only. They cannot define, repair, rerank, reject, or terminally commit any candidate."
+  },
+  "forbidden_action_inputs": [
+    "candidate_correctness_label as action input",
+    "candidate_wrong_label as action input",
+    "no_valid_candidate_pool as action input",
+    "correct_candidate_count as action input",
+    "wrong_candidate_count as action input",
+    "wrong_goal_visit_proxy as action input",
+    "wasted_path_proxy_m as action input",
+    "success_commit_proxy as action input",
+    "oracle fields",
+    "GTTargetOracle",
+    "GTCandidateOracle",
+    "GTViewOracle",
+    "semantic_rank fallback selector",
+    "semantic_score fallback selector",
+    "detector_score fallback selector",
+    "source_top fallback selector",
+    "local_context fallback selector",
+    "label-tuned utility threshold",
+    "candidate rejection based on evaluation labels",
+    "terminal commit based on evaluation labels"
+  ],
+  "required_outputs": {
+    "priority_task_proxy_rows": {
+      "filename": "semantic_slam_candidate_relative_active_observation_task_proxy_priority_rows.jsonl",
+      "expected_rows": 232,
+      "required_fields": [
+        "episode_key",
+        "scene_key",
+        "query",
+        "request_id",
+        "source_name",
+        "candidate_id",
+        "observation_action",
+        "utility_score",
+        "candidate_label_join_available",
+        "candidate_correctness_label",
+        "candidate_wrong_label",
+        "evaluation_only_task_proxy_join",
+        "terminal_commit",
+        "candidate_commit",
+        "candidate_rejection",
+        "uses_gt_for_action",
+        "uses_gt_for_analysis",
+        "paper_claim_allowed"
+      ]
+    },
+    "selected_candidate_task_proxy_rows": {
+      "filename": "semantic_slam_candidate_relative_active_observation_task_proxy_selected_candidate_rows.jsonl",
+      "expected_rows": 97,
+      "required_fields": [
+        "episode_key",
+        "scene_key",
+        "query",
+        "request_id",
+        "selected_observation_action",
+        "candidate_id",
+        "candidate_correctness_label",
+        "candidate_wrong_label",
+        "selected_for_request_action",
+        "evaluation_only_task_proxy_join",
+        "uses_gt_for_action",
+        "uses_gt_for_analysis"
+      ]
+    },
+    "request_task_proxy_rows": {
+      "filename": "semantic_slam_candidate_relative_active_observation_task_proxy_request_rows.jsonl",
+      "expected_rows": 50,
+      "required_fields": [
+        "episode_key",
+        "scene_key",
+        "query",
+        "request_id",
+        "selected_observation_action",
+        "selected_candidate_count",
+        "selected_candidate_label_counts",
+        "no_valid_candidate_pool",
+        "request_risk_tags",
+        "evaluation_only_task_proxy_join",
+        "terminal_commit",
+        "uses_gt_for_action",
+        "uses_gt_for_analysis"
+      ]
+    },
+    "alternative_task_proxy_rows": {
+      "filename": "semantic_slam_candidate_relative_active_observation_task_proxy_alternative_rows.jsonl",
+      "expected_rows": 300,
+      "expected_rows_with_audit_selected_candidate": 100,
+      "required_alternatives": [
+        "defer_all",
+        "current_unique_ready",
+        "top_map_pose_tuple",
+        "top_projection_visible_heading",
+        "semantic_rank_fallback_forbidden",
+        "detector_score_fallback_forbidden"
+      ],
+      "required_fields": [
+        "alternative_id",
+        "audit_selected_candidate_id",
+        "candidate_label_join_available",
+        "fallback_shortcut_forbidden",
+        "alternative_allowed_as_terminal_action",
+        "evaluation_only_task_proxy_join",
+        "terminal_commit",
+        "uses_gt_for_action",
+        "uses_gt_for_analysis"
+      ]
+    },
+    "baseline_policy_context_rows": {
+      "filename": "semantic_slam_candidate_relative_active_observation_task_proxy_baseline_rows.jsonl",
+      "expected_rows": 150,
+      "required_policies": [
+        "NoReobserveReference",
+        "SemanticOnly",
+        "SLAMOnlyRich_current"
+      ],
+      "required_fields": [
+        "policy_name",
+        "terminal_commit_proxy",
+        "success_commit_proxy",
+        "wrong_goal_visit_proxy",
+        "wasted_path_proxy_m",
+        "evaluation_only_baseline_context",
+        "uses_gt_for_action",
+        "uses_gt_for_analysis"
+      ]
+    },
+    "failure_taxonomy_rows": {
+      "filename": "semantic_slam_candidate_relative_active_observation_task_proxy_failure_rows.jsonl",
+      "minimum_rows": 50,
+      "required_tags": [
+        "task_proxy_join_after_action_freeze",
+        "active_observation_not_terminal_utility",
+        "selected_candidate_risk_evaluation_only",
+        "wrong_or_no_valid_risk_evaluation_only",
+        "top_rule_remains_closed",
+        "promotion_requires_nonterminal_task_proxy_signal"
+      ]
+    },
+    "summary": {
+      "filename": "semantic_slam_candidate_relative_active_observation_task_proxy_summary.json",
+      "required_fields": [
+        "actual_counts",
+        "active_observation_task_proxy_join_gate_passed",
+        "promotion_gate_after_join_passed",
+        "primary_blocker",
+        "next_task"
+      ]
+    }
+  },
+  "contract_gates": {
+    "priority_rows_expected": 232,
+    "selected_candidate_rows_expected": 97,
+    "request_rows_expected": 50,
+    "alternative_rows_expected": 300,
+    "baseline_policy_context_rows_expected": 150,
+    "failure_rows_minimum": 50,
+    "request_label_missing_rows_max": 0,
+    "candidate_label_missing_rows_max": 0,
+    "selected_candidate_label_missing_rows_max": 0,
+    "action_evidence_forbidden_key_count_max": 0,
+    "terminal_commit_rows_max": 0,
+    "candidate_commit_rows_max": 0,
+    "candidate_rejection_rows_max": 0,
+    "uses_gt_for_action_required": false,
+    "uses_gt_for_analysis_required": true,
+    "paper_claim_allowed_required": false,
+    "promotion_gate_after_join_required": false,
+    "terminal_utility_validation_allowed": false,
+    "heldout_or_fresh_validation_required_before_paper_claim": true
+  },
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "revised_SLAMOnlyRich_formula",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "Step_4_5_promotion",
+    "paper_claim"
+  ],
+  "next_research_task": {
+    "task": "implement_Docker_active_observation_task_proxy_join_materializer",
+    "implementation_allowed_now": true,
+    "required_docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "compile_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_task_proxy_join.py",
+    "run_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_semantic_slam_candidate_relative_active_observation_task_proxy_join"
+  },
+  "interpretation_rule": {
+    "fact": "Active-observation action rows are already frozen and contain no terminal commits, candidate commits/rejections, GT-action rows, paper-claim rows, or forbidden action keys.",
+    "agent_inference": "The next join should measure whether the frozen observation priorities expose wrong-goal/no-valid risk and selected-candidate risk profiles. It should not use labels to alter the observation action.",
+    "paper_claim_allowed": false
+  }
+}

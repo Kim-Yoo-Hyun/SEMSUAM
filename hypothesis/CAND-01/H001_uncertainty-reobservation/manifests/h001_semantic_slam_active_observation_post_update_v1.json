@@ -1,0 +1,290 @@
+{
+  "schema_version": "h001.contract.semantic_slam_active_observation_post_update.v1",
+  "date_checked": "2026-06-06",
+  "status": "frozen_contract_implementation_pending",
+  "contract_name": "semantic_slam_active_observation_post_update_v1",
+  "purpose": "Freeze the next label-free method step after active-observation risk analysis: selected observation actions may update semantic-SLAM evidence state, but may not become terminal goal selectors, candidate commits, or candidate rejections.",
+  "stage": "P4-design",
+  "source": {
+    "active_observation_risk_analysis_summary": "local_dataset/runs/h001_semantic_slam_active_observation_risk_analysis_v1/active_observation_risk_analysis_summary.json",
+    "active_observation_risk_request_rows": "local_dataset/runs/h001_semantic_slam_active_observation_risk_analysis_v1/active_observation_risk_request_rows.jsonl",
+    "active_observation_risk_candidate_rows": "local_dataset/runs/h001_semantic_slam_active_observation_risk_analysis_v1/active_observation_risk_candidate_rows.jsonl",
+    "active_observation_terminal_shortcut_audit_rows": "local_dataset/runs/h001_semantic_slam_active_observation_risk_analysis_v1/active_observation_terminal_shortcut_audit_rows.jsonl",
+    "active_observation_task_proxy_join_summary": "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1/semantic_slam_candidate_relative_active_observation_task_proxy_summary.json",
+    "active_observation_utility_summary": "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_utility_summary.json"
+  },
+  "source_gate": {
+    "risk_analysis_gate_passed": true,
+    "terminal_utility_contract_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false,
+    "primary_blocker": "top_observation_utility_terminal_shortcut_unsafe",
+    "request_analysis_rows": 50,
+    "candidate_analysis_rows": 232,
+    "selected_candidate_rows": 97,
+    "rule_audit_rows": 6,
+    "selected_action_counts": {
+      "observe_candidate": 3,
+      "observe_candidate_pair": 26,
+      "observe_request_context": 21
+    },
+    "selected_request_status_counts": {
+      "selected_all_correct": 11,
+      "selected_mixed_correct_wrong": 23,
+      "selected_all_wrong": 12,
+      "selected_in_no_valid_pool": 4
+    },
+    "selected_candidate_clean_correct_rows": 43,
+    "selected_candidate_wrong_or_no_valid_rows": 54,
+    "top_observation_utility_if_misused_as_terminal_success_wrong_no_valid_rows": [
+      16,
+      30,
+      4
+    ],
+    "top_selected_observation_utility_if_misused_as_terminal_success_wrong_no_valid_rows": [
+      19,
+      27,
+      4
+    ],
+    "utility_score_risk_auc": 0.511762506813316,
+    "source_terminal_commit_rows": 0,
+    "source_candidate_commit_rows": 0,
+    "source_candidate_rejection_rows": 0,
+    "source_uses_gt_for_action_true_rows": 0,
+    "source_paper_claim_allowed_true_rows": 0
+  },
+  "contract_scope": {
+    "contract_type": "label_free_post_observation_evidence_update_after_frozen_active_observation_actions",
+    "implementation_allowed_next": true,
+    "implementation_target_script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update.py",
+    "implementation_target_output_root": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1",
+    "not_allowed_to_define": [
+      "terminal_goal_candidate_selector",
+      "candidate_commit_rule",
+      "candidate_rejection_rule",
+      "SLAMOnlyRich_formula_weight_update",
+      "ObjectNav_final_policy",
+      "first_eval_rerun_config",
+      "policy_scale_comparison",
+      "paper_claim"
+    ]
+  },
+  "frozen_pre_update_actions": {
+    "request_rows_expected": 50,
+    "selected_candidate_rows_expected": 97,
+    "candidate_state_rows_expected": 232,
+    "allowed_frozen_actions": [
+      "observe_candidate",
+      "observe_candidate_pair",
+      "observe_request_context"
+    ],
+    "usage_rule": "The implementation may consume frozen selected_observation_action, selected_candidate_ids, selected utility terms, and selected risk tags, but it may not change those decisions using task labels."
+  },
+  "post_observation_update_semantics": {
+    "update_unit": [
+      "request",
+      "selected_candidate",
+      "candidate_state"
+    ],
+    "required_state_blocks": [
+      "pre_observation_state",
+      "observation_evidence",
+      "post_observation_state",
+      "evidence_delta"
+    ],
+    "allowed_post_update_states": [
+      "support_acquired",
+      "ambiguity_reduced",
+      "ambiguity_persisted",
+      "evidence_conflict_detected",
+      "context_only_support",
+      "no_independent_support",
+      "needs_goal_validity_confirmation",
+      "defer_after_update"
+    ],
+    "not_goal_validity_states": [
+      "correct_goal",
+      "wrong_goal",
+      "valid_target",
+      "invalid_target"
+    ],
+    "usage_rule": "The update may make uncertainty explicit and change evidence state. It may not decide ObjectNav goal validity."
+  },
+  "allowed_label_free_update_inputs": [
+    "selected_observation_action",
+    "selected_candidate_ids",
+    "selected_candidate_utility_scores",
+    "request_risk_tags",
+    "candidate_risk_tags",
+    "utility_terms",
+    "observation_view_role",
+    "observation_pose",
+    "observation_travel_cost_m",
+    "post_observation_rgb_depth_metadata",
+    "candidate_projection_visibility",
+    "candidate_box_or_mask_association",
+    "candidate_depth_consistency",
+    "candidate_pose_consistency",
+    "candidate_own_view_support",
+    "candidate_cross_view_support",
+    "rival_candidate_support",
+    "pair_contrast_support",
+    "request_context_support",
+    "pose_graph_connectivity_delta",
+    "map_pose_consistency_delta",
+    "observation_failure_reason"
+  ],
+  "forbidden_update_inputs": [
+    "candidate_correctness_label",
+    "candidate_wrong_label",
+    "correct_candidate_count",
+    "wrong_candidate_count",
+    "no_valid_candidate_pool",
+    "success_commit_proxy",
+    "wrong_goal_visit_proxy",
+    "no_valid_commit_proxy",
+    "wasted_path_proxy_m",
+    "task_proxy_commit_evaluable",
+    "evaluation_only_variant_outcomes",
+    "oracle fields",
+    "ground truth target id",
+    "GTTargetOracle",
+    "GTCandidateOracle",
+    "GTViewOracle",
+    "label-tuned threshold",
+    "semantic_rank_fallback_commit",
+    "detector_score_fallback_commit",
+    "source_top_fallback_commit",
+    "local_context_fallback_commit"
+  ],
+  "required_outputs": {
+    "request_update_rows": {
+      "filename": "active_observation_post_update_request_rows.jsonl",
+      "expected_rows": 50,
+      "required_fields": [
+        "episode_key",
+        "scene_key",
+        "query",
+        "request_id",
+        "selected_observation_action",
+        "selected_candidate_ids",
+        "post_update_request_state",
+        "request_evidence_delta",
+        "terminal_commit",
+        "uses_gt_for_action",
+        "paper_claim_allowed"
+      ]
+    },
+    "selected_candidate_update_rows": {
+      "filename": "active_observation_post_update_selected_candidate_rows.jsonl",
+      "expected_rows": 97,
+      "required_fields": [
+        "episode_key",
+        "scene_key",
+        "query",
+        "request_id",
+        "candidate_id",
+        "pre_observation_state",
+        "observation_evidence",
+        "post_observation_state",
+        "evidence_delta",
+        "candidate_commit",
+        "candidate_rejection",
+        "uses_gt_for_action"
+      ]
+    },
+    "candidate_state_rows": {
+      "filename": "active_observation_post_update_candidate_state_rows.jsonl",
+      "expected_rows": 232,
+      "required_fields": [
+        "episode_key",
+        "scene_key",
+        "query",
+        "request_id",
+        "candidate_id",
+        "selected_for_observation_update",
+        "pre_observation_state",
+        "post_observation_state",
+        "evidence_delta_available",
+        "terminal_commit",
+        "candidate_commit",
+        "candidate_rejection"
+      ]
+    },
+    "rule_audit_rows": {
+      "filename": "active_observation_post_update_rule_audit_rows.jsonl",
+      "minimum_rows": 6,
+      "required_rules": [
+        "defer_all_after_update",
+        "commit_top_observation_utility_forbidden",
+        "commit_top_selected_utility_forbidden",
+        "post_update_support_unique_terminal_forbidden",
+        "post_update_support_absence_rejection_forbidden",
+        "request_context_only_commit_forbidden"
+      ]
+    },
+    "failure_taxonomy_rows": {
+      "filename": "active_observation_post_update_failure_rows.jsonl",
+      "minimum_rows": 50,
+      "required_tags": [
+        "terminal_shortcut_rejected_before_update",
+        "post_update_not_goal_validity",
+        "label_free_evidence_delta_required",
+        "candidate_commit_blocked",
+        "candidate_rejection_blocked"
+      ]
+    },
+    "summary": {
+      "filename": "active_observation_post_update_summary.json",
+      "required_fields": [
+        "actual_counts",
+        "post_update_contract_gate_passed",
+        "post_update_materializer_gate_passed",
+        "promotion_gate_after_post_update_passed",
+        "primary_blocker",
+        "next_task"
+      ]
+    }
+  },
+  "contract_gates": {
+    "request_update_rows_expected": 50,
+    "selected_candidate_update_rows_expected": 97,
+    "candidate_state_rows_expected": 232,
+    "rule_audit_rows_minimum": 6,
+    "failure_rows_minimum": 50,
+    "action_evidence_forbidden_key_count_max": 0,
+    "uses_gt_for_action_required": false,
+    "terminal_commit_rows_max": 0,
+    "candidate_commit_rows_max": 0,
+    "candidate_rejection_rows_max": 0,
+    "paper_claim_allowed_required": false,
+    "label_join_allowed_only_after_post_update_freeze": true,
+    "post_update_evidence_delta_required": true,
+    "terminal_utility_validation_allowed": false,
+    "heldout_or_fresh_validation_required_before_paper_claim": true
+  },
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "revised_SLAMOnlyRich_formula",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "Step_4_5_promotion",
+    "paper_claim"
+  ],
+  "next_research_task": {
+    "task": "implement_Docker_active_observation_post_update_materializer",
+    "implementation_allowed_now": true,
+    "required_docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "compile_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update.py",
+    "run_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_semantic_slam_active_observation_post_update"
+  },
+  "interpretation_rule": {
+    "fact": "Frozen active-observation risk analysis rejects direct terminal use of observation utility because top utility shortcuts produce many wrong/no-valid outcomes.",
+    "agent_inference": "The defensible method step is to update label-free evidence state after observation, then evaluate whether the updated state can support a later non-GT goal-validity arbitration rule.",
+    "paper_claim_allowed": false
+  }
+}

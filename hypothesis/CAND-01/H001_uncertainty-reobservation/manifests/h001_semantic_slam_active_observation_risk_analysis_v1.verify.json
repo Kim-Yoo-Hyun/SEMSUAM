@@ -1,0 +1,23 @@
+{
+  "actual_counts": {
+    "candidate_analysis_rows": 232,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "paper_claim_allowed_true_rows": 0,
+    "request_analysis_rows": 50,
+    "rule_audit_rows": 6,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action_true_rows": 0
+  },
+  "date_checked": "2026-06-06",
+  "docker_compile_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_semantic_slam_active_observation_risk.py",
+  "docker_run_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.analyze_semantic_slam_active_observation_risk",
+  "primary_blocker": "top_observation_utility_terminal_shortcut_unsafe",
+  "risk_analysis_gate_passed": true,
+  "schema_version": "h001.semantic_slam_active_observation_risk_analysis.v1.verify",
+  "status": "risk_analysis_gate_passed_terminal_utility_blocked",
+  "summary": "local_dataset/runs/h001_semantic_slam_active_observation_risk_analysis_v1/active_observation_risk_analysis_summary.json",
+  "terminal_utility_contract_allowed": false,
+  "verification_command": "jq '.risk_analysis_gate_passed, .terminal_utility_contract_allowed, .primary_blocker, .terminal_shortcut_audit' local_dataset/runs/h001_semantic_slam_active_observation_risk_analysis_v1/active_observation_risk_analysis_summary.json",
+  "verify_path": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_risk_analysis_v1.verify.json"
+}

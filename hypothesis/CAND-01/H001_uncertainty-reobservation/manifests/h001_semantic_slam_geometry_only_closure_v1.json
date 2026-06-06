@@ -1,0 +1,126 @@
+{
+  "schema_version": "h001.contract.semantic_slam_geometry_only_closure.v1",
+  "date_checked": "2026-06-06",
+  "status": "frozen_non_promotable_decision_and_requirement_contract",
+  "contract_name": "semantic_slam_geometry_only_closure_v1",
+  "purpose": "Close the current geometry-only SLAMOnlyRich_current selector path as non-promotable and define the minimum candidate-relative map/pose evidence requirements before any revised SLAMOnlyRich formula.",
+  "source": {
+    "revision_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_slam_only_rich_revision_contract_v1.json",
+    "task_map_outcome_probe_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_outcome_probe_v1.verify.json",
+    "task_label_join_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_label_join_v1.verify.json",
+    "task_policy_selector_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_policy_selector_v1.verify.json",
+    "candidate_map_pose_selector_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_map_pose_selector_v1.verify.json",
+    "candidate_task_proxy_join_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_task_proxy_join_v1.verify.json",
+    "safe_sparse_selector_diagnostic_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_safe_sparse_selector_diagnostic_v1.verify.json",
+    "safe_sparse_selector_summary": "local_dataset/runs/h001_semantic_slam_safe_sparse_selector_diagnostic_v1/semantic_slam_safe_sparse_selector_summary.json"
+  },
+  "source_gate": {
+    "safe_sparse_diagnostic_gate_passed": true,
+    "candidate_separability_gate_passed": false,
+    "expected_source_request_rows": 50,
+    "expected_candidate_rows": 232,
+    "expected_all_candidates_ready_rows": 50,
+    "expected_multi_candidate_all_ready_rows": 47,
+    "current_unique_ready_commit_success_wrong_defer": [3, 2, 1, 47],
+    "top_map_pose_tuple_commit_success_wrong_no_valid": [50, 29, 21, 4],
+    "top_projection_visible_heading_commit_success_wrong_no_valid": [50, 29, 21, 4],
+    "max_action_evidence_forbidden_key_count": 0,
+    "requires_uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "closure_decision": {
+    "closed_path": "geometry_only_SLAMOnlyRich_current_selector",
+    "closed_status": "closed_as_non_promotable_under_current_evidence",
+    "closure_reason": [
+      "all candidates are strict map-pose-ready in all 50 source requests, so readiness is saturated",
+      "the conservative unique-ready selector is safe mainly because it defers 47 of 50 requests",
+      "simple label-free commit-all geometry alternatives recover more successes but reintroduce 21 wrong-goal rows and 4 no-valid commits",
+      "map/pose availability does not currently separate correct ObjectNav goal candidates from same-category rivals",
+      "formula or weight revision would tune around a separability failure rather than derive a method from a validated failure mechanism"
+    ],
+    "closed_shortcuts": [
+      "increase_SLAMOnlyRich_weight_after_sparse_successes",
+      "weaken_semantic_score_to_force_map_pose_selection",
+      "commit_top_map_pose_tuple_candidate",
+      "commit_top_projection_visible_heading_candidate",
+      "commit_top_pose_heading_candidate",
+      "commit_closest_target_distance_candidate",
+      "fallback_to_source_top_when_map_pose_ties",
+      "fallback_to_semantic_rank_when_map_pose_ties",
+      "fallback_to_detector_score_or_local_context",
+      "treat_candidate_overlap_edges_as_pose_graph_evidence",
+      "use_evaluation_labels_or_oracle_fields_as_action_evidence"
+    ],
+    "blocked_downstream_tasks": [
+      "revised_SLAMOnlyRich_formula",
+      "terminal_utility_contract",
+      "first_eval_rerun",
+      "policy_scale_comparison",
+      "Step_4_5_promotion",
+      "paper_claim"
+    ]
+  },
+  "candidate_relative_map_pose_evidence_requirements": {
+    "target_question": "Can label-free map/pose evidence distinguish a correct goal candidate from same-category rivals before terminal commitment?",
+    "allowed_role": "nonterminal evidence contract or active observation utility before any terminal policy",
+    "required_evidence_properties": [
+      "candidate-specific: evidence rows must be keyed by candidate id and request group",
+      "relative: evidence must compare the candidate against same-category rivals in the same request, not only report absolute readiness",
+      "map_pose_native: at least one term must come from map/pose structure such as pose graph consistency, loop or spatial edge support, fragmentation, source coverage, context consistency, or map-pose residual",
+      "label_free_action: action-time rows must not contain correctness labels, wrong-goal labels, no-valid labels, oracle fields, shortest-path labels, or evaluation-only variant outcomes",
+      "tie_safe: if multiple candidates remain similarly supported, the policy must request more evidence or defer rather than select by semantic rank, detector score, source-top, local-context, or distance",
+      "no_valid_guarded: the evidence contract must separate no-valid source-pool risk from same-category rival ambiguity before any commit rule",
+      "task_map_linked: later promotion must join at least one map-side metric and one task-side proxy after action rows are frozen"
+    ],
+    "minimum_first_contract_outputs": [
+      "candidate_relative_evidence_rows",
+      "request_group_summary_rows",
+      "simpler_alternative_audit_rows",
+      "failure_taxonomy_rows",
+      "summary"
+    ],
+    "minimum_first_contract_metrics": [
+      "candidate_relative_separable_rows",
+      "multi_candidate_tie_rows",
+      "no_valid_risk_rows",
+      "map_pose_contrast_gap",
+      "pose_graph_or_context_consistency_delta",
+      "wrong_goal_visit_proxy_after_label_join",
+      "wasted_path_proxy_after_label_join"
+    ],
+    "simpler_alternatives_to_audit": [
+      "current_unique_ready",
+      "top_map_pose_tuple",
+      "top_projection_visible_heading",
+      "top_pose_heading",
+      "closest_target_distance",
+      "top_projection_status_visible",
+      "defer_all",
+      "semantic_rank_fallback",
+      "detector_score_fallback"
+    ],
+    "promotion_floor_before_formula_revision": {
+      "candidate_relative_evidence_gate_passed": true,
+      "action_evidence_forbidden_key_count": 0,
+      "uses_gt_for_action": false,
+      "candidate_relative_separable_rows_min": 5,
+      "wrong_goal_commit_rows_max_if_terminal_commit_is_allowed": 0,
+      "no_valid_commit_rows_max_if_terminal_commit_is_allowed": 0,
+      "required_map_side_metric_count_min": 1,
+      "required_task_side_proxy_count_min": 1,
+      "heldout_or_fresh_validation_required_before_paper_claim": true
+    }
+  },
+  "next_research_task": {
+    "task": "freeze_candidate_relative_semantic_slam_map_pose_evidence_contract",
+    "proposed_contract": "h001_semantic_slam_candidate_relative_map_pose_evidence_v1.json",
+    "first_question": "Which existing label-free map/pose artifacts can produce relative candidate contrast without GT labels or semantic fallback shortcuts?",
+    "implementation_allowed_now": false,
+    "reason_implementation_blocked": "The candidate-relative evidence definition must be frozen before any runtime materializer or formula revision."
+  },
+  "interpretation_rule": {
+    "fact": "Current geometry-only map/pose features are saturated across candidates and simple label-free ranking alternatives reintroduce wrong-goal and no-valid commits.",
+    "agent_inference": "The current geometry-only path is not a promotable SLAM/navigation utility. The next method design must create candidate-relative map/pose contrast or keep Semantic-SLAM as a negative result.",
+    "paper_claim_allowed": false
+  }
+}

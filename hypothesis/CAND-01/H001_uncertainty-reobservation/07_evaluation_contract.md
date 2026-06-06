@@ -6910,7 +6910,7 @@ No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal uti
 
 ### 에이전트 추론
 
-The revision contract turns the underpowered diagnostic into a reviewer-defense rule: the next method step cannot be a scale patch. The required task/map outcome probe contract is frozen and has been Docker-implemented; that implementation now blocks formula revision until label-backed task proxy joins are defined.
+The revision contract turns the underpowered diagnostic into a reviewer-defense rule: the next method step cannot be a scale patch. The required task/map outcome probe, task proxy join, and safe-but-sparse selector diagnostic are Docker-implemented; formula revision remains blocked because simple label-free geometry alternatives reintroduce wrong-goal and no-valid commits.
 
 ### 논문 주장
 
@@ -7011,7 +7011,7 @@ No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal uti
 
 ### 에이전트 추론
 
-The label coverage blocker is resolved, but task outcome evaluation is still blocked because no frozen non-GT policy selector provides `policy_selected_candidate_id` and `terminal_commit_proxy`. The next defensible gate is a selector contract that defines how `NoReobserveReference`, `SemanticOnly`, and `SLAMOnlyRich_current` select or defer candidates without using evaluation labels. It is still not valid to revise the `SLAMOnlyRich` formula or claim task/map benefit.
+The label coverage blocker is resolved, but this stage still lacked a frozen non-GT policy selector with `policy_selected_candidate_id` and `terminal_commit_proxy`. Later selector, task-proxy-join, safe-but-sparse diagnostic, and geometry-only closure sections below resolve that measurement blocker and close the current geometry-only `SLAMOnlyRich_current` path as non-promotable. It is still not valid to revise the `SLAMOnlyRich` formula or claim task/map benefit.
 
 ### 논문 주장
 
@@ -7141,7 +7141,7 @@ No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal uti
 
 ### 에이전트 추론
 
-The materializer resolves the selector-missing blocker, but it also shows that candidate-specific map/pose evidence is mostly availability evidence: every candidate is strict-ready, so `47/50` requests remain ambiguous and must defer. The next gate is a label-backed task proxy join to test wrong-goal, wasted-path, and map-task alignment for the `3` geometry-only commits and to diagnose geometry-availability bias.
+The materializer resolves the selector-missing blocker, but it also shows that candidate-specific map/pose evidence is mostly availability evidence: every candidate is strict-ready, so `47/50` requests remain ambiguous and must defer. The follow-up task proxy join and safe-but-sparse diagnostic confirm that this geometry-only signal is not yet candidate-discriminative enough for formula revision.
 
 ### 논문 주장
 
@@ -7181,6 +7181,397 @@ The task proxy join resolves the measurement plumbing blocker: every policy deci
 ### 논문 주장
 
 No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this task proxy join.
+
+## SemanticSLAM Safe-But-Sparse Selector Diagnostic Result
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Script: `runtime/h001_runtime/diagnose_semantic_slam_safe_sparse_selector.py`
+- Contract: `manifests/h001_semantic_slam_safe_sparse_selector_diagnostic_v1.json`
+- Verify: `manifests/h001_semantic_slam_safe_sparse_selector_diagnostic_v1.verify.json`
+- Output: `local_dataset/runs/h001_semantic_slam_safe_sparse_selector_diagnostic_v1`
+- Docker image: `research3/openvocab-perception:20260513-v3c-gdino-sam2`
+- Docker compile/run/artifact validation: passed
+- Request / alternative rows: `50 / 300`
+- Candidate / source request rows: `232 / 50`
+- Current unique-ready selector commit / success / wrong-goal / defer rows: `3 / 2 / 1 / 47`
+- `top_map_pose_tuple` commit / success / wrong-goal / no-valid rows: `50 / 29 / 21 / 4`
+- `top_projection_visible_heading` commit / success / wrong-goal / no-valid rows: `50 / 29 / 21 / 4`
+- All-candidates-ready rows: `50`
+- Multi-candidate all-ready rows: `47`
+- Action forbidden key count: `0`
+- `uses_gt_for_action`: `false`
+- `uses_gt_for_analysis`: `true`
+- Diagnostic gate passed: `true`
+- Candidate separability gate passed: `false`
+- Primary blocker: `label_free_geometry_alternatives_reintroduce_wrong_goal_risk`
+- Discriminative candidate map/pose revision allowed: `false`
+- Revised `SLAMOnlyRich` formula implementation allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The current geometry-only candidate map/pose evidence is non-promotable under the frozen gates. It can make every candidate observable and can force all requests to commit with simple ranking rules, but those rules recreate wrong-goal and no-valid failures. A future `SLAMOnlyRich_current` revision must add candidate-relative evidence that separates same-category rivals, not just a larger weight on existing geometry availability features.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this diagnostic.
+
+## SemanticSLAM Geometry-Only Closure Gate
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Contract: `manifests/h001_semantic_slam_geometry_only_closure_v1.json`
+- Verify: `manifests/h001_semantic_slam_geometry_only_closure_v1.verify.json`
+- Source diagnostic: `manifests/h001_semantic_slam_safe_sparse_selector_diagnostic_v1.verify.json`
+- Closed path: `geometry_only_SLAMOnlyRich_current_selector`
+- Closed status: `closed_as_non_promotable_under_current_evidence`
+- Source request / candidate rows: `50 / 232`
+- All-candidates-ready / multi-candidate all-ready rows: `50 / 47`
+- Current unique-ready selector commit / success / wrong-goal / defer rows: `3 / 2 / 1 / 47`
+- `top_map_pose_tuple` commit / success / wrong-goal / no-valid rows: `50 / 29 / 21 / 4`
+- `top_projection_visible_heading` commit / success / wrong-goal / no-valid rows: `50 / 29 / 21 / 4`
+- Action forbidden key count: `0`
+- `uses_gt_for_action`: `false`
+- Candidate-relative requirements defined: `true`
+- Revised `SLAMOnlyRich` formula implementation allowed: `false`
+- Terminal utility validation allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The geometry-only `SLAMOnlyRich_current` path is no longer an active method candidate under the current evidence. It is useful as a negative result: candidate map/pose availability can be measured without label leakage, but availability saturates across rivals and simple geometry tie-breakers recreate wrong-goal and no-valid commits.
+
+The next `SemanticSLAM` step must freeze a candidate-relative map/pose evidence contract before any implementation. That contract must compare candidates within the same request group, use at least one map/pose-native relative term, preserve no-valid guarding, audit simpler alternatives, and join map-side and task-side proxies only after action rows are frozen.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this closure. A later claim requires a fresh candidate-relative evidence family that passes the frozen gates without semantic, detector, source-top, local-context, oracle, or label fallback shortcuts.
+
+## SemanticSLAM Candidate-Relative Map/Pose Evidence Contract And Materializer
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Contract: `manifests/h001_semantic_slam_candidate_relative_map_pose_evidence_v1.json`
+- Verify: `manifests/h001_semantic_slam_candidate_relative_map_pose_evidence_v1.verify.json`
+- Status: `docker_materializer_verified_promotion_blocked`
+- Source candidate / request group / candidate id counts: `232 / 50 / 43`
+- All-ready candidate rows: `232`
+- Map-pose source inventory / probe request / request-level pose graph rows: `5 / 50 / 50`
+- Pose graph proxy ready / spatial-or-loop / candidate-overlap-only rows: `50 / 46 / 4`
+- Strict edge variant / summary rows: `350 / 7`
+- Strict canonical / loop / context ready rows: `46 / 36 / 46`
+- Safe-sparse alternative rows: `300`
+- Materializer script: `runtime/h001_runtime/materialize_semantic_slam_candidate_relative_map_pose_evidence.py`
+- Docker output: `local_dataset/runs/h001_semantic_slam_candidate_relative_map_pose_evidence_v1`
+- Materialized candidate / request / alternative / failure rows: `232 / 50 / 450 / 50`
+- Candidate-relative unique-top / tie-or-saturation / single-candidate request rows: `42 / 5 / 3`
+- Candidate-overlap-only request rows: `4`
+- Action forbidden key count: `0`
+- Terminal / candidate commit / candidate rejection rows: `0 / 0 / 0`
+- Materializer gate passed: `true`
+- Promotion gate after materialization passed: `false`
+- Primary blocker: `task_side_proxy_not_joined_for_terminal_utility`
+- Terminal commit allowed: `false`
+- Candidate rejection allowed: `false`
+- Formula revision allowed: `false`
+- `uses_gt_for_action`: `false`
+- Paper claim allowed: `false`
+- Next contract target: task-side proxy join for candidate-relative map/pose evidence before terminal utility
+
+### 에이전트 추론
+
+The materializer is now implemented and passes the nonterminal evidence gate without action leakage. The result shows candidate-relative contrast exists in the current map/pose rows, but this is still not terminal utility because no task-side proxy has been joined to the relative evidence. The next contract should join frozen evidence rows to evaluation-only task proxies without allowing labels, semantic rank, detector score, source-top, or local-context fallback as action evidence.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer. A later promotion requires a task-side proxy join that tests the materialized candidate-relative evidence against wrong-goal/no-valid risk after action rows are frozen.
+
+## SemanticSLAM Candidate-Relative Task Proxy Join
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Contract: `manifests/h001_semantic_slam_candidate_relative_task_proxy_join_v1.json`
+- Verify: `manifests/h001_semantic_slam_candidate_relative_task_proxy_join_v1.verify.json`
+- Script: `runtime/h001_runtime/materialize_semantic_slam_candidate_relative_task_proxy_join.py`
+- Output: `local_dataset/runs/h001_semantic_slam_candidate_relative_task_proxy_join_v1`
+- Status: `docker_materializer_verified_promotion_blocked`
+- Source candidate-relative candidate / request / alternative / failure rows: `232 / 50 / 450 / 50`
+- Output candidate / request / alternative / baseline / failure rows: `232 / 50 / 450 / 150 / 50`
+- Task label request / candidate rows: `21 / 113`
+- Source-row request / candidate label missing rows: `0 / 0`
+- Source candidate label correct / wrong / no-valid rows: `84 / 148 / 24`
+- Top map-pose candidate correct / wrong / no-valid request rows: `29 / 21 / 4`
+- Candidate-relative unique-top correct / wrong / no-valid request rows: `23 / 19 / 4`
+- Candidate task-proxy policy rows: `150`
+- Task proxy join gate passed: `true`
+- Promotion gate after join passed: `false`
+- Primary blocker: `candidate_relative_top_rule_wrong_goal_risk`
+- Terminal commit allowed: `false`
+- Candidate rejection allowed: `false`
+- Formula revision allowed: `false`
+- `uses_gt_for_action`: `false`
+- `uses_gt_for_analysis`: `true`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The Docker materializer verifies full evaluation-only label coverage and materializes the risk as row-level failure taxonomy. A direct top-map-pose or unique-top candidate-relative rule would still include wrong-goal and no-valid cases. The current path should be closed or revised before any `SLAMOnlyRich_current` formula change.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this artifact.
+
+## SemanticSLAM Candidate-Relative Path Closure
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Contract: `manifests/h001_semantic_slam_candidate_relative_path_closure_v1.json`
+- Verify: `manifests/h001_semantic_slam_candidate_relative_path_closure_v1.verify.json`
+- Status: `static_closure_verified`
+- Closed path: `candidate_relative_map_pose_top_rule_as_terminal_selector`
+- Closed status: `closed_as_non_promotable_under_task_proxy_join`
+- Source candidate / request / alternative / baseline / failure rows: `232 / 50 / 450 / 150 / 50`
+- Source-row request / candidate label missing rows: `0 / 0`
+- Top map-pose candidate correct / wrong / no-valid rows: `29 / 21 / 4`
+- Candidate-relative unique-top correct / wrong / no-valid rows: `23 / 19 / 4`
+- Candidate-relative tie-or-saturation rows: `5`
+- Single-candidate geometry-only rows: `3`
+- Candidate-overlap-only request rows: `4`
+- Primary blocker: `candidate_relative_top_rule_wrong_goal_risk`
+- Active-observation revision requirements defined: `true`
+- Formula revision allowed: `false`
+- Terminal utility validation allowed: `false`
+- `first_eval` rerun allowed: `false`
+- Policy-scale comparison allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+The candidate-relative path should not be revised into a terminal selector. The useful signal is that map/pose contrast exposes uncertainty and rival ambiguity. The follow-up active-observation utility contract below freezes observe/defer priority as the next method step and keeps task proxies after action rows are frozen.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this closure.
+
+## SemanticSLAM Candidate-Relative Active-Observation Utility Contract
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Contract: `manifests/h001_semantic_slam_candidate_relative_active_observation_utility_v1.json`
+- Verify: `manifests/h001_semantic_slam_candidate_relative_active_observation_utility_v1.verify.json`
+- Status: `static_contract_verified`
+- Source closure: `manifests/h001_semantic_slam_candidate_relative_path_closure_v1.json`
+- Source request / candidate / alternative / baseline / failure rows: `50 / 232 / 450 / 150 / 50`
+- Top map-pose correct / wrong / no-valid rows: `29 / 21 / 4`
+- Candidate-relative unique-top correct / wrong / no-valid rows: `23 / 19 / 4`
+- Allowed action outputs: `observe_candidate`, `observe_candidate_pair`, `observe_request_context`, `defer_observation`, `audit_only`
+- Required next output root: `local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1`
+- Required next script: `runtime/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_utility.py`
+- Terminal commit allowed: `false`
+- Candidate commit / rejection allowed: `false / false`
+- Formula revision allowed: `false`
+- `first_eval` rerun allowed: `false`
+- Policy-scale comparison allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract freezes the method-direction shift forced by the task proxy join. Candidate-relative map/pose contrast can rank what to observe next, but cannot act as ObjectNav goal-validity authority. The Docker materializer below consumes this contract and preserves action/evaluation separation.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this contract. A later claim requires Docker materialization, post-action task proxy join, and held-out or fresh validation.
+
+## SemanticSLAM Candidate-Relative Active-Observation Utility Materializer
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Script: `runtime/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_utility.py`
+- Verify: `manifests/h001_semantic_slam_candidate_relative_active_observation_utility_v1.verify.json`
+- Docker output: `local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1`
+- Status: `docker_materializer_verified_promotion_blocked`
+- Output priority / request / alternative / failure rows: `232 / 50 / 300 / 50`
+- Request action counts: `observe_request_context 21`, `observe_candidate_pair 26`, `observe_candidate 3`
+- Candidate action counts: `observe_request_context 113`, `observe_candidate_pair 52`, `observe_candidate 19`, `audit_only 48`
+- Terminal commit / candidate commit / candidate rejection rows: `0 / 0 / 0`
+- `uses_gt_for_action` true rows: `0`
+- Action forbidden key count: `0`
+- Active-observation materializer gate passed: `true`
+- Promotion gate after materialization passed: `false`
+- Primary blocker: `task_proxy_join_after_active_observation_action_freeze_required`
+- Next contract target: active-observation task-proxy join after action rows are frozen
+
+### 에이전트 추론
+
+The materializer converts the closed top-rule failure into nonterminal observation pressure. It does not solve goal validity. The next falsifiable step is to join these frozen observation actions to task proxies and test whether the proposed active-observation priorities explain wrong-goal/no-valid risk without using labels to choose the action.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer.
+
+## SemanticSLAM Candidate-Relative Active-Observation Task-Proxy Join Contract
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Contract: `manifests/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1.json`
+- Verify: `manifests/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1.verify.json`
+- Status: `static_contract_verified`
+- Source active-observation priority / request / alternative / failure rows: `232 / 50 / 300 / 50`
+- Selected candidate eval rows: `97`
+- Alternative rows with audit-selected candidate: `100`
+- Selected request action counts: `observe_request_context 21`, `observe_candidate_pair 26`, `observe_candidate 3`
+- Task label request / candidate rows: `21 / 113`
+- Candidate task-proxy policy rows: `150`
+- Required next script: `runtime/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_task_proxy_join.py`
+- Required next output root: `local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1`
+- Terminal commit allowed: `false`
+- Candidate commit / rejection allowed: `false / false`
+- Label-tuned action revision allowed: `false`
+- Formula revision allowed: `false`
+- `first_eval` rerun allowed: `false`
+- Policy-scale comparison allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract makes the next join a measurement step only. The selected observation actions and candidate sets are frozen before labels are joined. The implementation should measure request-level and selected-candidate risk, but it must not change observation actions, create terminal utility, reject candidates, or tune thresholds from the joined labels.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this contract.
+
+## SemanticSLAM Candidate-Relative Active-Observation Task-Proxy Join Materializer
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Script: `runtime/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_task_proxy_join.py`
+- Verify: `manifests/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1.verify.json`
+- Docker output: `local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1`
+- Status: `active_observation_task_proxy_join_gate_passed_promotion_blocked`
+- Output priority / selected candidate / request / alternative / baseline / failure rows: `232 / 97 / 50 / 300 / 150 / 50`
+- Request label missing rows: `0`
+- Priority candidate label missing rows: `0`
+- Selected candidate label missing rows: `0`
+- Alternative audit-selected candidate rows / missing labels: `100 / 0`
+- Selected candidate labels: correct `43`, wrong `54`, no-valid pool `8`
+- Request action risk counts: `observe_candidate` selected correct/wrong `2/1`; `observe_candidate_pair` selected correct/wrong `22/30`; `observe_request_context` selected correct/wrong/no-valid request pools `19/23/4`
+- Baseline context rows: `NoReobserveReference 50`, `SemanticOnly 50`, `SLAMOnlyRich_current 50`
+- Baseline wrong-goal proxy rows: `NoReobserveReference 21`, `SemanticOnly 21`, `SLAMOnlyRich_current 1`
+- Terminal commit / candidate commit / candidate rejection rows: `0 / 0 / 0`
+- `uses_gt_for_action` true rows: `0`
+- Action forbidden key count on frozen active-observation input rows: `0`
+- Active-observation task-proxy join gate passed: `true`
+- Promotion gate after join passed: `false`
+- Primary blocker: `active_observation_task_proxy_join_is_evaluation_only`
+- Next target: analyze active-observation task-proxy join result before terminal utility
+
+### 에이전트 추론
+
+The join validates measurement coverage after action freeze and shows that selected observation targets are strongly enriched for wrong/no-valid risk. However, this is still an evaluation-only diagnosis. A terminal utility contract should not be defined until a label-free decision rule is shown to convert this risk profile into a promotable action without using joined labels.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer.
+
+## SemanticSLAM Active-Observation Risk Analysis
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Script: `runtime/h001_runtime/analyze_semantic_slam_active_observation_risk.py`
+- Verify: `manifests/h001_semantic_slam_active_observation_risk_analysis_v1.verify.json`
+- Docker output: `local_dataset/runs/h001_semantic_slam_active_observation_risk_analysis_v1`
+- Status: `risk_analysis_gate_passed_terminal_utility_blocked`
+- Output request / candidate / rule audit rows: `50 / 232 / 6`
+- Selected request status counts: all-correct `11`, mixed-correct-wrong `23`, all-wrong `12`, no-valid pool `4`
+- Selected candidate clean-correct / wrong-or-no-valid rows: `43 / 54`
+- Utility score `AUROC` for wrong/no-valid risk over priority candidates: `0.5117`
+- `top_observation_utility_if_misused_as_terminal`: success / wrong / no-valid `16 / 30 / 4`
+- `top_selected_observation_utility_if_misused_as_terminal`: success / wrong / no-valid `19 / 27 / 4`
+- `defer_all_after_risk_detection`: success / wrong / no-valid `0 / 0 / 0`
+- Risk analysis gate passed: `true`
+- Terminal utility contract allowed: `false`
+- Primary blocker: `top_observation_utility_terminal_shortcut_unsafe`
+- Next target: active-observation post-update evaluation join contract
+
+### 에이전트 추론
+
+The active-observation utility is a risk-acquisition signal, not a terminal goal selector. The selected candidates are enriched for ambiguous/wrong risk, and the top utility shortcut is unsafe if interpreted as a commit policy. The post-observation update contract below now defines how label-free evidence may change candidate state before any terminal utility is reconsidered.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this analysis.
+
+## SemanticSLAM Active-Observation Post-Observation Evidence Update Contract
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Contract: `manifests/h001_semantic_slam_active_observation_post_update_v1.json`
+- Verify: `manifests/h001_semantic_slam_active_observation_post_update_v1.verify.json`
+- Status: `static_contract_verified_implementation_pending`
+- Source risk request / candidate / rule audit rows: `50 / 232 / 6`
+- Frozen selected candidate rows: `97`
+- Selected request status counts: all-correct `11`, mixed-correct-wrong `23`, all-wrong `12`, no-valid pool `4`
+- Selected candidate clean-correct / wrong-or-no-valid rows: `43 / 54`
+- Required post-update request / selected-candidate / candidate-state rows: `50 / 97 / 232`
+- Required rule audit rows: at least `6`
+- Terminal commit / candidate commit / candidate rejection allowed: `0 / 0 / 0`
+- Label join allowed only after post-update row freeze: `true`
+- Required next script: `runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update.py`
+- Required next output: `local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1`
+- Formula revision allowed: `false`
+- `first_eval` rerun allowed: `false`
+- Policy-scale comparison allowed: `false`
+- Paper claim allowed: `false`
+
+### 에이전트 추론
+
+This contract converts the risk-analysis result into a method step: `observe_candidate`, `observe_candidate_pair`, and `observe_request_context` may update label-free evidence state, but cannot decide goal validity. A valid implementation must produce `pre_observation_state`, `observation_evidence`, `post_observation_state`, and `evidence_delta` without using correctness labels, wrong-goal proxies, or oracle fields as action/update inputs.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this contract. A later claim requires Docker materialization, post-update evaluation join, and held-out or fresh validation.
+
+## SemanticSLAM Active-Observation Post-Observation Evidence Update Materializer
+
+### 사실
+
+- Date checked: `2026-06-06`
+- Script: `runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update.py`
+- Verify: `manifests/h001_semantic_slam_active_observation_post_update_v1.verify.json`
+- Docker output: `local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1`
+- Status: `post_update_materializer_gate_passed_promotion_blocked`
+- Output request / selected candidate / candidate state / rule audit / failure rows: `50 / 97 / 232 / 6 / 50`
+- Selected candidate evidence delta rows: `97`
+- Candidate-state evidence delta rows: `97`
+- Request post-update states: `ambiguity_reduced 26`, `needs_goal_validity_confirmation 21`, `support_acquired 3`
+- Selected candidate post states: `ambiguity_reduced 52`, `needs_goal_validity_confirmation 42`, `support_acquired 3`
+- Terminal commit / candidate commit / candidate rejection rows: `0 / 0 / 0`
+- `uses_gt_for_action` true rows: `0`
+- Action forbidden key count: `0`
+- Post-update materializer gate passed: `true`
+- Promotion gate after post-update passed: `false`
+- Primary blocker: `post_update_label_join_and_goal_validity_arbitration_required`
+- Next target: post-update evaluation join contract
+
+### 에이전트 추론
+
+The materializer makes the method state transition explicit: active observation updates evidence state but still does not decide ObjectNav goal validity. The next measurement step should join evaluation labels only after these update rows are frozen, then test whether post-update states can support any non-GT arbitration rule without converting support acquisition or missing support into a shortcut.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer.
 
 ## User Decision Needed
 

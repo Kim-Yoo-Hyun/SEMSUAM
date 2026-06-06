@@ -8747,6 +8747,72 @@ docker run --rm --ipc=host -v "$PWD":/workspace -w /workspace -e PYTHONPATH=/wor
 
 논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer.
 
+### Semantic-SLAM Candidate Task Proxy Join
+
+사실:
+
+```text
+date_checked: 2026-06-06
+script: runtime/h001_runtime/materialize_semantic_slam_candidate_task_proxy_join.py
+contract: manifests/h001_semantic_slam_candidate_task_proxy_join_v1.json
+verify: manifests/h001_semantic_slam_candidate_task_proxy_join_v1.verify.json
+output: local_dataset/runs/h001_semantic_slam_candidate_task_proxy_join_v1
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+docker_compile_run_verify: passed
+policy_rows: 150
+failure_rows: 100
+decision_evaluable_rows: 150
+commit_evaluable_rows: 93
+selector_missing_rows: 0
+NoReobserveReference terminal/success/wrong: 49 / 28 / 21
+SemanticOnly terminal/success/wrong: 41 / 20 / 21
+SLAMOnlyRich_current terminal/success/wrong/defer/map-task-alignment: 3 / 2 / 1 / 47 / 2
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+task_proxy_join_gate_passed: true
+formula_revision_unlock_gate_passed: false
+primary_blocker: slam_only_terminal_commits_too_sparse
+paper_claim_allowed: false
+```
+
+에이전트 추론: The task proxy join resolves the measurement plumbing blocker, but it does not make `SLAMOnlyRich_current` useful. The branch is still sparse and cannot support formula revision or Step 4-5 promotion.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this join.
+
+### Semantic-SLAM Safe-But-Sparse Selector Diagnostic
+
+사실:
+
+```text
+date_checked: 2026-06-06
+script: runtime/h001_runtime/diagnose_semantic_slam_safe_sparse_selector.py
+contract: manifests/h001_semantic_slam_safe_sparse_selector_diagnostic_v1.json
+verify: manifests/h001_semantic_slam_safe_sparse_selector_diagnostic_v1.verify.json
+output: local_dataset/runs/h001_semantic_slam_safe_sparse_selector_diagnostic_v1
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+docker_compile_run_verify: passed
+request_rows: 50
+alternative_rows: 300
+candidate_rows: 232
+source_request_rows: 50
+current_unique_ready commit/success/wrong/defer: 3 / 2 / 1 / 47
+top_map_pose_tuple commit/success/wrong/no-valid: 50 / 29 / 21 / 4
+top_projection_visible_heading commit/success/wrong/no-valid: 50 / 29 / 21 / 4
+all_candidates_ready_rows: 50
+multi_candidate_all_ready_rows: 47
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+diagnostic_gate_passed: true
+candidate_separability_gate_passed: false
+primary_blocker: label_free_geometry_alternatives_reintroduce_wrong_goal_risk
+revised_slam_formula_allowed: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: Geometry-only map/pose evidence should be closed as non-promotable under current evidence. The simple label-free alternatives can increase commits, but they recreate wrong-goal and no-valid failures. A future candidate-relative map/pose evidence contract must separate same-category rivals before any `SLAMOnlyRich_current` formula revision.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this diagnostic.
+
 ### Semantic-SLAM Candidate Map-Pose Selector Contract
 
 사실:
@@ -8822,3 +8888,444 @@ docker run --rm --ipc=host -v "$PWD":/workspace -w /workspace -e PYTHONPATH=/wor
 에이전트 추론: The materializer removes the selector-missing blocker but reveals a stronger ambiguity blocker: all candidates are geometry-ready, so `47/50` request rows must defer rather than choose by a map-pose score. The next action is task proxy join, not formula revision.
 
 논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer.
+
+### Semantic-SLAM Geometry-Only Closure And Candidate-Relative Requirements
+
+사실:
+
+```text
+date_checked: 2026-06-06
+contract: manifests/h001_semantic_slam_geometry_only_closure_v1.json
+verify: manifests/h001_semantic_slam_geometry_only_closure_v1.verify.json
+status: frozen_non_promotable_decision_and_requirement_contract
+source diagnostic: manifests/h001_semantic_slam_safe_sparse_selector_diagnostic_v1.verify.json
+source_request_rows: 50
+candidate_rows: 232
+all_candidates_ready_rows: 50
+multi_candidate_all_ready_rows: 47
+current_unique_ready commit/success/wrong/defer: 3 / 2 / 1 / 47
+top_map_pose_tuple commit/success/wrong/no-valid: 50 / 29 / 21 / 4
+top_projection_visible_heading commit/success/wrong/no-valid: 50 / 29 / 21 / 4
+action_evidence_forbidden_key_count: 0
+uses_gt_for_action: false
+closed_path: geometry_only_SLAMOnlyRich_current_selector
+closed_status: closed_as_non_promotable_under_current_evidence
+candidate_relative_requirements_defined: true
+revised_slam_formula_allowed: false
+terminal_utility_validation_allowed: false
+first_eval_rerun_allowed: false
+policy_scale_comparison_allowed: false
+paper_claim_allowed: false
+next_task: freeze_candidate_relative_semantic_slam_map_pose_evidence_contract
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_geometry_only_closure_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_geometry_only_closure_v1.verify.json
+```
+
+에이전트 추론: The current geometry-only path is now closed as non-promotable. The required next evidence is not another score weight or tie-break rule, but candidate-relative map/pose contrast that separates same-category rivals without semantic rank, detector-score, source-top, local-context, oracle, or label fallback. The first candidate-relative contract must define map/pose-native relative metrics, simpler alternatives, no-valid guarding, and a task/map-side join before any formula revision.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this closure.
+
+### Semantic-SLAM Candidate-Relative Active-Observation Utility Contract
+
+사실:
+
+```text
+date_checked: 2026-06-06
+contract: manifests/h001_semantic_slam_candidate_relative_active_observation_utility_v1.json
+verify: manifests/h001_semantic_slam_candidate_relative_active_observation_utility_v1.verify.json
+status: static_contract_verified
+source closure: manifests/h001_semantic_slam_candidate_relative_path_closure_v1.json
+source candidate/request/alternative/baseline/failure rows: 232 / 50 / 450 / 150 / 50
+top map-pose correct/wrong/no-valid rows: 29 / 21 / 4
+candidate-relative unique-top correct/wrong/no-valid rows: 23 / 19 / 4
+allowed actions: observe_candidate, observe_candidate_pair, observe_request_context, defer_observation, audit_only
+implementation script: runtime/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_utility.py
+implementation output: local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1
+terminal/candidate commit/candidate rejection rows allowed: 0 / 0 / 0
+uses_gt_for_action: false
+formula_revision_allowed: false
+terminal_utility_validation_allowed: false
+first_eval_rerun_allowed: false
+policy_scale_comparison_allowed: false
+paper_claim_allowed: false
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_active_observation_utility_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_active_observation_utility_v1.verify.json
+jq '.status, .contract_scope.implementation_allowed_next, .action_space.allowed_actions, .contract_gates' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_active_observation_utility_v1.json
+```
+
+에이전트 추론: The contract converts the unsafe candidate-relative top-rule path into an observe/defer utility requirement. The Docker materializer below now produces action-time observation priority rows without using task labels, semantic rank fallback, detector-score fallback, source-top fallback, local-context fallback, oracle fields, terminal commits, or candidate rejection.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this contract.
+
+### Semantic-SLAM Candidate-Relative Active-Observation Utility Materializer
+
+사실:
+
+```text
+date_checked: 2026-06-06
+script: runtime/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_utility.py
+verify: manifests/h001_semantic_slam_candidate_relative_active_observation_utility_v1.verify.json
+status: docker_materializer_verified_promotion_blocked
+output: local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1
+priority/request/alternative/failure rows: 232 / 50 / 300 / 50
+request action counts: observe_request_context 21, observe_candidate_pair 26, observe_candidate 3
+candidate action counts: observe_request_context 113, observe_candidate_pair 52, observe_candidate 19, audit_only 48
+terminal/candidate commit/candidate rejection rows: 0 / 0 / 0
+uses_gt_for_action true rows: 0
+action_forbidden_key_count: 0
+active_observation_materializer_gate_passed: true
+promotion_gate_after_materialization_passed: false
+primary_blocker: task_proxy_join_after_active_observation_action_freeze_required
+next_task: freeze_active_observation_task_proxy_join_contract
+```
+
+Docker verification:
+
+```bash
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_utility.py
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_semantic_slam_candidate_relative_active_observation_utility
+jq '{status, actual_counts, active_observation_materializer_gate_passed, promotion_gate_after_materialization_passed, primary_blocker, next_task}' local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_utility_summary.json
+```
+
+에이전트 추론: The materializer turns candidate-relative map/pose contrast into nonterminal observation pressure. It preserves the failure-derived method direction but still needs a post-action task-proxy join before terminal utility, formula revision, or paper claims.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer.
+
+### Semantic-SLAM Candidate-Relative Active-Observation Task-Proxy Join Contract
+
+사실:
+
+```text
+date_checked: 2026-06-06
+contract: manifests/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1.json
+verify: manifests/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1.verify.json
+status: static_contract_verified
+source active-observation priority/request/alternative/failure rows: 232 / 50 / 300 / 50
+selected candidate eval rows: 97
+alternative audit-selected candidate rows: 100
+selected action counts: observe_request_context 21, observe_candidate_pair 26, observe_candidate 3
+task label request/candidate rows: 21 / 113
+candidate task-proxy policy rows: 150
+required next script: runtime/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_task_proxy_join.py
+required next output: local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1
+terminal/candidate commit/candidate rejection rows allowed: 0 / 0 / 0
+uses_gt_for_action: false
+formula_revision_allowed: false
+terminal_utility_validation_allowed: false
+first_eval_rerun_allowed: false
+policy_scale_comparison_allowed: false
+paper_claim_allowed: false
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1.verify.json
+jq '.source_gate, .contract_scope, .required_outputs, .contract_gates' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1.json
+```
+
+에이전트 추론: This contract freezes the post-action evaluation join. The next Docker materializer should join labels/proxies only after the active-observation rows are frozen and should report selected-candidate/request risk without changing the action.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this contract.
+
+### Semantic-SLAM Candidate-Relative Active-Observation Task-Proxy Join Materializer
+
+사실:
+
+```text
+date_checked: 2026-06-06
+contract: manifests/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1.json
+verify: manifests/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1.verify.json
+status: active_observation_task_proxy_join_gate_passed_promotion_blocked
+stage: P4-design
+script: runtime/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_task_proxy_join.py
+output: local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1
+priority/selected/request/alternative/baseline/failure rows: 232 / 97 / 50 / 300 / 150 / 50
+request label missing rows: 0
+priority candidate label missing rows: 0
+selected candidate label missing rows: 0
+alternative audit-selected candidate rows / missing labels: 100 / 0
+selected candidate labels correct/wrong/no-valid: 43 / 54 / 8
+request action counts: observe_request_context 21, observe_candidate_pair 26, observe_candidate 3
+baseline rows: NoReobserveReference 50, SemanticOnly 50, SLAMOnlyRich_current 50
+baseline wrong-goal proxy rows: NoReobserveReference 21, SemanticOnly 21, SLAMOnlyRich_current 1
+terminal/candidate commit/candidate rejection rows: 0 / 0 / 0
+uses_gt_for_action true rows: 0
+action_evidence_forbidden_key_count: 0
+active_observation_task_proxy_join_gate_passed: true
+promotion_gate_after_join_passed: false
+primary_blocker: active_observation_task_proxy_join_is_evaluation_only
+next_task: analyze_active_observation_task_proxy_join_before_terminal_utility
+```
+
+Docker verification:
+
+```bash
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_task_proxy_join.py
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_semantic_slam_candidate_relative_active_observation_task_proxy_join
+jq '{status, active_observation_task_proxy_join_gate_passed, promotion_gate_after_join_passed, primary_blocker, actual_counts, selected_candidate_label_totals, request_action_label_counts, next_task}' local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1/semantic_slam_candidate_relative_active_observation_task_proxy_summary.json
+wc -l local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1/*.jsonl
+```
+
+에이전트 추론: The join validates that the active-observation utility is measuring real wrong/no-valid risk after action freeze, not using labels to choose the observation action. The result is not a terminal utility yet; it should be analyzed for a label-free decision rule before any formula revision, `first_eval`, policy-scale comparison, or Step 4-5 promotion.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer.
+
+### Semantic-SLAM Active-Observation Risk Analysis
+
+사실:
+
+```text
+date_checked: 2026-06-06
+verify: manifests/h001_semantic_slam_active_observation_risk_analysis_v1.verify.json
+status: risk_analysis_gate_passed_terminal_utility_blocked
+stage: P4-design
+script: runtime/h001_runtime/analyze_semantic_slam_active_observation_risk.py
+input: local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1
+output: local_dataset/runs/h001_semantic_slam_active_observation_risk_analysis_v1
+request/candidate/rule audit rows: 50 / 232 / 6
+selected request statuses all-correct/mixed/all-wrong/no-valid: 11 / 23 / 12 / 4
+selected candidate clean-correct/wrong-or-no-valid rows: 43 / 54
+utility_score_risk_auc: 0.5117
+top_observation_utility_if_terminal success/wrong/no-valid: 16 / 30 / 4
+top_selected_utility_if_terminal success/wrong/no-valid: 19 / 27 / 4
+risk_analysis_gate_passed: true
+terminal_utility_contract_allowed: false
+primary_blocker: top_observation_utility_terminal_shortcut_unsafe
+next_task: implement_Docker_active_observation_post_update_materializer
+```
+
+Docker verification:
+
+```bash
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/analyze_semantic_slam_active_observation_risk.py
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.analyze_semantic_slam_active_observation_risk
+jq '{status, risk_analysis_gate_passed, terminal_utility_contract_allowed, primary_blocker, request_risk_profile, terminal_shortcut_audit, next_task}' local_dataset/runs/h001_semantic_slam_active_observation_risk_analysis_v1/active_observation_risk_analysis_summary.json
+```
+
+에이전트 추론: The analysis rejects the easiest terminal shortcut. Active-observation utility should now become evidence acquisition and post-observation state update, not a direct commit utility. The post-update contract below freezes that next step.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this analysis.
+
+### Semantic-SLAM Active-Observation Post-Observation Evidence Update Contract
+
+사실:
+
+```text
+date_checked: 2026-06-06
+contract: manifests/h001_semantic_slam_active_observation_post_update_v1.json
+verify: manifests/h001_semantic_slam_active_observation_post_update_v1.verify.json
+status: static_contract_verified_implementation_pending
+source risk request/candidate/rule audit rows: 50 / 232 / 6
+frozen selected candidate rows: 97
+selected request status all-correct/mixed/all-wrong/no-valid: 11 / 23 / 12 / 4
+selected candidate clean-correct/wrong-or-no-valid rows: 43 / 54
+terminal shortcut audits success/wrong/no-valid: 16 / 30 / 4 and 19 / 27 / 4
+required output request/selected-candidate/candidate-state rows: 50 / 97 / 232
+required rule audit rows: >=6
+terminal/candidate commit/candidate rejection rows allowed: 0 / 0 / 0
+label join allowed only after post-update freeze: true
+implementation target: runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update.py
+implementation output: local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1
+formula_revision_allowed: false
+terminal_utility_validation_allowed: false
+first_eval_rerun_allowed: false
+policy_scale_comparison_allowed: false
+paper_claim_allowed: false
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_v1.verify.json
+jq '{status, contract_name, source_gate: .source_gate.primary_blocker, gates: .contract_gates, next_task: .next_research_task.task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_v1.json
+```
+
+에이전트 추론: The contract changes the method question from "does observation utility select the goal?" to "does active observation create a label-free evidence delta that can later support a separate goal-validity rule?" This is the safer top-tier path because it preserves action/evaluation separation and prevents support acquisition, missing support, detector score, or semantic rank from becoming a shortcut commit.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this contract.
+
+### Semantic-SLAM Active-Observation Post-Observation Evidence Update Materializer
+
+사실:
+
+```text
+date_checked: 2026-06-06
+script: runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update.py
+verify: manifests/h001_semantic_slam_active_observation_post_update_v1.verify.json
+status: post_update_materializer_gate_passed_promotion_blocked
+stage: P4-design
+output: local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1
+request/selected-candidate/candidate-state/rule-audit/failure rows: 50 / 97 / 232 / 6 / 50
+selected candidate evidence delta rows: 97
+candidate-state evidence delta rows: 97
+request post-update states: ambiguity_reduced 26, needs_goal_validity_confirmation 21, support_acquired 3
+selected candidate post states: ambiguity_reduced 52, needs_goal_validity_confirmation 42, support_acquired 3
+terminal/candidate commit/candidate rejection rows: 0 / 0 / 0
+uses_gt_for_action true rows: 0
+paper_claim_allowed true rows: 0
+action_evidence_forbidden_key_count: 0
+post_update_materializer_gate_passed: true
+promotion_gate_after_post_update_passed: false
+primary_blocker: post_update_label_join_and_goal_validity_arbitration_required
+next_task: freeze_active_observation_post_update_evaluation_join_contract
+```
+
+Docker verification:
+
+```bash
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update.py
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_semantic_slam_active_observation_post_update
+jq '{status, actual_counts, request_post_update_state_counts, selected_candidate_post_state_counts, post_update_materializer_gate_passed, promotion_gate_after_post_update_passed, primary_blocker, next_task}' local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1/active_observation_post_update_summary.json
+wc -l local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1/*.jsonl
+```
+
+에이전트 추론: The materializer turns frozen observation actions into explicit label-free evidence state deltas. It remains nonterminal: `support_acquired`, `ambiguity_reduced`, and `needs_goal_validity_confirmation` are evidence states, not ObjectNav goal validity. The next contract should join labels only after these update rows are frozen and should test post-update states as evaluation-only diagnostics before any arbitration or terminal utility rule.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer.
+
+### Semantic-SLAM Candidate-Relative Map/Pose Evidence Materializer
+
+사실:
+
+```text
+date_checked: 2026-06-06
+contract: manifests/h001_semantic_slam_candidate_relative_map_pose_evidence_v1.json
+verify: manifests/h001_semantic_slam_candidate_relative_map_pose_evidence_v1.verify.json
+status: docker_materializer_verified_promotion_blocked
+stage: P4-design
+source candidate rows: 232
+source candidate request groups: 50
+source candidate ids: 43
+all-ready candidate rows: 232
+map-pose source inventory / probe request / request-level pose graph rows: 5 / 50 / 50
+pose graph proxy ready / spatial-or-loop / candidate-overlap-only rows: 50 / 46 / 4
+strict edge variant / summary rows: 350 / 7
+strict canonical / loop / context ready rows: 46 / 36 / 46
+safe-sparse alternative rows: 300
+terminal_commit_allowed: false
+candidate_rejection_allowed: false
+formula_revision_allowed: false
+uses_gt_for_action: false
+paper_claim_allowed: false
+script: runtime/h001_runtime/materialize_semantic_slam_candidate_relative_map_pose_evidence.py
+output: local_dataset/runs/h001_semantic_slam_candidate_relative_map_pose_evidence_v1
+candidate/request/alternative/failure rows: 232 / 50 / 450 / 50
+candidate-relative unique-top/tie/single request rows: 42 / 5 / 3
+candidate-overlap-only request rows: 4
+action_evidence_forbidden_key_count: 0
+terminal/candidate commit/candidate rejection rows: 0 / 0 / 0
+materializer_gate_passed: true
+promotion_gate_after_materialization_passed: false
+primary_blocker: task_side_proxy_not_joined_for_terminal_utility
+next_task: freeze_task_side_proxy_join_contract_for_candidate_relative_evidence
+```
+
+Docker verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_map_pose_evidence_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_map_pose_evidence_v1.verify.json
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_semantic_slam_candidate_relative_map_pose_evidence.py
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_semantic_slam_candidate_relative_map_pose_evidence
+```
+
+에이전트 추론: The materializer shows label-free candidate-relative map/pose contrast exists, but it remains measurement evidence only. Promotion is blocked because the relative rows need a wrong-goal/no-valid task-side proxy join before any terminal utility or `SLAMOnlyRich_current` formula revision.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer. The follow-up task-side proxy join contract is now frozen, and Docker implementation is required before further claims.
+
+### Semantic-SLAM Candidate-Relative Task Proxy Join Contract
+
+사실:
+
+```text
+date_checked: 2026-06-06
+contract: manifests/h001_semantic_slam_candidate_relative_task_proxy_join_v1.json
+verify: manifests/h001_semantic_slam_candidate_relative_task_proxy_join_v1.verify.json
+status: docker_materializer_verified_promotion_blocked
+stage: P4-design
+candidate_relative candidate/request/alternative/failure rows: 232 / 50 / 450 / 50
+output candidate/request/alternative/baseline/failure rows: 232 / 50 / 450 / 150 / 50
+task label request/candidate rows: 21 / 113
+source-row request/candidate label missing rows: 0 / 0
+source candidate label correct/wrong/no-valid rows: 84 / 148 / 24
+top map-pose candidate correct/wrong/no-valid request rows: 29 / 21 / 4
+candidate-relative unique-top correct/wrong/no-valid rows: 23 / 19 / 4
+candidate task-proxy policy rows: 150
+task_proxy_join_gate_passed: true
+promotion_gate_after_join_passed: false
+primary_blocker: candidate_relative_top_rule_wrong_goal_risk
+terminal_commit_allowed: false
+candidate_rejection_allowed: false
+formula_revision_allowed: false
+uses_gt_for_action: false
+uses_gt_for_analysis: true
+paper_claim_allowed: false
+script: runtime/h001_runtime/materialize_semantic_slam_candidate_relative_task_proxy_join.py
+output: local_dataset/runs/h001_semantic_slam_candidate_relative_task_proxy_join_v1
+```
+
+Docker verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_task_proxy_join_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_task_proxy_join_v1.verify.json
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_semantic_slam_candidate_relative_task_proxy_join.py
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_semantic_slam_candidate_relative_task_proxy_join
+wc -l local_dataset/runs/h001_semantic_slam_candidate_relative_task_proxy_join_v1/semantic_slam_candidate_relative_task_proxy_candidate_rows.jsonl local_dataset/runs/h001_semantic_slam_candidate_relative_task_proxy_join_v1/semantic_slam_candidate_relative_task_proxy_request_rows.jsonl local_dataset/runs/h001_semantic_slam_candidate_relative_task_proxy_join_v1/semantic_slam_candidate_relative_task_proxy_alternative_rows.jsonl local_dataset/runs/h001_semantic_slam_candidate_relative_task_proxy_join_v1/semantic_slam_candidate_relative_task_proxy_baseline_policy_rows.jsonl local_dataset/runs/h001_semantic_slam_candidate_relative_task_proxy_join_v1/semantic_slam_candidate_relative_task_proxy_failure_rows.jsonl
+```
+
+에이전트 추론: The Docker join verifies complete label coverage and makes the blocker explicit. Candidate-relative unique-top rows are not safe enough for direct action because they include `19` wrong rows and `4` no-valid request rows. The next step should close or revise this path, not revise the formula from this evidence.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this artifact.
+
+### Semantic-SLAM Candidate-Relative Path Closure
+
+사실:
+
+```text
+date_checked: 2026-06-06
+contract: manifests/h001_semantic_slam_candidate_relative_path_closure_v1.json
+verify: manifests/h001_semantic_slam_candidate_relative_path_closure_v1.verify.json
+status: static_closure_verified
+closed_path: candidate_relative_map_pose_top_rule_as_terminal_selector
+closed_status: closed_as_non_promotable_under_task_proxy_join
+source candidate/request/alternative/baseline/failure rows: 232 / 50 / 450 / 150 / 50
+source-row request/candidate label missing rows: 0 / 0
+top map-pose candidate correct/wrong/no-valid rows: 29 / 21 / 4
+candidate-relative unique-top correct/wrong/no-valid rows: 23 / 19 / 4
+candidate-relative tie-or-saturation rows: 5
+single-candidate geometry-only rows: 3
+candidate-overlap-only request rows: 4
+primary_blocker: candidate_relative_top_rule_wrong_goal_risk
+active_observation_revision_requirements_defined: true
+formula_revision_allowed: false
+terminal_utility_validation_allowed: false
+first_eval_rerun_allowed: false
+policy_scale_comparison_allowed: false
+paper_claim_allowed: false
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_path_closure_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_path_closure_v1.verify.json
+jq '.status, .contract_checks.candidate_relative_top_rule_closed_as_non_promotable, .next_task' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_path_closure_v1.verify.json
+```
+
+에이전트 추론: The current candidate-relative map/pose top-rule is closed as terminal utility, but the evidence family is not discarded. The next revision must turn the signal into active observation or uncertainty diagnosis, not a direct candidate commit.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this closure.

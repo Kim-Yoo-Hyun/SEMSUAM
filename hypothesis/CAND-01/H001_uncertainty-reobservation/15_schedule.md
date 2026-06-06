@@ -12,8 +12,8 @@ H001을 6개월-1년 범위에서 first probe, Step 4-5 SLAM extension, real-wor
 - Active hypothesis: H001 `Semantic-SLAM Uncertainty Re-observation`
 - Primary benchmark path: Habitat ObjectNav with HM3D, then HM3D-OVON extension.
 - Available runtime gates: HM3D / HM3D-OVON Docker mount, `habitat-h001` smoke, logging schema, non-GT candidate adapter, `VLMaps` artifact exporter, synthetic alignment adapter.
-- Current paper-facing blocker: semantic object routes are branch-closed or terminal-blocked with promotable terminal outcome `0`, and the current `SemanticSLAM` proxy line is still `P4-design`. The safe-but-sparse selector diagnostic shows current geometry-only map/pose evidence is available but not candidate-discriminative.
-- Latest schedule gate: safe-but-sparse selector diagnostic passed, but candidate separability gate failed with primary blocker `label_free_geometry_alternatives_reintroduce_wrong_goal_risk`. Terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, and paper claims remain blocked.
+- Current paper-facing blocker: semantic object routes are branch-closed or terminal-blocked with promotable terminal outcome `0`, and the current `SemanticSLAM` proxy line is still `P4-design`. The geometry-only `SLAMOnlyRich_current` selector path is now closed as non-promotable because current map/pose evidence is available but not candidate-discriminative.
+- Latest schedule gate: `semantic_slam_active_observation_post_update_v1` is Docker-materialized after the active-observation risk analysis rejected the direct terminal shortcut. It writes label-free post-update state rows and keeps terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, and paper claims blocked until a post-update evaluation join and later non-GT goal-validity arbitration pass.
 - First-probe gate: `07_evaluation_contract.md`.
 - Real-world setup gate: `03_feasibility.md`.
 - Long-running I/O-heavy jobs must follow `AGENTS.md` background-task policy.
@@ -334,11 +334,11 @@ If GT is weak, present real-world results as qualitative or diagnostic only. Do 
 
 ## Immediate Next Task
 
-Close geometry-only `SLAMOnlyRich_current` selector path as non-promotable and define candidate-relative map/pose evidence requirements.
+Freeze active-observation post-update evaluation join contract.
 
-사실: Safe-but-sparse `SLAMOnlyRich_current` selector diagnostic is implemented at `runtime/h001_runtime/diagnose_semantic_slam_safe_sparse_selector.py`, verified through `manifests/h001_semantic_slam_safe_sparse_selector_diagnostic_v1.verify.json`, and Docker-run at `local_dataset/runs/h001_semantic_slam_safe_sparse_selector_diagnostic_v1`. It writes request/alternative rows `50/300`; current unique-ready selector commit/success/wrong/defer rows `3/2/1/47`; `top_map_pose_tuple` and `top_projection_visible_heading` commit all `50` rows but produce success/wrong/no-valid rows `29/21/4`; action forbidden key count `0`; `uses_gt_for_action false`; diagnostic gate `true`; candidate separability gate `false`.
+사실: The post-update materializer is implemented at `runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update.py`, verified through `manifests/h001_semantic_slam_active_observation_post_update_v1.verify.json`, and Docker-run at `local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1`. It writes request/selected-candidate/candidate-state/rule-audit/failure rows `50/97/232/6/50`; evidence delta rows `97/97`; request post-update states `ambiguity_reduced 26`, `needs_goal_validity_confirmation 21`, and `support_acquired 3`; terminal/candidate commit/rejection rows `0/0/0`; `uses_gt_for_action false`; and materializer gate `true`.
 
-에이전트 추론: The geometry-only path should be closed as non-promotable under the current evidence. Any next `SLAMOnlyRich_current` revision must require candidate-relative map/pose evidence that separates same-category rivals without falling back to semantic rank, detector score, source-top, local-context, or evaluation labels.
+에이전트 추론: The next contract should join evaluation labels only after post-update rows are frozen and should keep the joined labels evaluation-only. It should not revise `SLAMOnlyRich_current` formula or open terminal utility.
 
 The historical runtime notes below preserve why the active gate moved from semantic object branches to the `SemanticSLAM` task/map outcome probe.
 

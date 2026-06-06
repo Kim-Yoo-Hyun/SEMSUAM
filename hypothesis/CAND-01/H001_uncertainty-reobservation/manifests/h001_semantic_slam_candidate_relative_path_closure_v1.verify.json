@@ -1,0 +1,64 @@
+{
+  "schema_version": "h001.verify.semantic_slam_candidate_relative_path_closure.v1",
+  "date_checked": "2026-06-06",
+  "ok": true,
+  "verified_artifact": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_path_closure_v1.json",
+  "status": "static_closure_verified",
+  "source_files_checked": [
+    "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_task_proxy_join_v1.verify.json",
+    "local_dataset/runs/h001_semantic_slam_candidate_relative_task_proxy_join_v1/semantic_slam_candidate_relative_task_proxy_summary.json"
+  ],
+  "verified_counts": {
+    "candidate_rows": 232,
+    "request_rows": 50,
+    "alternative_rows": 450,
+    "baseline_policy_rows": 150,
+    "failure_taxonomy_rows": 50,
+    "source_request_label_missing_rows": 0,
+    "source_candidate_label_missing_rows": 0,
+    "source_candidate_label_correct_rows": 84,
+    "source_candidate_label_wrong_rows": 148,
+    "source_candidate_no_valid_rows": 24,
+    "top_map_pose_tuple_correct_rows": 29,
+    "top_map_pose_tuple_wrong_rows": 21,
+    "top_map_pose_tuple_no_valid_request_rows": 4,
+    "candidate_relative_unique_top_rows": 42,
+    "candidate_relative_unique_top_correct_rows": 23,
+    "candidate_relative_unique_top_wrong_rows": 19,
+    "candidate_relative_unique_top_no_valid_rows": 4,
+    "candidate_relative_tie_or_saturation_rows": 5,
+    "single_candidate_geometry_only_rows": 3,
+    "candidate_overlap_only_request_rows": 4,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "action_evidence_forbidden_key_count": 0
+  },
+  "contract_checks": {
+    "candidate_relative_evidence_materializer_gate_passed": true,
+    "candidate_relative_task_proxy_join_gate_passed": true,
+    "candidate_relative_task_proxy_promotion_gate_passed": false,
+    "candidate_relative_top_rule_closed_as_non_promotable": true,
+    "active_observation_revision_requirements_defined": true,
+    "formula_revision_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "primary_blocker": "candidate_relative_top_rule_wrong_goal_risk"
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_path_closure_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_candidate_relative_path_closure_v1.verify.json",
+    "jq '.status, .task_proxy_join_gate_passed, .promotion_gate_after_join_passed, .primary_blocker, .actual_counts' local_dataset/runs/h001_semantic_slam_candidate_relative_task_proxy_join_v1/semantic_slam_candidate_relative_task_proxy_summary.json"
+  ],
+  "interpretation": {
+    "fact": "The closure is a static decision artifact derived from Docker-verified candidate-relative task proxy join counts.",
+    "agent_inference": "The current candidate-relative top-rule path should be closed as terminal utility, but candidate-relative map/pose contrast can be revised into an active-observation utility contract.",
+    "paper_claim": "No Semantic-SLAM complementarity, ObjectNav utility, SLAM benefit, terminal utility, first_eval rerun, policy-scale comparison, or paper claim is allowed from this closure."
+  },
+  "next_task": "freeze_candidate_relative_active_observation_utility_contract"
+}
