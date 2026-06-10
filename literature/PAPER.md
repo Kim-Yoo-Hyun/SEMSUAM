@@ -1,6 +1,6 @@
 # Paper Registry
 
-Last updated: 2026-05-07
+Last updated: 2026-06-09
 
 ## Paper Registry
 
@@ -40,6 +40,12 @@ Last updated: 2026-05-07
 | P32 | `UniGoal: Towards Universal Zero-shot Goal-oriented Navigation` | 2025 | CVPR | https://openaccess.thecvf.com/content/CVPR2025/html/Yin_UniGoal_Towards_Universal_Zero-shot_Goal-oriented_Navigation_CVPR_2025_paper.html | unified scene graph and goal graph for zero-shot goal-oriented navigation | foldered |
 | P33 | `Open Scene Graphs for Open-World Object-Goal Navigation` | 2025 | IJRR | https://journals.sagepub.com/doi/10.1177/02783649251369549 | persistent Open Scene Graph memory for open-world ObjectNav | foldered |
 | P34 | `Scene Action Maps: Behavioural Maps for Navigation without Metric Information` | 2024 | ICRA | https://scene-action-maps.github.io/ | non-metric behavioural topological maps from abstract maps for navigation | foldered |
+| P35 | `VLFM: Vision-Language Frontier Maps for Zero-Shot Semantic Navigation` | 2024 | ICRA | https://arxiv.org/abs/2312.03275 | vision-language frontier baseline for zero-shot ObjectNav; important comparison for semantic utility vs uncertainty-driven re-observation | foldered |
+| P36 | `One Map to Find Them All: Real-Time Open-Vocabulary Mapping for Zero-Shot Multi-Object Navigation` | 2025 | ICRA | https://arxiv.org/abs/2409.11764 | reusable open-vocabulary map and semantic uncertainty for multi-object navigation | foldered |
+| P37 | `Understanding while Exploring: Semantics-driven Active Mapping` | 2025 | NeurIPS | https://proceedings.neurips.cc/paper_files/paper/2025/hash/2fa561fb73e30a2396c268253eeca191-Abstract-Conference.html | scene-graph active mapping with semantic and geometric uncertainty as exploration utility | foldered |
+| P38 | `Uncertainty-Informed Active Perception for Open-Vocabulary Object Goal Navigation` | 2025 | ECMR / arXiv | https://arxiv.org/abs/2506.13367 | direct close work for uncertainty-aware active perception in open-vocabulary ObjectNav | foldered |
+| P39 | `Context-Nav: Context-Driven Exploration and Viewpoint-Aware 3D Spatial Reasoning for Instance-Aware Object Navigation` | 2026 | CVPR | https://openaccess.thecvf.com/content/CVPR2026/html/Jang_Context-Nav_Context-Driven_Exploration_and_Viewpoint-Aware_3D_Spatial_Reasoning_for_Instance_CVPR_2026_paper.html | current top-tier evidence that ObjectNav needs goal-validity / instance ambiguity reasoning beyond object detection | foldered |
+| P40 | `HM3D-OVON: A Dataset and Benchmark for Open-Vocabulary Object Goal Navigation` | 2024 | IROS | https://arxiv.org/abs/2409.14296 | benchmark source for open-vocabulary ObjectNav; uses HM3DSem, 15k+ object instances, and 379 categories | queued |
 
 ## Reading Queue
 
@@ -60,6 +66,11 @@ Last updated: 2026-05-07
 - [x] P27 `Context-Aware Replanning with Pre-explored Semantic Map for Object Navigation`
 - [x] P28 `SG-Nav: Online 3D Scene Graph Prompting for LLM-based Zero-shot Object Navigation`
 - [x] P30 `Open-Vocabulary Online Semantic Mapping for SLAM`
+- [x] P35 `VLFM: Vision-Language Frontier Maps for Zero-Shot Semantic Navigation`
+- [x] P36 `One Map to Find Them All: Real-Time Open-Vocabulary Mapping for Zero-Shot Multi-Object Navigation`
+- [x] P37 `Understanding while Exploring: Semantics-driven Active Mapping`
+- [x] P38 `Uncertainty-Informed Active Perception for Open-Vocabulary Object Goal Navigation`
+- [x] P39 `Context-Nav: Context-Driven Exploration and Viewpoint-Aware 3D Spatial Reasoning for Instance-Aware Object Navigation`
 
 ### Priority B
 
@@ -74,6 +85,7 @@ Last updated: 2026-05-07
 - [ ] P26 `MemoNav: Working Memory Model for Visual Navigation`
 - [ ] P31 `CogNav: Cognitive Process Modeling for Object Goal Navigation with LLMs`
 - [ ] P32 `UniGoal: Towards Universal Zero-shot Goal-oriented Navigation`
+- [ ] P40 `HM3D-OVON: A Dataset and Benchmark for Open-Vocabulary Object Goal Navigation`
 
 ### Priority C
 

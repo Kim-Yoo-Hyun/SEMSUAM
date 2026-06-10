@@ -80,6 +80,25 @@ H001을 paper-ready claim으로 올리려면 아래 증거가 필요하다.
 - `GTTargetOracle`, `GTCandidateOracle`, `GTViewOracle` gap analysis로 candidate coverage failure와 policy failure를 분리한다.
 - 최소 하나의 held-out split에서 tuning 없이 같은 방향의 결과가 유지된다.
 
+## Latest Related-Work Constraint
+
+### 사실
+
+- Date checked: 2026-06-09
+- `OneMap` and `Uncertainty-Informed Active Perception` already make semantic uncertainty-to-navigation / active-perception utility a close related-work direction.
+- `ActiveSGM` already makes semantic + geometric uncertainty-to-active-mapping utility a top-tier related-work direction.
+- `Context-Nav` already makes instance-aware ObjectNav goal ambiguity and context-based verification a top-tier related-work direction.
+
+### 에이전트 추론
+
+H001 novelty should not be framed as "using semantic uncertainty for ObjectNav" or "using active perception for ObjectNav." The defensible framing is narrower:
+
+```text
+semantic map uncertainty is decomposed into goal-validity risk, viewpoint evidence gap, and map/pose consistency uncertainty, then converted into active re-observation utility that is evaluated by wrong-goal / wasted-path / map-pose metrics rather than by `SR` / `SPL` alone.
+```
+
+The next reviewer-defense requirement is therefore post-update evidence-state evaluation and non-GT goal-validity arbitration, not another detector-confidence terminal rule.
+
 ## Confirmation Gate Rule
 
 ### 사실
@@ -345,6 +364,7 @@ H001은 다음 구조로 좁힐 때 가장 강하다.
 109. Treat active-observation risk analysis as a terminal-shortcut rejection: `top_observation_utility_if_misused_as_terminal` produces success/wrong/no-valid `16/30/4`, and `top_selected_observation_utility_if_misused_as_terminal` produces `19/27/4`. The reviewer-facing claim must be that uncertainty drives evidence acquisition and state update, not that high observation utility identifies the correct goal. The next novelty step is a label-free post-observation evidence update contract.
 110. Treat the frozen active-observation post-observation update contract as method derivation, not evidence of utility: it turns the unsafe terminal shortcut into a label-free state-update requirement with request/selected-candidate/candidate-state rows `50/97/232`, forbids terminal commits and candidate rejection, and allows labels only after update rows are frozen. The reviewer-facing novelty is the causal ordering: uncertainty triggers active observation, active observation updates evidence state, and only a later separately validated non-GT goal-validity rule may consider terminal utility.
 111. Treat the Docker-verified active-observation post-update materializer as evidence-state plumbing, not ObjectNav utility: it writes post-update request/selected-candidate/candidate-state rows `50/97/232` with evidence-delta rows `97/97`, but terminal commits and candidate rejection remain `0`. The reviewer-facing value is that states such as `support_acquired`, `ambiguity_reduced`, and `needs_goal_validity_confirmation` are explicit nonterminal states rather than hidden goal-validity claims; the next step must be an evaluation-only post-update label join.
+112. Treat the frozen post-update evaluation join contract as schema and measurement gate, not utility evidence: it fixes `goal_validity_risk`, `viewpoint_evidence_gap`, and `map_pose_consistency_uncertainty` as the three bridge variables, and defines wrong-goal, wasted path, and map/pose deltas as evaluation-only outputs after post-update rows are frozen. This preserves the Semantic-SLAM-centered framing: ObjectNav wrong-goal is the task-level failure surface of map/semantic/pose uncertainty, not a separate application. Terminal utility, formula revision, Step 4-5 promotion, and paper claims remain blocked until the Docker materializer and later non-GT arbitration pass.
 
 ## Promotion Rule
 

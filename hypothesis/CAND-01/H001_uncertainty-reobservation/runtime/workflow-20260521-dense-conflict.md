@@ -9196,6 +9196,37 @@ wc -l local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1/*.
 
 논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer.
 
+### Semantic-SLAM Active-Observation Post-Update Evaluation Join Contract
+
+사실:
+
+```text
+date_checked: 2026-06-11
+contract: manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.json
+verify: manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.verify.json
+status: static_contract_verified_implementation_pending
+source post-update request/selected-candidate/candidate-state/failure rows: 50 / 97 / 232 / 50
+source active-observation task-proxy request/selected-candidate/priority/baseline rows: 50 / 97 / 232 / 150
+required future output request/selected-candidate/candidate-state/baseline rows: 50 / 97 / 232 / 150
+schema blocks: goal_validity_risk, viewpoint_evidence_gap, map_pose_consistency_uncertainty
+ObjectNav wrong-goal role: task-level failure surface for Semantic-SLAM uncertainty
+terminal/candidate commit/candidate rejection rows allowed: 0 / 0 / 0
+formula revision / first_eval / policy-scale comparison / Step 4-5 promotion / paper claim allowed: false
+next_task: implement_Docker_active_observation_post_update_evaluation_join_materializer
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.verify.json
+jq '{status, contract_name, source_gate: .source_gate.post_update_primary_blocker, schema: (.uncertainty_decomposition_schema | keys), next_task: .next_research_task.task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.json
+```
+
+에이전트 추론: This contract freezes the schema requested by the revised direction: `goal_validity_risk`, `viewpoint_evidence_gap`, and `map_pose_consistency_uncertainty` are joined to wrong-goal, wasted path, and map/pose deltas only after post-update rows are fixed. The join is evaluation-only and does not unlock terminal utility.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this static contract.
+
 ### Semantic-SLAM Candidate-Relative Map/Pose Evidence Materializer
 
 사실:

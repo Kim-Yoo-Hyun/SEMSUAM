@@ -19,6 +19,22 @@ First probe는 small subset 또는 one-scene replay에서 semantic map uncertain
 
 Active diagnostic. H001 remains a hypothesis, not a paper-ready claim.
 
+## Latest Literature Check
+
+### 사실
+
+- Date checked: 2026-06-09
+- Targeted recent sources checked in `literature/README.md`: `VLFM`, `OneMap`, `ActiveSGM`, `Uncertainty-Informed Active Perception`, `Context-Nav`, `HM3D-OVON`.
+- `OneMap` and `Uncertainty-Informed Active Perception` already connect semantic uncertainty to navigation / active perception utility.
+- `ActiveSGM` connects semantic and geometric uncertainty to active mapping utility.
+- `Context-Nav` directly targets instance-aware ObjectNav ambiguity and goal-validity reasoning.
+
+### 에이전트 추론
+
+Keep H001, but narrow the paper claim. Do not frame the novelty as "semantic uncertainty improves ObjectNav." The stronger current claim is that semantic map uncertainty must be decomposed into goal-validity risk, viewpoint evidence gap, and map/pose consistency uncertainty, then used as active re-observation utility rather than a direct terminal goal score.
+
+This keeps the current next gate focused on post-update evaluation join and later non-GT goal-validity arbitration before any terminal utility or paper claim.
+
 ## Current Gate
 
 - Problem and hypothesis: `01_problem.md`, `02_hypothesis.md`
@@ -32,12 +48,14 @@ Active diagnostic. H001 remains a hypothesis, not a paper-ready claim.
 - Reproducibility entrypoint: `../../../docs/reproducibility.md`
 - Dense conflict validation workflow: `runtime/workflow-20260521-dense-conflict.md`
 - Cross-machine backup/restore: `../../../docs/reproducibility.md#google-drive-backup-manifest`
-- Current next target: freeze active-observation post-update evaluation join contract
+- Current next target: implement Docker active-observation post-update evaluation join materializer
 
 ## Latest Gate
 
 ### 사실
 
+- Date checked: 2026-06-11
+- `semantic_slam_active_observation_post_update_evaluation_join_v1` is frozen at `manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.json` with static verify file `manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.verify.json`. `jq` validation passes. The contract consumes Docker-verified post-update rows `50/97/232/50`, active-observation task-proxy rows `50/97/232/150`, candidate-relative map/pose rows, and task/map outcome probe rows. It freezes the schema for `goal_validity_risk`, `viewpoint_evidence_gap`, and `map_pose_consistency_uncertainty`, plus wrong-goal, wasted path, and map/pose consistency deltas. `ObjectNav` wrong-goal is explicitly treated as the task-level failure surface for `Semantic-SLAM` uncertainty, not as a separate application. Terminal commit, candidate commit/rejection, formula revision, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked. The next task is the Docker materializer.
 - Date checked: 2026-06-07
 - `semantic_slam_active_observation_post_update_v1` is implemented at `runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update.py`, verified through `manifests/h001_semantic_slam_active_observation_post_update_v1.verify.json`, and Docker-run at `local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1`. It writes request/selected-candidate/candidate-state/rule-audit/failure rows `50/97/232/6/50`; selected candidate and candidate-state evidence delta rows are `97/97`; request post-update states are `ambiguity_reduced 26`, `needs_goal_validity_confirmation 21`, and `support_acquired 3`; selected candidate post states are `ambiguity_reduced 52`, `needs_goal_validity_confirmation 42`, and `support_acquired 3`. Terminal commits, candidate commits/rejections, GT-action rows, paper-claim rows, and forbidden action keys are all `0`. The materializer gate passes, but promotion remains blocked with primary blocker `post_update_label_join_and_goal_validity_arbitration_required`. The next task is to freeze the post-update evaluation join contract.
 - `semantic_slam_active_observation_post_update_v1` is frozen at `manifests/h001_semantic_slam_active_observation_post_update_v1.json` with verify file `manifests/h001_semantic_slam_active_observation_post_update_v1.verify.json`. Static `jq` verification passes. The contract consumes active-observation risk rows `50/232/6`, selected candidate rows `97`, selected request statuses all-correct/mixed/all-wrong/no-valid `11/23/12/4`, selected candidate clean-correct/wrong-or-no-valid rows `43/54`, and terminal shortcut audits `16/30/4` and `19/27/4`. It allows only label-free post-observation evidence state updates and blocks terminal commits, candidate commits/rejections, formula revision, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims. The materializer is now Docker-verified; the next task is a post-update evaluation join contract.

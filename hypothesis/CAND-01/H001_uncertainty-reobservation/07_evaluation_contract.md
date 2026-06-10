@@ -7573,6 +7573,41 @@ The materializer makes the method state transition explicit: active observation 
 
 No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this materializer.
 
+## SemanticSLAM Active-Observation Post-Update Evaluation Join Contract
+
+### 사실
+
+- Date checked: `2026-06-11`
+- Contract: `manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.json`
+- Verify: `manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.verify.json`
+- Status: `static_contract_verified_implementation_pending`
+- Source post-update request / selected-candidate / candidate-state / failure rows: `50 / 97 / 232 / 50`
+- Source active-observation task-proxy request / selected-candidate / priority / baseline rows: `50 / 97 / 232 / 150`
+- Required future output request / selected-candidate / candidate-state / baseline rows: `50 / 97 / 232 / 150`
+- Frozen schema blocks: `goal_validity_risk`, `viewpoint_evidence_gap`, `map_pose_consistency_uncertainty`
+- Required task/map fields include wrong-goal, wasted path, `pose_graph_connectivity_delta`, `map_pose_consistency_delta`, and `map_task_alignment`
+- `ObjectNav` wrong-goal role: task-level failure surface for `Semantic-SLAM` uncertainty, not a separate application
+- Terminal commit / candidate commit / candidate rejection allowed: `0 / 0 / 0`
+- Formula revision, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claim allowed: `false`
+- Required next script: `runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update_evaluation_join.py`
+- Required next output: `local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1`
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.verify.json
+jq '{status, contract_name, source_gate: .source_gate.post_update_primary_blocker, schema: (.uncertainty_decomposition_schema | keys), next_task: .next_research_task.task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.json
+```
+
+### 에이전트 추론
+
+This contract is the bridge from label-free post-update evidence states to task/map evaluation. It keeps the research Semantic-SLAM-centered by treating wrong-goal and wasted path as action-level symptoms of map/semantic/pose uncertainty. The next implementation must join evaluation labels and map-side deltas only after action and post-update rows are frozen.
+
+### 논문 주장
+
+No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this static contract.
+
 ## User Decision Needed
 
 - Choose the accepted `SPL` drop threshold for first probe success.
