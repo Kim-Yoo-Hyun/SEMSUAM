@@ -1,0 +1,211 @@
+{
+  "schema_version": "h001.contract.rival_contradiction_region_contamination_detector_substrate.v1",
+  "date_checked": "2026-06-12",
+  "status": "frozen_contract_static_verified",
+  "contract_name": "rival_contradiction_region_contamination_detector_substrate_v1",
+  "purpose": "Freeze the detector/SAM2 substrate contract for the Docker-verified rival_contradiction_region_contamination_frame_projection_v1 output before any detector evidence interpretation, contamination decision, candidate rejection, terminal utility, formula revision, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim.",
+  "stage": "P4-design",
+  "paper_framing": {
+    "semantic_slam_centered": true,
+    "objectnav_wrong_goal_role": "task_level_failure_surface_for_semantic_slam_uncertainty",
+    "active_reobservation_role": "nonterminal_visual_evidence_acquisition_for_supported_vs_rival_uncertainty",
+    "natural_proof_rule": "The preceding rule failed because positive goal-region/object-relation support can select a wrong same-category instance. The required next method step is therefore to test whether fixed supported-vs-rival observations can produce detector/SAM2 associations that are analyzable as contradiction or contamination evidence, not to tune a terminal score.",
+    "paper_claim_allowed": false
+  },
+  "source": {
+    "frame_projection_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_frame_projection_v1.json",
+    "frame_projection_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_frame_projection_v1.verify.json",
+    "frame_plan_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_frame_plan_v1/rival_contradiction_region_contamination_frame_plan_summary.json",
+    "frame_plan_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_frame_plan_v1/rival_contradiction_region_contamination_frame_plan_rows.jsonl",
+    "candidate_artifact": "local_dataset/runs/h001_rival_contradiction_region_contamination_frame_plan_v1/rival_contradiction_region_contamination_candidate_artifact.jsonl",
+    "frame_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_frames_v1",
+    "filtered_frame_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl",
+    "frame_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_frames_v1/summary.json",
+    "nonblank_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+    "projection_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_projection_v1",
+    "projection_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_projection_v1/projection_anchor_smoke_summary.json"
+  },
+  "source_gate": {
+    "frame_projection_status": "docker_verified_frame_projection_smoke",
+    "frame_plan_rows": 4,
+    "skipped_rows": 0,
+    "candidate_artifact_rows": 1,
+    "candidate_count": 2,
+    "observation_role_counts": {
+      "supported_candidate_own_view": 1,
+      "rival_candidate_own_view": 1,
+      "shared_region_or_relation_anchor_view": 1,
+      "cross_candidate_challenge_view": 1
+    },
+    "viewpoint_source_counts": {
+      "standoff_navmesh": 2,
+      "pair_region_navmesh": 2
+    },
+    "frame_rows_requested": 4,
+    "frame_rows_exported": 4,
+    "rendered_heading_count": 26,
+    "nonblank_input_rows": 4,
+    "nonblank_output_rows": 4,
+    "removed_blank_heading_count": 0,
+    "projection_rows": 4,
+    "projection_anchor_visible_rows": 4,
+    "projection_anchor_visible_rate": 1.0,
+    "candidate_selection_source_counts": {
+      "explicit_candidate_ids": 4
+    },
+    "missing_candidate_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0
+  },
+  "target_pair": {
+    "scene_key": "QaLdnwvtxbs",
+    "query": "sofa",
+    "request_id": "rival_identity:3",
+    "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:9:1:sofa",
+    "provisionally_supported_candidate_id": "vlmaps:export:sofa:spatial_nms:1",
+    "rival_candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+    "required_observation_roles": [
+      "supported_candidate_own_view",
+      "rival_candidate_own_view",
+      "shared_region_or_relation_anchor_view",
+      "cross_candidate_challenge_view"
+    ],
+    "required_evidence_axes": [
+      "supported_candidate_own_region_evidence",
+      "rival_candidate_own_region_evidence",
+      "region_context_overlap_or_contamination",
+      "relation_anchor_contradiction_or_leakage"
+    ]
+  },
+  "detector_substrate_contract": {
+    "job": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/rival_contradiction_region_contamination_detector_substrate.sh",
+    "base_job": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_detector_substrate.sh",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "device": "cuda",
+    "model_root": "local_dataset/models",
+    "groundingdino_dir": "local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny",
+    "sam2_checkpoint": "local_dataset/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt",
+    "output": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1",
+    "detector_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1/detector_v3c",
+    "expected_policy": "RivalContradictionRegionContaminationEvidence",
+    "expected_frame_rows": 4,
+    "max_frames": 4,
+    "max_headings_per_frame": 0,
+    "max_detector_boxes_per_heading": 3,
+    "max_masks_per_heading": 3,
+    "max_candidates_per_frame": 2,
+    "candidate_point_field": "grounded_position",
+    "projection_anchor_height_offsets_m": [
+      0.0,
+      0.4,
+      0.8,
+      1.2,
+      1.6,
+      2.0,
+      2.4
+    ],
+    "query_template": "{query}",
+    "box_threshold": 0.1,
+    "text_threshold": 0.1,
+    "association_depth_tolerance_m": 1.0,
+    "min_detector_box_rate": 0.8,
+    "min_sam2_mask_rate": 0.8,
+    "min_candidate_association_rate": 0.4,
+    "min_rows_with_candidate_association": 2,
+    "min_associated_candidate_heading_count": 2,
+    "required_candidate_selection_source": "explicit_candidate_ids",
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "required_outputs": {
+    "job_status": "job_status.json",
+    "detector_summary": "detector_v3c/summary.json",
+    "detector_frame_summary": "expanded_retrieval_detector_frame_summary.jsonl",
+    "detector_associations": "expanded_retrieval_detector_associations.jsonl",
+    "detector_substrate_summary": "expanded_retrieval_detector_substrate_summary.json"
+  },
+  "minimum_gate": {
+    "source_frame_projection_gate_passed": true,
+    "frame_rows": 4,
+    "nonblank_rows": 4,
+    "projection_visible_rows": 4,
+    "detector_rows": 4,
+    "detector_box_rate_minimum": 0.8,
+    "sam2_mask_rate_minimum": 0.8,
+    "candidate_association_rate_minimum": 0.4,
+    "rows_with_candidate_association_minimum": 2,
+    "associated_candidate_heading_count_minimum": 2,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "verification_ladder_to_complete_target_claim": [
+    {
+      "step": 1,
+      "name": "detector_sam2_substrate",
+      "status": "contract_frozen_here",
+      "goal": "Verify that the four fixed supported-vs-rival observation rows produce detector boxes, SAM2 masks, and candidate associations without label or GT-action leakage.",
+      "required_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+      "claim_allowed_after_step": "detector/SAM2 substrate is available for post-detector analysis only"
+    },
+    {
+      "step": 2,
+      "name": "post_detector_evidence_contract",
+      "status": "blocked_until_step_1_passes",
+      "goal": "Freeze a label-free analyzer that converts supported-own, rival-own, shared-region, and cross-candidate detector associations into contradiction/contamination evidence states.",
+      "required_output": "future manifest h001_rival_contradiction_region_contamination_detector_evidence_v1.json",
+      "claim_allowed_after_step": "evidence-state rows are defined, not terminal utility"
+    },
+    {
+      "step": 3,
+      "name": "post_detector_evidence_materializer",
+      "status": "blocked_until_step_2_is_frozen",
+      "goal": "Materialize role-level and pair-level evidence rows while preserving target/context candidate provenance and forbidding terminal commits.",
+      "required_output": "future local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1",
+      "claim_allowed_after_step": "label-free evidence mechanism can be inspected"
+    },
+    {
+      "step": 4,
+      "name": "evaluation_only_join",
+      "status": "blocked_until_step_3_is_frozen",
+      "goal": "Join evaluation-only candidate correctness and task proxy outcomes after evidence rows are frozen to test whether the evidence flags the provisional wrong same-category support case.",
+      "required_output": "future evaluation join artifact",
+      "claim_allowed_after_step": "failure mechanism support or negative result"
+    },
+    {
+      "step": 5,
+      "name": "promotion_gate",
+      "status": "blocked_until_step_4_passes",
+      "goal": "Check wrong-goal, wasted-path, and map/pose consistency deltas under fixed baselines and same-row budget before any terminal utility claim.",
+      "required_output": "future promotion gate artifact",
+      "claim_allowed_after_step": "only then can a bounded utility claim be considered"
+    }
+  ],
+  "blocked_outputs": [
+    "detector_evidence_interpretation",
+    "region_contamination_decision",
+    "rival_contradiction_decision",
+    "terminal_goal_commit",
+    "candidate_commit",
+    "candidate_rejection",
+    "formula_revision",
+    "first_eval_rerun_config",
+    "policy_scale_comparison",
+    "step_4_5_promotion",
+    "paper_claim"
+  ],
+  "expected_command_shape": [
+    "bash -n hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/rival_contradiction_region_contamination_detector_substrate.sh",
+    "TS=$(date +%Y%m%d-%H%M%S) hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/rival_contradiction_region_contamination_detector_substrate.sh",
+    "jq '{gate:.gate.passes_detector_substrate_gate, rows:.detector_rows, box:.detector_box_rate, sam2:.sam2_mask_rate, assoc:.candidate_association_rate, associated:.rows_with_candidate_association, headings:.associated_candidate_heading_count, gt:.uses_gt_for_action, paper:.paper_claim_allowed}' local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json"
+  ],
+  "next_allowed_step_after_contract": "Implement the Docker detector/SAM2 substrate wrapper using the frozen frame/projection outputs.",
+  "paper_claim_allowed": false
+}

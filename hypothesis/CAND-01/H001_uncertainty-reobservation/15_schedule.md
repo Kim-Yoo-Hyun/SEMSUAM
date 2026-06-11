@@ -8,12 +8,12 @@ H001을 6개월-1년 범위에서 first probe, Step 4-5 SLAM extension, real-wor
 
 ## Facts
 
-- Date checked: 2026-06-06
+- Date checked: 2026-06-12
 - Active hypothesis: H001 `Semantic-SLAM Uncertainty Re-observation`
 - Primary benchmark path: Habitat ObjectNav with HM3D, then HM3D-OVON extension.
 - Available runtime gates: HM3D / HM3D-OVON Docker mount, `habitat-h001` smoke, logging schema, non-GT candidate adapter, `VLMaps` artifact exporter, synthetic alignment adapter.
 - Current paper-facing blocker: semantic object routes are branch-closed or terminal-blocked with promotable terminal outcome `0`, and the current `SemanticSLAM` proxy line is still `P4-design`. The geometry-only `SLAMOnlyRich_current` selector path is now closed as non-promotable because current map/pose evidence is available but not candidate-discriminative.
-- Latest schedule gate: `semantic_slam_active_observation_post_update_evaluation_join_v1` is frozen as the next implementation contract after the Docker-verified active-observation post-update materializer. It keeps `Semantic-SLAM` central by treating `ObjectNav` wrong-goal as the task-level failure surface, and freezes schema fields for `goal_validity_risk`, `viewpoint_evidence_gap`, `map_pose_consistency_uncertainty`, wrong-goal, wasted path, and map/pose consistency deltas. Terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, and paper claims remain blocked until the Docker join materializer and later non-GT goal-validity arbitration pass.
+- Latest schedule gate: `rival_contradiction_region_contamination_detector_promotion_gate_v1` is Docker-verified as a bounded single-case mechanism gate, `rival_contradiction_region_contamination_multi_case_source_v1` is Docker-verified as the 18-row source materializer, and `rival_contradiction_region_contamination_multi_case_frame_projection_v1` is now frozen as the next static frame/projection smoke contract. The bounded chain passes detector/SAM2 substrate -> label-free post-detector evidence -> evaluation-only join -> wrong-goal/wasted-path/map-pose promotion gate on `QaLdnwvtxbs/sofa/rival_identity:3`, but this permits only `bounded_single_case_mechanism_probe_ready`. The multi-case frame/projection contract preserves `72` symbolic observation seed rows across `9` scenes and `5` queries, requires geometry candidate coverage `26/26`, frame/projection rows `72/72`, projection visible rate at least `0.95`, explicit candidate ids, and keeps action-forbidden keys, terminal commits, candidate commits/rejections, GT-action rows, and paper-claim rows at `0`. Terminal utility, `first_eval`, policy-scale comparison, formula revision, Step 4-5 promotion, and paper claims remain blocked until the multi-case frame/projection -> detector/evidence/evaluation/promotion ladder passes.
 - First-probe gate: `07_evaluation_contract.md`.
 - Real-world setup gate: `03_feasibility.md`.
 - Long-running I/O-heavy jobs must follow `AGENTS.md` background-task policy.
@@ -334,11 +334,11 @@ If GT is weak, present real-world results as qualitative or diagnostic only. Do 
 
 ## Immediate Next Task
 
-Implement Docker active-observation post-update evaluation join materializer.
+Implement Docker detector/SAM2 substrate smoke for `rival_contradiction_region_contamination_frame_projection_v1`.
 
-사실: The post-update materializer is implemented at `runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update.py`, verified through `manifests/h001_semantic_slam_active_observation_post_update_v1.verify.json`, and Docker-run at `local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1`. It writes request/selected-candidate/candidate-state/rule-audit/failure rows `50/97/232/6/50`; evidence delta rows `97/97`; request post-update states `ambiguity_reduced 26`, `needs_goal_validity_confirmation 21`, and `support_acquired 3`; terminal/candidate commit/rejection rows `0/0/0`; `uses_gt_for_action false`; and materializer gate `true`.
+사실: `rival_contradiction_region_contamination_evidence_v1` materializer is implemented at `runtime/h001_runtime/materialize_rival_contradiction_region_contamination_evidence.py`, verified by `manifests/h001_rival_contradiction_region_contamination_evidence_v1.verify.json`, and Docker-run at `local_dataset/runs/h001_rival_contradiction_region_contamination_evidence_v1`. It writes request/pair/target-pair/candidate/observation-plan/audit/failure rows `21/21/1/2/4/20/21` and requests four observation roles for the target pair.
 
-에이전트 추론: The post-update evaluation join contract is now frozen. The next Docker materializer should write the required request, selected-candidate, candidate-state, baseline, failure, and summary rows while keeping labels evaluation-only. It should not revise `SLAMOnlyRich_current` formula or open terminal utility.
+에이전트 추론: The detector/SAM2 substrate contract is now frozen. The next implementation should use only the frozen frame/projection outputs, preserve supported-vs-rival candidate order, explicit candidate ids, observation roles, and map/pose metadata, and keep contamination decisions and terminal utility blocked until post-detector evidence is analyzed.
 
 The historical runtime notes below preserve why the active gate moved from semantic object branches to the `SemanticSLAM` task/map outcome probe.
 

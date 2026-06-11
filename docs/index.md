@@ -17,6 +17,7 @@
 | --- | --- | --- |
 | [literature.md](literature.md) | 문헌 조사 workflow와 paper folder convention | [literature/README.md](../literature/README.md), [literature/PAPER.md](../literature/PAPER.md) |
 | [hypothesis.md](hypothesis.md) | hypothesis 검증 workflow와 promotion 기준 | [hypothesis/README.md](../hypothesis/README.md) |
+| [experiments.md](experiments.md) | hypothesis probe를 논문 본문용 experiment로 승격하는 workflow와 natural-proof rule | 대상 hypothesis workflow, `docs/reproducibility.md` |
 | [paper.md](paper.md) | paper framing, novelty, reviewer-defense 기준 | `summary.md`, future `paper/README.md` |
 | [reproducibility.md](reproducibility.md) | dataset, checkpoint, Docker, artifact, 백업/복구 기준 | `local_dataset/{data,models,runs}` |
 
@@ -35,7 +36,7 @@
 
 ### 사실
 
-- Date checked: 2026-06-07
+- Date checked: 2026-06-12
 - Primary candidate: `CAND-01`
 - Active hypothesis: `H001_uncertainty-reobservation`
 - Current gate is tracked in [TODO.md](../TODO.md).

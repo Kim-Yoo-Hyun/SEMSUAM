@@ -8930,6 +8930,357 @@ jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semant
 
 논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this closure.
 
+### Rival Contradiction / Region Contamination Frame/Projection Smoke
+
+사실:
+
+```text
+date_checked: 2026-06-12
+contract: manifests/h001_rival_contradiction_region_contamination_frame_projection_v1.json
+verify: manifests/h001_rival_contradiction_region_contamination_frame_projection_v1.verify.json
+planner: runtime/h001_runtime/plan_rival_contradiction_region_contamination_frame_projection.py
+job: runtime/jobs/rival_contradiction_region_contamination_frame_projection.sh
+status: docker_verified_frame_projection_smoke
+plan_output: local_dataset/runs/h001_rival_contradiction_region_contamination_frame_plan_v1
+frame_output: local_dataset/runs/h001_rival_contradiction_region_contamination_frames_v1
+projection_output: local_dataset/runs/h001_rival_contradiction_region_contamination_projection_v1
+planner/frame/nonblank/projection rows: 4 / 4 / 4 / 4
+rendered_heading_count: 26
+removed_blank_heading_count: 0
+projection_visible_rows/rate: 4 / 1.0
+candidate_selection_source: explicit_candidate_ids 4
+uses_gt_for_action: false
+paper_claim_allowed: false
+next_task: freeze_rival_contradiction_region_contamination_detector_substrate_contract
+```
+
+에이전트 추론: The supported-vs-rival observation roles are now renderable and projection-visible, so the branch can move to a detector/SAM2 substrate contract. This remains a substrate gate, not contamination resolution or terminal utility.
+
+논문 주장: No ObjectNav improvement, `SemanticSLAM` complementarity, detector evidence, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this smoke.
+
+### Rival Contradiction / Region Contamination Detector/SAM2 Substrate Contract
+
+사실:
+
+```text
+date_checked: 2026-06-12
+contract: manifests/h001_rival_contradiction_region_contamination_detector_substrate_v1.json
+verify: manifests/h001_rival_contradiction_region_contamination_detector_substrate_v1.verify.json
+status: static_contract_verified_before_detector_sam2_run
+source_frame_projection_verify: manifests/h001_rival_contradiction_region_contamination_frame_projection_v1.verify.json
+expected_policy: RivalContradictionRegionContaminationEvidence
+expected_frame_rows: 4
+max_candidates_per_frame: 2
+candidate_point_field: grounded_position
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+detector_box_rate_minimum: 0.8
+sam2_mask_rate_minimum: 0.8
+candidate_association_rate_minimum: 0.4
+minimum_associated_rows/headings: 2 / 2
+output: local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1
+next_task: implement_docker_rival_contradiction_region_contamination_detector_substrate_smoke
+```
+
+에이전트 추론: The next verification sequence is detector/SAM2 substrate -> post-detector evidence contract -> evidence materializer -> evaluation-only join -> promotion gate. This keeps the method derivation tied to the diagnosed wrong same-category support failure rather than tuning a terminal score.
+
+논문 주장: No ObjectNav improvement, `SemanticSLAM` complementarity, detector evidence interpretation, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this static contract.
+
+### Rival Contradiction / Region Contamination Detector Evidence Ladder Completion
+
+사실:
+
+```text
+date_checked: 2026-06-12
+detector_substrate_verify: manifests/h001_rival_contradiction_region_contamination_detector_substrate_v1.verify.json
+detector_evidence_verify: manifests/h001_rival_contradiction_region_contamination_detector_evidence_v1.verify.json
+evaluation_join_verify: manifests/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1.verify.json
+promotion_gate_verify: manifests/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1.verify.json
+detector_substrate_output: local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1
+detector_evidence_output: local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1
+evaluation_join_output: local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1
+promotion_gate_output: local_dataset/runs/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1
+detector/frame rows: 4 / 4
+detector box / SAM2 / candidate association: 1.0 / 1.0 / 1.0
+detector evidence candidate-role / role / pair / audit rows: 8 / 4 / 1 / 1
+pair evidence state: rival_region_contamination_or_same_category_overlap_observed 1
+evaluation join request / candidate / pair / baseline / promotion rows: 1 / 2 / 1 / 3 / 1
+evaluation-only pair label: a_wrong_b_correct 1
+wrong-goal baseline count: 2
+max wasted path exposure: 1.7432420154092887m
+map/pose consistency delta: 1.0
+promotion_gate_passed: true
+promotion_gate_blockers: []
+allowed_after_pass: bounded_single_case_mechanism_probe_ready
+terminal/candidate commit/rejection rows: 0 / 0 / 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+```
+
+에이전트 추론: This ladder completes the bounded single-case verification requested for the diagnosed wrong provisional same-category support case. The mechanism is now ready to scale under the same frozen schema; it should not be converted into a terminal utility or paper claim from one row.
+
+논문 주장: No ObjectNav improvement, `SemanticSLAM` utility, terminal utility, `first_eval`, policy-scale comparison, formula revision, or paper claim is allowed from this single-case promotion gate.
+
+### Rival Contradiction / Region Contamination Multi-Case Scaling Contract
+
+사실:
+
+```text
+date_checked: 2026-06-12
+contract: manifests/h001_rival_contradiction_region_contamination_multi_case_scaling_v1.json
+verify: manifests/h001_rival_contradiction_region_contamination_multi_case_scaling_v1.verify.json
+status: static_verified_multi_case_source_contract_frozen_terminal_utility_blocked
+decision: scale_detector_evidence_ladder_before_terminal_utility
+rejected_path: freeze_terminal_utility_contract_now
+bounded_source_gate: rival_contradiction_region_contamination_detector_promotion_gate_v1
+bounded_gate_rows: 1
+bounded_allowed_after_pass: bounded_single_case_mechanism_probe_ready
+multi_case_source_pair_rows: 21
+selected_pairwise_conflict_rows: 18
+selected_pairwise_conflict_scenes: 9
+selected_pairwise_conflict_queries: 5
+selected_filter: selected_branch == pairwise_goal_region_map_pose_arbitration_v1
+selected_action: request_pairwise_goal_region_map_pose_evidence
+target_role: primary_target
+pair_status_patterns: independent_support_acquired + independent_support_acquired 10; independent_support_acquired + independent_support_and_contradiction_conflict 7; independent_contradiction_acquired + independent_evidence_missing 1
+evaluation_only_pair_label_patterns: a_wrong_b_correct 8; both_correct 4; both_wrong 6
+terminal_commit_rows: 0
+uses_gt_for_action_true_rows: 0
+paper_claim_allowed: false
+next_materializer: runtime/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_source.py
+expected_output: local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_scaling_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_scaling_v1.verify.json
+jq -s 'map(select(.selected_branch=="pairwise_goal_region_map_pose_arbitration_v1")) | {rows:length, scenes:([.[].scene_key] | unique | length), queries:([.[].query] | unique | length)}' local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1/post_action_goal_validity_arbitration_followup_pair_rows.jsonl
+```
+
+### Rival Contradiction / Region Contamination Multi-Case Source Materializer
+
+사실:
+
+```text
+date_checked: 2026-06-12
+materializer: runtime/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_source.py
+verify: manifests/h001_rival_contradiction_region_contamination_multi_case_scaling_v1.verify.json
+status: docker_verified_multi_case_source_materializer_gate_passed_terminal_blocked
+output_root: local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1
+source_rows: 18
+candidate_role_rows: 36
+observation_plan_seed_rows: 72
+audit_rows: 3
+scene_count: 9
+query_count: 5
+evaluation_join_pair_rows: 18
+action_evidence_forbidden_key_count: 0
+terminal_commit_rows: 0
+candidate_commit_rows: 0
+candidate_rejection_rows: 0
+uses_gt_for_action_true_rows: 0
+paper_claim_allowed_true_rows: 0
+primary_blocker: multi_case_frame_projection_contract_required
+next_task: freeze_multi_case_rival_contradiction_region_contamination_frame_projection_contract
+```
+
+Docker verification:
+
+```bash
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_source.py
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_rival_contradiction_region_contamination_multi_case_source
+jq '{status, source_rows, candidate_role_rows, observation_plan_seed_rows, audit_rows, scene_count, query_count, materializer_gate_passed, primary_blocker, next_task}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_summary.json
+```
+
+에이전트 추론: The bounded single-case detector ladder is now ready to scale, but it is not a terminal-utility result. The source materializer now preserves the 18 action-frozen pairwise conflict rows across scenes and queries before any correctness label, wrong-goal outcome, wasted-path outcome, or GT object identity can affect action-side rows. The next natural gate is a multi-case frame/projection contract.
+
+논문 주장: No ObjectNav improvement, `SemanticSLAM` utility, terminal utility, `first_eval`, policy-scale comparison, formula revision, Step 4-5 promotion, or paper claim is allowed from this multi-case source materializer.
+
+### Rival Contradiction / Region Contamination Multi-Case Frame/Projection Contract
+
+사실:
+
+```text
+date_checked: 2026-06-12
+contract: manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.json
+verify: manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.verify.json
+status: static_verified_multi_case_frame_projection_contract_frozen_terminal_blocked
+source: local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1
+source_rows: 18
+observation_seed_rows: 72
+scene_count: 9
+query_count: 5
+scene_query_pairs: 13
+required_candidate_tuples: 26
+geometry_candidate_tuples_covered: 26
+missing_geometry_candidate_tuples: 0
+required_frame_plan_rows: 72
+required_frame_rows: 72
+required_projection_rows: 72
+minimum_projection_visible_rate: 0.95
+minimum_projection_visible_rows: 69
+max_missing_candidate_rows: 0
+next_task: implement_docker_rival_contradiction_region_contamination_multi_case_frame_projection_smoke
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.verify.json
+comm -23 <(jq -r '[.scene_key,.query,.candidate_id] | @tsv' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_candidate_role_rows.jsonl | sort -u) <(jq -r '. as $r | .candidates[] | [$r.scene_key,$r.query,.candidate_id] | @tsv' local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl | sort -u) | wc -l
+```
+
+에이전트 추론: The multi-case source now has enough action-frozen rows to scale the bounded observation substrate. The frame/projection contract should test renderability and explicit candidate projection across scenes before detector/SAM2 evidence is allowed. This is still source preservation and observation substrate, not terminal utility.
+
+논문 주장: No ObjectNav improvement, `SemanticSLAM` utility, terminal utility, `first_eval`, policy-scale comparison, formula revision, Step 4-5 promotion, or paper claim is allowed from this static multi-case frame/projection contract.
+
+### Rival Contradiction / Region Contamination Frame/Projection Contract
+
+사실:
+
+```text
+date_checked: 2026-06-12
+contract: manifests/h001_rival_contradiction_region_contamination_frame_projection_v1.json
+verify: manifests/h001_rival_contradiction_region_contamination_frame_projection_v1.verify.json
+source materializer: local_dataset/runs/h001_rival_contradiction_region_contamination_evidence_v1
+target scene/query/request: QaLdnwvtxbs / sofa / rival_identity:3
+supported/rival candidate: vlmaps:export:sofa:spatial_nms:1 / vlmaps:export:sofa:spatial_nms:2
+required observation roles: supported_candidate_own_view, rival_candidate_own_view, shared_region_or_relation_anchor_view, cross_candidate_challenge_view
+symbolic observation rows: 4
+required pre-render plan output: local_dataset/runs/h001_rival_contradiction_region_contamination_frame_plan_v1
+required frame/projection output: local_dataset/runs/h001_rival_contradiction_region_contamination_frames_v1 / local_dataset/runs/h001_rival_contradiction_region_contamination_projection_v1
+required projection visible row rate: 1.0
+terminal/candidate commit/candidate rejection rows allowed: 0 / 0 / 0
+uses_gt_for_action: false
+paper_claim_allowed: false
+next_task: implement_docker_rival_contradiction_region_contamination_frame_projection_smoke
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_frame_projection_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_frame_projection_v1.verify.json
+test -f local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl
+test -f local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_plan.jsonl
+```
+
+에이전트 추론: The contract freezes a renderability/projection substrate after the nonterminal evidence materializer. It requires a resolver because the current observation rows are symbolic and must be converted into Habitat-ready viewpoint rows before frame export. This is the natural next step from the failure mechanism; it does not turn provisional positive support into a terminal score.
+
+논문 주장: No ObjectNav improvement, `SemanticSLAM` complementarity, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this contract.
+
+### Active Re-observation Branch Selection
+
+사실:
+
+```text
+date_checked: 2026-06-11
+contract: manifests/h001_active_reobservation_branch_selection_v1.json
+verify: manifests/h001_active_reobservation_branch_selection_v1.verify.json
+status: static_selection_verified
+selected_branch: post_update_goal_validity_gap_reobservation_v1
+source_artifact: local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1
+primary_target_filter: post_update_request_state == needs_goal_validity_confirmation
+primary target request/scenes/queries: 21 / 9 / 6
+same-state selected-candidate rows: 42
+target risk states clean/mixed/no-valid/wrong-risk: 4 / 11 / 4 / 2
+broad risk-or-unresolved audit rows: 43
+terminal/candidate commit/rejection rows: 0 / 0 / 0
+uses_gt_for_action true rows: 0
+paper_claim_allowed true rows: 0
+next_task: freeze_post_update_goal_validity_gap_reobservation_contract
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_active_reobservation_branch_selection_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_active_reobservation_branch_selection_v1.verify.json
+jq '{status, selected_branch: .selected_branch.branch_name, target: .selected_branch.primary_target_counts.request_rows, next_task: .next_research_task.task, checks: .contract_checks}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_active_reobservation_branch_selection_v1.json
+```
+
+에이전트 추론: The selected branch follows the failure mechanism rather than the desired claim. Semantic-object branches and direct map/pose top rules failed as terminal shortcuts; the remaining natural path is a label-free branch for rows where active observation reduced viewpoint gap but still left goal validity unresolved.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this selection.
+
+### Post-Update Goal-Validity Gap Re-observation Contract
+
+사실:
+
+```text
+date_checked: 2026-06-11
+contract: manifests/h001_post_update_goal_validity_gap_reobservation_v1.json
+verify: manifests/h001_post_update_goal_validity_gap_reobservation_v1.verify.json
+status: static_contract_verified
+selected_branch: post_update_goal_validity_gap_reobservation_v1
+source_artifact: local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1
+primary target request/scenes/queries: 21 / 9 / 6
+non-target audit/control rows: 29
+source request/selected-candidate/candidate-state/baseline rows: 50 / 97 / 232 / 150
+primary target selected-candidate/baseline rows: 42 / 63
+target risk states clean/mixed/no-valid/wrong-risk: 4 / 11 / 4 / 2
+target NoReobserveReference terminal/success/wrong: 20 / 10 / 10
+target SemanticOnly terminal/success/wrong: 16 / 6 / 10
+target SLAMOnlyRich_current terminal/success/wrong: 0 / 0 / 0
+allowed next: Docker materializer for all-50-row nonterminal branch actions
+blocked: terminal utility, formula revision, first_eval, policy-scale comparison, Step 4-5 promotion, paper claim
+next_task: implement_docker_post_update_goal_validity_gap_reobservation_materializer
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_post_update_goal_validity_gap_reobservation_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_post_update_goal_validity_gap_reobservation_v1.verify.json
+jq '{status, contract_name, target_rows: .frozen_target_selection.primary_target_counts.request_rows, implementation_allowed_next: .contract_scope.implementation_allowed_next, next_task: .next_research_task.task, checks: .contract_checks}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_post_update_goal_validity_gap_reobservation_v1.json
+```
+
+에이전트 추론: The contract is implementation-ready but deliberately nonterminal. Requiring all `50` source rows prevents a cherry-picked branch result, while marking `21` unresolved rows as primary target preserves the mechanism that actually needs more evidence.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this static contract.
+
+### Active Re-observation Promotion Gate
+
+사실:
+
+```text
+date_checked: 2026-06-11
+contract: manifests/h001_active_reobservation_promotion_gate_v1.json
+verify: manifests/h001_active_reobservation_promotion_gate_v1.verify.json
+status: static_contract_verified_promotion_not_satisfied
+source contracts:
+  manifests/h001_semantic_slam_task_map_evidence_v1.json
+  manifests/h001_reviewer_defense_baseline_matrix_v1.json
+source request/selected-candidate/candidate-state/baseline/failure rows: 50 / 97 / 232 / 150 / 50
+goal-validity/viewpoint/map-pose join rows: 50 / 50 / 50
+wrong-goal/wasted-path proxy evaluable rows: 150 / 150
+map-pose delta evaluable rows: 50
+terminal/candidate commit/rejection rows: 0 / 0 / 0
+uses_gt_for_action_true_rows: 0
+paper_claim_allowed_true_rows: 0
+terminal_utility_contract_allowed_now: false
+terminal_utility_contract_allowed_after_gate_pass: true
+formula_revision_allowed: false
+first_eval_rerun_allowed: false
+policy_scale_comparison_allowed: false
+step_4_5_promotion_allowed: false
+paper_claim_allowed: false
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_active_reobservation_promotion_gate_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_active_reobservation_promotion_gate_v1.verify.json
+jq '{status, contract_name, natural_proof_rule: .natural_proof_rule.post_hoc_fitting_forbidden, next_task: .next_research_task.task, checks: .contract_checks}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_active_reobservation_promotion_gate_v1.json
+```
+
+에이전트 추론: This gate is a natural-proof guard. It prevents the paper path from fitting evidence around the desired hypothesis by requiring a future label-free branch to reduce wrong-goal and wasted path under fixed comparisons while preserving map/pose consistency. If a later result fails, it should become failure taxonomy, scope reduction, deferred claim, or a new hypothesis, not threshold or metric tuning.
+
+논문 주장: No ObjectNav improvement, `SemanticSLAM` complementarity, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this static gate.
+
 ### Semantic-SLAM Candidate-Relative Active-Observation Utility Contract
 
 사실:
@@ -9226,6 +9577,104 @@ jq '{status, contract_name, source_gate: .source_gate.post_update_primary_blocke
 에이전트 추론: This contract freezes the schema requested by the revised direction: `goal_validity_risk`, `viewpoint_evidence_gap`, and `map_pose_consistency_uncertainty` are joined to wrong-goal, wasted path, and map/pose deltas only after post-update rows are fixed. The join is evaluation-only and does not unlock terminal utility.
 
 논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this static contract.
+
+### Semantic-SLAM Active-Observation Post-Update Evaluation Join Materializer
+
+사실:
+
+```text
+date_checked: 2026-06-11
+script: runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update_evaluation_join.py
+verify: manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.verify.json
+output: local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1
+status: post_update_evaluation_join_gate_passed_promotion_blocked
+request/selected-candidate/candidate-state/baseline/failure rows: 50 / 97 / 232 / 150 / 50
+goal-validity/viewpoint/map-pose join rows: 50 / 50 / 50
+wrong-goal/wasted-path proxy evaluable rows: 150 / 150
+map-pose delta evaluable rows: 50
+request goal-validity states: clean-correct 11, mixed-risk 23, no-valid-risk 4, wrong-risk 12
+baseline wrong-goal rows: NoReobserveReference 21, SemanticOnly 21, SLAMOnlyRich_current 1
+terminal/candidate commit/candidate rejection rows: 0 / 0 / 0
+uses_gt_for_action true rows: 0
+paper_claim_allowed true rows: 0
+action_evidence_forbidden_key_count: 0
+primary_blocker: evaluation_join_only_nonterminal_goal_validity_arbitration_required
+next_task: freeze_semantic_slam_centered_task_map_evidence_contract
+```
+
+Docker verification:
+
+```bash
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update_evaluation_join.py
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_semantic_slam_active_observation_post_update_evaluation_join
+jq '{status, actual_counts, post_update_evaluation_join_gate_passed, promotion_gate_after_evaluation_join_passed, primary_blocker, next_task}' local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_summary.json
+```
+
+에이전트 추론: This artifact is the first same-row task/map bridge after active-observation post-update. It supports the Semantic-SLAM-centered framing because `ObjectNav` wrong-goal and wasted path are measured as task-level failure surfaces while map/pose deltas remain a separate map-side evidence axis.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this artifact.
+
+### Semantic-SLAM Task/Map Evidence Contract
+
+사실:
+
+```text
+date_checked: 2026-06-11
+contract: manifests/h001_semantic_slam_task_map_evidence_v1.json
+verify: manifests/h001_semantic_slam_task_map_evidence_v1.verify.json
+status: static_contract_verified_promotion_blocked
+source output: local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1
+source request/selected-candidate/candidate-state/baseline/failure rows: 50 / 97 / 232 / 150 / 50
+goal-validity/viewpoint/map-pose join rows: 50 / 50 / 50
+wrong-goal/wasted-path proxy evaluable rows: 150 / 150
+map-pose delta evaluable rows: 50
+ObjectNav wrong-goal role: task-level failure surface for Semantic-SLAM uncertainty
+map/pose role: separate Semantic-SLAM evidence axis
+terminal/formula/first_eval/policy-scale/Step 4-5/paper claim allowed: false
+next_task: define_reviewer_defense_baseline_matrix
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_evidence_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_evidence_v1.verify.json
+jq '{status, contract_name, framing: .paper_framing.objectnav_wrong_goal_role, next_task: .next_research_task.task, checks: .contract_checks}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_evidence_v1.json
+```
+
+에이전트 추론: This freezes the interpretation layer: `ObjectNav` wrong-goal and wasted path are task-level symptoms of semantic/map/pose uncertainty, while map/pose consistency remains a separate `Semantic-SLAM` axis. The next runtime-facing design should be a reviewer-defense baseline/ablation matrix, not a terminal selector.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this contract.
+
+### Reviewer-Defense Baseline Matrix
+
+사실:
+
+```text
+date_checked: 2026-06-11
+contract: manifests/h001_reviewer_defense_baseline_matrix_v1.json
+verify: manifests/h001_reviewer_defense_baseline_matrix_v1.verify.json
+status: static_contract_verified_promotion_blocked
+source contract: manifests/h001_semantic_slam_task_map_evidence_v1.json
+required non-GT baselines: NoReobserveReference, SemanticOnly, SLAMOnly, SemanticSLAMInteraction, RandomReobserve, FrontierReobserve, CARe_style_confidence_replanning
+required related-work references or blockers: VLFM_style_semantic_frontier_reference, OneMap_style_semantic_memory_reference
+oracle references: GTTargetOracle, GTCandidateOracle, GTViewOracle
+simpler alternatives: confidence_threshold_only, direct_semantic_memory_commit, detector_score_confirmation, geometry_only_viewpoint, random_budget_matched_observation
+terminal/formula/first_eval/policy-scale/Step 4-5/paper claim allowed: false
+next_task: define_active_reobservation_promotion_gate
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_reviewer_defense_baseline_matrix_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_reviewer_defense_baseline_matrix_v1.verify.json
+jq '{status, contract_name, next_task: .next_research_task.task, checks: .contract_checks}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_reviewer_defense_baseline_matrix_v1.json
+```
+
+에이전트 추론: This matrix is a reviewer-defense checklist. It forces the next promotion gate to compare against random extra views, geometry/frontier exploration, confidence replanning, semantic frontier exploration, semantic memory reuse, and separated semantic vs map/pose components before any terminal utility.
+
+논문 주장: No `SemanticSLAM` complementarity, ObjectNav benefit, SLAM benefit, terminal utility, `first_eval`, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this baseline matrix.
 
 ### Semantic-SLAM Candidate-Relative Map/Pose Evidence Materializer
 

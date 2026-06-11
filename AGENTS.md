@@ -158,6 +158,8 @@ tmux new-session -d -s <job-name> 'cd <workdir> && <resumable-command> > logs/<j
 ## Paper Novelty Rules
 
 - Motivation과 novelty를 구분한다. "기존 방법이 안 된다" 또는 "새 모듈을 붙였다"는 motivation일 수 있지만, 그 자체를 contribution으로 쓰지 않는다.
+- 논문화 과정은 원하는 hypothesis를 증명하기 위해 evidence, metric, baseline, threshold를 사후적으로 끼워 맞추는 방식으로 진행하지 않는다. 문제 원인 진단에서 method 형태가 자연스럽게 도출되어야 하며, claim은 그 원인을 해결한다는 사전 정의된 gate를 통과할 때만 승격한다.
+- 결과가 기대와 다르면 threshold, metric, baseline을 바꾸어 hypothesis를 살리지 말고 failure mechanism, scope reduction, deferred claim, or new hypothesis로 기록한다.
 - Contribution은 원인 진단과 해법의 원리가 함께 있어야 한다. 실패 원인을 설명하는 한 문장과 그 원인에서 method 형태가 왜 도출되는지 연결한다.
 - Challenge는 단순히 "기존 방식이 안 된다"가 아니라 naive baseline을 실제로 돌린 뒤 case-level failure taxonomy로 정의한다.
 - Naive baseline을 먼저 정의하고, 어디서 왜 실패하는지 case-level failure taxonomy를 만든다.

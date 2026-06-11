@@ -1,0 +1,82 @@
+{
+  "schema_version": "h001.contract.rival_contradiction_region_contamination_detector_evaluation_join.v1",
+  "date_checked": "2026-06-12",
+  "status": "frozen_design_contract_before_evaluation_join_materializer",
+  "contract_name": "rival_contradiction_region_contamination_detector_evaluation_join_v1",
+  "purpose": "Join evaluation-only labels and baseline/task proxy outcomes after the label-free detector evidence rows are frozen, to test whether the detector evidence flags the previously diagnosed wrong provisional same-category support case.",
+  "source": {
+    "detector_evidence_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_detector_evidence_v1.json",
+    "detector_evidence_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_detector_evidence_v1.verify.json",
+    "detector_evidence_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_evidence_summary.json",
+    "detector_pair_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_pair_rows.jsonl",
+    "detector_candidate_role_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_candidate_role_rows.jsonl",
+    "detector_role_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_role_rows.jsonl",
+    "pairwise_eval_request_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_v1/pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_request_rows.jsonl",
+    "pairwise_eval_candidate_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_v1/pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_candidate_rows.jsonl",
+    "pairwise_eval_pair_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_v1/pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_pair_rows.jsonl",
+    "pairwise_eval_baseline_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_v1/pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_baseline_rows.jsonl"
+  },
+  "target_pair": {
+    "scene_key": "QaLdnwvtxbs",
+    "query": "sofa",
+    "request_id": "rival_identity:3",
+    "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:9:1:sofa",
+    "source_name": "expanded_retrieval_local_context_frames_v1",
+    "provisionally_supported_candidate_id": "vlmaps:export:sofa:spatial_nms:1",
+    "rival_candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+    "expected_pair_label_pattern_for_evaluation_only": "a_wrong_b_correct"
+  },
+  "join_policy": {
+    "evidence_rows_must_be_frozen_before_join": true,
+    "labels_are_evaluation_only": true,
+    "baseline_outcomes_are_evaluation_only": true,
+    "joined_labels_may_not_reorder_candidates": true,
+    "joined_labels_may_not_select_thresholds": true,
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "required_outputs": {
+    "request_rows": "rival_contradiction_region_contamination_detector_evaluation_join_request_rows.jsonl",
+    "candidate_rows": "rival_contradiction_region_contamination_detector_evaluation_join_candidate_rows.jsonl",
+    "pair_rows": "rival_contradiction_region_contamination_detector_evaluation_join_pair_rows.jsonl",
+    "baseline_rows": "rival_contradiction_region_contamination_detector_evaluation_join_baseline_rows.jsonl",
+    "promotion_probe_rows": "rival_contradiction_region_contamination_detector_evaluation_join_promotion_probe_rows.jsonl",
+    "summary": "rival_contradiction_region_contamination_detector_evaluation_join_summary.json"
+  },
+  "minimum_join_gate": {
+    "source_detector_evidence_gate_passed": true,
+    "expected_request_rows": 1,
+    "expected_candidate_rows": 2,
+    "expected_pair_rows": 1,
+    "expected_baseline_rows": 3,
+    "expected_promotion_probe_rows": 1,
+    "expected_pair_label_pattern": "a_wrong_b_correct",
+    "expected_wrong_provisional_candidate_id": "vlmaps:export:sofa:spatial_nms:1",
+    "expected_correct_rival_candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+    "minimum_wrong_goal_baseline_count": 2,
+    "minimum_wasted_path_exposure_m": 1.0,
+    "minimum_map_pose_consistency_delta": 0.5,
+    "terminal_commit_rows_maximum": 0,
+    "candidate_commit_rows_maximum": 0,
+    "candidate_rejection_rows_maximum": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "blocked_actions": [
+    "terminal_goal_commit",
+    "candidate_commit",
+    "candidate_rejection",
+    "terminal_score_tuning",
+    "formula_revision_from_labels",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "next_allowed_step_after_join": "Run the bounded promotion gate that checks wrong-goal, wasted-path, and map/pose consistency delta readiness without converting the single diagnostic row into a paper claim.",
+  "paper_claim_allowed": false
+}

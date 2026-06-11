@@ -1,106 +1,130 @@
 {
-  "schema_version": "h001.verify.semantic_slam_active_observation_post_update_evaluation_join.v1",
-  "date_checked": "2026-06-11",
-  "ok": true,
-  "verified_artifact": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.json",
-  "status": "static_contract_verified_implementation_pending",
-  "source_files_checked": [
-    "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_v1.json",
-    "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_v1.verify.json",
-    "local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1/active_observation_post_update_summary.json",
-    "local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1/active_observation_post_update_request_rows.jsonl",
-    "local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1/active_observation_post_update_selected_candidate_rows.jsonl",
-    "local_dataset/runs/h001_semantic_slam_active_observation_post_update_v1/active_observation_post_update_candidate_state_rows.jsonl",
-    "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1/semantic_slam_candidate_relative_active_observation_task_proxy_summary.json",
-    "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1/semantic_slam_candidate_relative_active_observation_task_proxy_request_rows.jsonl",
-    "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_task_proxy_join_v1/semantic_slam_candidate_relative_active_observation_task_proxy_selected_candidate_rows.jsonl",
-    "local_dataset/runs/h001_semantic_slam_candidate_relative_map_pose_evidence_v1/semantic_slam_candidate_relative_map_pose_evidence_request_rows.jsonl",
-    "local_dataset/runs/h001_semantic_slam_candidate_relative_map_pose_evidence_v1/semantic_slam_candidate_relative_map_pose_evidence_candidate_rows.jsonl",
-    "local_dataset/runs/h001_semantic_slam_task_map_outcome_probe_v1/semantic_slam_task_map_outcome_probe_summary.json",
-    "local_dataset/runs/h001_semantic_slam_task_map_outcome_probe_v1/semantic_slam_task_map_outcome_probe_rows.jsonl"
-  ],
-  "verified_source_counts": {
-    "post_update_request_rows": 50,
-    "post_update_selected_candidate_rows": 97,
-    "post_update_candidate_state_rows": 232,
-    "post_update_failure_rows": 50,
-    "post_update_rule_audit_rows": 6,
-    "post_update_request_state_counts": {
-      "ambiguity_reduced": 26,
-      "needs_goal_validity_confirmation": 21,
-      "support_acquired": 3
+  "baseline_policy_counts": {
+    "NoReobserveReference": {
+      "map_task_alignment_rows": 0,
+      "rows": 50,
+      "success_commit_proxy_rows": 28,
+      "terminal_commit_proxy_rows": 49,
+      "wasted_path_proxy_m_stats": {
+        "count": 50,
+        "max": 2.0130304619382464,
+        "mean": 0.6937538089727587,
+        "min": 0.0
+      },
+      "wrong_goal_visit_proxy_rows": 21
     },
-    "post_update_selected_candidate_state_counts": {
-      "ambiguity_reduced": 52,
-      "needs_goal_validity_confirmation": 42,
-      "support_acquired": 3
+    "SLAMOnlyRich_current": {
+      "map_task_alignment_rows": 2,
+      "rows": 50,
+      "success_commit_proxy_rows": 2,
+      "terminal_commit_proxy_rows": 3,
+      "wasted_path_proxy_m_stats": {
+        "count": 50,
+        "max": 1.7499999289487662,
+        "mean": 0.03499999857897532,
+        "min": 0.0
+      },
+      "wrong_goal_visit_proxy_rows": 1
     },
-    "task_proxy_request_rows": 50,
-    "task_proxy_selected_candidate_rows": 97,
-    "task_proxy_priority_rows": 232,
-    "task_proxy_baseline_rows": 150,
-    "request_label_missing_rows": 0,
-    "selected_candidate_label_missing_rows": 0,
-    "priority_candidate_label_missing_rows": 0,
-    "selected_candidate_clean_correct_rows": 43,
-    "selected_candidate_wrong_or_no_valid_rows": 54,
-    "selected_candidate_no_valid_pool_rows": 8,
-    "task_map_outcome_request_groups": 50,
-    "task_map_outcome_map_metric_positive_rows": 50,
-    "task_map_outcome_task_proxy_evaluable_rows": 0,
-    "source_terminal_commit_rows": 0,
-    "source_candidate_commit_rows": 0,
-    "source_candidate_rejection_rows": 0,
-    "source_uses_gt_for_action_true_rows": 0,
-    "source_paper_claim_allowed_true_rows": 0
-  },
-  "expected_output_contract": {
-    "request_rows": 50,
-    "selected_candidate_rows": 97,
-    "candidate_state_rows": 232,
-    "baseline_rows": 150,
-    "failure_rows_minimum": 50,
-    "goal_validity_risk_join_available_rows_min": 50,
-    "viewpoint_evidence_gap_available_rows_min": 50,
-    "map_pose_consistency_join_available_rows_min": 50,
-    "wrong_goal_proxy_evaluable_rows_min": 35,
-    "wasted_path_proxy_evaluable_rows_min": 35,
-    "map_pose_delta_evaluable_rows_min": 50,
-    "terminal_commit_rows_max": 0,
-    "candidate_commit_rows_max": 0,
-    "candidate_rejection_rows_max": 0,
-    "action_evidence_forbidden_key_count_max": 0
+    "SemanticOnly": {
+      "map_task_alignment_rows": 0,
+      "rows": 50,
+      "success_commit_proxy_rows": 20,
+      "terminal_commit_proxy_rows": 41,
+      "wasted_path_proxy_m_stats": {
+        "count": 50,
+        "max": 2.115075912697615,
+        "mean": 0.7016471279240141,
+        "min": 0.0
+      },
+      "wrong_goal_visit_proxy_rows": 21
+    }
   },
   "contract_checks": {
-    "post_update_rows_frozen_before_label_join": true,
-    "evaluation_join_allowed_only_after_freeze": true,
-    "semantic_slam_centered_task_map_schema": true,
-    "objectnav_wrong_goal_is_task_failure_surface": true,
-    "goal_validity_risk_schema_defined": true,
-    "viewpoint_evidence_gap_schema_defined": true,
-    "map_pose_consistency_uncertainty_schema_defined": true,
-    "wrong_goal_visit_primary_definition_commit_based": true,
-    "near_candidate_pass_through_excluded_from_primary_wrong_goal": true,
-    "implementation_allowed_next": true,
-    "terminal_commit_allowed": false,
     "candidate_commit_allowed": false,
     "candidate_rejection_allowed": false,
-    "formula_revision_allowed": false,
-    "terminal_utility_validation_allowed": false,
+    "evaluation_join_allowed_only_after_freeze": true,
     "first_eval_rerun_allowed": false,
+    "formula_revision_allowed": false,
+    "objectnav_wrong_goal_is_task_failure_surface": true,
+    "paper_claim_allowed": false,
     "policy_scale_comparison_allowed": false,
+    "post_update_rows_frozen_before_label_join": true,
+    "semantic_slam_centered_task_map_schema": true,
     "step_4_5_promotion_allowed": false,
-    "paper_claim_allowed": false
+    "terminal_commit_allowed": false,
+    "terminal_utility_validation_allowed": false
   },
-  "verification_commands": [
-    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.json",
-    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.verify.json",
-    "jq '{status, contract_name, source_gate: .source_gate.post_update_primary_blocker, schema: .uncertainty_decomposition_schema | keys, next_task: .next_research_task.task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.json"
-  ],
+  "date_checked": "2026-06-11",
   "interpretation": {
-    "fact": "The contract freezes an evaluation-only join after active-observation post-update rows are already materialized.",
-    "agent_inference": "The new schema preserves Semantic-SLAM centrality by treating ObjectNav wrong-goal as the task-level failure surface of Semantic-SLAM uncertainty, while also leaving explicit fields for goal-validity risk, viewpoint evidence gap, and map/pose consistency uncertainty.",
-    "paper_claim": "No ObjectNav improvement, SLAM benefit, Semantic-SLAM complementarity, terminal utility, first_eval rerun, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this static contract."
+    "agent_inference": "The artifact now exposes goal-validity risk, viewpoint evidence gap, and map/pose consistency uncertainty on the same rows, but it is still measurement plumbing rather than terminal utility.",
+    "fact": "Frozen post-update active-observation rows are joined to evaluation-only task proxies, baseline task proxies, and candidate-relative map/pose evidence.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM complementarity, SLAM benefit, formula revision, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim is allowed."
   },
-  "next_task": "implement_Docker_active_observation_post_update_evaluation_join_materializer"
+  "next_task": "freeze_semantic_slam_centered_task_map_evidence_contract",
+  "ok": true,
+  "out_root": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1",
+  "output_state_counts": {
+    "request_goal_validity_risk_state_counts": {
+      "clean_correct_candidate_support": 11,
+      "mixed_goal_validity_risk": 23,
+      "no_valid_candidate_pool_risk": 4,
+      "wrong_goal_candidate_risk": 12
+    },
+    "request_map_pose_uncertainty_state_counts": {
+      "map_pose_ready_uncertainty_measured": 50
+    },
+    "request_viewpoint_evidence_gap_state_counts": {
+      "viewpoint_gap_reduced_ambiguity_reduced": 26,
+      "viewpoint_gap_reduced_goal_validity_unresolved": 21,
+      "viewpoint_gap_reduced_support_acquired": 3
+    },
+    "selected_candidate_goal_validity_risk_state_counts": {
+      "clean_correct_candidate_support": 43,
+      "no_valid_candidate_pool_risk": 8,
+      "wrong_goal_candidate_risk": 46
+    }
+  },
+  "paper_claim_allowed": false,
+  "post_update_evaluation_join_gate_passed": true,
+  "primary_blocker": "evaluation_join_only_nonterminal_goal_validity_arbitration_required",
+  "promotion_gate_after_evaluation_join_passed": false,
+  "schema_version": "h001.semantic_slam_active_observation_post_update_evaluation_join.v1.verify",
+  "status": "post_update_evaluation_join_gate_passed_promotion_blocked",
+  "summary": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_summary.json",
+  "verification_commands": [
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_semantic_slam_active_observation_post_update_evaluation_join.py",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_semantic_slam_active_observation_post_update_evaluation_join",
+    "jq '{status, actual_counts, post_update_evaluation_join_gate_passed, promotion_gate_after_evaluation_join_passed, primary_blocker, next_task}' local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_summary.json"
+  ],
+  "verified_artifact": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.json",
+  "verified_output_counts": {
+    "action_evidence_forbidden_key_count": 0,
+    "baseline_rows": 150,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "candidate_state_rows": 232,
+    "failure_rows": 50,
+    "goal_validity_risk_join_available_rows": 50,
+    "map_pose_consistency_join_available_rows": 50,
+    "map_pose_delta_evaluable_rows": 50,
+    "paper_claim_allowed_true_rows": 0,
+    "request_label_missing_rows": 0,
+    "request_rows": 50,
+    "selected_candidate_label_missing_rows": 0,
+    "selected_candidate_rows": 97,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "viewpoint_evidence_gap_available_rows": 50,
+    "wasted_path_proxy_evaluable_rows": 150,
+    "wrong_goal_proxy_evaluable_rows": 150
+  },
+  "verified_output_files": {
+    "baseline_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_baseline_rows.jsonl",
+    "candidate_state_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_candidate_state_rows.jsonl",
+    "failure_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_failure_rows.jsonl",
+    "request_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_request_rows.jsonl",
+    "selected_candidate_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_selected_candidate_rows.jsonl",
+    "summary": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_summary.json"
+  }
 }

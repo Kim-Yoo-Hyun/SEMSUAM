@@ -1,0 +1,56 @@
+{
+  "schema_version": "h001.verify.rival_contradiction_region_contamination_detector_promotion_gate.v1",
+  "checked_at": "2026-06-12",
+  "ok": true,
+  "status": "docker_verified_bounded_single_case_promotion_gate_passed",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1.json",
+  "source_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1.verify.json",
+  "docker_commands": [
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/run_rival_contradiction_region_contamination_detector_promotion_gate.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.run_rival_contradiction_region_contamination_detector_promotion_gate --out-root /runs/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1"
+  ],
+  "outputs": {
+    "output_root": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1",
+    "gate_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1/rival_contradiction_region_contamination_detector_promotion_gate_rows.jsonl",
+    "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1/rival_contradiction_region_contamination_detector_promotion_gate_summary.json"
+  },
+  "result": {
+    "gate_rows": 1,
+    "promotion_gate_passed": true,
+    "promotion_gate_blockers": [],
+    "wrong_goal_baseline_count": 2,
+    "max_wasted_path_exposure_m": 1.7432420154092887,
+    "map_pose_consistency_delta": 1.0,
+    "allowed_after_pass": "bounded_single_case_mechanism_probe_ready",
+    "terminal_selector_allowed_after_pass": false,
+    "policy_scale_claim_allowed_after_pass": false,
+    "paper_claim_allowed_after_pass": false,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "claim_boundary": {
+    "allowed_after_pass": "bounded_single_case_mechanism_probe_ready",
+    "not_allowed_after_pass": [
+      "ObjectNav improvement claim",
+      "Semantic-SLAM utility claim",
+      "terminal utility claim",
+      "first_eval rerun",
+      "policy-scale comparison",
+      "paper claim"
+    ],
+    "next_valid_research_step": "Scale the same frozen-schema gate to more rows/scenes or freeze a terminal utility contract only after multi-case evidence shows stable wrong-goal/wasted-path/map-pose behavior."
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1.verify.json",
+    "jq '{promotion_gate_passed, promotion_gate_blockers, wrong_goal_baseline_count, max_wasted_path_exposure_m, map_pose_consistency_delta}' local_dataset/runs/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1/rival_contradiction_region_contamination_detector_promotion_gate_summary.json"
+  ],
+  "next_task": "scale_or_freeze_terminal_utility_contract_only_after_multi_case_evidence",
+  "interpretation": {
+    "fact": "The bounded single-case promotion gate passed with no blockers on the frozen detector evidence and evaluation-only join artifact.",
+    "agent_inference": "This is a mechanism-readiness result: the evidence branch can flag the diagnosed wrong provisional support case and link it to wrong-goal, wasted-path, and map/pose context. It is still not a terminal policy, policy-scale comparison, or paper claim.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM utility, terminal utility, first_eval rerun, policy-scale comparison, or paper claim is allowed from this single-case gate."
+  },
+  "paper_claim_allowed": false
+}

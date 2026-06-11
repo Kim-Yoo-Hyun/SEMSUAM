@@ -1,0 +1,133 @@
+{
+  "active_reobservation_promotion_gate_passed": false,
+  "branch_counts": {
+    "keep_audit_control_v1": 29,
+    "missing_evidence_second_view_followup_v1": 3,
+    "pairwise_goal_region_map_pose_arbitration_v1": 18
+  },
+  "candidate_evidence_status_counts": {
+    "audit_control_no_evidence_required": 55,
+    "independent_contradiction_acquired": 1,
+    "independent_evidence_missing": 7,
+    "independent_support_acquired": 27,
+    "independent_support_and_contradiction_conflict": 7
+  },
+  "contract_checks": {
+    "audit_rows_preserved": true,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "conflict_rows_preserved": true,
+    "detector_score_terminal_shortcut_forbidden": true,
+    "evidence_availability_not_goal_validity": true,
+    "labels_for_action_forbidden": true,
+    "map_pose_only_terminal_shortcut_forbidden": true,
+    "missing_rows_preserved": true,
+    "pairwise_arbitration_materialized": true,
+    "paper_claim_allowed": false,
+    "second_view_followup_materialized": true,
+    "source_resolution_verified": true,
+    "support_count_terminal_shortcut_forbidden": true,
+    "terminal_commit_allowed": false,
+    "terminal_utility_validation_allowed": false
+  },
+  "date_checked": "2026-06-11",
+  "failure_tag_counts": {
+    "arbitration_followup_materialization_only": 50,
+    "audit_control_preserved": 29,
+    "candidate_commit_blocked": 50,
+    "candidate_rejection_blocked": 50,
+    "goal_validity_not_proven_by_missing_followup": 3,
+    "goal_validity_not_proven_by_pair_row": 18,
+    "missing_evidence_second_view_followup_required": 3,
+    "pairwise_goal_region_map_pose_arbitration_required": 18,
+    "paper_claim_blocked": 50,
+    "terminal_utility_blocked": 50,
+    "wrong_goal_reduction_only_by_evidence_availability": 9
+  },
+  "implementation_gate": {
+    "action_evidence_forbidden_key_count_passed": true,
+    "audit_candidate_rows_expected_passed": true,
+    "audit_request_rows_expected_passed": true,
+    "candidate_commit_rows_passed": true,
+    "candidate_rejection_rows_passed": true,
+    "candidate_rows_expected_passed": true,
+    "conflict_candidate_rows_expected_passed": true,
+    "conflict_request_rows_expected_passed": true,
+    "missing_candidate_rows_expected_passed": true,
+    "missing_followup_pair_rows_expected_passed": true,
+    "missing_request_rows_expected_passed": true,
+    "pairwise_arbitration_pair_rows_expected_passed": true,
+    "paper_claim_blocked_passed": true,
+    "request_rows_expected_passed": true,
+    "selected_target_request_rows_expected_passed": true,
+    "terminal_commit_rows_passed": true,
+    "uses_gt_for_action_passed": true
+  },
+  "interpretation": {
+    "agent_inference": "The artifact makes pairwise arbitration and missing-evidence follow-up explicit enough for a future evaluation join, but it still does not prove goal validity or terminal utility.",
+    "fact": "The materializer preserves the frozen conflict/missing/audit routing and writes request, candidate, pair, audit, and failure rows without terminal commits or label-derived actions.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM complementarity, terminal utility, formula revision, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim is allowed."
+  },
+  "materializer_gate_passed": true,
+  "next_task": "freeze_post_action_goal_validity_arbitration_followup_evaluation_join_contract",
+  "ok": true,
+  "out_root": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1",
+  "pair_status_pattern_counts": {
+    "independent_contradiction_acquired + independent_evidence_missing": 1,
+    "independent_evidence_missing + independent_evidence_missing": 3,
+    "independent_support_acquired + independent_support_acquired": 10,
+    "independent_support_acquired + independent_support_and_contradiction_conflict": 7
+  },
+  "paper_claim_allowed": false,
+  "primary_blocker": "post_action_arbitration_followup_evaluation_join_required",
+  "request_evidence_status_counts": {
+    "audit_control_no_evidence_required": 29,
+    "independent_evidence_conflicted": 18,
+    "independent_evidence_missing": 3
+  },
+  "route_counts": {
+    "keep_audit_control": 29,
+    "request_conflict_arbitration_evidence": 18,
+    "request_missing_evidence_followup": 3
+  },
+  "schema_version": "h001.post_action_goal_validity_arbitration_followup.v1.verify",
+  "status": "arbitration_followup_materializer_gate_passed_terminal_blocked",
+  "summary": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1/post_action_goal_validity_arbitration_followup_summary.json",
+  "verification_commands": [
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_post_action_goal_validity_arbitration_followup.py",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_post_action_goal_validity_arbitration_followup",
+    "jq '{status, request_rows, candidate_rows, pair_rows, audit_rows, failure_rows, pairwise_arbitration_pair_rows, missing_followup_pair_rows, materializer_gate_passed, primary_blocker, next_task}' local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1/post_action_goal_validity_arbitration_followup_summary.json"
+  ],
+  "verified_artifact": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_post_action_goal_validity_arbitration_followup_v1.json",
+  "verified_output_counts": {
+    "action_evidence_forbidden_key_count": 0,
+    "audit_candidate_rows": 55,
+    "audit_request_rows": 29,
+    "audit_rows": 29,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "candidate_rows": 97,
+    "conflict_candidate_rows": 36,
+    "conflict_request_rows": 18,
+    "failure_rows": 50,
+    "missing_candidate_rows": 6,
+    "missing_followup_pair_rows": 3,
+    "missing_request_rows": 3,
+    "pair_rows": 21,
+    "pairwise_arbitration_pair_rows": 18,
+    "paper_claim_allowed_true_rows": 0,
+    "request_rows": 50,
+    "selected_target_request_rows": 21,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "wrong_goal_reduction_only_by_evidence_availability_rows": 9
+  },
+  "verified_output_files": {
+    "audit_rows": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1/post_action_goal_validity_arbitration_followup_audit_rows.jsonl",
+    "candidate_rows": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1/post_action_goal_validity_arbitration_followup_candidate_rows.jsonl",
+    "failure_rows": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1/post_action_goal_validity_arbitration_followup_failure_rows.jsonl",
+    "pair_rows": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1/post_action_goal_validity_arbitration_followup_pair_rows.jsonl",
+    "request_rows": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1/post_action_goal_validity_arbitration_followup_request_rows.jsonl",
+    "summary": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1/post_action_goal_validity_arbitration_followup_summary.json"
+  }
+}

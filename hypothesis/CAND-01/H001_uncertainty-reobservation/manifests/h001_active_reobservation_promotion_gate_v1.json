@@ -1,0 +1,232 @@
+{
+  "schema_version": "h001.contract.active_reobservation_promotion_gate.v1",
+  "date_checked": "2026-06-11",
+  "status": "frozen_contract_static_verified_promotion_not_satisfied",
+  "contract_name": "active_reobservation_promotion_gate_v1",
+  "purpose": "Freeze the measurable gate for promoting active re-observation from nonterminal Semantic-SLAM evidence acquisition to a later terminal-utility contract. Promotion requires wrong-goal and wasted-path reduction on fixed rows without map/pose consistency degradation, and it must follow from the diagnosed failure mechanism rather than post-hoc metric fitting.",
+  "stage": "P4-design",
+  "source": {
+    "task_map_evidence_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_evidence_v1.json",
+    "task_map_evidence_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_evidence_v1.verify.json",
+    "reviewer_defense_baseline_matrix": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_reviewer_defense_baseline_matrix_v1.json",
+    "reviewer_defense_baseline_matrix_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_reviewer_defense_baseline_matrix_v1.verify.json",
+    "post_update_evaluation_join_summary": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_summary.json"
+  },
+  "source_gate": {
+    "task_map_evidence_contract_verified": true,
+    "reviewer_defense_baseline_matrix_verified": true,
+    "source_join_gate_passed": true,
+    "promotion_satisfied_by_current_evidence": false,
+    "primary_blocker": "promotion_gate_defined_but_no_promotable_label_free_policy_result_yet",
+    "request_rows": 50,
+    "selected_candidate_rows": 97,
+    "candidate_state_rows": 232,
+    "baseline_rows": 150,
+    "failure_rows": 50,
+    "goal_validity_risk_join_available_rows": 50,
+    "viewpoint_evidence_gap_available_rows": 50,
+    "map_pose_consistency_join_available_rows": 50,
+    "wrong_goal_proxy_evaluable_rows": 150,
+    "wasted_path_proxy_evaluable_rows": 150,
+    "map_pose_delta_evaluable_rows": 50,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0
+  },
+  "natural_proof_rule": {
+    "post_hoc_fitting_forbidden": true,
+    "rule": "Do not reshape metrics, thresholds, baselines, or labels to force the H001 hypothesis to look true. A promotable claim must follow naturally from a predeclared failure mechanism: goal-validity risk, viewpoint evidence gap, and map/pose consistency uncertainty should explain why active re-observation is needed and why the chosen method form follows.",
+    "if_result_does_not_match_hypothesis": [
+      "record_failure_mechanism",
+      "reduce_claim_scope",
+      "defer_terminal_utility",
+      "define_new_hypothesis_only_after documenting the old failure"
+    ],
+    "not_allowed": [
+      "change thresholds after inspecting held-out labels",
+      "drop unfavorable baselines from the comparison",
+      "reinterpret wrong-goal or wasted-path metrics after seeing results",
+      "collapse map/pose degradation into an overall navigation score",
+      "promote a detector, segmenter, or semantic-memory module combination as novelty without a failure-mechanism link"
+    ]
+  },
+  "promotion_prerequisites": {
+    "same_rows_required": true,
+    "same_candidate_pool_required": true,
+    "same_viewpoint_pool_required_when_applicable": true,
+    "same_reobservation_budget_required": true,
+    "same_travel_cost_accounting_required": true,
+    "fixed_random_seed_required_for_random_baselines": true,
+    "paired_metric_reporting_required": true,
+    "non_gt_action_inputs_only": true,
+    "evaluation_labels_joined_only_after_action_freeze": true,
+    "commit_based_wrong_goal_metric_required": true,
+    "near_candidate_pass_through_primary_wrong_goal_forbidden": true,
+    "oracle_references_must_remain_diagnostic": true,
+    "style_baselines_must_be_named_as_style_unless_exact_reproduction": true
+  },
+  "required_comparisons_before_terminal_utility_contract": {
+    "must_beat_or_explain": [
+      "NoReobserveReference",
+      "SemanticOnly",
+      "RandomReobserve"
+    ],
+    "must_compare_or_document_blocker": [
+      "FrontierReobserve",
+      "CARe_style_confidence_replanning",
+      "VLFM_style_semantic_frontier_reference",
+      "OneMap_style_semantic_memory_reference"
+    ],
+    "must_separate_component_effects": [
+      "SLAMOnly",
+      "SemanticSLAMInteraction"
+    ],
+    "must_report_oracle_gap": [
+      "GTTargetOracle",
+      "GTCandidateOracle",
+      "GTViewOracle"
+    ]
+  },
+  "promotion_metrics": {
+    "task_behavior": [
+      "wrong_goal_visit_proxy",
+      "wasted_path_proxy_m",
+      "terminal_commit_proxy",
+      "success_commit_proxy",
+      "defer_rate"
+    ],
+    "navigation_cost": [
+      "mean_wasted_path_wrong_goal",
+      "mean_wasted_path_total",
+      "mean_reobserve_count",
+      "mean_reobserve_travel_cost_m"
+    ],
+    "map_pose": [
+      "map_pose_consistency_delta",
+      "pose_graph_connectivity_delta",
+      "map_task_alignment_delta"
+    ],
+    "failure_mechanism": [
+      "goal_validity_risk_state",
+      "viewpoint_evidence_gap_state",
+      "map_pose_consistency_uncertainty_state",
+      "failure_taxonomy"
+    ]
+  },
+  "diagnostic_gate": {
+    "role": "Allows writing a later terminal-utility contract only if a fixed label-free branch produces sign-correct evidence on the same frozen split.",
+    "minimum_rows": 50,
+    "wrong_goal_direction": "lower_than_NoReobserveReference_and_SemanticOnly",
+    "wasted_path_direction": "lower_than_NoReobserveReference_or_explained_by_nonterminal_defer_cost",
+    "map_pose_direction": "nonnegative_map_pose_consistency_delta_vs_SemanticOnly_or_documented_no_degradation",
+    "random_baseline_check": "RandomReobserve must not match or beat the proposed active selection under the same observation budget unless the claim is reduced to extra-observation utility.",
+    "gt_leakage_check": "uses_gt_for_action_true_rows must be 0.",
+    "terminal_shortcut_check": "The active observation utility itself must not be reused as a terminal goal score."
+  },
+  "paper_promotion_gate": {
+    "role": "Allows paper-facing active re-observation claim only after diagnostic gate passes and a held-out or fresh split keeps the same direction without retuning.",
+    "minimum_evaluation_rows": 100,
+    "minimum_scene_count": 5,
+    "wrong_goal_visit_reduction": {
+      "vs_NoReobserveReference": {
+        "absolute_percentage_point_min": 5,
+        "relative_reduction_min": 0.2
+      },
+      "vs_SemanticOnly": {
+        "must_be_non_worse": true,
+        "preferred_absolute_percentage_point_min": 3
+      },
+      "vs_RandomReobserve": {
+        "must_be_better": true,
+        "if_not_better": "active_selection_novelty_blocked"
+      }
+    },
+    "wasted_path_reduction": {
+      "vs_NoReobserveReference": {
+        "absolute_meter_min": 0.5,
+        "relative_reduction_min": 0.15
+      },
+      "vs_SemanticOnly": {
+        "must_be_non_worse": true
+      },
+      "total_path_cost_guard": {
+        "mean_wasted_path_total_increase_absolute_meter_max": 0.5,
+        "mean_wasted_path_total_increase_relative_max": 0.1
+      }
+    },
+    "map_pose_non_degradation": {
+      "map_pose_consistency_delta_vs_SemanticOnly": "mean_or_median_must_be_nonnegative",
+      "pose_graph_connectivity_delta_vs_SemanticOnly": "must_not_decrease_unless_explained_by_valid_defer",
+      "map_task_alignment_delta_vs_SemanticOnly": "must_not_decrease",
+      "if_degraded": "navigation_only_claim_allowed_at_most_semantic_slam_claim_blocked"
+    },
+    "observation_budget_guard": {
+      "mean_num_reobservations_max": 1.5,
+      "same_budget_as_random_required": true,
+      "travel_cost_accounted_in_primary_table": true
+    },
+    "held_out_requirement": {
+      "fixed_split_before_run": true,
+      "no_threshold_retuning_after_calibration": true,
+      "one_fresh_or_scene_disjoint_validation_required_before_paper_claim": true
+    }
+  },
+  "failure_interpretation": {
+    "wrong_goal_reduced_but_map_pose_degrades": "Do not claim Semantic-SLAM utility; at most record a navigation-only diagnostic and revise the map/pose term.",
+    "random_reobserve_matches_or_beats": "Active selection novelty is blocked; report that extra observation budget explains the effect.",
+    "frontier_or_slam_only_matches_or_beats": "Semantic uncertainty term is not necessary under current evidence; reduce claim or find cases where semantic ambiguity matters.",
+    "semantic_only_matches_or_beats": "Map/pose component is not justified; block Step 4-5 and SemanticSLAMInteraction claim.",
+    "care_style_matches_or_beats": "Confidence replanning may explain the effect; H001 must narrow to failure-mechanism analysis or stronger evidence acquisition.",
+    "vlfm_or_onemap_style_matches_or_beats": "Semantic frontier or memory reuse may explain the effect; paper claim must move to the task/map failure-decomposition axis only if still supported.",
+    "wrong_goal_reduction_only_by_defer_all": "Utility is safe but inert; require nonzero success or path-cost benefit before promotion.",
+    "result_sensitive_to_threshold_or_split": "Treat as diagnostic only and do not write terminal utility contract."
+  },
+  "contract_scope": {
+    "contract_type": "promotion_gate_definition_only",
+    "implementation_allowed_next": false,
+    "terminal_utility_contract_allowed_now": false,
+    "terminal_utility_contract_allowed_after_gate_pass": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false,
+    "not_allowed_to_define": [
+      "terminal_goal_candidate_selector",
+      "candidate_commit_rule",
+      "candidate_rejection_rule",
+      "SLAMOnlyRich_formula_update",
+      "SemanticSLAMInteraction_formula_update",
+      "first_eval_rerun_config",
+      "policy_scale_comparison",
+      "Step_4_5_promotion",
+      "paper_claim"
+    ]
+  },
+  "contract_checks": {
+    "task_map_evidence_contract_consumed": true,
+    "reviewer_defense_baseline_matrix_consumed": true,
+    "natural_proof_rule_defined": true,
+    "post_hoc_metric_fitting_forbidden": true,
+    "wrong_goal_reduction_gate_defined": true,
+    "wasted_path_reduction_gate_defined": true,
+    "map_pose_non_degradation_gate_defined": true,
+    "random_reobservation_sanity_gate_defined": true,
+    "related_work_style_baseline_gate_defined": true,
+    "oracle_references_remain_diagnostic": true,
+    "gt_action_for_non_gt_policies_forbidden": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "next_research_task": {
+    "task": "select_next_label_free_branch_for_promotion_gate_attempt",
+    "reason": "The promotion gate is now defined, but no current label-free branch has satisfied it. The next actionable step is to select or design the label-free evidence branch that can attempt this gate. A terminal utility contract is allowed only after future evidence passes the gate without GT action leakage or post-hoc threshold fitting."
+  }
+}

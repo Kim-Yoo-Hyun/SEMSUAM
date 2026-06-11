@@ -1,0 +1,116 @@
+{
+  "active_reobservation_promotion_gate_passed": false,
+  "contract_checks": {
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "formula_revision_allowed": false,
+    "goal_region_or_object_relation_evidence_required": true,
+    "labels_for_rule_input_forbidden": true,
+    "map_pose_only_terminal_shortcut_forbidden": true,
+    "paper_claim_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "same_candidate_pool_required": true,
+    "same_pair_order_required": true,
+    "source_evaluation_join_preserved": true,
+    "step_4_5_promotion_allowed": false,
+    "terminal_commit_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "wrong_goal_for_rule_input_forbidden": true
+  },
+  "date_checked": "2026-06-11",
+  "goal_region_contrast_state_counts": {
+    "both_candidates_have_goal_region_support": 1,
+    "candidate_a_contrastive_goal_region_support": 1,
+    "goal_region_pair_evidence_missing": 19
+  },
+  "implementation_gate": {
+    "action_evidence_forbidden_key_count_passed": true,
+    "audit_request_rows_expected_passed": true,
+    "baseline_rows_preserved_for_later_evaluation_passed": true,
+    "candidate_commit_rows_passed": true,
+    "candidate_rejection_rows_passed": true,
+    "candidate_rows_expected_passed": true,
+    "missing_followup_pair_rows_expected_passed": true,
+    "pair_rows_expected_passed": true,
+    "pairwise_arbitration_pair_rows_expected_passed": true,
+    "paper_claim_allowed_true_rows_passed": true,
+    "request_rows_expected_passed": true,
+    "selected_target_request_rows_expected_passed": true,
+    "terminal_commit_rows_passed": true,
+    "uses_gt_for_action_true_rows_passed": true
+  },
+  "interpretation": {
+    "agent_inference": "This artifact tests whether goal-region/object-relation contrast plus map/pose non-contradiction can produce provisional support without terminal commits. Any provisional support still requires a separate action-frozen evaluation join.",
+    "fact": "The materializer applies the frozen non-GT pairwise rule to preserved request, candidate, and pair rows while keeping correctness labels, wrong-goal outcomes, and oracle fields out of rule inputs.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM complementarity, terminal utility, formula revision, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim is allowed."
+  },
+  "map_pose_non_contradiction_state_counts": {
+    "map_pose_non_contradictory_but_non_discriminative": 21
+  },
+  "materializer_gate_passed": true,
+  "next_task": "freeze_pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_contract",
+  "non_gt_pairwise_rule_state_counts": {
+    "candidate_a_provisionally_supported_by_non_gt_pairwise_rule": 1,
+    "missing_evidence_second_view_followup_required": 3,
+    "pair_remains_unresolved": 17
+  },
+  "object_relation_anchor_consistency_state_counts": {
+    "both_candidates_relation_contradicted": 2,
+    "candidate_a_anchor_consistent": 1,
+    "candidate_a_relation_contradicted": 3,
+    "candidate_b_anchor_consistent": 1,
+    "object_relation_evidence_missing": 14
+  },
+  "ok": true,
+  "out_root": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_v1",
+  "paper_claim_allowed": false,
+  "primary_blocker": "pairwise_rule_evaluation_join_required",
+  "rule_defer_reason_counts": {
+    "any_required_non_gt_evidence_family_is_missing": 16,
+    "both_candidates_have_goal_region_support": 1,
+    "missing_followup_pair_without_second_view_evidence": 3
+  },
+  "schema_version": "h001.pairwise_goal_region_map_pose_arbitration_rule.v1.verify",
+  "status": "pairwise_rule_materializer_gate_passed_terminal_blocked",
+  "summary": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_v1/pairwise_goal_region_map_pose_arbitration_rule_summary.json",
+  "verification_commands": [
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_pairwise_goal_region_map_pose_arbitration_rule.py",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_pairwise_goal_region_map_pose_arbitration_rule",
+    "jq '{status, request_rows, candidate_rows, pair_rows, provisional_candidate_a_rows, provisional_candidate_b_rows, pair_unresolved_rows, missing_followup_required_rows, materializer_gate_passed, active_reobservation_promotion_gate_passed, primary_blocker, next_task}' local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_v1/pairwise_goal_region_map_pose_arbitration_rule_summary.json"
+  ],
+  "verified_artifact": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_pairwise_goal_region_map_pose_arbitration_rule_v1.json",
+  "verified_output_counts": {
+    "action_evidence_forbidden_key_count": 0,
+    "audit_request_rows": 29,
+    "baseline_rows": 150,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "candidate_rows": 97,
+    "failure_rows": 50,
+    "goal_region_pair_evidence_available_rows": 2,
+    "map_pose_non_contradiction_rows": 21,
+    "missing_followup_pair_rows": 3,
+    "missing_followup_required_rows": 3,
+    "object_relation_pair_evidence_available_rows": 7,
+    "pair_rows": 21,
+    "pair_unresolved_rows": 17,
+    "pairwise_arbitration_pair_rows": 18,
+    "paper_claim_allowed_true_rows": 0,
+    "provisional_candidate_a_rows": 1,
+    "provisional_candidate_b_rows": 0,
+    "request_rows": 50,
+    "rule_input_complete_rows": 2,
+    "selected_target_candidate_rows": 42,
+    "selected_target_request_rows": 21,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action_true_rows": 0
+  },
+  "verified_output_files": {
+    "candidate_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_v1/pairwise_goal_region_map_pose_arbitration_rule_candidate_rows.jsonl",
+    "failure_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_v1/pairwise_goal_region_map_pose_arbitration_rule_failure_rows.jsonl",
+    "pair_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_v1/pairwise_goal_region_map_pose_arbitration_rule_pair_rows.jsonl",
+    "request_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_v1/pairwise_goal_region_map_pose_arbitration_rule_request_rows.jsonl",
+    "summary": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_v1/pairwise_goal_region_map_pose_arbitration_rule_summary.json"
+  }
+}

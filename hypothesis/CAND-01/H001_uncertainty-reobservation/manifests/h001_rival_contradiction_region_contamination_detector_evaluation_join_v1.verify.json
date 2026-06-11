@@ -1,0 +1,81 @@
+{
+  "schema_version": "h001.verify.rival_contradiction_region_contamination_detector_evaluation_join.v1",
+  "checked_at": "2026-06-12",
+  "ok": true,
+  "status": "docker_verified_evaluation_only_join_after_detector_evidence_freeze",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1.json",
+  "source_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_detector_evidence_v1.verify.json",
+  "docker_commands": [
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_rival_contradiction_region_contamination_detector_evaluation_join.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_rival_contradiction_region_contamination_detector_evaluation_join --out-root /runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1"
+  ],
+  "outputs": {
+    "output_root": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1",
+    "request_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1/rival_contradiction_region_contamination_detector_evaluation_join_request_rows.jsonl",
+    "candidate_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1/rival_contradiction_region_contamination_detector_evaluation_join_candidate_rows.jsonl",
+    "pair_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1/rival_contradiction_region_contamination_detector_evaluation_join_pair_rows.jsonl",
+    "baseline_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1/rival_contradiction_region_contamination_detector_evaluation_join_baseline_rows.jsonl",
+    "promotion_probe_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1/rival_contradiction_region_contamination_detector_evaluation_join_promotion_probe_rows.jsonl",
+    "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1/rival_contradiction_region_contamination_detector_evaluation_join_summary.json"
+  },
+  "result": {
+    "request_rows": 1,
+    "candidate_rows": 2,
+    "pair_rows": 1,
+    "baseline_rows": 3,
+    "promotion_probe_rows": 1,
+    "candidate_label_counts": {
+      "correct": 1,
+      "wrong": 1
+    },
+    "pair_label_pattern_counts": {
+      "a_wrong_b_correct": 1
+    },
+    "detector_pair_evidence_state_counts": {
+      "rival_region_contamination_or_same_category_overlap_observed": 1
+    },
+    "wrong_goal_baseline_count": 2,
+    "max_wasted_path_exposure_m": 1.7432420154092887,
+    "map_pose_consistency_delta": 1.0,
+    "map_pose_consistency_uncertainty_proxy": 0.195,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "gate": {
+    "source_detector_evidence_gate_passed": true,
+    "request_rows_match": true,
+    "candidate_rows_match": true,
+    "pair_rows_match": true,
+    "baseline_rows_match": true,
+    "promotion_probe_rows_match": true,
+    "pair_label_pattern_match": true,
+    "wrong_provisional_candidate_match": true,
+    "correct_rival_candidate_match": true,
+    "wrong_goal_baseline_count_pass": true,
+    "wasted_path_exposure_pass": true,
+    "map_pose_consistency_delta_pass": true,
+    "terminal_commit_rows_pass": true,
+    "candidate_commit_rows_pass": true,
+    "candidate_rejection_rows_pass": true,
+    "uses_gt_for_action_pass": true,
+    "paper_claim_blocked": true,
+    "evaluation_join_gate_passed": true
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1.verify.json",
+    "jq '{gate, wrong_goal_baseline_count, max_wasted_path_exposure_m, map_pose_consistency_delta}' local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1/rival_contradiction_region_contamination_detector_evaluation_join_summary.json",
+    "wc -l local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1/*.jsonl"
+  ],
+  "next_task": "run_rival_contradiction_region_contamination_detector_promotion_gate",
+  "interpretation": {
+    "fact": "The Docker evaluation-only join connected the frozen detector evidence to the diagnosed a_wrong_b_correct case and to baseline wrong-goal/wasted-path/map-pose context.",
+    "agent_inference": "This supports a bounded mechanism probe: detector evidence can flag a wrong provisional support case that exposes wrong-goal and wasted-path risk under simple baselines. It is not yet a policy-scale or paper claim.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM utility, terminal utility, first_eval rerun, policy-scale comparison, or paper claim is allowed from this single-row evaluation join."
+  },
+  "paper_claim_allowed": false
+}

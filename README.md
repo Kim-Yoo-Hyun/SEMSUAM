@@ -16,17 +16,17 @@
 
 ### 사실
 
-- Date checked: 2026-06-07
+- Date checked: 2026-06-12
 - Primary candidate: `CAND-01`
 - Active hypothesis: `H001_uncertainty-reobservation`
-- Current gate: freeze active-observation post-update evaluation join contract
+- Current gate: terminal utility remains blocked; `rival_contradiction_region_contamination_multi_case_frame_projection_v1` is statically frozen as the next 72-row frame/projection smoke contract
 - Current `Now`: [TODO.md](TODO.md)
 - Active hypothesis entrypoint: [hypothesis/CAND-01/H001_uncertainty-reobservation/README.md](hypothesis/CAND-01/H001_uncertainty-reobservation/README.md)
 - Current detailed workflow: [workflow-20260521-dense-conflict.md](hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260521-dense-conflict.md)
 
 ### 에이전트 추론
 
-현재 연구 방향은 semantic uncertainty를 단순 confidence score가 아니라 active SLAM/navigation utility로 바꾸는 것이다. Paper-scale local-context detector/SAM2 substrate는 통과했지만 post-observation terminal rule은 wrong-goal/no-valid commit 때문에 실패했다. Candidate-specific, object-relation, unique-support, partial relation-depth, missing-own-view, and instance-arbitration pair-graph branches는 terminal commit을 막는 방향으로 세분화되어 있다. Instance-arbitration pair-graph closure 뒤 selector는 semantic object branch promotable rows `0`과 semantic object branches exhausted `true`를 확인했고, 다음 label-free evidence family로 `semantic_slam_map_pose_consistency_probe_v1`를 선택했다. Source audit, pose graph connectivity proxy gate, strict edge variant proxy gate, proxy comparison contract/implementation/output evaluation, non-dominated proxy redesign, reviewer-defense proxy sequence, `SLAMOnlyRich` underpowered diagnostic, revision contract, task/map outcome probe implementation, label-backed task proxy join materializer, non-GT task policy selector materializer, candidate-specific SLAM/map-pose selector materializer, candidate-specific task proxy join, safe-but-sparse selector diagnostic, geometry-only closure, candidate-relative map/pose evidence materializer, candidate-relative task-side proxy join materializer, candidate-relative top-rule closure, active-observation utility contract/materializer, active-observation task-proxy join contract/materializer, active-observation risk analysis, active-observation post-update contract, and active-observation post-update materializer are Docker-verified or frozen. The latest materializer makes label-free evidence state updates explicit, but terminal utility, formula change, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked until a post-update evaluation join and later non-GT goal-validity arbitration pass.
+현재 연구 방향은 semantic uncertainty를 단순 confidence score가 아니라 active SLAM/navigation utility로 바꾸는 것이다. 최신 bounded detector/evidence/evaluation/promotion ladder는 `QaLdnwvtxbs/sofa/rival_identity:3` 한 행에서 mechanism probe를 통과했지만, 그 자체로 terminal utility나 paper claim은 허용하지 않는다. 새 multi-case frame/projection contract는 action-frozen source pool의 `18` pairwise conflict rows에서 나온 `72` observation seed rows를 Docker smoke 대상으로 고정했다. 다음 단계는 이 contract를 실제 Habitat frame/projection smoke로 구현한 뒤 detector/SAM2, post-detector evidence, evaluation-only join, promotion gate로 같은 no-GT-action discipline 아래 확장하는 것이다.
 
 ## Key Documents
 

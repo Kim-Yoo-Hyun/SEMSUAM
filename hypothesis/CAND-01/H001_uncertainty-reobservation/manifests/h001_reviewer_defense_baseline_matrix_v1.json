@@ -1,0 +1,417 @@
+{
+  "schema_version": "h001.contract.reviewer_defense_baseline_matrix.v1",
+  "date_checked": "2026-06-11",
+  "status": "frozen_contract_static_verified",
+  "contract_name": "reviewer_defense_baseline_matrix_v1",
+  "purpose": "Freeze the reviewer-defense baseline and ablation matrix for H001 before any terminal utility, formula revision, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim. The matrix tests whether active re-observation utility is more than semantic thresholding, random extra views, confidence replanning, semantic frontier exploration, semantic memory reuse, or geometry-only exploration.",
+  "stage": "P4-design",
+  "source": {
+    "task_map_evidence_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_evidence_v1.json",
+    "task_map_evidence_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_evidence_v1.verify.json",
+    "post_update_evaluation_join_summary": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_summary.json"
+  },
+  "source_gate": {
+    "task_map_evidence_contract_verified": true,
+    "source_join_gate_passed": true,
+    "promotion_remains_blocked": true,
+    "request_rows": 50,
+    "baseline_rows": 150,
+    "existing_baseline_rows_available": [
+      "NoReobserveReference",
+      "SemanticOnly",
+      "SLAMOnlyRich_current"
+    ],
+    "goal_validity_risk_join_available_rows": 50,
+    "viewpoint_evidence_gap_available_rows": 50,
+    "map_pose_consistency_join_available_rows": 50,
+    "wrong_goal_proxy_evaluable_rows": 150,
+    "wasted_path_proxy_evaluable_rows": 150,
+    "map_pose_delta_evaluable_rows": 50,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0
+  },
+  "baseline_groups": {
+    "core_task_controls": [
+      {
+        "name": "NoReobserveReference",
+        "role": "Direct semantic-map commit baseline and wrong-goal prior.",
+        "implementation_status": "available_in_join_artifact",
+        "action_inputs": [
+          "frozen semantic candidate source",
+          "source top candidate"
+        ],
+        "must_report": [
+          "terminal_commit_proxy",
+          "success_commit_proxy",
+          "wrong_goal_visit_proxy",
+          "wasted_path_proxy_m"
+        ],
+        "reviewer_question": "Does the failure mode exist before active re-observation?"
+      },
+      {
+        "name": "SemanticOnly",
+        "role": "Semantic evidence / semantic uncertainty baseline without map-pose utility.",
+        "implementation_status": "available_in_join_artifact_as_current_proxy",
+        "action_inputs": [
+          "semantic candidate evidence",
+          "post-observation semantic support",
+          "goal_validity_risk proxy before labels"
+        ],
+        "must_report": [
+          "wrong_goal_visit_proxy",
+          "wasted_path_proxy_m",
+          "viewpoint_evidence_gap_state",
+          "defer_rate"
+        ],
+        "reviewer_question": "Is the proposed method more than semantic uncertainty or semantic evidence update alone?"
+      }
+    ],
+    "active_observation_controls": [
+      {
+        "name": "RandomReobserve",
+        "role": "Budget-matched active observation control.",
+        "implementation_status": "required_before_promotion",
+        "action_inputs": [
+          "same candidate/viewpoint pool as proposed policy",
+          "fixed random seed",
+          "same re-observation budget",
+          "same travel-cost accounting"
+        ],
+        "forbidden_inputs": [
+          "candidate correctness label",
+          "wrong-goal label",
+          "no-valid label",
+          "oracle shortest path for action"
+        ],
+        "must_report": [
+          "wrong_goal_visit_proxy",
+          "wasted_path_proxy_m",
+          "mean_reobserve_count",
+          "mean_reobserve_travel_cost_m"
+        ],
+        "reviewer_question": "Does active selection matter, or does any extra view help?"
+      },
+      {
+        "name": "FrontierReobserve",
+        "role": "Geometry/frontier-only re-observation control.",
+        "implementation_status": "required_before_promotion_or_explicitly_marked_unavailable",
+        "action_inputs": [
+          "frontier or visibility coverage proxy",
+          "reachable viewpoint candidates",
+          "same travel-cost accounting"
+        ],
+        "allowed_approximation_if_frontier_unavailable": "geometry_only_viewpoint_coverage_proxy",
+        "forbidden_inputs": [
+          "semantic correctness label",
+          "semantic rank as tie-breaker unless explicitly ablated",
+          "oracle target position for action"
+        ],
+        "must_report": [
+          "wrong_goal_visit_proxy",
+          "wasted_path_proxy_m",
+          "map_pose_consistency_delta",
+          "map_task_alignment"
+        ],
+        "reviewer_question": "Is the gain semantic uncertainty utility, or just geometry-only exploration?"
+      }
+    ],
+    "semantic_slam_component_controls": [
+      {
+        "name": "SLAMOnly",
+        "role": "Map/pose uncertainty or geometry-only utility without semantic goal-validity utility.",
+        "implementation_status": "required_before_step_4_5_promotion",
+        "current_proxy": "SLAMOnlyRich_current",
+        "current_proxy_status": "available_but_underpowered_and_safe_sparse",
+        "action_inputs": [
+          "map_pose_consistency_uncertainty",
+          "pose graph connectivity proxy",
+          "candidate-relative map/pose features"
+        ],
+        "forbidden_inputs": [
+          "semantic score fallback",
+          "source-top fallback",
+          "detector score fallback",
+          "evaluation_only_variant_outcomes"
+        ],
+        "must_report": [
+          "map_pose_consistency_delta",
+          "pose_graph_connectivity_delta",
+          "wrong_goal_visit_proxy",
+          "wasted_path_proxy_m",
+          "defer_rate"
+        ],
+        "reviewer_question": "Can map/pose uncertainty alone explain the effect?"
+      },
+      {
+        "name": "SemanticSLAMInteraction",
+        "role": "Proposed combined semantic + map/pose active re-observation utility.",
+        "implementation_status": "blocked_until_promotion_gate_contract",
+        "action_inputs": [
+          "goal_validity_risk",
+          "viewpoint_evidence_gap",
+          "map_pose_consistency_uncertainty",
+          "travel-cost term"
+        ],
+        "forbidden_designs": [
+          "SemanticOnly plus nonnegative bonus on every row",
+          "component max shortcut",
+          "midpoint-only interpolation",
+          "label-tuned weights",
+          "scale-only SLAM term tuning"
+        ],
+        "must_report": [
+          "wrong_goal_visit_proxy_delta_vs_NoReobserveReference",
+          "wrong_goal_visit_proxy_delta_vs_SemanticOnly",
+          "wrong_goal_visit_proxy_delta_vs_RandomReobserve",
+          "wasted_path_proxy_delta_vs_NoReobserveReference",
+          "map_pose_consistency_delta_vs_SemanticOnly",
+          "map_task_alignment_delta_vs_SemanticOnly"
+        ],
+        "reviewer_question": "Does semantic-map uncertainty become active SLAM/navigation utility rather than a module combination?"
+      }
+    ],
+    "related_work_references": [
+      {
+        "name": "CARe_style_confidence_replanning",
+        "role": "Confidence / uncertainty replanning reference for inaccurate pre-explored semantic maps.",
+        "implementation_status": "controlled_style_baseline_required_before_paper_claim",
+        "exact_reproduction_status": "optional_if_official_setup_cost_is_high",
+        "naming_rule": "Use CARe-style unless the official CARe code and evaluation protocol are reproduced.",
+        "action_inputs": [
+          "semantic map confidence",
+          "top-k candidate set",
+          "uncertainty or multi-view consistency proxy"
+        ],
+        "forbidden_inputs": [
+          "new active observation evidence unless explicitly configured as an H001 extension",
+          "GT candidate correctness for action"
+        ],
+        "must_report": [
+          "wrong_goal_visit_proxy",
+          "wasted_path_proxy_m",
+          "candidate_switch_rate",
+          "replan_success_proxy"
+        ],
+        "reviewer_question": "Is H001 only a confidence-replanning variant?"
+      },
+      {
+        "name": "VLFM_style_semantic_frontier_reference",
+        "role": "Vision-language frontier / semantic exploration reference.",
+        "implementation_status": "style_reference_required_or_exact_reproduction_if_feasible",
+        "naming_rule": "Use VLFM-style unless the exact VLFM system is reproduced.",
+        "action_inputs": [
+          "semantic frontier score",
+          "vision-language object likelihood",
+          "frontier or exploration utility"
+        ],
+        "must_report": [
+          "wrong_goal_visit_proxy",
+          "wasted_path_proxy_m",
+          "exploration_cost_proxy",
+          "map_pose_consistency_delta_if_available"
+        ],
+        "reviewer_question": "Is the effect already explained by semantic frontier exploration?"
+      },
+      {
+        "name": "OneMap_style_semantic_memory_reference",
+        "role": "Open-vocabulary semantic memory / reusable map reference.",
+        "implementation_status": "style_reference_required_or_exact_reproduction_if_feasible",
+        "naming_rule": "Use OneMap-style unless the exact OneMap system is reproduced.",
+        "action_inputs": [
+          "open-vocabulary semantic memory",
+          "map-level semantic uncertainty if available",
+          "multi-object navigation score if available"
+        ],
+        "must_report": [
+          "wrong_goal_visit_proxy",
+          "wasted_path_proxy_m",
+          "semantic_memory_confidence_proxy",
+          "map_task_alignment"
+        ],
+        "reviewer_question": "Is H001 just reusable semantic memory with a different evaluation?"
+      }
+    ],
+    "oracle_references": [
+      {
+        "name": "GTTargetOracle",
+        "role": "Shortest path or path-efficiency upper bound to the valid target.",
+        "baseline_type": "oracle_reference_not_deployable_baseline",
+        "allowed_use": [
+          "upper-bound path cost",
+          "candidate coverage gap analysis"
+        ],
+        "forbidden_use": [
+          "action selection for non-GT policies",
+          "threshold tuning",
+          "policy weight fitting"
+        ]
+      },
+      {
+        "name": "GTCandidateOracle",
+        "role": "Candidate-set correctness upper bound.",
+        "baseline_type": "oracle_reference_not_deployable_baseline",
+        "allowed_use": [
+          "candidate coverage vs policy failure separation",
+          "no-valid pool diagnosis"
+        ],
+        "forbidden_use": [
+          "candidate selection for proposed policy",
+          "terminal rule tuning"
+        ]
+      },
+      {
+        "name": "GTViewOracle",
+        "role": "Best re-observation viewpoint upper bound.",
+        "baseline_type": "oracle_reference_not_deployable_baseline",
+        "allowed_use": [
+          "viewpoint pool quality audit",
+          "observation budget upper bound"
+        ],
+        "forbidden_use": [
+          "viewpoint selection for proposed policy",
+          "utility term tuning"
+        ]
+      }
+    ]
+  },
+  "simpler_alternative_matrix": [
+    {
+      "name": "confidence_threshold_only",
+      "tests": "Whether a scalar semantic confidence threshold is enough.",
+      "expected_failure_to_report": "over-deferral or wrong-goal confirmation when object visibility does not imply goal validity"
+    },
+    {
+      "name": "direct_semantic_memory_commit",
+      "tests": "Whether direct semantic-memory retrieval is enough.",
+      "expected_failure_to_report": "wrong repeated-instance or no-valid candidate commitment"
+    },
+    {
+      "name": "detector_score_confirmation",
+      "tests": "Whether detector confidence can confirm the goal.",
+      "expected_failure_to_report": "detector visibility confirms object existence but not ObjectNav goal validity"
+    },
+    {
+      "name": "geometry_only_viewpoint",
+      "tests": "Whether map/pose or frontier-only viewpoint choice is enough.",
+      "expected_failure_to_report": "same-category rivals remain unresolved or geometry-only commits become unsafe"
+    },
+    {
+      "name": "random_budget_matched_observation",
+      "tests": "Whether active selection is unnecessary.",
+      "expected_failure_to_report": "extra observation budget without uncertainty-targeted evidence has weaker wrong-goal/wasted-path tradeoff"
+    }
+  ],
+  "fair_comparison_rules": {
+    "same_rows_required": true,
+    "same_candidate_pool_required": true,
+    "same_viewpoint_pool_required_when_applicable": true,
+    "same_reobservation_budget_required": true,
+    "same_travel_cost_accounting_required": true,
+    "fixed_random_seed_required": true,
+    "paired_metric_reporting_required": true,
+    "gt_action_forbidden_for_non_gt_policies": true,
+    "style_baseline_must_be_named_as_style_unless_exact_reproduction": true,
+    "oracle_references_not_ranked_as_deployable_baselines": true
+  },
+  "required_metrics": {
+    "task_behavior": [
+      "wrong_goal_visit_proxy",
+      "wasted_path_proxy_m",
+      "terminal_commit_proxy",
+      "success_commit_proxy",
+      "defer_rate"
+    ],
+    "active_observation": [
+      "mean_reobserve_count",
+      "mean_reobserve_travel_cost_m",
+      "viewpoint_evidence_gap_state",
+      "evidence_delta_available"
+    ],
+    "map_pose": [
+      "map_pose_consistency_delta",
+      "pose_graph_connectivity_delta",
+      "map_task_alignment"
+    ],
+    "diagnostic": [
+      "goal_validity_risk_state",
+      "no_valid_pool_proxy",
+      "candidate_coverage_proxy",
+      "failure_taxonomy"
+    ]
+  },
+  "minimum_matrix_before_promotion_gate": {
+    "must_have_non_gt_baselines": [
+      "NoReobserveReference",
+      "SemanticOnly",
+      "SLAMOnly",
+      "SemanticSLAMInteraction",
+      "RandomReobserve",
+      "FrontierReobserve",
+      "CARe_style_confidence_replanning"
+    ],
+    "must_have_related_work_reference_or_documented_blocker": [
+      "VLFM_style_semantic_frontier_reference",
+      "OneMap_style_semantic_memory_reference"
+    ],
+    "must_have_oracle_references": [
+      "GTTargetOracle",
+      "GTCandidateOracle",
+      "GTViewOracle"
+    ],
+    "minimum_metric_axes": [
+      "wrong_goal_visit_proxy",
+      "wasted_path_proxy_m",
+      "viewpoint_evidence_gap_state",
+      "map_pose_consistency_delta",
+      "map_task_alignment"
+    ]
+  },
+  "contract_scope": {
+    "contract_type": "baseline_and_ablation_matrix_definition_only",
+    "implementation_allowed_next": false,
+    "promotion_gate_definition_allowed_next": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false,
+    "not_allowed_to_define": [
+      "terminal_goal_candidate_selector",
+      "candidate_commit_rule",
+      "candidate_rejection_rule",
+      "SLAMOnlyRich_formula_update",
+      "SemanticSLAMInteraction_formula_update",
+      "first_eval_rerun_config",
+      "policy_scale_comparison",
+      "Step_4_5_promotion",
+      "paper_claim"
+    ]
+  },
+  "contract_checks": {
+    "task_map_evidence_contract_consumed": true,
+    "core_baselines_defined": true,
+    "active_observation_controls_defined": true,
+    "semantic_slam_component_controls_defined": true,
+    "related_work_references_defined": true,
+    "oracle_references_separated_from_deployable_baselines": true,
+    "simpler_alternatives_defined": true,
+    "fair_comparison_rules_defined": true,
+    "required_metric_axes_defined": true,
+    "style_vs_exact_reproduction_naming_rule_defined": true,
+    "gt_action_for_non_gt_policies_forbidden": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "next_research_task": {
+    "task": "define_active_reobservation_promotion_gate",
+    "reason": "The baseline and ablation matrix is frozen; the next step is to define the promotion gate that says how much wrong-goal and wasted-path reduction is required without degrading map/pose consistency before any terminal utility or formula revision."
+  }
+}

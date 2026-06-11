@@ -1,0 +1,326 @@
+{
+  "schema_version": "h001.contract.rival_contradiction_region_contamination_evidence.v1",
+  "date_checked": "2026-06-11",
+  "status": "frozen_contract_static_verified",
+  "contract_name": "rival_contradiction_region_contamination_evidence_v1",
+  "selected_family_from_diagnostic": "rival_contradiction_or_region_contamination_evidence_v1",
+  "purpose": "Freeze the next non-GT evidence family after pairwise_goal_region_map_pose_rule_failure_diagnostic_v1 showed that positive goal-region and object-relation agreement can still select a wrong same-category instance. This contract turns that failure into a label-free rival contradiction / region contamination evidence request before any terminal utility, formula revision, or policy-scale comparison.",
+  "stage": "P4-design",
+  "paper_framing": {
+    "semantic_slam_centered": true,
+    "objectnav_wrong_goal_role": "task_level_failure_surface_for_semantic_slam_uncertainty",
+    "active_reobservation_role": "nonterminal_rival_contradiction_or_region_contamination_evidence_before_goal_validity_arbitration",
+    "natural_proof_rule": "The method form is forced by the failure mechanism: positive support alone is not enough because the supported candidate can share region or relation evidence with a rival. The next evidence family must therefore test contradiction and contamination before allowing provisional support.",
+    "paper_claim_allowed": false
+  },
+  "source": {
+    "failure_diagnostic_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1.verify.json",
+    "failure_diagnostic_summary": "local_dataset/runs/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1/pairwise_goal_region_map_pose_rule_failure_diagnostic_summary.json",
+    "failure_diagnostic_pair_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1/pairwise_goal_region_map_pose_rule_failure_diagnostic_pair_rows.jsonl",
+    "failure_diagnostic_request_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1/pairwise_goal_region_map_pose_rule_failure_diagnostic_request_rows.jsonl",
+    "failure_diagnostic_next_family_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1/pairwise_goal_region_map_pose_rule_failure_diagnostic_next_family_rows.jsonl",
+    "pairwise_rule_evaluation_join_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_v1.json",
+    "pairwise_rule_evaluation_join_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_v1.verify.json",
+    "pairwise_rule_evaluation_join_summary": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_v1/pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_summary.json",
+    "pairwise_rule_evaluation_join_request_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_v1/pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_request_rows.jsonl",
+    "pairwise_rule_evaluation_join_candidate_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_v1/pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_candidate_rows.jsonl",
+    "pairwise_rule_evaluation_join_pair_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_v1/pairwise_goal_region_map_pose_arbitration_rule_evaluation_join_pair_rows.jsonl",
+    "active_reobservation_promotion_gate": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_active_reobservation_promotion_gate_v1.json",
+    "reviewer_defense_baseline_matrix": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_reviewer_defense_baseline_matrix_v1.json"
+  },
+  "source_gate": {
+    "failure_diagnostic_gate_passed": true,
+    "pairwise_rule_evaluation_join_gate_passed": true,
+    "active_reobservation_promotion_gate_passed": false,
+    "diagnostic_pair_rows": 21,
+    "diagnostic_request_rows": 21,
+    "diagnostic_next_family_rows": 5,
+    "failure_class_counts": {
+      "dual_evidence_coverage_gap": 12,
+      "relation_contradiction_without_goal_region_context": 4,
+      "missing_second_view_evidence": 3,
+      "provisional_positive_evidence_selects_wrong_instance": 1,
+      "noncontrastive_goal_region_support": 1
+    },
+    "recommended_next_family_counts": {
+      "goal_region_object_relation_coverage_completion_v1": 12,
+      "goal_region_conditioned_relation_recheck_v1": 4,
+      "missing_evidence_second_view_followup_v1": 3,
+      "rival_contradiction_or_region_contamination_evidence_v1": 1,
+      "contrastive_goal_region_rival_support_audit_v1": 1
+    },
+    "selected_next_family_candidate": "rival_contradiction_or_region_contamination_evidence_v1",
+    "target_failure_class": "provisional_positive_evidence_selects_wrong_instance",
+    "target_failure_mechanism": "goal_region_and_object_relation_agree_on_wrong_candidate",
+    "target_request_rows": 1,
+    "target_pair_rows": 1,
+    "target_scene_count": 1,
+    "target_query_count": 1,
+    "target_scene_key": "QaLdnwvtxbs",
+    "target_query": "sofa",
+    "target_request_id": "rival_identity:3",
+    "target_episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:9:1:sofa",
+    "target_candidate_a_id": "vlmaps:export:sofa:spatial_nms:1",
+    "target_candidate_b_id": "vlmaps:export:sofa:spatial_nms:2",
+    "target_non_gt_rule_state": "candidate_a_provisionally_supported_by_non_gt_pairwise_rule",
+    "target_goal_region_contrast_state": "candidate_a_contrastive_goal_region_support",
+    "target_object_relation_anchor_consistency_state": "candidate_a_anchor_consistent",
+    "target_map_pose_non_contradiction_state": "map_pose_non_contradictory_but_non_discriminative",
+    "target_rule_input_complete": true,
+    "target_pair_label_pattern_for_evaluation_only": "a_wrong_b_correct",
+    "target_evaluation_label_action_forbidden": true,
+    "label_fields_used_for_action_true_rows": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0
+  },
+  "target_selection_rule": {
+    "rule_name": "select_provisional_positive_support_rows_for_rival_contradiction_or_region_contamination",
+    "uses_label_free_inputs_only": true,
+    "target_filter": {
+      "non_gt_pairwise_rule_state": [
+        "candidate_a_provisionally_supported_by_non_gt_pairwise_rule",
+        "candidate_b_provisionally_supported_by_non_gt_pairwise_rule"
+      ],
+      "rule_input_complete": true,
+      "goal_region_contrast_state": [
+        "candidate_a_contrastive_goal_region_support",
+        "candidate_b_contrastive_goal_region_support"
+      ],
+      "object_relation_anchor_consistency_state": [
+        "candidate_a_anchor_consistent",
+        "candidate_b_anchor_consistent"
+      ],
+      "map_pose_non_contradiction_state": "map_pose_non_contradictory_but_non_discriminative",
+      "terminal_commit": false,
+      "candidate_commit": false,
+      "candidate_rejection": false,
+      "uses_gt_for_action": false
+    },
+    "expected_current_target_rows": 1,
+    "why_not_coverage_completion_first": "Coverage completion is necessary for broad unresolved rows, but it does not answer the strongest reviewer objection: the only complete positive support row selected the wrong same-category instance under evaluation-only labels. This contract therefore freezes a negative/rival check before expanding positive support."
+  },
+  "evidence_family": {
+    "family_name": "rival_contradiction_or_region_contamination_evidence_v1",
+    "family_type": "label_free_nonterminal_evidence_before_pairwise_goal_validity_arbitration",
+    "core_question": "Does the provisionally supported candidate have clean candidate-specific support, or is the same positive evidence contaminated by a rival same-category candidate or contradicted by rival/context evidence?",
+    "required_evidence_axes": [
+      "supported_candidate_own_region_evidence",
+      "rival_candidate_own_region_evidence",
+      "supported_candidate_relation_anchor_evidence",
+      "rival_candidate_relation_anchor_evidence",
+      "shared_or_cross_region_candidate_association",
+      "region_context_overlap_or_contamination",
+      "relation_anchor_contradiction_or_leakage",
+      "map_pose_non_contradiction_audit"
+    ],
+    "allowed_action_inputs": [
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key",
+      "candidate_a_id",
+      "candidate_b_id",
+      "provisionally_supported_candidate_id",
+      "rival_candidate_id",
+      "non_gt_pairwise_rule_state",
+      "goal_region_contrast_state",
+      "object_relation_anchor_consistency_state",
+      "map_pose_non_contradiction_state",
+      "rule_input_complete",
+      "candidate positions and visit/standoff metadata",
+      "projection, detector, mask, depth, association, and relation-anchor metadata already available before evaluation labels",
+      "fixed predeclared contamination and contradiction thresholds",
+      "fixed viewpoint roles from this contract"
+    ],
+    "forbidden_action_inputs": [
+      "candidate_a_correctness_label_for_evaluation_only",
+      "candidate_b_correctness_label_for_evaluation_only",
+      "candidate_pair_label_pattern_for_evaluation_only",
+      "provisional_rule_candidate_correct_for_evaluation_only",
+      "provisional_rule_candidate_wrong_for_evaluation_only",
+      "wrong_goal_visit_proxy",
+      "success_commit_proxy",
+      "terminal_commit_proxy",
+      "wasted_path_proxy_m",
+      "GTTargetOracle",
+      "GTCandidateOracle",
+      "GTViewOracle",
+      "GT object id",
+      "GT goal id",
+      "oracle distance to goal",
+      "post_hoc_label_tuned_threshold",
+      "query_specific_threshold_selected_after_evaluation_join"
+    ],
+    "required_nonterminal_outputs": [
+      "rival_contradiction_evidence_requested",
+      "region_contamination_evidence_requested",
+      "rival_contradiction_acquired",
+      "region_contamination_detected",
+      "candidate_specific_support_clean_but_not_terminal",
+      "insufficient_rival_contradiction_or_contamination_evidence",
+      "coverage_completion_family_required",
+      "audit_control_preserved"
+    ],
+    "blocked_outputs": [
+      "terminal_goal_commit",
+      "candidate_commit",
+      "candidate_rejection",
+      "drop_pair_row",
+      "rerank_pair_by_evaluation_label",
+      "convert_contamination_to_wrong_goal_label",
+      "formula_revision",
+      "first_eval_rerun_config",
+      "policy_scale_comparison"
+    ]
+  },
+  "observation_contract": {
+    "viewpoint_policy": "paired_supported_vs_rival_region_contamination_probe_v1",
+    "roles": [
+      "supported_candidate_own_view",
+      "rival_candidate_own_view",
+      "shared_region_or_relation_anchor_view",
+      "cross_candidate_challenge_view"
+    ],
+    "minimum_observation_roles_per_target_pair": 4,
+    "require_candidate_pair_preserved": true,
+    "require_same_candidate_order_as_source_pair": true,
+    "require_map_pose_fields_preserved": true,
+    "require_audit_rows_for_non_target_pair_families": true,
+    "terminal_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "uses_gt_for_action": false
+  },
+  "required_output_schema_for_next_implementation": {
+    "implementation_target_script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_rival_contradiction_region_contamination_evidence.py",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "output_root": "local_dataset/runs/h001_rival_contradiction_region_contamination_evidence_v1",
+    "required_files": {
+      "request_rows": "rival_contradiction_region_contamination_request_rows.jsonl",
+      "pair_rows": "rival_contradiction_region_contamination_pair_rows.jsonl",
+      "candidate_rows": "rival_contradiction_region_contamination_candidate_rows.jsonl",
+      "observation_plan_rows": "rival_contradiction_region_contamination_observation_plan_rows.jsonl",
+      "audit_rows": "rival_contradiction_region_contamination_audit_rows.jsonl",
+      "failure_rows": "rival_contradiction_region_contamination_failure_rows.jsonl",
+      "summary": "rival_contradiction_region_contamination_summary.json"
+    },
+    "required_pair_row_fields": [
+      "schema_version",
+      "row_type",
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key",
+      "candidate_a_id",
+      "candidate_b_id",
+      "provisionally_supported_candidate_id",
+      "rival_candidate_id",
+      "source_non_gt_pairwise_rule_state",
+      "rival_contradiction_region_contamination_state",
+      "contamination_or_contradiction_evidence_required",
+      "map_pose_non_contradiction_state",
+      "terminal_commit",
+      "candidate_commit",
+      "candidate_rejection",
+      "uses_gt_for_action",
+      "paper_claim_allowed"
+    ],
+    "required_summary_fields": [
+      "status",
+      "request_rows",
+      "pair_rows",
+      "target_request_rows",
+      "target_pair_rows",
+      "audit_pair_rows",
+      "candidate_rows",
+      "observation_plan_rows",
+      "failure_rows",
+      "target_selection_gate_passed",
+      "action_evidence_forbidden_key_count",
+      "terminal_commit_rows",
+      "candidate_commit_rows",
+      "candidate_rejection_rows",
+      "uses_gt_for_action_true_rows",
+      "paper_claim_allowed_true_rows",
+      "active_reobservation_promotion_gate_passed",
+      "primary_blocker",
+      "next_task"
+    ]
+  },
+  "implementation_gate": {
+    "source_diagnostic_pair_rows_expected": 21,
+    "source_diagnostic_request_rows_expected": 21,
+    "target_pair_rows_expected": 1,
+    "target_request_rows_expected": 1,
+    "audit_pair_rows_minimum": 20,
+    "candidate_rows_minimum": 2,
+    "minimum_observation_plan_rows": 4,
+    "action_evidence_forbidden_key_count_expected": 0,
+    "terminal_commit_rows_expected": 0,
+    "candidate_commit_rows_expected": 0,
+    "candidate_rejection_rows_expected": 0,
+    "uses_gt_for_action_true_rows_expected": 0,
+    "paper_claim_allowed_true_rows_expected": 0,
+    "gate_pass_interpretation": "Passing this materializer gate would only mean the next non-GT evidence family was materialized without action leakage. A later detector/evidence analyzer and evaluation-only join are required before any promotion or terminal utility claim."
+  },
+  "simpler_alternatives_to_report_later": [
+    {
+      "name": "commit_provisional_positive_support",
+      "failure_condition": "Fails if the provisionally supported candidate is not task-valid after action-frozen evaluation join."
+    },
+    {
+      "name": "goal_region_contrast_only",
+      "failure_condition": "Fails if contrastive goal-region support is contaminated by rival visibility or shared context."
+    },
+    {
+      "name": "object_relation_anchor_only",
+      "failure_condition": "Fails if relation-anchor consistency supports a wrong same-category instance or lacks goal-region context."
+    },
+    {
+      "name": "map_pose_non_contradiction_only",
+      "failure_condition": "Fails because current map/pose deltas are non-discriminative for all 21 pair rows."
+    },
+    {
+      "name": "defer_all_pairwise_rows",
+      "failure_condition": "Safe but cannot reduce wasted path or demonstrate active utility."
+    }
+  ],
+  "contract_scope": {
+    "contract_type": "non_gt_rival_contradiction_region_contamination_evidence_before_terminal_utility",
+    "implementation_allowed_next": true,
+    "detector_or_post_observation_analyzer_required_after_implementation": true,
+    "evaluation_join_required_after_evidence_rows_are_frozen": true,
+    "terminal_utility_validation_allowed": false,
+    "terminal_utility_contract_allowed_now": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "contract_checks": {
+    "failure_diagnostic_consumed": true,
+    "selected_family_matches_diagnostic": true,
+    "target_filter_label_free": true,
+    "target_pair_rows_nonzero": true,
+    "coverage_completion_not_discarded": true,
+    "same_pair_order_required": true,
+    "same_candidate_pool_required": true,
+    "pair_labels_evaluation_only": true,
+    "terminal_shortcuts_blocked": true,
+    "candidate_rejection_blocked": true,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "next_research_task": {
+    "task": "implement_docker_rival_contradiction_region_contamination_evidence_materializer",
+    "reason": "The non-GT evidence family contract is now frozen. The next implementation should materialize the target pair, candidate, observation-plan, audit, failure, and summary rows without terminal commits, candidate rejection, label leakage, or paper claims."
+  }
+}

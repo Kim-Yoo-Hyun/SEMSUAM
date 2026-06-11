@@ -1,0 +1,79 @@
+{
+  "schema_version": "h001.verify.reviewer_defense_baseline_matrix.v1",
+  "date_checked": "2026-06-11",
+  "ok": true,
+  "status": "static_contract_verified_promotion_blocked",
+  "verified_artifact": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_reviewer_defense_baseline_matrix_v1.json",
+  "source_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_evidence_v1.json",
+  "verified_counts": {
+    "request_rows": 50,
+    "baseline_rows": 150,
+    "goal_validity_risk_join_available_rows": 50,
+    "viewpoint_evidence_gap_available_rows": 50,
+    "map_pose_consistency_join_available_rows": 50,
+    "wrong_goal_proxy_evaluable_rows": 150,
+    "wasted_path_proxy_evaluable_rows": 150,
+    "map_pose_delta_evaluable_rows": 50,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0
+  },
+  "baseline_family_counts": {
+    "core_task_controls": 2,
+    "active_observation_controls": 2,
+    "semantic_slam_component_controls": 2,
+    "related_work_references": 3,
+    "oracle_references": 3,
+    "simpler_alternatives": 5
+  },
+  "required_non_gt_baselines": [
+    "NoReobserveReference",
+    "SemanticOnly",
+    "SLAMOnly",
+    "SemanticSLAMInteraction",
+    "RandomReobserve",
+    "FrontierReobserve",
+    "CARe_style_confidence_replanning"
+  ],
+  "related_work_reference_or_blocker_required": [
+    "VLFM_style_semantic_frontier_reference",
+    "OneMap_style_semantic_memory_reference"
+  ],
+  "oracle_references": [
+    "GTTargetOracle",
+    "GTCandidateOracle",
+    "GTViewOracle"
+  ],
+  "contract_checks": {
+    "task_map_evidence_contract_consumed": true,
+    "core_baselines_defined": true,
+    "active_observation_controls_defined": true,
+    "semantic_slam_component_controls_defined": true,
+    "related_work_references_defined": true,
+    "oracle_references_separated_from_deployable_baselines": true,
+    "simpler_alternatives_defined": true,
+    "fair_comparison_rules_defined": true,
+    "required_metric_axes_defined": true,
+    "style_vs_exact_reproduction_naming_rule_defined": true,
+    "gt_action_for_non_gt_policies_forbidden": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "interpretation": {
+    "fact": "The baseline matrix defines core task controls, active observation controls, Semantic-SLAM component controls, related-work style references, oracle references, and simpler alternatives.",
+    "agent_inference": "The matrix blocks weak novelty framing by requiring comparisons against random extra views, geometry/frontier exploration, confidence replanning, semantic frontier/memory references, and separated semantic vs map/pose components.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM complementarity, SLAM benefit, terminal utility, formula revision, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim is allowed from this static matrix."
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_reviewer_defense_baseline_matrix_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_reviewer_defense_baseline_matrix_v1.verify.json",
+    "jq '{status, contract_name, next_task: .next_research_task.task, checks: .contract_checks}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_reviewer_defense_baseline_matrix_v1.json"
+  ],
+  "next_task": "define_active_reobservation_promotion_gate"
+}

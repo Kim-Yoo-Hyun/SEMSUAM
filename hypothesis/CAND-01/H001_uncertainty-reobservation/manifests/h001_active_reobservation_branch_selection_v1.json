@@ -1,0 +1,197 @@
+{
+  "schema_version": "h001.contract.active_reobservation_branch_selection.v1",
+  "date_checked": "2026-06-11",
+  "status": "frozen_selection_static_verified",
+  "contract_name": "active_reobservation_branch_selection_v1",
+  "purpose": "Select the next label-free branch that can attempt active_reobservation_promotion_gate_v1 without turning active observation utility into a terminal goal score or fitting the proof around the desired H001 hypothesis.",
+  "stage": "P4-design",
+  "source": {
+    "promotion_gate": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_active_reobservation_promotion_gate_v1.json",
+    "task_map_evidence_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_semantic_slam_task_map_evidence_v1.json",
+    "reviewer_defense_baseline_matrix": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_reviewer_defense_baseline_matrix_v1.json",
+    "post_update_evaluation_join_summary": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_summary.json",
+    "post_update_request_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_request_rows.jsonl",
+    "post_update_selected_candidate_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_selected_candidate_rows.jsonl",
+    "post_update_baseline_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_baseline_rows.jsonl"
+  },
+  "source_gate": {
+    "promotion_gate_verified": true,
+    "task_map_evidence_contract_verified": true,
+    "reviewer_defense_baseline_matrix_verified": true,
+    "post_update_evaluation_join_gate_passed": true,
+    "promotion_satisfied_by_current_evidence": false,
+    "request_rows": 50,
+    "selected_candidate_rows": 97,
+    "candidate_state_rows": 232,
+    "baseline_rows": 150,
+    "failure_rows": 50,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0
+  },
+  "selected_branch": {
+    "branch_name": "post_update_goal_validity_gap_reobservation_v1",
+    "branch_type": "label_free_nonterminal_active_reobservation_branch",
+    "primary_target_filter": {
+      "post_update_request_state": "needs_goal_validity_confirmation",
+      "selected_observation_action": "observe_request_context",
+      "map_pose_consistency_uncertainty_state": "map_pose_ready_uncertainty_measured",
+      "terminal_commit": false,
+      "candidate_commit": false,
+      "candidate_rejection": false,
+      "uses_gt_for_action": false
+    },
+    "primary_target_counts": {
+      "request_rows": 21,
+      "scenes": 9,
+      "queries": 6,
+      "request_ids": 21,
+      "selected_candidate_rows_with_same_post_state": 42,
+      "request_goal_validity_risk_state_counts": {
+        "clean_correct_candidate_support": 4,
+        "mixed_goal_validity_risk": 11,
+        "no_valid_candidate_pool_risk": 4,
+        "wrong_goal_candidate_risk": 2
+      },
+      "selected_candidate_goal_validity_risk_state_counts": {
+        "clean_correct_candidate_support": 19,
+        "no_valid_candidate_pool_risk": 8,
+        "wrong_goal_candidate_risk": 15
+      },
+      "selected_observation_action_counts": {
+        "observe_request_context": 21
+      },
+      "map_pose_uncertainty_state_counts": {
+        "map_pose_ready_uncertainty_measured": 21
+      }
+    },
+    "audit_scope": {
+      "all_request_rows": 50,
+      "all_selected_candidate_rows": 97,
+      "all_candidate_state_rows": 232,
+      "all_baseline_rows": 150,
+      "broad_risk_or_unresolved_request_rows": 43,
+      "broad_risk_or_unresolved_by_post_update_state": {
+        "ambiguity_reduced": 21,
+        "needs_goal_validity_confirmation": 21,
+        "support_acquired": 1
+      }
+    },
+    "why_this_branch": [
+      "It directly targets the post-update rows where active observation reduced viewpoint gap but did not resolve goal validity.",
+      "It keeps ObjectNav wrong-goal as the task-level failure surface of Semantic-SLAM uncertainty rather than a separate application.",
+      "It uses the frozen same-row axes: goal_validity_risk, viewpoint_evidence_gap, and map_pose_consistency_uncertainty.",
+      "It has enough diagnostic coverage for the next branch contract: 21 request rows across 9 scenes and 6 queries.",
+      "It does not reuse active observation utility as a terminal candidate score."
+    ]
+  },
+  "rejected_or_deferred_branches": [
+    {
+      "branch_name": "semantic_object_terminal_branches",
+      "decision": "defer_as_exhausted_for_terminal_promotion",
+      "reason": "Source-pool repair, object-relation, missing-own-view, partial relation-depth, and instance-arbitration pair-graph branches produced semantic branch promotable rows 0 under current evidence."
+    },
+    {
+      "branch_name": "candidate_relative_map_pose_top_rule",
+      "decision": "reject_as_terminal_selector",
+      "reason": "Task proxy join shows top map-pose correct/wrong/no-valid request rows 29/21/4 and candidate-relative unique-top correct/wrong/no-valid rows 23/19/4."
+    },
+    {
+      "branch_name": "geometry_only_SLAMOnlyRich_current",
+      "decision": "reject_as_primary_branch",
+      "reason": "The current geometry-only selector is safe but sparse with commit/success/wrong/defer rows 3/2/1/47, so it cannot attempt the active promotion gate alone."
+    },
+    {
+      "branch_name": "support_acquired_direct_commit",
+      "decision": "reject_as_terminal_shortcut",
+      "reason": "Support acquisition is object evidence, not goal-validity proof, and only 3 request rows have support_acquired."
+    },
+    {
+      "branch_name": "ambiguity_reduced_direct_commit",
+      "decision": "use_as_audit_not_primary_target",
+      "reason": "Ambiguity reduction can remain an audit/control state, but the primary failure mechanism is the unresolved post-update goal-validity gap."
+    }
+  ],
+  "promotion_attempt_shape": {
+    "next_contract_name": "post_update_goal_validity_gap_reobservation_v1",
+    "allowed_next_step": "freeze_branch_contract_before_implementation",
+    "required_action_outputs": [
+      "request_second_reobservation_for_goal_validity_confirmation",
+      "request_independent_goal_validity_evidence",
+      "defer_unresolved_goal_validity",
+      "audit_only"
+    ],
+    "forbidden_action_outputs": [
+      "terminal_goal_commit",
+      "candidate_commit",
+      "candidate_rejection",
+      "commit_top_observation_utility",
+      "commit_support_acquired",
+      "commit_ambiguity_reduced",
+      "threshold_tuned_from_joined_labels"
+    ],
+    "required_fields_to_keep_open": [
+      "goal_validity_risk",
+      "viewpoint_evidence_gap",
+      "map_pose_consistency_uncertainty",
+      "wrong_goal_visit_proxy",
+      "wasted_path_proxy_m",
+      "map_pose_consistency_delta",
+      "pose_graph_connectivity_delta",
+      "reobserve_travel_cost_m",
+      "random_reobserve_reference",
+      "frontier_reobserve_reference",
+      "care_style_confidence_replanning_reference"
+    ],
+    "minimum_diagnostic_target": {
+      "request_rows": 21,
+      "scene_count": 9,
+      "query_count": 6,
+      "paper_promotion_note": "This branch can attempt the diagnostic promotion gate, but paper promotion still requires a later expanded or fresh evaluation with at least 100 rows and 5 scenes under the frozen active_reobservation_promotion_gate_v1."
+    }
+  },
+  "natural_proof_checks": {
+    "selected_from_diagnosed_failure_mechanism": true,
+    "post_hoc_threshold_or_metric_fitting_forbidden": true,
+    "uses_label_free_action_inputs_only": true,
+    "evaluation_labels_joined_only_after_action_freeze": true,
+    "wrong_goal_metric_remains_commit_based": true,
+    "near_candidate_pass_through_primary_wrong_goal_forbidden": true,
+    "terminal_shortcut_forbidden": true,
+    "oracle_references_remain_diagnostic": true
+  },
+  "contract_scope": {
+    "contract_type": "branch_selection_definition_only",
+    "branch_contract_allowed_next": true,
+    "implementation_allowed_now": false,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "contract_checks": {
+    "selected_branch_defined": true,
+    "primary_target_filter_defined": true,
+    "primary_target_has_nonzero_rows": true,
+    "primary_target_has_scene_diversity": true,
+    "rejected_terminal_shortcuts_documented": true,
+    "promotion_gate_consumed": true,
+    "task_map_evidence_contract_consumed": true,
+    "reviewer_defense_baseline_matrix_consumed": true,
+    "natural_proof_rule_preserved": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "next_research_task": {
+    "task": "freeze_post_update_goal_validity_gap_reobservation_contract",
+    "reason": "The next label-free branch is selected. The follow-up should freeze the branch contract, including exact target rows, allowed nonterminal actions, required baselines, and the evaluation join needed to test active_reobservation_promotion_gate_v1. It should not implement a terminal utility or revise formulas."
+  }
+}
