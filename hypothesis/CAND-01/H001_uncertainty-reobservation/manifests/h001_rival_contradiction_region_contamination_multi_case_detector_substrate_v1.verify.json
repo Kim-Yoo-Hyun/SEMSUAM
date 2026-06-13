@@ -1,0 +1,146 @@
+{
+  "schema_version": "h001.verify.rival_contradiction_region_contamination_multi_case_detector_substrate.v1",
+  "checked_at": "2026-06-13",
+  "ok": true,
+  "status": "static_verified_multi_case_detector_sam2_substrate_contract_frozen_terminal_blocked",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1.json",
+  "frame_projection_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.json",
+  "frame_projection_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.verify.json",
+  "source_artifacts": {
+    "frame_plan_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frame_plan_v1/rival_contradiction_region_contamination_multi_case_frame_plan_summary.json",
+    "frame_plan_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frame_plan_v1/rival_contradiction_region_contamination_multi_case_frame_plan_rows.jsonl",
+    "candidate_artifact": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frame_plan_v1/rival_contradiction_region_contamination_multi_case_candidate_artifact.jsonl",
+    "filtered_frame_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl",
+    "frame_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frames_v1/summary.json",
+    "nonblank_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+    "projection_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_projection_v1/projection_anchor_smoke_summary.json"
+  },
+  "verified_source_counts": {
+    "frame_plan_rows": 72,
+    "skipped_rows": 0,
+    "candidate_artifact_rows": 13,
+    "candidate_tuple_required": 26,
+    "candidate_tuple_covered": 26,
+    "candidate_tuple_missing": 0,
+    "frame_rows_requested": 72,
+    "frame_rows_exported": 72,
+    "rendered_heading_count": 472,
+    "nonblank_input_rows": 72,
+    "nonblank_output_rows": 72,
+    "kept_heading_count": 469,
+    "removed_blank_heading_count": 3,
+    "projection_rows": 72,
+    "projection_anchor_visible_rows": 72,
+    "projection_anchor_visible_rate": 1.0,
+    "missing_candidate_rows": 0,
+    "explicit_candidate_id_rows": 72,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0
+  },
+  "verified_role_counts": {
+    "candidate_a_own_view": 18,
+    "candidate_b_own_view": 18,
+    "shared_region_or_relation_anchor_view": 18,
+    "cross_candidate_challenge_view": 18
+  },
+  "verified_frame_summary_counts": {
+    "frame_rows": 72,
+    "policy_counts": {
+      "RivalContradictionRegionContaminationEvidenceMultiCase": 72
+    },
+    "candidate_ids_per_frame_counts": {
+      "2": 72
+    },
+    "scene_count": 9,
+    "query_count": 5,
+    "scene_keys": [
+      "4ok3usBNeis",
+      "BAbdmeyTvMZ",
+      "Dd4bFSTQ8gi",
+      "HY1NcmCgn3n",
+      "QaLdnwvtxbs",
+      "bCPU9suPUw9",
+      "bxsVRursffK",
+      "q3zU7Yy5E5s",
+      "qyAac8rV8Zk"
+    ],
+    "queries": [
+      "bed",
+      "chair",
+      "plant",
+      "sofa",
+      "tv_monitor"
+    ],
+    "uses_gt_for_action_true_rows": 0
+  },
+  "model_and_image_checks": {
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_image_id": "sha256:fcd8df3370546d92added1e60c35abb1be31f175414efbe311e0246431fd9a95",
+    "docker_image_created": "2026-05-13T20:44:48.792584782+09:00",
+    "groundingdino_config_exists": true,
+    "groundingdino_weights_exists": true,
+    "sam2_checkpoint_exists": true,
+    "checkpoint_paths": {
+      "groundingdino_config": "local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/config.json",
+      "groundingdino_weights": "local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/model.safetensors",
+      "sam2_checkpoint": "local_dataset/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt"
+    }
+  },
+  "static_contract_checks": {
+    "frame_projection_verify_status_is_docker_verified": true,
+    "frame_plan_gate_passed": true,
+    "frame_rows_match_expected": true,
+    "nonblank_rows_match_expected": true,
+    "projection_rows_match_expected": true,
+    "projection_visible_rows_match_expected": true,
+    "candidate_tuple_coverage_complete": true,
+    "candidate_ids_explicit_for_all_rows": true,
+    "required_roles_complete": true,
+    "role_counts_match_expected": true,
+    "docker_image_available": true,
+    "checkpoints_available": true,
+    "gt_action_forbidden": true,
+    "terminal_utility_validation_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "future_docker_job": {
+    "job": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/rival_contradiction_region_contamination_multi_case_detector_substrate.sh",
+    "base_job": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_detector_substrate.sh",
+    "output": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1",
+    "detector_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1/detector_v3c",
+    "expected_frame_rows": 72,
+    "max_candidates_per_frame": 2,
+    "min_detector_box_rate": 0.8,
+    "min_sam2_mask_rate": 0.8,
+    "min_candidate_association_rate": 0.4,
+    "min_rows_with_candidate_association": 29,
+    "min_associated_candidate_heading_count": 36,
+    "min_rows_with_candidate_association_per_role": 2,
+    "min_associated_scene_count": 5,
+    "min_associated_query_count": 3
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1.verify.json",
+    "jq '{status, docker_verification, next_task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.verify.json",
+    "jq '{frame_plan_rows, skipped_rows, candidate_artifact_rows, candidate_tuple_required, candidate_tuple_covered, candidate_tuple_missing, observation_role_counts, gate}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frame_plan_v1/rival_contradiction_region_contamination_multi_case_frame_plan_summary.json",
+    "jq '{ok, rows_requested, rows_exported, rendered_heading_count, uses_gt_for_action}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frames_v1/summary.json",
+    "jq '{input_rows, output_rows, row_level_nonblank_gate_passed, removed_blank_heading_count, kept_heading_count, original_heading_count, uses_gt_for_action}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+    "jq '{rows, expected_rows, projection_anchor_visible_rows, projection_anchor_visible_rate, missing_candidate_rows, candidate_selection_source_counts, gt_action_rows, gate}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_projection_v1/projection_anchor_smoke_summary.json",
+    "wc -l local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frame_plan_v1/rival_contradiction_region_contamination_multi_case_candidate_artifact.jsonl local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frame_plan_v1/rival_contradiction_region_contamination_multi_case_frame_plan_rows.jsonl",
+    "docker image inspect research3/openvocab-perception:20260513-v3c-gdino-sam2 --format '{{.Id}} {{.Created}}'",
+    "test -f local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/config.json && test -f local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/model.safetensors && test -f local_dataset/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt"
+  ],
+  "next_task": "implement_docker_multi_case_detector_sam2_substrate_wrapper_and_run",
+  "interpretation": {
+    "fact": "The contract consumes the Docker-verified 72-row frame/projection substrate and freezes the multi-case detector/SAM2 substrate requirements before any detector evidence interpretation or label join.",
+    "agent_inference": "The next natural step is a Docker detector/SAM2 run that reports global and stratified association diagnostics. Passing the substrate gate would unlock a post-detector evidence analyzer contract; failing it would produce a detector/candidate-association failure taxonomy instead of a terminal utility claim.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM complementarity, detector evidence interpretation as utility, terminal utility, formula revision, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim is allowed from this static detector/SAM2 substrate contract."
+  },
+  "paper_claim_allowed": false
+}

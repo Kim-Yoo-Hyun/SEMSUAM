@@ -36,7 +36,7 @@
 
 ### 사실
 
-- Date checked: 2026-06-12
+- Date checked: 2026-06-13
 - Primary candidate: `CAND-01`
 - Active hypothesis: `H001_uncertainty-reobservation`
 - Current gate is tracked in [TODO.md](../TODO.md).

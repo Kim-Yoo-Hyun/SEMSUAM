@@ -1,0 +1,144 @@
+{
+  "schema_version": "h001.contract.rival_contradiction_region_contamination_multi_case_path_closure.v1",
+  "date_checked": "2026-06-13",
+  "status": "frozen_diagnostic_only_path_closure",
+  "contract_name": "rival_contradiction_region_contamination_multi_case_path_closure_v1",
+  "purpose": "Close the current rival contradiction / region contamination multi-case path as diagnostic-only after the nonterminal report. This prevents converting evaluation-only wrong-goal, wasted-path, map-pose, or pair-label diagnostics into a terminal action rule.",
+  "stage": "P4-design-closure",
+  "source": {
+    "diagnostic_report_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1.json",
+    "diagnostic_report_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1.verify.json",
+    "diagnostic_report_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1/rival_contradiction_region_contamination_multi_case_diagnostic_report_summary.json",
+    "diagnostic_report_md": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1/rival_contradiction_region_contamination_multi_case_diagnostic_report.md"
+  },
+  "source_gate": {
+    "diagnostic_report_gate_passed": true,
+    "diagnostic_report_blockers": [],
+    "expected_source_pair_rows": 18,
+    "expected_scene_count": 9,
+    "expected_query_count": 5,
+    "expected_observation_seed_rows": 72,
+    "expected_detector_frame_rows": 72,
+    "expected_detector_association_rows_min": 900,
+    "expected_detector_evidence_pair_rows": 18,
+    "expected_contamination_or_contradiction_pair_rows": 6,
+    "expected_wrong_labeled_pair_rows": 14,
+    "expected_wrong_labeled_contamination_or_contradiction_pair_rows": 5,
+    "expected_wrong_goal_baseline_rows": 17,
+    "expected_slam_map_pose_delta_rows": 18,
+    "terminal_utility_contract_allowed": false,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "closure_decision": {
+    "closed_path": "rival_contradiction_region_contamination_multi_case_as_terminal_utility",
+    "closed_status": "closed_as_diagnostic_only_under_current_evidence",
+    "closure_reason": [
+      "the report gate passed only as nonterminal diagnostic readiness",
+      "there is no frozen label-free terminal action rule that selects or rejects a candidate",
+      "label-free detector evidence states show ambiguity, contamination, and support patterns, but not a validated goal-validity decision",
+      "wrong-goal, wasted-path, map-pose delta, pair labels, candidate labels, and baseline outcomes are evaluation-only",
+      "using the evaluation-only rows to define a terminal selector would violate the action/evaluation separation rule",
+      "the path currently explains a failure mechanism rather than reducing wrong-goal or wasted path with a deployable policy"
+    ],
+    "closed_shortcuts": [
+      "commit_candidate_from_rival_region_contamination_state",
+      "reject_candidate_from_cross_candidate_contamination_state",
+      "commit_both_candidates_own_view_supported",
+      "select_candidate_by_pair_label_pattern",
+      "select_candidate_by_baseline_wrong_goal_result",
+      "select_candidate_by_wasted_path_exposure",
+      "select_candidate_by_map_pose_delta_after_evaluation_join",
+      "tune_threshold_after_pair_label_join",
+      "claim_ObjectNav_utility_from_diagnostic_readiness",
+      "rerun_first_eval_from_bounded_diagnostic_readiness",
+      "policy_scale_comparison_from_bounded_diagnostic_readiness"
+    ],
+    "blocked_downstream_tasks": [
+      "terminal_utility_contract_from_current_rival_contradiction_path",
+      "candidate_rejection_rule_from_current_rival_contradiction_path",
+      "formula_revision_from_evaluation_join",
+      "first_eval_rerun",
+      "policy_scale_comparison",
+      "Step_4_5_promotion",
+      "paper_claim"
+    ]
+  },
+  "surviving_evidence_role": {
+    "allowed_role": "failure_mechanism_diagnostic_and_future_action_contract_input",
+    "not_allowed_role": "terminal_goal_candidate_selector_or_rejector",
+    "reason": "The current evidence can identify ambiguous same-category rival cases and show where additional evidence is needed, but it cannot decide ObjectNav goal validity without evaluation-only labels.",
+    "allowed_outputs": [
+      "diagnostic_report_rows",
+      "failure_taxonomy_rows",
+      "action_contract_requirements",
+      "nonterminal_observation_priority_requirements",
+      "simpler_alternative_audit_requirements"
+    ],
+    "forbidden_outputs": [
+      "terminal_commit_rows",
+      "candidate_rejection_rows",
+      "label_tuned_utility_formula",
+      "first_eval_rerun_permission",
+      "policy_scale_comparison_permission",
+      "paper_claim"
+    ]
+  },
+  "minimum_future_terminal_contract_requirements": {
+    "target_question": "Can a label-free action rule use semantic uncertainty, viewpoint evidence gap, and map/pose consistency to decide observe/defer/commit without evaluation-only labels?",
+    "required_design_shift": "A future terminal path must be derived from a predeclared label-free action rule, not from post-hoc wrong-goal or pair-label diagnostics.",
+    "required_action_time_properties": [
+      "candidate-specific rows must be frozen before label join",
+      "action rows may use detector evidence states, semantic evidence states, viewpoint coverage, and map/pose consistency only if these are available before evaluation labels",
+      "the action rule must explicitly separate observe, defer, commit, and reject decisions",
+      "commit or reject is allowed only after the rule defines a non-GT goal-validity resolution condition",
+      "the rule must specify what happens when evidence is ambiguous, contradictory, or missing",
+      "pair labels, candidate correctness, wrong-goal, wasted path, map-pose delta after label join, oracle fields, and baseline outcomes must remain forbidden action inputs"
+    ],
+    "minimum_contract_outputs": [
+      "action_rule_rows",
+      "candidate_state_rows",
+      "request_state_rows",
+      "simpler_alternative_audit_rows",
+      "failure_taxonomy_rows",
+      "summary"
+    ],
+    "minimum_gates_before_terminal_utility": {
+      "action_evidence_forbidden_key_count": 0,
+      "uses_gt_for_action": false,
+      "terminal_commit_rows_allowed_only_if_rule_predeclared": true,
+      "candidate_rejection_rows_allowed_only_if_rule_predeclared": true,
+      "evaluation_join_after_action_freeze_required": true,
+      "wrong_goal_not_increased_vs_NoReobserveReference": true,
+      "wasted_path_not_increased_vs_budget_matched_baselines": true,
+      "map_pose_consistency_not_degraded": true,
+      "heldout_or_fresh_validation_required_before_paper_claim": true
+    },
+    "simpler_alternatives_to_audit": [
+      "defer_all",
+      "NoReobserveReference",
+      "SemanticOnly",
+      "SLAMOnly",
+      "RandomReobserve",
+      "FrontierReobserve",
+      "detector_score_confirmation",
+      "semantic_memory_direct_commit",
+      "confidence_thresholding",
+      "geometry_only_viewpoint_choice"
+    ]
+  },
+  "next_research_task": {
+    "task": "select_next_label_free_terminal_or_observation_branch_after_rival_contradiction_closure",
+    "implementation_allowed_now": false,
+    "reason_implementation_blocked": "A new branch or terminal action rule must be specified as a separate contract before implementation."
+  },
+  "interpretation_rule": {
+    "fact": "The multi-case diagnostic report passed with action/evaluation separation and no terminal or candidate commit rows.",
+    "agent_inference": "The rival contradiction / region contamination path is useful as a failure-mechanism diagnostic, but the current artifact cannot be promoted to terminal utility without a new label-free action rule.",
+    "paper_claim_allowed": false
+  }
+}

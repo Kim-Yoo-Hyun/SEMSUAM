@@ -8894,10 +8894,10 @@ No ObjectNav improvement, `SemanticSLAM` utility, terminal utility, candidate co
 ### 사실
 
 ```text
-date_checked: 2026-06-12
+date_checked: 2026-06-13
 contract: manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.json
 verify: manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.verify.json
-status: static_verified_multi_case_frame_projection_contract_frozen_terminal_blocked
+status: docker_verified_multi_case_frame_projection_smoke_terminal_blocked
 source: local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1
 source_rows: 18
 observation_seed_rows: 72
@@ -8907,35 +8907,102 @@ scene_query_pairs: 13
 required_candidate_tuples: 26
 geometry_candidate_tuples_covered: 26
 missing_geometry_candidate_tuples: 0
-required_frame_plan_rows: 72
-required_frame_rows: 72
-required_projection_rows: 72
-minimum_projection_visible_rate: 0.95
-minimum_projection_visible_rows: 69
-max_missing_candidate_rows: 0
+frame_plan_rows: 72
+skipped_rows: 0
+candidate_artifact_rows: 13
+frame_rows_exported: 72
+rendered_heading_count: 472
+nonblank_output_rows: 72
+kept_heading_count: 469
+removed_blank_heading_count: 3
+row_level_nonblank_gate_passed: true
+projection_rows: 72
+projection_visible_rows: 72
+projection_visible_rate: 1.0
+missing_candidate_rows: 0
+explicit_candidate_id_rows: 72
 uses_gt_for_action_true_rows: 0
 paper_claim_allowed_true_rows: 0
-next_task: implement_docker_rival_contradiction_region_contamination_multi_case_frame_projection_smoke
+next_task: freeze_multi_case_detector_sam2_substrate_contract_after_frame_projection_smoke
 ```
 
-Static verification:
+Docker verification:
 
 ```bash
 jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.json
 jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.verify.json
-jq '{status, source_rows, candidate_role_rows, observation_plan_seed_rows, audit_rows, scene_count, query_count, materializer_gate_passed, primary_blocker, next_task}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_summary.json
-comm -23 <(jq -r '[.scene_key,.query,.candidate_id] | @tsv' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_candidate_role_rows.jsonl | sort -u) <(jq -r '. as $r | .candidates[] | [$r.scene_key,$r.query,.candidate_id] | @tsv' local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl | sort -u) | wc -l
+bash -n hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/rival_contradiction_region_contamination_multi_case_frame_projection.sh
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -w /workspace research3/habitat-h001:20260508-calib-artifacts /opt/conda/bin/python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_rival_contradiction_region_contamination_multi_case_frame_projection.py
+hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/rival_contradiction_region_contamination_multi_case_frame_projection.sh
+jq '{frame_plan_rows, skipped_rows, candidate_artifact_rows, candidate_tuple_required, candidate_tuple_covered, candidate_tuple_missing, observation_role_counts, gate}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frame_plan_v1/rival_contradiction_region_contamination_multi_case_frame_plan_summary.json
+jq '{ok, rows_requested, rows_exported, rendered_heading_count, uses_gt_for_action}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frames_v1/summary.json
+jq '{input_rows, output_rows, row_level_nonblank_gate_passed, removed_blank_heading_count, kept_heading_count, original_heading_count, uses_gt_for_action}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json
+jq '{rows, expected_rows, projection_anchor_visible_rows, projection_anchor_visible_rate, missing_candidate_rows, candidate_selection_source_counts, gt_action_rows, gate}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_projection_v1/projection_anchor_smoke_summary.json
 ```
 
 ### 에이전트 추론
 
-The single-case detector/evidence ladder is a mechanism probe, not a terminal utility proof. The correct scale-up is to first test whether the same four nonterminal observation roles can be resolved, rendered, and projected across the frozen multi-case source without changing pair order or using evaluation labels. This keeps the proof path natural: source freeze -> renderability/projection -> detector/SAM2 substrate -> label-free post-detector evidence -> evaluation-only join -> promotion gate.
+The single-case detector/evidence ladder is a mechanism probe, not a terminal utility proof. The scale-up now passes the renderability/projection gate across the frozen multi-case source without changing pair order or using evaluation labels. The proof path remains: source freeze -> renderability/projection -> detector/SAM2 substrate -> label-free post-detector evidence -> evaluation-only join -> promotion gate.
 
 The multi-case projection gate is stricter on missing candidates (`0`) but allows a projection visible rate threshold of `0.95` because the contract spans `9` scenes and `72` frame rows. Blank headings may be filtered, but each observation seed must retain at least one nonblank frame row.
 
 ### 논문 주장
 
-No ObjectNav improvement, `SemanticSLAM` utility, terminal utility, candidate commit/rejection, `first_eval`, policy-scale comparison, formula revision, Step 4-5 promotion, or paper claim is allowed from this static frame/projection contract.
+No ObjectNav improvement, `SemanticSLAM` utility, terminal utility, candidate commit/rejection, `first_eval`, policy-scale comparison, formula revision, Step 4-5 promotion, or paper claim is allowed from this frame/projection smoke.
+
+## Rival Contradiction / Region Contamination Multi-Case Detector/SAM2 Substrate Contract
+
+### 사실
+
+```text
+date_checked: 2026-06-13
+contract: manifests/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1.json
+verify: manifests/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1.verify.json
+status: static_verified_multi_case_detector_sam2_substrate_contract_frozen_terminal_blocked
+source_frame_projection_verify: manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.verify.json
+source_frame_rows: 72
+source_nonblank_rows: 72
+source_projection_visible_rows: 72
+candidate_artifact_rows: 13
+candidate_tuple_coverage: 26/26
+scene_count: 9
+query_count: 5
+role_counts: 18 each for candidate_a_own_view, candidate_b_own_view, shared_region_or_relation_anchor_view, cross_candidate_challenge_view
+docker_image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+expected_frame_rows: 72
+max_candidates_per_frame: 2
+candidate_point_field: grounded_position
+projection_anchor_height_offsets_m: 0.0,0.4,0.8,1.2,1.6,2.0,2.4
+min_detector_box_rate: 0.8
+min_sam2_mask_rate: 0.8
+min_candidate_association_rate: 0.4
+min_rows_with_candidate_association: 29
+min_associated_candidate_heading_count: 36
+min_rows_with_candidate_association_per_role: 2
+min_associated_scene_count: 5
+min_associated_query_count: 3
+uses_gt_for_action: false
+paper_claim_allowed: false
+next_task: implement_docker_multi_case_detector_sam2_substrate_wrapper_and_run
+```
+
+Static verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1.verify.json
+jq '{status, ok, next_task, static_contract_checks, future_docker_job}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1.verify.json
+docker image inspect research3/openvocab-perception:20260513-v3c-gdino-sam2 --format '{{.Id}} {{.Created}}'
+test -f local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/config.json && test -f local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/model.safetensors && test -f local_dataset/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt
+```
+
+### 에이전트 추론
+
+This contract turns the 72-row renderable observation substrate into the next Docker detector/SAM2 substrate gate without changing source rows, role counts, candidate ids, thresholds, or evaluation labels after seeing detector output. If the detector/SAM2 run fails, the correct output is a role/scene/query/candidate-association failure taxonomy, not threshold tuning or terminal utility.
+
+### 논문 주장
+
+No ObjectNav improvement, `SemanticSLAM` utility, detector evidence interpretation as utility, terminal utility, candidate commit/rejection, `first_eval`, policy-scale comparison, formula revision, Step 4-5 promotion, or paper claim is allowed from this static detector/SAM2 substrate contract.
 
 ## User Decision Needed
 

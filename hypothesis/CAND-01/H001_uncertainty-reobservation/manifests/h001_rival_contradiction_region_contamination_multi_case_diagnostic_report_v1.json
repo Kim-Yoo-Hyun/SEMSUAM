@@ -1,0 +1,129 @@
+{
+  "schema_version": "h001.contract.rival_contradiction_region_contamination_multi_case_diagnostic_report.v1",
+  "date_checked": "2026-06-13",
+  "status": "frozen_contract",
+  "contract_name": "rival_contradiction_region_contamination_multi_case_diagnostic_report_v1",
+  "purpose": "Freeze a nonterminal diagnostic report after the multi-case detector/evidence/evaluation/promotion ladder passed bounded diagnostic readiness. The report records what is observable, what is evaluation-only, and why terminal utility remains blocked.",
+  "stage": "P4-diagnostic",
+  "decision": {
+    "selected_next_step": "freeze_nonterminal_diagnostic_report",
+    "rejected_next_step_now": "define_terminal_utility_contract",
+    "reason": "The current promotion gate allows only bounded multi-case diagnostic readiness. There is no label-free terminal action rule, and wrong-goal, wasted-path, and map/pose delta fields are evaluation-only."
+  },
+  "source": {
+    "source_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_summary.json",
+    "frame_plan_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frame_plan_v1/rival_contradiction_region_contamination_multi_case_frame_plan_summary.json",
+    "frame_export_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frames_v1/summary.json",
+    "projection_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_projection_v1/projection_anchor_smoke_summary.json",
+    "detector_substrate_diagnostic": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1/rival_contradiction_region_contamination_multi_case_detector_substrate_diagnostic.json",
+    "detector_evidence_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_evidence_summary.json",
+    "evaluation_join_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_summary.json",
+    "promotion_gate_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1/rival_contradiction_region_contamination_multi_case_promotion_gate_summary.json"
+  },
+  "expected_report_counts": {
+    "source_pair_rows": 18,
+    "scene_count": 9,
+    "query_count": 5,
+    "observation_seed_rows": 72,
+    "frame_plan_rows": 72,
+    "rendered_frame_rows": 72,
+    "projection_visible_rows": 72,
+    "detector_frame_rows": 72,
+    "detector_associated_decision_rows_min": 64,
+    "detector_association_rows_min": 900,
+    "detector_evidence_pair_rows": 18,
+    "evaluation_pair_rows": 18,
+    "contamination_or_contradiction_pair_rows": 6,
+    "wrong_labeled_pair_rows": 14,
+    "wrong_labeled_contamination_or_contradiction_pair_rows": 5,
+    "total_wrong_goal_baseline_rows": 17,
+    "slam_map_pose_delta_rows": 18,
+    "promotion_ready_rows": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "report_definition": {
+    "report_type": "nonterminal_diagnostic_report",
+    "required_sections": [
+      "Facts",
+      "Paper Claims",
+      "Agent Inferences",
+      "Blocked Claims",
+      "Next Valid Step"
+    ],
+    "must_separate": [
+      "facts",
+      "paper_claims",
+      "agent_inferences",
+      "user_decision_needed"
+    ],
+    "evaluation_only_fields": [
+      "candidate_correctness_label",
+      "pair_label",
+      "wrong_goal_visit",
+      "wasted_path_m",
+      "map_pose_consistency_delta",
+      "baseline_wrong_goal_counts"
+    ],
+    "reserved_bridge_fields": [
+      "goal_validity_risk",
+      "viewpoint_evidence_gap",
+      "map_pose_consistency_uncertainty",
+      "wrong_goal_visit",
+      "wasted_path_m",
+      "map_pose_consistency_delta"
+    ],
+    "forbidden_outputs": [
+      "terminal_commit",
+      "candidate_commit",
+      "candidate_rejection",
+      "label_tuned_selector",
+      "first_eval_rerun_permission",
+      "policy_scale_claim",
+      "paper_claim"
+    ]
+  },
+  "success_gates": {
+    "report_gate": {
+      "source_pair_rows": 18,
+      "frame_plan_rows": 72,
+      "rendered_frame_rows": 72,
+      "projection_visible_rows": 72,
+      "detector_frame_rows": 72,
+      "detector_associated_decision_rows_min": 64,
+      "detector_evidence_pair_rows": 18,
+      "evaluation_pair_rows": 18,
+      "promotion_gate_passed": true,
+      "promotion_ready_rows": 0,
+      "terminal_commit_rows": 0,
+      "candidate_commit_rows": 0,
+      "candidate_rejection_rows": 0,
+      "uses_gt_for_action": false,
+      "paper_claim_allowed": false
+    }
+  },
+  "allowed_next_steps_after_report": {
+    "write_nonterminal_diagnostic_report": true,
+    "define_terminal_utility_contract": false,
+    "define_terminal_utility_contract_condition": "Only after a separate label-free action rule is specified and frozen without evaluation-only labels, wrong-goal outcomes, wasted path, or baseline proxies as action inputs.",
+    "first_eval_rerun": false,
+    "policy_scale_comparison": false,
+    "step_4_5_promotion": false,
+    "paper_claim": false
+  },
+  "expected_future_outputs": {
+    "out_root": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1",
+    "row_files": {
+      "summary": "rival_contradiction_region_contamination_multi_case_diagnostic_report_summary.json",
+      "report": "rival_contradiction_region_contamination_multi_case_diagnostic_report.md"
+    }
+  },
+  "interpretation_rule": {
+    "fact": "The report may state the completed source, frame/projection, detector/SAM2, label-free evidence, evaluation-only join, and bounded promotion counts.",
+    "paper_claim": "The report must not claim terminal utility, ObjectNav improvement, Semantic-SLAM performance improvement, Step 4-5 promotion, first_eval readiness, policy-scale comparison readiness, or paper-level contribution.",
+    "agent_inference": "The completed multi-case ladder shows that the rival contradiction / region contamination failure mechanism is observable and diagnosable across multiple scenes, but not yet actionable as a label-free terminal utility."
+  }
+}

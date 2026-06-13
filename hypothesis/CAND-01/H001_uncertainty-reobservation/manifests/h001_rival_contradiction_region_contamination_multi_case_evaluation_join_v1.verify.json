@@ -1,0 +1,121 @@
+{
+  "schema_version": "h001.verify.rival_contradiction_region_contamination_multi_case_evaluation_join.v1",
+  "date_checked": "2026-06-13",
+  "status": "docker_verified_multi_case_evaluation_only_join_terminal_blocked",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1.json",
+  "source_verification": {
+    "detector_evidence_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1",
+    "detector_evidence_gate_passed": true,
+    "source_pair_rows": 18,
+    "join_pair_rows": 18,
+    "join_candidate_rows": 36,
+    "join_baseline_rows": 54,
+    "pair_label_counts": {
+      "a_wrong_b_correct": 8,
+      "both_correct": 4,
+      "both_wrong": 6
+    },
+    "candidate_label_counts": {
+      "correct": 16,
+      "wrong": 20
+    },
+    "baseline_policy_counts": {
+      "NoReobserveReference": 18,
+      "SemanticOnly": 18,
+      "SLAMOnlyRich_current": 18
+    },
+    "baseline_wrong_goal_counts": {
+      "NoReobserveReference": 9,
+      "SemanticOnly": 8,
+      "SLAMOnlyRich_current": 0
+    },
+    "total_wrong_goal_baseline_rows": 17,
+    "max_wasted_path_exposure_m": 1.7588606361711194,
+    "slam_map_pose_delta_rows": 18,
+    "slam_map_pose_delta_maximum": 1.0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "static_contract_checks": {
+    "source_paths_exist": true,
+    "contract_json_valid": true,
+    "evidence_rows_frozen_before_join": true,
+    "labels_evaluation_only": true,
+    "baseline_outcomes_evaluation_only": true,
+    "wrong_goal_wasted_path_map_pose_reserved_for_join": true,
+    "terminal_commit_blocked": true,
+    "candidate_commit_blocked": true,
+    "candidate_rejection_blocked": true,
+    "gt_action_blocked": true,
+    "paper_claim_blocked": true
+  },
+  "docker_materializer": {
+    "script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_evaluation_join.py",
+    "image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "compile_passed": true,
+    "command": "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_rival_contradiction_region_contamination_multi_case_evaluation_join --out-root /runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1",
+    "output": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1",
+    "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_summary.json"
+  },
+  "materializer_output": {
+    "request_rows": 18,
+    "candidate_rows": 36,
+    "pair_rows": 18,
+    "baseline_rows": 54,
+    "promotion_probe_rows": 18,
+    "pair_label_counts": {
+      "a_wrong_b_correct": 8,
+      "both_correct": 4,
+      "both_wrong": 6
+    },
+    "candidate_label_counts": {
+      "correct": 16,
+      "wrong": 20
+    },
+    "baseline_policy_counts": {
+      "NoReobserveReference": 18,
+      "SLAMOnlyRich_current": 18,
+      "SemanticOnly": 18
+    },
+    "baseline_wrong_goal_counts": {
+      "NoReobserveReference": 9,
+      "SLAMOnlyRich_current": 0,
+      "SemanticOnly": 8
+    },
+    "total_wrong_goal_baseline_rows": 17,
+    "max_wasted_path_exposure_m": 1.7588606361711194,
+    "slam_map_pose_delta_rows": 18,
+    "slam_map_pose_delta_maximum": 1.0,
+    "promotion_ready_rows": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false,
+    "gate_passed": true
+  },
+  "output_files": {
+    "request_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_request_rows.jsonl",
+    "candidate_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_candidate_rows.jsonl",
+    "pair_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_pair_rows.jsonl",
+    "baseline_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_baseline_rows.jsonl",
+    "promotion_probe_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_promotion_probe_rows.jsonl",
+    "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_summary.json"
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1.verify.json",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_evaluation_join.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_rival_contradiction_region_contamination_multi_case_evaluation_join --out-root /runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1",
+    "jq '{gate, request_rows, candidate_rows, pair_rows, baseline_rows, promotion_probe_rows, pair_label_counts, candidate_label_counts, baseline_policy_counts, baseline_wrong_goal_counts, total_wrong_goal_baseline_rows, max_wasted_path_exposure_m, slam_map_pose_delta_rows, slam_map_pose_delta_maximum, terminal_commit_rows, candidate_commit_rows, candidate_rejection_rows, uses_gt_for_action, paper_claim_allowed, next_task}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_summary.json",
+    "wc -l local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_request_rows.jsonl local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_candidate_rows.jsonl local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_pair_rows.jsonl local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_baseline_rows.jsonl local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_promotion_probe_rows.jsonl"
+  ],
+  "next_task": "freeze_multi_case_promotion_gate_contract",
+  "ok": true,
+  "notes": {
+    "fact": "The Docker materializer joins evaluation-only labels and baseline proxies after evidence row freeze and passes all count, baseline, wrong-goal, wasted-path, map/pose, no-action, and no-claim gates.",
+    "agent_inference": "The next natural step is a bounded promotion gate contract that interprets these diagnostics without turning evaluation-only labels into an action rule."
+  }
+}

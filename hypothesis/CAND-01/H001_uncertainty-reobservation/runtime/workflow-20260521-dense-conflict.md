@@ -14,6 +14,206 @@ This does not prove wrong-goal repair utility. The next validation must test row
 
 If a dense non-GT candidate backend provides both correct and wrong positively supported candidates, can the terminal active-observation objective choose a correct candidate without increasing wrong-goal commits, compared with defer-only, first-external, and detector-score-only alternatives?
 
+## Current Multi-Case Substrate Gate
+
+### 사실
+
+`rival_contradiction_region_contamination_multi_case_frame_projection_v1` is Docker-verified before any multi-case detector/SAM2 evidence. The job `runtime/jobs/rival_contradiction_region_contamination_multi_case_frame_projection.sh` consumes `18` action-frozen pairwise conflict source rows and `72` symbolic observation seed rows, writes `72` frame-plan rows with skipped rows `0`, exports `72` Habitat frame rows with `472` rendered headings, keeps `72` nonblank rows after removing `3` blank headings, and passes projection-anchor smoke with visible rows `72/72`, missing candidates `0`, explicit candidate-id rows `72`, and GT-action rows `0`.
+
+### 에이전트 추론
+
+This closes the renderability/projection substrate blocker. It does not validate detector evidence, wrong-goal reduction, wasted-path reduction, terminal utility, or paper claims. The next natural workflow step is a multi-case detector/SAM2 substrate contract that consumes these frozen frame/projection outputs.
+
+## Current Multi-Case Detector/SAM2 Contract
+
+### 사실
+
+`rival_contradiction_region_contamination_multi_case_detector_substrate_v1` is Docker-verified. The wrapper `runtime/jobs/rival_contradiction_region_contamination_multi_case_detector_substrate.sh` completed from tmux session `h001-multi-case-detector-20260613-014521`. It consumes the `72` nonblank frame rows from the multi-case frame/projection substrate, fixes `research3/openvocab-perception:20260513-v3c-gdino-sam2`, `GroundingDINO`, `SAM2`, `expected_frame_rows 72`, `max_candidates_per_frame 2`, `min_detector_box_rate 0.8`, `min_sam2_mask_rate 0.8`, `min_candidate_association_rate 0.4`, `min_rows_with_candidate_association 29`, and `min_associated_candidate_heading_count 36`.
+
+```text
+output: local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1
+detector/frame rows: 72 / 72
+association rows: 938
+detector box / SAM2 / candidate association: 1.0 / 1.0 / 0.8889
+rows with candidate association: 64
+associated candidate heading count: 262
+role row association counts: 17 / 18 / 12 / 17
+associated scene/query count: 9 / 5
+failure taxonomy: []
+multi-case detector substrate gate: true
+```
+
+### 에이전트 추론
+
+This contract prevents detector output from retroactively changing thresholds or role definitions. If the next Docker run fails, the output should be a role/scene/query/candidate-association failure taxonomy rather than a detector threshold patch or terminal utility claim.
+
+## Current Multi-Case Post-Detector Evidence Contract
+
+### 사실
+
+`rival_contradiction_region_contamination_multi_case_detector_evidence_v1` is frozen and statically verified at `manifests/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1.json` / `.verify.json`. The contract fixes expected candidate-view/role/pair/request rows `144/72/18/18`, preserves `candidate_a` and `candidate_b` as action-frozen pair roles rather than correctness labels, reserves future fields for goal-validity, viewpoint gap, map/pose, wrong-goal, and wasted-path joins, and keeps terminal commits, candidate commits/rejections, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims blocked.
+
+The materializer is implemented at `runtime/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_detector_evidence.py` and Docker-verified at `local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1`.
+
+```text
+candidate-view / role / pair / request / audit rows: 144 / 72 / 18 / 18 / 18
+role rows with any candidate association: 64
+pair rows with any candidate association: 18
+associated scene/query count: 9 / 5
+pair evidence states:
+  both_candidates_own_view_supported: 11
+  candidate_b_region_support_only: 1
+  cross_candidate_contamination_observed: 3
+  rival_region_contamination_or_same_category_overlap_observed: 3
+request evidence states:
+  ambiguous_shared_or_cross_region_evidence: 12
+  contradiction_or_contamination_evidence_available: 6
+terminal/candidate commit/rejection rows: 0 / 0 / 0
+action forbidden keys: []
+gate: true
+```
+
+### 에이전트 추론
+
+The next natural step is an evaluation-only join contract. It should attach wrong-goal, wasted-path, and map/pose consistency diagnostics only after the evidence rows above are frozen.
+
+## Current Multi-Case Evaluation Join And Promotion Gate
+
+### 사실
+
+`rival_contradiction_region_contamination_multi_case_evaluation_join_v1` is Docker-verified at `local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1`.
+
+```text
+request / candidate / pair / baseline / promotion rows: 18 / 36 / 18 / 54 / 18
+pair labels: a_wrong_b_correct 8, both_correct 4, both_wrong 6
+baseline wrong-goal rows: NoReobserveReference 9, SemanticOnly 8, SLAMOnlyRich_current 0
+total wrong-goal baseline rows: 17
+max wasted path exposure: 1.7589 m
+SLAM map-pose delta rows / max: 18 / 1.0
+gate: true
+```
+
+`rival_contradiction_region_contamination_multi_case_promotion_gate_v1` is Docker-verified at `local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1`.
+
+```text
+promotion gate: true
+allowed after pass: bounded_multi_case_diagnostic_readiness_ready
+source pair rows: 18
+contamination/contradiction pair rows: 6
+wrong-labeled pair rows: 14
+wrong-labeled contamination/contradiction rows: 5
+wrong-goal baseline rows: 17
+max wasted path exposure: 1.7589 m
+SLAM map-pose delta rows / max: 18 / 1.0
+promotion blockers: []
+terminal selector allowed: false
+policy-scale claim allowed: false
+paper claim allowed: false
+```
+
+### 에이전트 추론
+
+`rival_contradiction_region_contamination_multi_case_diagnostic_report_v1` is Docker-verified at `local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1`.
+
+```text
+report gate: true
+report blockers: []
+source pair rows: 18
+frame/projection rows: 72 / 72
+detector frame/association rows: 72 / 938
+detector evidence pair rows: 18
+wrong-goal baseline rows: 17
+max wasted path exposure: 1.7589 m
+SLAM map-pose delta rows / max: 18 / 1.0
+terminal commits / candidate commits / candidate rejections: 0 / 0 / 0
+terminal utility contract allowed: false
+paper claim allowed: false
+```
+
+The requested ladder is complete through bounded diagnostic readiness and is now frozen as a nonterminal diagnostic report. This is a stronger multi-case diagnostic substrate than the single-case mechanism probe, but it is still not a terminal action rule or paper claim. The next valid decision is whether a separate label-free terminal utility/action contract can be derived without using evaluation-only labels, wrong-goal outcomes, wasted path, map/pose deltas, or baseline proxies as action inputs.
+
+`rival_contradiction_region_contamination_multi_case_path_closure_v1` is statically verified at `manifests/h001_rival_contradiction_region_contamination_multi_case_path_closure_v1.json` / `.verify.json`.
+
+```text
+closed path: rival_contradiction_region_contamination_multi_case_as_terminal_utility
+closed status: closed_as_diagnostic_only_under_current_evidence
+diagnostic report gate: true
+terminal utility contract from current path allowed: false
+candidate rejection from current path allowed: false
+evaluation-only fields for action: blocked
+first_eval / policy-scale / Step 4-5 / paper claim: blocked
+```
+
+This closes the current rival contradiction / region contamination path as a terminal-utility route. The surviving role is failure-mechanism diagnostic evidence and future action-contract input. A new terminal or observation branch must be specified as a separate label-free contract before implementation.
+
+`next_label_free_branch_after_rival_contradiction_closure_v1` is statically verified at `manifests/h001_next_label_free_branch_after_rival_contradiction_closure_v1.json` / `.verify.json`.
+
+```text
+selected branch: goal_region_object_relation_coverage_completion_v1
+branch type: label_free_nonterminal_observation_branch
+target failure class: dual_evidence_coverage_gap
+target mechanism: goal_region_and_object_relation_both_missing
+target rows: 12 pair/request rows
+scene/query count: 7 / 3
+terminal utility allowed: false
+implementation allowed now: false
+next task: freeze_goal_region_object_relation_coverage_completion_contract
+```
+
+This branch selection follows the failure mechanism after closing the rival contamination path: the largest remaining unclosed blocker is missing goal-region and object-relation evidence, not a terminal arbitration rule. The next workflow step must freeze exact target rows, observation roles, nonterminal actions, audit rows, and later evaluation-only join requirements before implementation.
+
+`goal_region_object_relation_coverage_completion_v1` is statically verified at `manifests/h001_goal_region_object_relation_coverage_completion_v1.json` / `.verify.json`.
+
+```text
+contract status: frozen_branch_contract_static_verified
+target failure class: dual_evidence_coverage_gap
+target mechanism: goal_region_and_object_relation_both_missing
+target rows: 12 pair/request rows
+scene/query count: 7 / 3
+expected candidate rows: 24
+expected observation seed rows: 48
+observation roles per pair: 4
+terminal utility allowed: false
+implementation allowed next: true
+next task: implement_goal_region_object_relation_coverage_completion_materializer
+```
+
+This contract freezes coverage-completion observation before implementation. The required roles are `candidate_a_goal_region_context_view`, `candidate_b_goal_region_context_view`, `candidate_pair_object_relation_context_view`, and `shared_goal_region_anchor_view`. These roles may request missing goal-region and object-relation evidence, but they may not commit, reject, tune thresholds, use evaluation labels, or claim wrong-goal / wasted-path / map-pose improvement.
+
+`goal_region_object_relation_coverage_completion_v1` materializer is Docker-verified with script `runtime/h001_runtime/materialize_goal_region_object_relation_coverage_completion.py`.
+
+```text
+output: local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1
+target/candidate/observation-seed/audit rows: 12 / 24 / 48 / 9
+scene/query count: 7 / 3
+observation role rows: 12 each across 4 roles
+action forbidden key count: 0
+terminal/candidate commit/rejection rows: 0 / 0 / 0
+GT action rows: 0
+materializer gate: true
+primary blocker: frame_projection_contract_required
+next task: freeze_goal_region_object_relation_coverage_completion_frame_projection_contract
+```
+
+This artifact preserves the coverage-completion rows as a nonterminal observation source. It does not render frames, run detector/SAM2, resolve goal validity, permit terminal utility, or allow paper claims.
+
+`goal_region_object_relation_coverage_completion_frame_projection_v1` is statically verified at `manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.json` / `.verify.json`.
+
+```text
+source target/candidate/observation-seed/audit rows: 12 / 24 / 48 / 9
+scene/query count: 7 / 3
+required geometry candidate ids: 18 / 18 covered
+missing geometry candidate ids: 0
+expected frame/projection rows: 48 / 48
+minimum projection visible rows/rate: 46 / 0.95
+terminal/candidate commit/rejection rows: 0 / 0 / 0
+GT action rows: 0
+paper claim rows: 0
+next task: implement_docker_goal_region_object_relation_coverage_completion_frame_projection_smoke
+```
+
+This contract freezes Habitat renderability requirements for the missing-evidence branch. It does not run rendering yet and cannot be used as detector evidence, goal-validity resolution, terminal utility, or paper claim.
+
 ## Current Broader Standoff Diagnostic
 
 ### 사실

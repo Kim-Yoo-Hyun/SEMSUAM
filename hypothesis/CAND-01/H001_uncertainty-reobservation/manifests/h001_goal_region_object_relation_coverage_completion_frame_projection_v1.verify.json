@@ -1,0 +1,113 @@
+{
+  "schema_version": "h001.verify.goal_region_object_relation_coverage_completion_frame_projection.v1",
+  "checked_at": "2026-06-13",
+  "ok": true,
+  "status": "static_verified_coverage_completion_frame_projection_contract_terminal_blocked",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.json",
+  "source_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_v1.json",
+  "source_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_v1.verify.json",
+  "source_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1/goal_region_object_relation_coverage_completion_summary.json",
+  "verified_source_counts": {
+    "target_pair_rows": 12,
+    "target_request_rows": 12,
+    "candidate_rows": 24,
+    "observation_seed_rows": 48,
+    "audit_rows": 9,
+    "scene_count": 7,
+    "query_count": 3,
+    "scene_query_pairs": 9,
+    "candidate_pair_rows": 12,
+    "required_candidate_tuples": 9,
+    "required_candidate_ids": 18,
+    "geometry_candidate_ids_covered": 18,
+    "missing_geometry_candidate_ids": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0
+  },
+  "verified_observation_role_counts": {
+    "candidate_a_goal_region_context_view": 12,
+    "candidate_b_goal_region_context_view": 12,
+    "candidate_pair_object_relation_context_view": 12,
+    "shared_goal_region_anchor_view": 12
+  },
+  "verified_evidence_axis_counts": {
+    "goal_region_context_for_candidate_a": 12,
+    "goal_region_context_for_candidate_b": 12,
+    "object_relation_context_for_candidate_pair": 12,
+    "shared_goal_region_anchor_context": 12
+  },
+  "verified_nonterminal_action_counts": {
+    "request_goal_region_evidence": 24,
+    "request_joint_goal_region_object_relation_evidence": 12,
+    "request_object_relation_evidence": 12
+  },
+  "verified_scene_coverage": {
+    "scene_keys": [
+      "4ok3usBNeis",
+      "BAbdmeyTvMZ",
+      "Dd4bFSTQ8gi",
+      "HY1NcmCgn3n",
+      "QaLdnwvtxbs",
+      "bxsVRursffK",
+      "qyAac8rV8Zk"
+    ],
+    "queries": [
+      "bed",
+      "chair",
+      "tv_monitor"
+    ]
+  },
+  "frame_projection_contract_checks": {
+    "source_materializer_gate_passed": true,
+    "expected_target_pair_rows": 12,
+    "expected_symbolic_observation_seed_rows": 48,
+    "minimum_frame_plan_rows": 48,
+    "minimum_frame_rows": 48,
+    "minimum_projection_rows": 48,
+    "minimum_projection_visible_rate": 0.95,
+    "minimum_projection_visible_rows": 46,
+    "max_missing_candidate_rows": 0,
+    "required_observation_roles_complete": true,
+    "geometry_candidate_artifact_available": true,
+    "geometry_plan_reference_available": true,
+    "geometry_candidate_coverage_complete": true,
+    "pre_render_resolution_required": true,
+    "explicit_candidate_ids_required": true,
+    "terminal_utility_validation_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "implementation_target": {
+    "job": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/goal_region_object_relation_coverage_completion_frame_projection.sh",
+    "optional_frame_ready_planner": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_goal_region_object_relation_coverage_completion_frame_projection.py",
+    "docker_image": "research3/habitat-h001:20260508-calib-artifacts",
+    "pre_render_plan_output": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frame_plan_v1",
+    "frame_output": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1",
+    "projection_output": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_projection_v1"
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.verify.json",
+    "jq '{status, source_gate, frame_projection_contract, implementation_target, next_research_task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.json",
+    "jq '{status, target_pair_rows, candidate_rows, observation_seed_rows, audit_rows, materializer_gate_passed, primary_blocker, next_task}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1/goal_region_object_relation_coverage_completion_summary.json",
+    "jq -s '{rows:length, role_counts:(group_by(.observation_role)|map({key:.[0].observation_role,n:length})), gt_action_true:map(select(.uses_gt_for_action==true))|length}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1/goal_region_object_relation_coverage_completion_observation_seed_rows.jsonl",
+    "comm -23 <(jq -r '. as $r | .candidate_ids[] | [$r.scene_key,$r.query,.] | @tsv' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1/goal_region_object_relation_coverage_completion_observation_seed_rows.jsonl | sort -u) <(jq -r '. as $r | .candidates[] | [$r.scene_key,$r.query,.candidate_id] | @tsv' local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl | sort -u) | wc -l",
+    "test -f local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl",
+    "test -f local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_plan.jsonl"
+  ],
+  "next_task": "implement_docker_goal_region_object_relation_coverage_completion_frame_projection_smoke",
+  "interpretation": {
+    "fact": "The contract freezes 48 symbolic coverage-completion observation seed rows from 12 target pairs across 7 scenes and 3 queries, with complete geometry candidate coverage for 18 required candidate ids.",
+    "agent_inference": "The next natural step is Docker Habitat frame/projection smoke. This static contract verifies source completeness and renderability requirements only; it does not validate detector evidence or terminal utility.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM complementarity, terminal utility, formula revision, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim is allowed from this frame/projection contract."
+  },
+  "paper_claim_allowed": false
+}

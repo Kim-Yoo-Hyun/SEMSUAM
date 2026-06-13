@@ -1,7 +1,7 @@
 {
   "schema_version": "h001.contract.rival_contradiction_region_contamination_multi_case_frame_projection.v1",
-  "date_checked": "2026-06-12",
-  "status": "frozen_contract_static_verified_terminal_blocked",
+  "date_checked": "2026-06-13",
+  "status": "frozen_contract_docker_verified_terminal_blocked",
   "contract_name": "rival_contradiction_region_contamination_multi_case_frame_projection_v1",
   "purpose": "Freeze the multi-case frame/projection smoke contract after the Docker-verified 18-row multi-case source materializer and before any multi-case detector/SAM2 evidence, evaluation-only join, terminal utility, first_eval rerun, policy-scale comparison, or paper claim.",
   "stage": "P4-design",
@@ -251,7 +251,7 @@
     "paper_claim_allowed": false
   },
   "next_research_task": {
-    "task": "implement_docker_rival_contradiction_region_contamination_multi_case_frame_projection_smoke",
-    "reason": "The 18 source rows and 72 symbolic observation seeds are frozen. The next implementation should resolve them into frame-ready Habitat decisions, render frames, filter blank headings, and run projection-anchor smoke with explicit candidate ids before any multi-case detector/SAM2 evidence or terminal utility."
+    "task": "freeze_multi_case_detector_sam2_substrate_contract_after_frame_projection_smoke",
+    "reason": "The 18 source rows and 72 symbolic observation seeds are frozen and Docker-verified through frame/projection smoke. The next step should freeze the detector/SAM2 substrate contract before any post-detector evidence, evaluation-only label join, terminal utility, or paper claim."
   }
 }

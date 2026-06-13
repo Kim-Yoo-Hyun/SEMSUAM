@@ -1,0 +1,74 @@
+{
+  "schema_version": "h001.verify.next_label_free_branch_after_rival_contradiction_closure.v1",
+  "date_checked": "2026-06-13",
+  "ok": true,
+  "verified_artifact": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_branch_after_rival_contradiction_closure_v1.json",
+  "status": "static_selection_verified",
+  "source_files_checked": [
+    "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_path_closure_v1.json",
+    "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_path_closure_v1.verify.json",
+    "local_dataset/runs/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1/pairwise_goal_region_map_pose_rule_failure_diagnostic_summary.json",
+    "local_dataset/runs/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1/pairwise_goal_region_map_pose_rule_failure_diagnostic_next_family_rows.jsonl",
+    "local_dataset/runs/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1/pairwise_goal_region_map_pose_rule_failure_diagnostic_pair_rows.jsonl",
+    "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1/rival_contradiction_region_contamination_multi_case_diagnostic_report_summary.json"
+  ],
+  "selection_verification": {
+    "selected_branch": "goal_region_object_relation_coverage_completion_v1",
+    "selected_branch_type": "label_free_nonterminal_observation_branch",
+    "path_closure_static_verified": true,
+    "current_rival_path_closed_as_diagnostic_only": true,
+    "pairwise_failure_diagnostic_gate_passed": true,
+    "selected_family_pair_rows": 12,
+    "selected_family_request_rows": 12,
+    "selected_family_scene_count": 7,
+    "selected_family_query_count": 3,
+    "selected_family_queries": [
+      "bed",
+      "chair",
+      "tv_monitor"
+    ],
+    "selected_failure_class": "dual_evidence_coverage_gap",
+    "selected_failure_mechanism": "goal_region_and_object_relation_both_missing",
+    "label_pattern_counts_for_evaluation_only": {
+      "a_wrong_b_correct": 4,
+      "both_correct": 4,
+      "both_wrong": 4
+    },
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "contract_checks": {
+    "selected_branch_defined": true,
+    "primary_target_filter_defined": true,
+    "primary_target_has_nonzero_rows": true,
+    "primary_target_has_scene_diversity": true,
+    "primary_target_has_query_diversity": true,
+    "largest_unclosed_failure_family_selected": true,
+    "rival_path_closure_consumed": true,
+    "rejected_or_deferred_branches_documented": true,
+    "natural_proof_rule_preserved": true,
+    "branch_contract_allowed_next": true,
+    "implementation_allowed_now": false,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_branch_after_rival_contradiction_closure_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_branch_after_rival_contradiction_closure_v1.verify.json",
+    "jq '{status, selected_branch, future_branch_contract_requirements, next_research_task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_branch_after_rival_contradiction_closure_v1.json"
+  ],
+  "interpretation": {
+    "fact": "The selected branch is the largest unclosed pairwise failure family after the rival contradiction diagnostic-only closure: 12 dual-evidence coverage-gap rows across 7 scenes and 3 queries.",
+    "agent_inference": "The next natural step is to freeze a coverage-completion observation contract, not to implement terminal utility or tune a selector.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM utility, terminal utility, first_eval readiness, policy-scale comparison, or paper contribution claim is allowed from this selection."
+  },
+  "next_task": "freeze_goal_region_object_relation_coverage_completion_contract"
+}
