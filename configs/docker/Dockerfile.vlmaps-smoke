@@ -23,7 +23,7 @@ RUN git clone --branch ${VLMAPS_BRANCH} --depth 1 https://github.com/vlmaps/vlma
   && cd /opt/vlmaps \
   && test "$(git rev-parse HEAD)" = "${VLMAPS_COMMIT}"
 
-COPY smoke_vlmaps.py /opt/research3/smoke_vlmaps.py
+COPY scripts/h001_tools/smoke_vlmaps.py /opt/research3/smoke_vlmaps.py
 
 WORKDIR /opt/vlmaps
 

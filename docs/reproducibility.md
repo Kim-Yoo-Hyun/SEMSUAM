@@ -77,6 +77,101 @@ jq '{status, contrast_materializer_gate_passed, primary_blocker, next_task}' \
   local_dataset/runs/h001_fully_covered_candidate_conditioned_contrast_v1/fully_covered_candidate_conditioned_contrast_summary.json
 ```
 
+## Dataset-Missing Recovery Path
+
+### 사실
+
+Date checked: 2026-06-14
+
+현재 gate summary만 확인할 때는 이미 생성된 `local_dataset/runs/...` artifact가 있으면 충분하다. 하지만 frame/projection, detector/SAM2 substrate, Habitat rendering, ObjectNav/HM3D 기반 artifact를 재생성하려면 아래 dataset layout이 필요하다.
+
+Required layout:
+
+```text
+local_dataset/data/
+  scene_datasets/hm3d/
+  datasets/objectnav/hm3d/v2/
+  datasets/ovon/hm3d/                  # optional; OVON branch를 재실행할 때만 필요
+```
+
+먼저 local 상태를 가볍게 확인한다.
+
+```bash
+test -d local_dataset/data/scene_datasets/hm3d
+test -d local_dataset/data/datasets/objectnav/hm3d/v2
+python scripts/h001_tools/check_hm3d.py local_dataset/data
+
+# OVON branch가 필요할 때만 실행한다.
+python scripts/h001_tools/check_ovon.py local_dataset/data
+```
+
+위 확인이 실패하면 dataset을 repo에 넣지 말고 `local_dataset/data` 아래에 복구한다. Matterport credential은 shell environment나 password manager에서만 가져오고 문서, Git, Drive archive에 저장하지 않는다.
+
+```bash
+cd /home/yoohyun/research3
+mkdir -p local_dataset/data local_dataset/models local_dataset/runs archive/logs/root
+
+export MATTERPORT_TOKEN_ID='<token-id>'
+export MATTERPORT_TOKEN_SECRET='<token-secret>'
+
+ts=$(date +%Y%m%d-%H%M%S)
+tmux new-session -d -s "h001-hm3d-restore-${ts}" \
+  "cd /home/yoohyun/research3 && \
+   TS=${ts} \
+   DATA_ROOT=/home/yoohyun/research3/local_dataset/data \
+   OUT=/home/yoohyun/research3/local_dataset/runs/hm3d_restore_${ts} \
+   LOG=/home/yoohyun/research3/archive/logs/root/hm3d-restore-${ts}.log \
+   bash scripts/h001_jobs/hm3d_restore.sh"
+```
+
+복구 job은 background에서 돌리고 Codex 작업을 막지 않는다. 필요할 때만 짧게 확인한다.
+
+```bash
+tail -n 80 "archive/logs/root/hm3d-restore-${ts}.log"
+jq . "local_dataset/runs/hm3d_restore_${ts}/job_status.json"
+```
+
+완료 검증:
+
+```bash
+python scripts/h001_tools/check_hm3d.py local_dataset/data
+
+docker run --rm \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/hm3d-download:20260507 \
+  python /workspace/scripts/h001_tools/check_hm3d.py /data
+```
+
+OVON episodes가 필요한 branch를 재현할 때만 추가로 복구한다.
+
+```bash
+docker run --rm \
+  -v /home/yoohyun/research3/local_dataset/data:/data \
+  research3/hm3d-download:20260507 \
+  bash -lc 'mkdir -p /data/datasets/ovon; \
+    curl --fail --location --continue-at - \
+      https://huggingface.co/datasets/nyokoyama/hm3d_ovon/resolve/main/hm3d.tar.gz \
+      -o /data/datasets/ovon/hm3d.tar.gz; \
+    rm -rf /data/datasets/ovon/hm3d; \
+    tar -xzf /data/datasets/ovon/hm3d.tar.gz -C /data/datasets/ovon; \
+    find /data/datasets/ovon/hm3d -name "._*" -delete'
+
+python scripts/h001_tools/check_ovon.py local_dataset/data
+```
+
+Legacy command와 호환이 필요할 때만 `/tmp` symlink를 다시 만든다. Docker bind mount에는 가능한 한 canonical `local_dataset/` path를 직접 사용한다.
+
+```bash
+ln -sfn /home/yoohyun/research3/local_dataset/data /tmp/research3-data
+ln -sfn /home/yoohyun/research3/local_dataset/models /tmp/research3-models
+ln -sfn /home/yoohyun/research3/local_dataset/runs /tmp/research3-runs
+```
+
+### 에이전트 추론
+
+현재 `docs/reproducibility.md`는 code, Docker, checkpoint, artifact 재생성 경로를 포함하고 있어 재현 entrypoint 역할은 한다. 다만 dataset이 없는 환경에서는 먼저 `local_dataset/data` 검증과 HM3D/ObjectNav 복구를 끝내야 downstream Habitat rendering, detector substrate, evaluation artifact 재생성이 닫힌다. `/tmp/research3-*`는 호환 경로일 뿐 source-of-truth가 아니다.
+
 ## Coverage-Completion Frame/Projection Reproduction Gate
 
 ### 사실
@@ -641,9 +736,14 @@ next_cleanup: full /tmp Docker compatibility requires sudo/root bind-mount clean
 Docker path template:
 
 ```bash
-DATA_ROOT=$(readlink -f /tmp/research3-data)
-MODEL_ROOT=$(readlink -f /tmp/research3-models)
-RUN_ROOT=$(readlink -f /tmp/research3-runs)
+DATA_ROOT=/home/yoohyun/research3/local_dataset/data
+MODEL_ROOT=/home/yoohyun/research3/local_dataset/models
+RUN_ROOT=/home/yoohyun/research3/local_dataset/runs
+
+# Legacy compatibility only:
+TMP_DATA_ROOT=$(readlink -f /tmp/research3-data)
+TMP_MODEL_ROOT=$(readlink -f /tmp/research3-models)
+TMP_RUN_ROOT=$(readlink -f /tmp/research3-runs)
 ```
 
 Local dataset migration:
@@ -785,6 +885,7 @@ local_dataset/runs/h001_semantic_slam_non_dominated_proxy_output_evaluation_v1/
 
 ```text
 research3/habitat-h001:20260508-calib-artifacts
+research3/hm3d-download:20260507
 research3/openvocab-perception:20260513-v3c-gdino-sam2
 research3/vlmaps-hm3d:20260508-timmfix
 research3/vlmaps-text:20260508
@@ -793,18 +894,21 @@ research3/vlmaps-text:20260508
 Archive command:
 
 ```bash
+mkdir -p local_dataset/docker_images
+
 docker save \
   research3/habitat-h001:20260508-calib-artifacts \
+  research3/hm3d-download:20260507 \
   research3/openvocab-perception:20260513-v3c-gdino-sam2 \
   research3/vlmaps-hm3d:20260508-timmfix \
   research3/vlmaps-text:20260508 \
-  | gzip > local_dataset/research3-docker-images-20260522.tar.gz
+  | zstd -T0 -19 -o local_dataset/docker_images/research3-docker-images-20260614.tar.zst
 ```
 
 Drive upload target:
 
 ```text
-local_dataset/research3-docker-images-20260522.tar.gz
+local_dataset/docker_images/research3-docker-images-20260614.tar.zst
 ```
 
 #### Optional
@@ -856,7 +960,7 @@ ln -sfn /home/yoohyun/research3/local_dataset/runs /tmp/research3-runs
 Docker image archive를 보존한 경우:
 
 ```bash
-gunzip -c local_dataset/research3-docker-images-20260522.tar.gz | docker load
+zstd -dc local_dataset/docker_images/research3-docker-images-20260614.tar.zst | docker load
 ```
 
 복구 검증:
@@ -865,13 +969,13 @@ gunzip -c local_dataset/research3-docker-images-20260522.tar.gz | docker load
 python scripts/h001_tools/check_hm3d.py local_dataset/data
 
 docker run --rm \
-  -v /tmp/research3-data:/data:ro \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
   -v /home/yoohyun/research3:/workspace:ro \
   research3/hm3d-download:20260507 \
   python /workspace/scripts/h001_tools/check_hm3d.py /data
 
 docker run --rm \
-  -v /tmp/research3-models:/models:ro \
+  -v /home/yoohyun/research3/local_dataset/models:/models:ro \
   research3/openvocab-perception:20260513-v3c-gdino-sam2 \
   bash -lc 'test -d /models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny && test -f /models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt'
 
@@ -904,7 +1008,9 @@ ts=$(date +%Y%m%d-%H%M%S)
 tmux new-session -d -s "h001-hm3d-restore-${ts}" \
   "cd /home/yoohyun/research3 && \
    TS=${ts} \
-   DATA_ROOT=/tmp/research3-data \
+   DATA_ROOT=/home/yoohyun/research3/local_dataset/data \
+   OUT=/home/yoohyun/research3/local_dataset/runs/hm3d_restore_${ts} \
+   LOG=/home/yoohyun/research3/archive/logs/root/hm3d-restore-${ts}.log \
    bash scripts/h001_jobs/hm3d_restore.sh"
 ```
 
@@ -926,7 +1032,7 @@ docker build \
 5. Verify before running experiments:
 
 ```bash
-python scripts/h001_tools/check_hm3d.py /tmp/research3-data
+python scripts/h001_tools/check_hm3d.py local_dataset/data
 nvidia-smi
 docker run --rm --gpus all --entrypoint nvidia-smi research3/habitat-h001:20260508-calib-artifacts
 ```
@@ -994,7 +1100,9 @@ ts=$(date +%Y%m%d-%H%M%S)
 tmux new-session -d -s "h001-hm3d-restore-${ts}" \
   "cd /home/yoohyun/research3 && \
    TS=${ts} \
-   DATA_ROOT=/tmp/research3-data \
+   DATA_ROOT=/home/yoohyun/research3/local_dataset/data \
+   OUT=/home/yoohyun/research3/local_dataset/runs/hm3d_restore_${ts} \
+   LOG=/home/yoohyun/research3/archive/logs/root/hm3d-restore-${ts}.log \
    bash scripts/h001_jobs/hm3d_restore.sh"
 ```
 
@@ -1026,7 +1134,7 @@ docker run --rm --ipc=host \
   -e HOME=/tmp \
   -e PYTHONDONTWRITEBYTECODE=1 \
   -e PYTHONPATH=/workspace/src \
-  -v /tmp/research3-runs:/runs \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
   -v /home/yoohyun/research3:/workspace:ro \
   research3/habitat-h001:20260508-calib-artifacts \
   micromamba run -n base python -m h001_runtime.diagnose_dense_terminal_arbitration \
@@ -1091,16 +1199,18 @@ ts=$(date +%Y%m%d-%H%M%S)
 tmux new-session -d -s "h001-hm3d-restore-${ts}" \
   "cd /home/yoohyun/research3 && \
    TS=${ts} \
-   DATA_ROOT=/tmp/research3-data \
+   DATA_ROOT=/home/yoohyun/research3/local_dataset/data \
+   OUT=/home/yoohyun/research3/local_dataset/runs/hm3d_restore_${ts} \
+   LOG=/home/yoohyun/research3/archive/logs/root/hm3d-restore-${ts}.log \
    bash scripts/h001_jobs/hm3d_restore.sh"
 ```
 
 검증:
 
 ```bash
-python scripts/h001_tools/check_hm3d.py /tmp/research3-data
+python scripts/h001_tools/check_hm3d.py local_dataset/data
 docker run --rm \
-  -v /tmp/research3-data:/data:ro \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
   -v /home/yoohyun/research3:/workspace:ro \
   research3/hm3d-download:20260507 \
   python /workspace/scripts/h001_tools/check_hm3d.py /data
@@ -1110,7 +1220,7 @@ docker run --rm \
 
 ```bash
 docker run --rm \
-  -v /tmp/research3-data:/data \
+  -v /home/yoohyun/research3/local_dataset/data:/data \
   research3/hm3d-download:20260507 \
   bash -lc 'mkdir -p /data/datasets/ovon; \
     curl --fail --location --continue-at - \
@@ -1124,8 +1234,10 @@ docker run --rm \
 검증:
 
 ```bash
+python scripts/h001_tools/check_ovon.py local_dataset/data
+
 docker run --rm \
-  -v /tmp/research3-data:/data:ro \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
   -v /home/yoohyun/research3:/workspace:ro \
   research3/hm3d-download:20260507 \
   python /workspace/scripts/h001_tools/check_ovon.py /data
@@ -1170,9 +1282,9 @@ tmux new-session -d -s "h001-openvocab-v3c-setup-${ts}" \
 
 ```text
 GroundingDINO model id: IDEA-Research/grounding-dino-tiny
-GroundingDINO local dir: /tmp/research3-models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny
+GroundingDINO local dir: local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny
 SAM2 checkpoint URL: https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_tiny.pt
-SAM2 local path: /tmp/research3-models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt
+SAM2 local path: local_dataset/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt
 ```
 
 오프라인 검증은 setup script의 `verify_offline_load` 단계가 수행한다.
@@ -1190,7 +1302,7 @@ tmux new-session -d -s "h001-openvocab-owlvit-setup-${ts}" \
 
 ```text
 model id: google/owlvit-base-patch32
-local dir: /tmp/research3-models/openvocab/owlvit/google_owlvit-base-patch32
+local dir: local_dataset/models/openvocab/owlvit/google_owlvit-base-patch32
 ```
 
 ### VLMaps / LSeg
@@ -1199,7 +1311,7 @@ local dir: /tmp/research3-models/openvocab/owlvit/google_owlvit-base-patch32
 
 ```text
 container path: /models/vlmaps/lseg/checkpoints/demo_e200.ckpt
-host path: /tmp/research3-models/vlmaps/lseg/checkpoints/demo_e200.ckpt
+host path: local_dataset/models/vlmaps/lseg/checkpoints/demo_e200.ckpt
 ```
 
 기본 job은 `run_vlmaps_map.py --download-checkpoint`를 사용해 필요 시 checkpoint를 받는다.
@@ -1570,16 +1682,109 @@ Contract summary:
 | Detector gate | box/SAM2/association `>= 0.80 / 0.80 / 0.50` |
 | Post-observation gate | wrong-goal `0`, no-label `0`, newly resolved primary request `>= 1` |
 
-### 사용 중인 Image
+### Docker Image Reproduction Path
+
+#### 사실
+
+Date checked: 2026-06-14
+
+아래 image들은 `local_dataset/` 내용물과 별개로 Docker daemon에 저장된다. 새 컴퓨터에서는 Drive에 저장한 image archive를 `docker load` 하거나, repo의 Dockerfile/setup script로 재생성한다.
+
+Current local image inventory:
 
 ```text
 research3/habitat-h001:20260508-calib-artifacts
 research3/hm3d-download:20260507
 research3/openvocab-perception:20260513-v3c-gdino-sam2
-research3/openvocab-perception:20260513-owlvit
 research3/vlmaps-hm3d:20260508-timmfix
 research3/vlmaps-text:20260508
 ```
+
+Optional / inactive image:
+
+```text
+research3/openvocab-perception:20260513-owlvit
+```
+
+Image 역할:
+
+| Image | Role | Rebuild source |
+| --- | --- | --- |
+| `research3/hm3d-download:20260507` | HM3D / ObjectNav dataset download and verification | `configs/docker/Dockerfile.hm3d-download` |
+| `research3/habitat-h001:20260508-calib-artifacts` | Habitat rendering, ObjectNav/HM3D frame/projection, H001 runtime smoke/evaluation | `configs/docker/Dockerfile.habitat-h001` |
+| `research3/openvocab-perception:20260513-v3c-gdino-sam2` | `GroundingDINO + SAM2` detector/segmentation evidence path | `configs/docker/Dockerfile.openvocab-perception-v3c` and setup script |
+| `research3/vlmaps-hm3d:20260508-timmfix` | `VLMaps` HM3D semantic map / candidate artifact regeneration | `configs/docker/Dockerfile.vlmaps-hm3d` |
+| `research3/vlmaps-text:20260508` | `VLMaps` text embedding regeneration | `configs/docker/Dockerfile.vlmaps-text` |
+
+이미지가 하나도 없는 새 환경에서는 아래 순서로 재생성한다.
+
+```bash
+cd /home/yoohyun/research3
+
+docker build \
+  -f configs/docker/Dockerfile.hm3d-download \
+  -t research3/hm3d-download:20260507 \
+  .
+
+docker build \
+  -f configs/docker/Dockerfile.habitat-h001 \
+  -t research3/habitat-h001:20260508-calib-artifacts \
+  .
+
+docker build \
+  -f configs/docker/Dockerfile.vlmaps-text \
+  -t research3/vlmaps-text:20260508 \
+  .
+
+docker build \
+  -f configs/docker/Dockerfile.vlmaps-hm3d \
+  -t research3/vlmaps-hm3d:20260508-timmfix \
+  .
+```
+
+`GroundingDINO + SAM2` image와 checkpoint는 setup script로 함께 복구한다. 이 job은 Docker build, model download, offline load verification을 순서대로 수행한다.
+
+```bash
+ts=$(date +%Y%m%d-%H%M%S)
+tmux new-session -d -s "h001-openvocab-v3c-setup-${ts}" \
+  "cd /home/yoohyun/research3 && \
+   LOG_FILE=archive/logs/root/openvocab-perception-v3c-groundingdino-sam2-${ts}.log \
+   bash scripts/h001_jobs/openvocab_perception_v3c_groundingdino_sam2_setup.sh"
+```
+
+`OWL-ViT` diagnostic image가 다시 필요할 때만 optional로 재생성한다.
+
+```bash
+bash scripts/h001_jobs/openvocab_perception_owlvit_setup.sh
+```
+
+Build 후 검증:
+
+```bash
+docker image inspect \
+  research3/hm3d-download:20260507 \
+  research3/habitat-h001:20260508-calib-artifacts \
+  research3/openvocab-perception:20260513-v3c-gdino-sam2 \
+  research3/vlmaps-hm3d:20260508-timmfix \
+  research3/vlmaps-text:20260508 >/dev/null
+
+docker run --rm \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
+  -v /home/yoohyun/research3:/workspace:ro \
+  research3/hm3d-download:20260507 \
+  python /workspace/scripts/h001_tools/check_hm3d.py /data
+
+docker run --rm --entrypoint python \
+  research3/habitat-h001:20260508-calib-artifacts \
+  /opt/h001/smoke_habitat_h001.py --help >/dev/null
+
+docker run --rm \
+  -v /home/yoohyun/research3/local_dataset/models:/models:ro \
+  research3/openvocab-perception:20260513-v3c-gdino-sam2 \
+  bash -lc 'test -d /models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny && test -f /models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt'
+```
+
+GPU job 검증은 `NVIDIA Runtime Recovery Checklist`의 `docker run --rm --gpus all --entrypoint nvidia-smi ...`가 통과한 뒤에만 수행한다.
 
 ### 다른 컴퓨터로 옮길 때 우선순위
 
@@ -1602,32 +1807,46 @@ research3/vlmaps-text:20260508
 Docker image를 직접 옮길 때:
 
 ```bash
+mkdir -p local_dataset/docker_images
+
 docker save \
   research3/habitat-h001:20260508-calib-artifacts \
+  research3/hm3d-download:20260507 \
   research3/openvocab-perception:20260513-v3c-gdino-sam2 \
   research3/vlmaps-hm3d:20260508-timmfix \
   research3/vlmaps-text:20260508 \
-  | gzip > research3-docker-images-20260521.tar.gz
+  | zstd -T0 -19 -o local_dataset/docker_images/research3-docker-images-20260614.tar.zst
 ```
 
 새 컴퓨터에서:
 
 ```bash
-gunzip -c research3-docker-images-20260521.tar.gz | docker load
+zstd -dc local_dataset/docker_images/research3-docker-images-20260614.tar.zst | docker load
+docker image inspect \
+  research3/habitat-h001:20260508-calib-artifacts \
+  research3/hm3d-download:20260507 \
+  research3/openvocab-perception:20260513-v3c-gdino-sam2 \
+  research3/vlmaps-hm3d:20260508-timmfix \
+  research3/vlmaps-text:20260508 >/dev/null
+```
+
+`zstd`가 없는 환경에서는 `gzip`을 사용한다.
+
+```bash
+docker save \
+  research3/habitat-h001:20260508-calib-artifacts \
+  research3/hm3d-download:20260507 \
+  research3/openvocab-perception:20260513-v3c-gdino-sam2 \
+  research3/vlmaps-hm3d:20260508-timmfix \
+  research3/vlmaps-text:20260508 \
+  | gzip > local_dataset/docker_images/research3-docker-images-20260614.tar.gz
+
+gunzip -c local_dataset/docker_images/research3-docker-images-20260614.tar.gz | docker load
 ```
 
 ### Build / Setup
 
-Habitat runtime image는 artifact job에서 없으면 자동 build한다.
-
-```bash
-docker build \
-  -f configs/docker/Dockerfile.habitat-h001 \
-  -t research3/habitat-h001:20260508-calib-artifacts \
-  .
-```
-
-Open-vocabulary detector image는 setup script를 사용한다.
+H001에서 실제 재현에 쓰는 image는 위 `Docker Image Reproduction Path`를 따른다. Open-vocabulary detector image는 아래 setup script를 사용한다.
 
 ```bash
 bash scripts/h001_jobs/openvocab_perception_v3c_groundingdino_sam2_setup.sh
@@ -1791,8 +2010,8 @@ docker run --rm --ipc=host \
   -e HOME=/tmp \
   -e PYTHONDONTWRITEBYTECODE=1 \
   -e PYTHONPATH=/workspace/src \
-  -v /tmp/research3-data:/data:ro \
-  -v /tmp/research3-runs:/runs \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
   -v /home/yoohyun/research3:/workspace:ro \
   research3/habitat-h001:20260508-calib-artifacts \
   micromamba run -n base python -m h001_runtime.plan_external_candidate_followup_observation \
@@ -1810,8 +2029,8 @@ docker run --rm --gpus all --ipc=host \
   -e HOME=/tmp \
   -e PYTHONDONTWRITEBYTECODE=1 \
   -e PYTHONPATH=/workspace/src \
-  -v /tmp/research3-data:/data:ro \
-  -v /tmp/research3-runs:/runs \
+  -v /home/yoohyun/research3/local_dataset/data:/data:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
   -v /home/yoohyun/research3:/workspace:ro \
   research3/habitat-h001:20260508-calib-artifacts \
   micromamba run -n base python -m h001_runtime.export_postview_frames_v2 \
@@ -1835,8 +2054,8 @@ docker run --rm --gpus all \
   -e PYTHONDONTWRITEBYTECODE=1 \
   -e PYTHONPATH=/workspace/src \
   -v /home/yoohyun/research3:/workspace:ro \
-  -v /tmp/research3-runs:/runs \
-  -v /tmp/research3-models:/models:ro \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
+  -v /home/yoohyun/research3/local_dataset/models:/models:ro \
   -w /workspace \
   research3/openvocab-perception:20260513-v3c-gdino-sam2 \
   python -m h001_runtime.detect_postview_groundingdino_sam2 \
@@ -1870,7 +2089,7 @@ docker run --rm --ipc=host \
   -e HOME=/tmp \
   -e PYTHONDONTWRITEBYTECODE=1 \
   -e PYTHONPATH=/workspace/src \
-  -v /tmp/research3-runs:/runs \
+  -v /home/yoohyun/research3/local_dataset/runs:/runs \
   -v /home/yoohyun/research3:/workspace:ro \
   research3/habitat-h001:20260508-calib-artifacts \
   micromamba run -n base python -m h001_runtime.analyze_external_candidate_followup_evidence \

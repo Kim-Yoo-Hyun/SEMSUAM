@@ -47,8 +47,8 @@ RUN git clone --depth 1 --branch v0.3.3 \
     && micromamba run -n base pip install --no-cache-dir \
       pillow==10.4.0
 
-COPY smoke_habitat_h001.py /opt/h001/smoke_habitat_h001.py
-COPY h001_runtime /opt/h001/h001_runtime
+COPY scripts/h001_tools/smoke_habitat_h001.py /opt/h001/smoke_habitat_h001.py
+COPY src/h001_runtime /opt/h001/h001_runtime
 
 WORKDIR /workspace
 

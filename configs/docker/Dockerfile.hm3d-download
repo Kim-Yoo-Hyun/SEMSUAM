@@ -22,8 +22,8 @@ RUN curl -fsSL \
     "https://raw.githubusercontent.com/facebookresearch/habitat-sim/${HABITAT_SIM_COMMIT}/src_python/habitat_sim/utils/datasets_download.py" \
     -o /opt/datasets_download.py
 
-COPY download_hm3d.sh /opt/download_hm3d.sh
-COPY check_hm3d.py /opt/check_hm3d.py
+COPY scripts/h001_tools/download_hm3d.sh /opt/download_hm3d.sh
+COPY scripts/h001_tools/check_hm3d.py /opt/check_hm3d.py
 
 RUN chmod +x /opt/download_hm3d.sh
 

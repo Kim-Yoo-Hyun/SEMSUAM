@@ -3,8 +3,9 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 DOCKER_DIR="$ROOT_DIR/configs/docker"
-OUTPUT_ROOT="/tmp/research3-runs/openvocab_perception_v3c_groundingdino_sam2_setup"
-MODEL_ROOT="/tmp/research3-models/openvocab"
+OUTPUT_ROOT="${OUTPUT_ROOT:-$ROOT_DIR/local_dataset/runs/openvocab_perception_v3c_groundingdino_sam2_setup}"
+MODEL_BASE="${MODEL_BASE:-$ROOT_DIR/local_dataset/models}"
+MODEL_ROOT="$MODEL_BASE/openvocab"
 GDINO_MODEL_ID="IDEA-Research/grounding-dino-tiny"
 GDINO_DIR="$MODEL_ROOT/groundingdino/IDEA-Research_grounding-dino-tiny"
 SAM2_DIR="$MODEL_ROOT/sam2/sam2.1_hiera_tiny"
@@ -70,7 +71,7 @@ CURRENT_STAGE="verify_imports"
 write_status "running" "$CURRENT_STAGE"
 sg docker -c "docker run --rm \
   -e HF_HOME=/models/.cache/huggingface \
-  -v /tmp/research3-models:/models \
+  -v '$MODEL_BASE':/models \
   '$IMAGE' \
   python - <<'PY'
 import cv2
@@ -92,7 +93,7 @@ CURRENT_STAGE="download_groundingdino"
 write_status "running" "$CURRENT_STAGE"
 sg docker -c "docker run --rm \
   -e HF_HOME=/models/.cache/huggingface \
-  -v /tmp/research3-models:/models \
+  -v '$MODEL_BASE':/models \
   '$IMAGE' \
   huggingface-cli download '$GDINO_MODEL_ID' \
     --local-dir '/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny' \
@@ -101,7 +102,7 @@ sg docker -c "docker run --rm \
 CURRENT_STAGE="download_sam2"
 write_status "running" "$CURRENT_STAGE"
 sg docker -c "docker run --rm \
-  -v /tmp/research3-models:/models \
+  -v '$MODEL_BASE':/models \
   '$IMAGE' \
   bash -lc 'mkdir -p /models/openvocab/sam2/sam2.1_hiera_tiny && wget -c \"$SAM2_CKPT_URL\" -O /models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt'"
 
@@ -111,7 +112,7 @@ sg docker -c "docker run --rm \
   -e TRANSFORMERS_OFFLINE=1 \
   -e HF_HUB_OFFLINE=1 \
   -e HF_HOME=/models/.cache/huggingface \
-  -v /tmp/research3-models:/models \
+  -v '$MODEL_BASE':/models \
   '$IMAGE' \
   python - <<'PY'
 from pathlib import Path

@@ -4,8 +4,9 @@ set -euo pipefail
 ROOT=${ROOT:-/home/yoohyun/research3}
 IMAGE=${IMAGE:-research3/openvocab-perception:20260513-owlvit}
 MODEL_ID=${MODEL_ID:-google/owlvit-base-patch32}
-MODEL_DIR=${MODEL_DIR:-/tmp/research3-models/openvocab/owlvit/google_owlvit-base-patch32}
-OUT=${OUT:-/tmp/research3-runs/openvocab_perception_owlvit_setup}
+MODEL_BASE=${MODEL_BASE:-$ROOT/local_dataset/models}
+MODEL_DIR=${MODEL_DIR:-$MODEL_BASE/openvocab/owlvit/google_owlvit-base-patch32}
+OUT=${OUT:-$ROOT/local_dataset/runs/openvocab_perception_owlvit_setup}
 LOG=${LOG:-$ROOT/archive/logs/root/openvocab-perception-owlvit-setup-$(date +%Y%m%d-%H%M%S).log}
 STATUS="$OUT/job_status.json"
 
@@ -53,7 +54,7 @@ sg docker -c "docker run --rm --ipc=host \
   -e HOME=/models \
   -e HF_HOME=/models/.cache/huggingface \
   -e XDG_CACHE_HOME=/models/.cache \
-  -v /tmp/research3-models:/models \
+  -v $MODEL_BASE:/models \
   $IMAGE \
   python -c 'import importlib.util, torch, transformers; mods=[\"torch\",\"torchvision\",\"transformers\",\"cv2\",\"PIL\",\"numpy\"]; [print(\"{}: {}\".format(m, \"available\" if importlib.util.find_spec(m) else \"missing\")) for m in mods]; print(\"torch_version:\", torch.__version__); print(\"transformers_version:\", transformers.__version__); print(\"cuda_available:\", torch.cuda.is_available())'"
 
@@ -64,7 +65,7 @@ sg docker -c "docker run --rm --ipc=host \
   -e HOME=/models \
   -e HF_HOME=/models/.cache/huggingface \
   -e XDG_CACHE_HOME=/models/.cache \
-  -v /tmp/research3-models:/models \
+  -v $MODEL_BASE:/models \
   $IMAGE \
   python -c 'from huggingface_hub import snapshot_download; snapshot_download(repo_id=\"$MODEL_ID\", local_dir=\"/models/openvocab/owlvit/google_owlvit-base-patch32\", resume_download=True)'"
 
@@ -77,7 +78,7 @@ sg docker -c "docker run --rm --ipc=host \
   -e XDG_CACHE_HOME=/models/.cache \
   -e TRANSFORMERS_OFFLINE=1 \
   -e HF_HUB_OFFLINE=1 \
-  -v /tmp/research3-models:/models \
+  -v $MODEL_BASE:/models \
   $IMAGE \
   python -c 'from pathlib import Path; from transformers import OwlViTForObjectDetection, OwlViTProcessor; p=Path(\"/models/openvocab/owlvit/google_owlvit-base-patch32\"); assert p.exists(), p; processor=OwlViTProcessor.from_pretrained(str(p), local_files_only=True); model=OwlViTForObjectDetection.from_pretrained(str(p), local_files_only=True); print({\"model_dir\": str(p), \"files\": len(list(p.rglob(\"*\"))), \"model_type\": model.config.model_type, \"processor\": processor.__class__.__name__})'"
 

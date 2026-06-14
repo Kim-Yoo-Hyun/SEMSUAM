@@ -39,8 +39,8 @@ RUN git clone --branch ${VLMAPS_BRANCH} --depth 1 https://github.com/vlmaps/vlma
     && cd ${VLMAPS_REPO} \
     && test "$(git rev-parse HEAD)" = "${VLMAPS_COMMIT}"
 
-COPY run_vlmaps_map.py /opt/research3/run_vlmaps_map.py
-COPY verify_vlmaps_map.py /opt/research3/verify_vlmaps_map.py
+COPY scripts/h001_tools/run_vlmaps_map.py /opt/research3/run_vlmaps_map.py
+COPY scripts/h001_tools/verify_vlmaps_map.py /opt/research3/verify_vlmaps_map.py
 
 WORKDIR /opt/vlmaps
 

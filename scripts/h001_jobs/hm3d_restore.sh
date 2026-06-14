@@ -2,9 +2,9 @@
 set -euo pipefail
 
 ROOT=${ROOT:-/home/yoohyun/research3}
-DATA_ROOT=${DATA_ROOT:-/tmp/research3-data}
+DATA_ROOT=${DATA_ROOT:-$ROOT/local_dataset/data}
 IMAGE=${IMAGE:-research3/hm3d-download:20260507}
-OUT=${OUT:-/tmp/research3-runs/hm3d_restore}
+OUT=${OUT:-$ROOT/local_dataset/runs/hm3d_restore}
 LOG=${LOG:-$ROOT/archive/logs/root/hm3d-restore-$(date +%Y%m%d-%H%M%S).log}
 STATUS="$OUT/job_status.json"
 
