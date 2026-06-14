@@ -19,7 +19,7 @@
 - 다른 컴퓨터 재현을 위한 GitHub source-of-truth는 code, Dockerfile, job script, manifest, workflow 문서, reproducibility 문서다.
 - 대용량 dataset, checkpoint, Docker image layer, `local_dataset/runs` artifact는 GitHub source-of-truth가 아니다. 이 문서의 다운로드/빌드/검증 명령으로 복구한다.
 - `/tmp/research3-data`, `/tmp/research3-models`, `/tmp/research3-runs`는 기존 Docker command 호환용 path다. 2026-05-27 host symlink는 복구됐고 host `check_hm3d.py /tmp/research3-data`는 통과하지만, 현재 Docker daemon에서는 top-level `/tmp` symlink를 직접 bind source로 쓰면 `mkdir /tmp/research3-data: file exists`로 실패한다. Docker job은 canonical `local_dataset/` path 또는 `readlink -f`로 해석한 path를 사용한다.
-- Current gate: implement Docker `fully_covered_candidate_conditioned_contrast_v1` materializer after static contrast contract freeze; terminal utility, policy-scale comparison, and paper claims remain blocked.
+- Current gate: freeze `candidate_conditioned_blocker_multi_case_validation_contract` after Docker-verified fully covered contrast materializer; terminal utility, policy-scale comparison, and paper claims remain blocked.
 - Current Docker-verified substrate: `goal_region_object_relation_coverage_completion_detector_substrate_v1`.
 - Current source artifact: `local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1`.
 - Current frame/projection contract verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.verify.json`.
@@ -39,12 +39,32 @@
 - Current fully covered asymmetry inspection verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1.verify.json`.
 - Current fully covered asymmetry inspection output: `local_dataset/runs/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1/fully_covered_goal_validity_failure_asymmetry_inspection_summary.json`.
 - Current fully covered contrast contract verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.verify.json`.
+- Current fully covered contrast materializer output: `local_dataset/runs/h001_fully_covered_candidate_conditioned_contrast_v1/fully_covered_candidate_conditioned_contrast_summary.json`.
 
 ### 에이전트 추론
 
 재현 정보는 기존 workflow와 job script에 흩어져 있었고, 데이터 다운로드, checkpoint, Docker image, 실험 명령, artifact/evaluation summary가 한 문서로 닫혀 있지는 않았다. 이 문서를 재현 entrypoint로 사용한다.
 
 ## Current Reproduction Gate
+
+### 사실
+
+Date checked: 2026-06-14
+
+Current gate:
+
+```text
+gate: freeze_candidate_conditioned_blocker_multi_case_validation_contract
+latest verified materializer: fully_covered_candidate_conditioned_contrast_v1
+summary: local_dataset/runs/h001_fully_covered_candidate_conditioned_contrast_v1/fully_covered_candidate_conditioned_contrast_summary.json
+verify: hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.verify.json
+status: Docker materializer gate pass, terminal utility blocked
+next_task: freeze_candidate_conditioned_blocker_multi_case_validation_contract
+```
+
+The exact Docker command and expected summary for the current gate are recorded under `Fully covered candidate-conditioned contrast materializer` below. The older coverage-completion frame/projection and detector/SAM2 commands remain in this document as dependency reproduction gates, not the current `Now` task.
+
+## Coverage-Completion Frame/Projection Reproduction Gate
 
 ### 사실
 
@@ -244,16 +264,46 @@ jq -s 'map(select(.pair_evidence_state=="goal_region_both_candidates_supported_o
 Expected contrast contract summary:
 
 ```text
-contract status: static_contract_verified_terminal_blocked
+contract status: static_contract_verified_terminal_blocked_consumed_by_docker_materializer
 fully covered pair/candidate rows: 2 / 4
 audit-only pair labels: a_wrong_b_correct 1, both_correct 1
 wrong contrast: coverage_completion_pair:005 / rival_identity:21 / BAbdmeyTvMZ / chair
 correct contrast: coverage_completion_pair:008 / rival_identity:24 / HY1NcmCgn3n / chair
-expected future pair/candidate/candidate-role/summary rows: 2 / 4 / 16 / 1
+expected materializer pair/candidate/candidate-role/summary rows: 2 / 4 / 16 / 1
 fixed rule under test: candidate_conditioned_visible_without_depth_association_blocker
 terminal/candidate commit/rejection: blocked
 paper claim: blocked
-next_task: implement_docker_fully_covered_candidate_conditioned_contrast_materializer
+materializer status: completed
+next_task: freeze_candidate_conditioned_blocker_multi_case_validation_contract
+```
+
+Fully covered candidate-conditioned contrast materializer:
+
+```bash
+docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_fully_covered_candidate_conditioned_contrast.py
+docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_fully_covered_candidate_conditioned_contrast --out-root /runs/h001_fully_covered_candidate_conditioned_contrast_v1
+jq '{status, contrast_materializer_gate_passed, pair_contrast_rows, candidate_contrast_rows, candidate_role_contrast_rows, alternative_audit_rows, pair_contrast_state_counts, candidate_contrast_state_counts, rule_blocker_candidate_ids, false_positive_blocker_rows_for_audit_only, mixed_depth_positive_blocker_rows, terminal_arbitration_rule_ready, promotion_gate_after_contrast_passed, primary_blocker, next_task}' local_dataset/runs/h001_fully_covered_candidate_conditioned_contrast_v1/fully_covered_candidate_conditioned_contrast_summary.json
+```
+
+Expected contrast materializer summary:
+
+```text
+status: completed
+contrast gate: true
+pair/candidate/candidate-role/alternative rows: 2 / 4 / 16 / 7
+pair contrast states: wrong_pair_blocker_matches_audit_only 1, correct_pair_no_false_positive 1
+candidate contrast states: blocked_wrong_candidate_for_audit_only 1, clean_all_role_support_candidate 1, mixed_depth_support_but_no_visible_gap 2
+rule blocker candidate ids: vlmaps:export:chair:spatial_nms:16
+false-positive blocker rows: 0
+mixed-depth correct candidate rows: 2
+mixed-depth positive blocker rows: 0
+terminal/candidate commit/rejection rows: 0 / 0 / 0
+GT action rows: 0
+terminal arbitration rule ready: false
+promotion gate after contrast: false
+paper claim: false
+primary blocker: multi_case_candidate_conditioned_blocker_validation_required
+next_task: freeze_candidate_conditioned_blocker_multi_case_validation_contract
 ```
 
 Previous multi-case detector/SAM2 contract verification:
@@ -2104,8 +2154,9 @@ result: detector substrate pass, follow-up evidence safety/full gate fail
 | Goal-region/object-relation coverage-completion detector/SAM2 substrate contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.json` and `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.verify.json` | Static detector/SAM2 substrate contract pass, Docker wrapper/run required next | Static `jq`, Docker image, checkpoint, frame-plan, frame, nonblank, and projection checks passed; consumes the 48-row coverage-completion frame/projection output; preserves `12` target pairs, `9` scene/query candidate artifacts, `18/18` candidate tuple coverage, `7` scenes, `3` queries, and four roles with `12` rows each; fixes `research3/openvocab-perception:20260513-v3c-gdino-sam2`, `GroundingDINO`, `SAM2`, expected detector rows `48`, max candidates per frame `2`, detector/SAM2/candidate association gates `0.8/0.8/0.4`, minimum associated rows/headings `20/24`, role/scene/query diagnostic gates, and forbids GT-action, terminal/candidate commit/rejection, detector evidence interpretation, formula revision, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims |
 | Fully covered goal-validity failure contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.json` and `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.verify.json` | Static diagnostic contract pass, materializer required next | Static `jq` verification passed; targets `coverage_completion_pair:005` / `rival_identity:21` in `BAbdmeyTvMZ/chair`, where the pair evidence state is `goal_region_both_candidates_supported_object_relation_supported` but the evaluation-only audit is `a_wrong_b_correct`; fixes expected target/candidate/role/candidate-view/baseline-audit rows `1/2/4/8/3`; terminal utility, candidate commit/rejection, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
 | Fully covered goal-validity failure materializer | `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_fully_covered_goal_validity_failure.py`, `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.verify.json`, and `local_dataset/runs/h001_fully_covered_goal_validity_failure_v1/fully_covered_goal_validity_failure_summary.json` | Docker materializer pass, consumed by asymmetry inspection | Docker compile/run passed; target/candidate/role/candidate-view/baseline-audit rows `1/2/4/8/3`; candidate-view states `associated_depth_consistent 7` and `visible_without_candidate_association 1`; role evidence states include `both_goal_region_candidates_supported`, `goal_region_candidate_b_supported`, `object_relation_context_supported`, and `shared_goal_region_anchor_overlap_observed`; action forbidden keys `[]`; terminal/candidate commit/rejection rows `0/0/0`; GT-action rows `0`; primary blocker `candidate_conditioned_goal_validity_rule_required`; terminal utility, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
-| Fully covered candidate-conditioned asymmetry inspection | `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/inspect_fully_covered_goal_validity_failure_asymmetry.py`, `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1.verify.json`, and `local_dataset/runs/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1/fully_covered_goal_validity_failure_asymmetry_inspection_summary.json` | Docker inspection gate pass, contrast contract required next | Docker compile/run passed; candidate/pair/alternative rows `2/1/6`; candidate-conditioned asymmetry present; candidate B `vlmaps:export:chair:spatial_nms:0` is all-role associated; candidate A `vlmaps:export:chair:spatial_nms:16` is incomplete with `visible_without_depth_association_in_goal_region_context`; rejected terminal shortcuts include binary coverage, association-count best, depth-consistency-count best, and detector-score-mean best; terminal/candidate commit/rejection rows `0/0/0`; GT-action rows `0`; primary blocker `fixed_rule_needs_fully_covered_contrast_validation`; terminal utility, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
-| Fully covered candidate-conditioned contrast contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.json` and `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.verify.json` | Static contract pass, Docker materializer required next | Static `jq` verification passed; source fully covered pair/candidate rows are `2/4`; audit-only pair labels are `a_wrong_b_correct 1` and `both_correct 1`; wrong contrast row is `coverage_completion_pair:005` in `BAbdmeyTvMZ/chair`; correct contrast row is `coverage_completion_pair:008` in `HY1NcmCgn3n/chair`; expected future pair/candidate/candidate-role/summary rows are `2/4/16/1`; fixed rule under test is `candidate_conditioned_visible_without_depth_association_blocker` as a nonterminal blocker; terminal utility, candidate commit/rejection, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
+| Fully covered candidate-conditioned asymmetry inspection | `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/inspect_fully_covered_goal_validity_failure_asymmetry.py`, `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1.verify.json`, and `local_dataset/runs/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1/fully_covered_goal_validity_failure_asymmetry_inspection_summary.json` | Docker inspection gate pass, consumed by contrast materializer | Docker compile/run passed; candidate/pair/alternative rows `2/1/6`; candidate-conditioned asymmetry present; candidate B `vlmaps:export:chair:spatial_nms:0` is all-role associated; candidate A `vlmaps:export:chair:spatial_nms:16` is incomplete with `visible_without_depth_association_in_goal_region_context`; rejected terminal shortcuts include binary coverage, association-count best, depth-consistency-count best, and detector-score-mean best; terminal/candidate commit/rejection rows `0/0/0`; GT-action rows `0`; the result was consumed by `fully_covered_candidate_conditioned_contrast_v1`; terminal utility, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked pending multi-case validation |
+| Fully covered candidate-conditioned contrast contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.json` and `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.verify.json` | Static contract pass, consumed by Docker materializer | Static `jq` verification passed; source fully covered pair/candidate rows are `2/4`; audit-only pair labels are `a_wrong_b_correct 1` and `both_correct 1`; wrong contrast row is `coverage_completion_pair:005` in `BAbdmeyTvMZ/chair`; correct contrast row is `coverage_completion_pair:008` in `HY1NcmCgn3n/chair`; materialized pair/candidate/candidate-role/summary rows are `2/4/16/1`; fixed rule under test is `candidate_conditioned_visible_without_depth_association_blocker` as a nonterminal blocker; terminal utility, candidate commit/rejection, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
+| Fully covered candidate-conditioned contrast materializer | `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_fully_covered_candidate_conditioned_contrast.py`, `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.verify.json`, and `local_dataset/runs/h001_fully_covered_candidate_conditioned_contrast_v1/fully_covered_candidate_conditioned_contrast_summary.json` | Docker materializer gate pass, multi-case validation contract required next | Docker compile/run passed; pair/candidate/candidate-role/alternative rows are `2/4/16/7`; pair contrast states are `wrong_pair_blocker_matches_audit_only 1` and `correct_pair_no_false_positive 1`; candidate states are `blocked_wrong_candidate_for_audit_only 1`, `clean_all_role_support_candidate 1`, and `mixed_depth_support_but_no_visible_gap 2`; rule blocker candidate is `vlmaps:export:chair:spatial_nms:16`; false-positive blocker rows `0`; mixed-depth positive blocker rows `0`; terminal/candidate commit/rejection rows `0/0/0`; GT-action rows `0`; primary blocker `multi_case_candidate_conditioned_blocker_validation_required`; terminal utility, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
 
 ### 에이전트 추론
 

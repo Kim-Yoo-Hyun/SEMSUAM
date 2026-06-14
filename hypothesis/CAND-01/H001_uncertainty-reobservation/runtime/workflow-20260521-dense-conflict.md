@@ -433,7 +433,7 @@ primary blocker: fixed_rule_needs_fully_covered_contrast_validation
 next task: freeze_fully_covered_candidate_conditioned_contrast_contract
 ```
 
-This inspection shows why binary coverage completion is too coarse: in the same fully covered row, one candidate has all-role association while the other is visible without depth association in the peer goal-region context. This is a promising label-free blocker for this row only. It is not yet a terminal rule because it has not been validated against the fully covered correct contrast row, so terminal utility, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked.
+This inspection shows why binary coverage completion is too coarse: in the same fully covered row, one candidate has all-role association while the other is visible without depth association in the peer goal-region context. This is a promising label-free blocker for this row only. It led to the fully covered contrast contract and Docker materializer below. It is still not a terminal rule because the validated contrast covers only two fully covered rows, so terminal utility, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked until multi-case validation is defined.
 
 `fully_covered_candidate_conditioned_contrast_v1` is statically verified at `manifests/h001_fully_covered_candidate_conditioned_contrast_v1.json` / `.verify.json`.
 
@@ -451,10 +451,40 @@ rule role: label-free nonterminal blocker
 terminal/candidate commit/rejection: blocked
 evaluation-only labels as action inputs: blocked
 paper claim: blocked
-next task: implement_docker_fully_covered_candidate_conditioned_contrast_materializer
+materializer status: completed
+next task after materializer: freeze_candidate_conditioned_blocker_multi_case_validation_contract
 ```
 
-This contract is the natural-proof guard after the single-row asymmetry inspection. It tests whether `visible_without_depth_association_in_goal_region_context` remains a useful blocker when compared against a fully covered `both_correct` row, and it explicitly prevents treating mixed depth support as the same failure mechanism as visible-without-association. Passing the future materializer may only unlock a contrast audit; it still cannot by itself define terminal utility.
+This contract is the natural-proof guard after the single-row asymmetry inspection. It tests whether `visible_without_depth_association_in_goal_region_context` remains a useful blocker when compared against a fully covered `both_correct` row, and it explicitly prevents treating mixed depth support as the same failure mechanism as visible-without-association. The Docker materializer below passed this contrast audit, but it still cannot by itself define terminal utility.
+
+`fully_covered_candidate_conditioned_contrast_v1` materializer is Docker-verified with script `runtime/h001_runtime/materialize_fully_covered_candidate_conditioned_contrast.py`.
+
+```text
+output: local_dataset/runs/h001_fully_covered_candidate_conditioned_contrast_v1
+pair / candidate / candidate-role / alternative rows: 2 / 4 / 16 / 7
+pair labels for audit only: a_wrong_b_correct 1, both_correct 1
+pair contrast states: wrong_pair_blocker_matches_audit_only 1, correct_pair_no_false_positive 1
+candidate contrast states: blocked_wrong_candidate_for_audit_only 1, clean_all_role_support_candidate 1, mixed_depth_support_but_no_visible_gap 2
+candidate-conditioned blocker counts: visible_without_depth_association_in_goal_region_context 1, none 3
+rule blocker candidate ids: vlmaps:export:chair:spatial_nms:16
+true-positive blocker rows for audit only: 1
+false-positive blocker rows for audit only: 0
+mixed-depth correct candidate rows for audit only: 2
+mixed-depth positive blocker rows: 0
+alternative decisions: diagnostic_only_contrast_pass_not_terminal_rule 1, rejected_as_terminal_rule 4, safe_but_inert 2
+action forbidden keys: []
+terminal / candidate commit / candidate rejection rows: 0 / 0 / 0
+GT action rows: 0
+contrast materializer gate: true
+fixed blocker survives fully covered contrast: true
+terminal arbitration rule ready: false
+promotion gate after contrast: false
+paper claim: blocked
+primary blocker: multi_case_candidate_conditioned_blocker_validation_required
+next task: freeze_candidate_conditioned_blocker_multi_case_validation_contract
+```
+
+This is a stronger reviewer-defense signal than the single-row inspection: the visible-without-depth-association blocker flags the fully covered wrong candidate and does not fire on the fully covered correct row, even though the correct row has mixed-depth support. The result is still not a terminal selector because it covers only two fully covered rows and does not yet connect to multi-case wrong-goal, wasted-path, or map/pose behavior.
 
 ## Current Broader Standoff Diagnostic
 
