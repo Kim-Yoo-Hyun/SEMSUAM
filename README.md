@@ -16,17 +16,17 @@
 
 ### 사실
 
-- Date checked: 2026-06-13
+- Date checked: 2026-06-14
 - Primary candidate: `CAND-01`
 - Active hypothesis: `H001_uncertainty-reobservation`
-- Current gate: `goal_region_object_relation_coverage_completion_frame_projection_v1` is statically frozen before Habitat rendering; terminal utility, policy-scale comparison, and paper claims remain blocked
+- Current gate: implement Docker `fully_covered_candidate_conditioned_contrast_v1` materializer; terminal utility, policy-scale comparison, and paper claims remain blocked
 - Current `Now`: [TODO.md](TODO.md)
 - Active hypothesis entrypoint: [hypothesis/CAND-01/H001_uncertainty-reobservation/README.md](hypothesis/CAND-01/H001_uncertainty-reobservation/README.md)
 - Current detailed workflow: [workflow-20260521-dense-conflict.md](hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260521-dense-conflict.md)
 
 ### 에이전트 추론
 
-현재 연구 방향은 semantic uncertainty를 단순 confidence score가 아니라 active SLAM/navigation utility로 바꾸는 것이다. 최신 bounded detector/evidence/evaluation/promotion ladder는 `QaLdnwvtxbs/sofa/rival_identity:3` 한 행에서 mechanism probe를 통과했지만, 그 자체로 terminal utility나 paper claim은 허용하지 않는다. 새 multi-case ladder는 action-frozen source pool의 `18` pairwise conflict rows에서 나온 `72` observation seed rows를 frame/projection, detector/SAM2, label-free evidence, evaluation-only join, bounded promotion gate까지 Docker로 통과시켰다. 이 pass는 diagnostic readiness만 허용하므로 `rival_contradiction_region_contamination_multi_case_diagnostic_report_v1`을 nonterminal report로 freeze했고, 이어서 `rival_contradiction_region_contamination_multi_case_path_closure_v1`로 현재 path를 diagnostic-only로 닫았다. 그 다음 branch selection은 가장 큰 남은 failure family인 `dual_evidence_coverage_gap` 12 rows를 대상으로 `goal_region_object_relation_coverage_completion_v1`을 선택했다. 현재는 이 branch materializer가 Docker-verified 상태이며, target/candidate/observation-seed/audit rows `12/24/48/9`를 생성했고, frame/projection contract가 rendering 전에 freeze됐다.
+현재 연구 방향은 semantic uncertainty를 단순 confidence score가 아니라 active SLAM/navigation utility로 바꾸는 것이다. 최신 bounded detector/evidence/evaluation/promotion ladder는 `QaLdnwvtxbs/sofa/rival_identity:3` 한 행에서 mechanism probe를 통과했지만, 그 자체로 terminal utility나 paper claim은 허용하지 않는다. 새 multi-case ladder는 action-frozen source pool의 `18` pairwise conflict rows에서 나온 `72` observation seed rows를 frame/projection, detector/SAM2, label-free evidence, evaluation-only join, bounded promotion gate까지 Docker로 통과시켰다. 이 pass는 diagnostic readiness만 허용하므로 `rival_contradiction_region_contamination_multi_case_diagnostic_report_v1`을 nonterminal report로 freeze했고, 이어서 `rival_contradiction_region_contamination_multi_case_path_closure_v1`로 현재 path를 diagnostic-only로 닫았다. 그 다음 branch selection은 가장 큰 남은 failure family인 `dual_evidence_coverage_gap` 12 rows를 대상으로 `goal_region_object_relation_coverage_completion_v1`을 선택했다. 이 branch는 detector/evidence/evaluation/promotion ladder까지 Docker-verified 됐지만, fully covered evidence `2`개 중 `1`개가 `a_wrong_b_correct`라 terminal utility로 닫지 않고 diagnostic-only로 closure했다. `fully_covered_goal_validity_failure_asymmetry_inspection_v1`은 그 1개 blocker row에서 candidate-conditioned asymmetry를 Docker로 확인했다. `fully_covered_candidate_conditioned_contrast_v1` contract는 이 blocker를 fully covered correct row와 비교하도록 freeze했다. 다음 작업은 이 contrast materializer를 Docker로 구현하는 것이다. Terminal utility, policy-scale comparison, paper claim은 blocked다.
 
 ## Key Documents
 

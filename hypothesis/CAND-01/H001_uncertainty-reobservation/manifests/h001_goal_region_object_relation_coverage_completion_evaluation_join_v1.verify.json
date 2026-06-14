@@ -1,0 +1,152 @@
+{
+  "schema_version": "h001.verify.goal_region_object_relation_coverage_completion_evaluation_join.v1",
+  "date_checked": "2026-06-13",
+  "status": "docker_verified_coverage_completion_evaluation_only_join_materializer_terminal_blocked",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1.json",
+  "source_verification": {
+    "detector_evidence_output": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1",
+    "detector_evidence_gate_passed": true,
+    "candidate_view_rows": 96,
+    "role_rows": 48,
+    "pair_rows": 12,
+    "request_rows": 12,
+    "audit_rows": 12,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "static_contract_checks": {
+    "source_paths_exist": true,
+    "contract_json_valid": true,
+    "evidence_rows_frozen_before_join": true,
+    "target_rows_join_to_source_evaluation": true,
+    "expected_pair_rows_fixed": 12,
+    "expected_candidate_rows_fixed": 24,
+    "expected_baseline_rows_fixed": 36,
+    "expected_request_rows_fixed": 12,
+    "expected_promotion_probe_rows_fixed": 12,
+    "pair_label_missing_rows": 0,
+    "candidate_label_missing_rows": 0,
+    "baseline_policy_missing_rows": 0,
+    "terminal_selector_blocked": true,
+    "gt_action_blocked": true,
+    "paper_claim_blocked": true
+  },
+  "evaluation_subset_summary": {
+    "candidate_pair_label_counts_for_evaluation_only": {
+      "a_wrong_b_correct": 4,
+      "both_correct": 4,
+      "both_wrong": 4
+    },
+    "candidate_label_counts_for_evaluation_only": {
+      "correct": 12,
+      "wrong": 12
+    },
+    "baseline_policy_rows": {
+      "NoReobserveReference": 12,
+      "SLAMOnlyRich_current": 12,
+      "SemanticOnly": 12
+    },
+    "baseline_wrong_goal_rows_for_evaluation_only": {
+      "NoReobserveReference": 6,
+      "SLAMOnlyRich_current": 0,
+      "SemanticOnly": 6
+    },
+    "baseline_success_rows_for_evaluation_only": {
+      "NoReobserveReference": 5,
+      "SLAMOnlyRich_current": 0,
+      "SemanticOnly": 2
+    },
+    "total_wrong_goal_baseline_rows_for_evaluation_only": 12,
+    "max_wasted_path_exposure_m_for_evaluation_only": 1.7545644472996156,
+    "slam_map_pose_delta_rows_for_evaluation_only": 12,
+    "slam_map_pose_delta_max_for_evaluation_only": 1.0,
+    "evidence_label_cross_counts_for_evaluation_only": {
+      "goal_region_both_candidates_supported_object_relation_missing|a_wrong_b_correct": 3,
+      "goal_region_both_candidates_supported_object_relation_missing|both_correct": 3,
+      "goal_region_both_candidates_supported_object_relation_missing|both_wrong": 4,
+      "goal_region_both_candidates_supported_object_relation_supported|a_wrong_b_correct": 1,
+      "goal_region_both_candidates_supported_object_relation_supported|both_correct": 1
+    }
+  },
+  "docker_materializer": {
+    "script": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_goal_region_object_relation_coverage_completion_evaluation_join.py",
+    "image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "compile_passed": true,
+    "command": "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_goal_region_object_relation_coverage_completion_evaluation_join --out-root /runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1",
+    "output": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1",
+    "summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_summary.json"
+  },
+  "materializer_output": {
+    "pair_rows": 12,
+    "candidate_rows": 24,
+    "baseline_rows": 36,
+    "request_rows": 12,
+    "promotion_probe_rows": 12,
+    "pair_label_counts_for_evaluation_only": {
+      "a_wrong_b_correct": 4,
+      "both_correct": 4,
+      "both_wrong": 4
+    },
+    "candidate_label_counts_for_evaluation_only": {
+      "correct": 12,
+      "wrong": 12
+    },
+    "baseline_policy_rows": {
+      "NoReobserveReference": 12,
+      "SLAMOnlyRich_current": 12,
+      "SemanticOnly": 12
+    },
+    "baseline_wrong_goal_rows_for_evaluation_only": {
+      "NoReobserveReference": 6,
+      "SemanticOnly": 6
+    },
+    "total_wrong_goal_baseline_rows_for_evaluation_only": 12,
+    "max_wasted_path_exposure_m_for_evaluation_only": 1.7545644472996156,
+    "slam_map_pose_delta_rows_for_evaluation_only": 12,
+    "slam_map_pose_delta_max_for_evaluation_only": 1.0,
+    "evidence_label_cross_counts_for_evaluation_only": {
+      "goal_region_both_candidates_supported_object_relation_missing|a_wrong_b_correct": 3,
+      "goal_region_both_candidates_supported_object_relation_missing|both_correct": 3,
+      "goal_region_both_candidates_supported_object_relation_missing|both_wrong": 4,
+      "goal_region_both_candidates_supported_object_relation_supported|a_wrong_b_correct": 1,
+      "goal_region_both_candidates_supported_object_relation_supported|both_correct": 1
+    },
+    "pair_label_missing_rows": 0,
+    "candidate_label_missing_rows": 0,
+    "baseline_policy_missing_rows": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "terminal_selector_allowed_from_this_join": false,
+    "paper_claim_allowed": false,
+    "gate_passed": true
+  },
+  "output_files": {
+    "pair_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_pair_rows.jsonl",
+    "candidate_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_candidate_rows.jsonl",
+    "baseline_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_baseline_rows.jsonl",
+    "request_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_request_rows.jsonl",
+    "promotion_probe_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_promotion_probe_rows.jsonl",
+    "summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_summary.json"
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1.verify.json",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_goal_region_object_relation_coverage_completion_evaluation_join.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_goal_region_object_relation_coverage_completion_evaluation_join --out-root /runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1",
+    "jq '{status, pair_rows, candidate_rows, baseline_rows, request_rows, promotion_probe_rows, pair_label_counts_for_evaluation_only, baseline_wrong_goal_rows_for_evaluation_only, evidence_label_cross_counts_for_evaluation_only, gate, terminal_selector_allowed_from_this_join, uses_gt_for_action, paper_claim_allowed, next_task}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_summary.json",
+    "jq '{status, source_verification, static_contract_checks, evaluation_subset_summary, next_task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1.verify.json"
+  ],
+  "next_task": "freeze_goal_region_object_relation_coverage_completion_promotion_gate_contract",
+  "ok": true,
+  "notes": {
+    "fact": "The Docker materializer joins the 12 frozen evidence pairs to prior multi-case evaluation-only pair, candidate, baseline, request, and promotion-probe rows and passes the frozen gate.",
+    "agent_inference": "The next natural step is a promotion gate contract. The join confirms that fully covered evidence is not terminal proof because one fully covered pair is a_wrong_b_correct.",
+    "paper_claim": "No terminal utility, wrong-goal reduction, wasted-path reduction, map/pose improvement, first_eval rerun, or paper claim is allowed from this static join contract."
+  }
+}

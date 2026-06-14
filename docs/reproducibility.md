@@ -6,7 +6,7 @@
 
 ### 사실
 
-- Date checked: 2026-06-13
+- Date checked: 2026-06-14
 - Primary hypothesis: `H001_uncertainty-reobservation`
 - Runtime root: `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/`
 - Local dataset root: `local_dataset/`
@@ -19,17 +19,26 @@
 - 다른 컴퓨터 재현을 위한 GitHub source-of-truth는 code, Dockerfile, job script, manifest, workflow 문서, reproducibility 문서다.
 - 대용량 dataset, checkpoint, Docker image layer, `local_dataset/runs` artifact는 GitHub source-of-truth가 아니다. 이 문서의 다운로드/빌드/검증 명령으로 복구한다.
 - `/tmp/research3-data`, `/tmp/research3-models`, `/tmp/research3-runs`는 기존 Docker command 호환용 path다. 2026-05-27 host symlink는 복구됐고 host `check_hm3d.py /tmp/research3-data`는 통과하지만, 현재 Docker daemon에서는 top-level `/tmp` symlink를 직접 bind source로 쓰면 `mkdir /tmp/research3-data: file exists`로 실패한다. Docker job은 canonical `local_dataset/` path 또는 `readlink -f`로 해석한 path를 사용한다.
-- Current gate: `goal_region_object_relation_coverage_completion_frame_projection_v1` is statically frozen before Habitat rendering; terminal utility, policy-scale comparison, and paper claims remain blocked.
-- Current Docker-verified substrate: `rival_contradiction_region_contamination_multi_case_frame_projection_v1`.
-- Current source artifact: `local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1`.
-- Current frame/projection contract verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.verify.json`.
-- Current detector/SAM2 substrate contract verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1.verify.json`.
+- Current gate: implement Docker `fully_covered_candidate_conditioned_contrast_v1` materializer after static contrast contract freeze; terminal utility, policy-scale comparison, and paper claims remain blocked.
+- Current Docker-verified substrate: `goal_region_object_relation_coverage_completion_detector_substrate_v1`.
+- Current source artifact: `local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1`.
+- Current frame/projection contract verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.verify.json`.
+- Previous multi-case detector/SAM2 substrate contract verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1.verify.json`.
 - Current nonterminal report verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1.verify.json`.
 - Current path closure verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_path_closure_v1.verify.json`.
 - Current branch selection verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_branch_after_rival_contradiction_closure_v1.verify.json`.
 - Current coverage-completion branch contract verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_v1.verify.json`.
 - Current coverage-completion materializer output: `local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1/goal_region_object_relation_coverage_completion_summary.json`.
 - Current coverage-completion frame/projection contract verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.verify.json`.
+- Current coverage-completion detector/SAM2 substrate contract verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.verify.json`.
+- Current coverage-completion detector/SAM2 output: `local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1`; log `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/goal-region-object-relation-coverage-completion-detector-substrate-20260613-232446.log`; status `completed`.
+- Current coverage-completion detector evidence contract verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1.verify.json`.
+- Current coverage-completion detector evidence output: `local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_evidence_summary.json`.
+- Current fully covered goal-validity failure contract verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.verify.json`.
+- Current fully covered goal-validity failure materializer output: `local_dataset/runs/h001_fully_covered_goal_validity_failure_v1/fully_covered_goal_validity_failure_summary.json`.
+- Current fully covered asymmetry inspection verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1.verify.json`.
+- Current fully covered asymmetry inspection output: `local_dataset/runs/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1/fully_covered_goal_validity_failure_asymmetry_inspection_summary.json`.
+- Current fully covered contrast contract verify: `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.verify.json`.
 
 ### 에이전트 추론
 
@@ -39,41 +48,215 @@
 
 ### 사실
 
-Date checked: 2026-06-13
+Date checked: 2026-06-14
 
 ```bash
-jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.json
-jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_frame_projection_v1.verify.json
-bash -n hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/rival_contradiction_region_contamination_multi_case_frame_projection.sh
-docker run --rm --ipc=host --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -w /workspace research3/habitat-h001:20260508-calib-artifacts /opt/conda/bin/python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_rival_contradiction_region_contamination_multi_case_frame_projection.py
-hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/rival_contradiction_region_contamination_multi_case_frame_projection.sh
-jq '{frame_plan_rows, skipped_rows, candidate_artifact_rows, candidate_tuple_required, candidate_tuple_covered, candidate_tuple_missing, gate}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frame_plan_v1/rival_contradiction_region_contamination_multi_case_frame_plan_summary.json
-jq '{ok, rows_requested, rows_exported, rendered_heading_count, uses_gt_for_action}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frames_v1/summary.json
-jq '{input_rows, output_rows, row_level_nonblank_gate_passed, removed_blank_heading_count, kept_heading_count, original_heading_count, uses_gt_for_action}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json
-jq '{rows, expected_rows, projection_anchor_visible_rows, projection_anchor_visible_rate, missing_candidate_rows, candidate_selection_source_counts, gt_action_rows, gate}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_projection_v1/projection_anchor_smoke_summary.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.verify.json
+bash -n hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/goal_region_object_relation_coverage_completion_frame_projection.sh
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -w /workspace research3/habitat-h001:20260508-calib-artifacts /opt/conda/bin/python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_goal_region_object_relation_coverage_completion_frame_projection.py
+EXPECTED_FRAME_ROWS=48 hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/goal_region_object_relation_coverage_completion_frame_projection.sh
+jq '{frame_plan_rows, skipped_rows, candidate_artifact_rows, candidate_tuple_required, candidate_tuple_covered, candidate_tuple_missing, gate}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frame_plan_v1/goal_region_object_relation_coverage_completion_frame_plan_summary.json
+jq '{ok, rows_requested, rows_exported, rendered_heading_count, uses_gt_for_action}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/summary.json
+jq '{input_rows, output_rows, row_level_nonblank_gate_passed, removed_blank_heading_count, kept_heading_count, original_heading_count, uses_gt_for_action}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json
+jq '{rows, expected_rows, projection_anchor_visible_rows, projection_anchor_visible_rate, missing_candidate_rows, candidate_selection_source_counts, gt_action_rows, gate}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_projection_v1/projection_anchor_smoke_summary.json
 ```
 
 Expected summary:
 
 ```text
-verify status: docker_verified_multi_case_frame_projection_smoke_terminal_blocked
-source/observation-seed rows: 18/72
-scene/query coverage: 9/5
-geometry candidate coverage: 26/26, missing 0
-frame plan rows: 72, skipped rows 0
-candidate artifact rows: 13
-frame rows exported: 72/72
-rendered headings: 472
-nonblank rows: 72/72, kept headings 469/472
-projection visible rows: 72/72
+verify status: docker_verified_coverage_completion_frame_projection_smoke_terminal_blocked
+source/observation-seed rows: 12/48
+scene/query coverage: 7/3
+geometry candidate coverage: 18/18, missing 0
+frame plan rows: 48, skipped rows 0
+candidate artifact rows: 9
+frame rows exported: 48/48
+rendered headings: 307
+nonblank rows: 48/48, kept headings 304/307
+projection visible rows: 48/48
 projection visible rate: 1.0
 missing candidate rows: 0
-candidate selection source: explicit_candidate_ids 72
+candidate selection source: explicit_candidate_ids 48
 GT action rows: 0
-next_task: consumed_by_static_multi_case_detector_sam2_substrate_contract
+next_task: freeze_goal_region_object_relation_coverage_completion_detector_sam2_substrate_contract_after_frame_projection_smoke
 ```
 
-Current detector/SAM2 contract verification:
+Coverage-completion detector/SAM2 contract verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.verify.json
+jq '{status, ok, next_task, static_contract_checks, future_docker_job}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.verify.json
+docker image inspect research3/openvocab-perception:20260513-v3c-gdino-sam2 --format '{{.Id}} {{.Created}}'
+test -f local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/config.json
+test -f local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/model.safetensors
+test -f local_dataset/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt
+```
+
+Expected detector/SAM2 contract summary:
+
+```text
+contract status: static_verified_coverage_completion_detector_sam2_substrate_contract_frozen_terminal_blocked
+source frame rows: 48
+source nonblank rows: 48
+source projection visible rows: 48/48
+candidate tuple coverage: 18/18
+docker image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+expected detector rows: 48
+min detector box/SAM2/candidate association: 0.8 / 0.8 / 0.4
+min rows with candidate association: 20
+min associated candidate heading count: 24
+next_task: implement_docker_goal_region_object_relation_coverage_completion_detector_sam2_substrate_wrapper_and_run
+```
+
+Completed detector/SAM2 job:
+
+```bash
+cat local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1/job_status.json
+jq '{detector_rows, frame_rows, detector_box_rate, sam2_mask_rate, candidate_association_rate, rows_with_candidate_association, associated_candidate_heading_count, coverage_completion_gate, uses_gt_for_action, paper_claim_allowed}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json
+jq '{frame_rows, association_rows, associated_scene_count, associated_query_count, role_row_association_counts, evidence_axis_row_association_counts, nonterminal_action_row_association_counts, failure_taxonomy, gate}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1/goal_region_object_relation_coverage_completion_detector_substrate_diagnostic.json
+```
+
+Expected detector/SAM2 result:
+
+```text
+status: completed
+detector/frame rows: 48 / 48
+association rows: 608
+detector box / SAM2 / candidate association: 1.0 / 1.0 / 0.8958
+rows with candidate association: 43
+associated candidate heading count: 194
+role association rows: 12 / 12 / 7 / 12
+associated scene/query count: 7 / 3
+coverage-completion detector substrate gate: true
+failure taxonomy: []
+```
+
+Coverage-completion post-detector evidence contract verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1.verify.json
+jq '{status, source_verification, static_contract_checks, source_gate_summary, next_task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1.verify.json
+```
+
+Expected contract summary:
+
+```text
+contract status: static_verified_coverage_completion_post_detector_evidence_contract_frozen_terminal_blocked
+expected candidate-view/role/pair/request/audit rows: 96 / 48 / 12 / 12 / 12
+reserved future fields: goal_validity_risk, viewpoint_evidence_gap, map_pose_consistency_uncertainty, wrong_goal_visit, wasted_path_m, map_pose_consistency_delta
+next_task: implement_docker_label_free_goal_region_object_relation_coverage_completion_detector_evidence_materializer
+```
+
+Coverage-completion post-detector evidence materializer:
+
+```bash
+docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_goal_region_object_relation_coverage_completion_detector_evidence.py
+docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_goal_region_object_relation_coverage_completion_detector_evidence --out-root /runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1
+jq '{status, candidate_view_rows, role_rows, pair_rows, request_rows, audit_rows, pair_evidence_state_counts, request_evidence_state_counts, gate, terminal_commit_rows, candidate_commit_rows, candidate_rejection_rows, action_evidence_forbidden_keys_found, uses_gt_for_action, paper_claim_allowed, next_task}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_evidence_summary.json
+```
+
+Expected materializer summary:
+
+```text
+status: completed
+candidate-view/role/pair/request/audit rows: 96 / 48 / 12 / 12 / 12
+pair evidence states: goal_region_both_candidates_supported_object_relation_supported 2, goal_region_both_candidates_supported_object_relation_missing 10
+request evidence states: coverage_completed_for_goal_region_and_object_relation 2, goal_region_completed_object_relation_gap_remains 10
+terminal/candidate commit/rejection rows: 0 / 0 / 0
+forbidden action keys: []
+GT action: false
+paper claim: false
+next_task: freeze_goal_region_object_relation_coverage_completion_evaluation_only_join_contract
+```
+
+Fully covered goal-validity failure contract verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.verify.json
+docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_fully_covered_goal_validity_failure.py
+docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_fully_covered_goal_validity_failure --out-root /runs/h001_fully_covered_goal_validity_failure_v1
+jq '{status, materializer_gate_passed, target_pair_rows, candidate_rows, role_rows, candidate_view_rows, evaluation_audit_rows, candidate_view_state_counts, role_evidence_state_counts, primary_blocker, next_task}' local_dataset/runs/h001_fully_covered_goal_validity_failure_v1/fully_covered_goal_validity_failure_summary.json
+jq '{status, contract_name, target_counts, target_rows, next_research_task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.json
+jq '{status, target_verification, static_contract_checks, next_task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.verify.json
+```
+
+Expected fully covered failure contract summary:
+
+```text
+status: completed
+materializer gate: true
+target pair/request: coverage_completion_pair:005 / rival_identity:21
+scene/query: BAbdmeyTvMZ / chair
+pair evidence state: goal_region_both_candidates_supported_object_relation_supported
+evaluation-only blocker: a_wrong_b_correct
+target/candidate/role/candidate-view/baseline-audit rows: 1 / 2 / 4 / 8 / 3
+candidate-view states: associated_depth_consistent 7, visible_without_candidate_association 1
+terminal/candidate commit/rejection rows: 0 / 0 / 0
+GT action rows: 0
+next_task: inspect_fully_covered_goal_validity_failure_candidate_conditioned_asymmetry
+```
+
+Fully covered candidate-conditioned asymmetry inspection:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1.verify.json
+docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/inspect_fully_covered_goal_validity_failure_asymmetry.py
+docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.inspect_fully_covered_goal_validity_failure_asymmetry --out-root /runs/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1
+jq '{status, asymmetry_inspection_gate_passed, candidate_asymmetry_rows, pair_inspection_rows, alternative_audit_rows, candidate_conditioned_asymmetry_present, candidate_conditioned_blocker_ready_for_this_row, candidate_blocker_counts, unsafe_simple_alternatives_for_audit_only, terminal_arbitration_rule_ready, promotion_gate_after_inspection_passed, primary_blocker, next_task}' local_dataset/runs/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1/fully_covered_goal_validity_failure_asymmetry_inspection_summary.json
+```
+
+Expected asymmetry inspection summary:
+
+```text
+status: completed
+inspection gate: true
+candidate/pair/alternative rows: 2 / 1 / 6
+candidate-conditioned asymmetry present: true
+blocker ready for this row: true
+all-role associated candidate: vlmaps:export:chair:spatial_nms:0
+candidate-conditioned incomplete candidate: vlmaps:export:chair:spatial_nms:16
+candidate blocker: visible_without_depth_association_in_goal_region_context
+unsafe simple alternatives: binary_coverage_completion_as_terminal_support, association_count_best, depth_consistency_count_best, detector_score_mean_best
+terminal/candidate commit/rejection rows: 0 / 0 / 0
+GT action rows: 0
+terminal arbitration rule ready: false
+promotion gate after inspection: false
+paper claim: false
+primary blocker: fixed_rule_needs_fully_covered_contrast_validation
+next_task: freeze_fully_covered_candidate_conditioned_contrast_contract
+```
+
+Fully covered candidate-conditioned contrast contract verification:
+
+```bash
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.json
+jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.verify.json
+jq -s 'map(select(.coverage_completion_pair_evidence_state=="goal_region_both_candidates_supported_object_relation_supported")) | {n:length, labels:(map(.candidate_pair_label_pattern_for_evaluation_only)|group_by(.)|map({(.[0]):length})|add), rows: map({coverage_completion_pair_id, request_id, scene_key, query, candidate_a_id, candidate_b_id, candidate_pair_label_pattern_for_evaluation_only})}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_pair_rows.jsonl
+jq -s 'map(select(.coverage_completion_pair_evidence_state=="goal_region_both_candidates_supported_object_relation_supported")) | {n:length, candidate_labels:(map({id:.candidate_id, pair:.coverage_completion_pair_id, role:.candidate_pair_role, correct:.candidate_correctness_label_for_evaluation_only, wrong:.candidate_wrong_label_for_evaluation_only, states:.coverage_completion_candidate_view_states_by_role}) )}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_candidate_rows.jsonl
+jq -s 'map(select(.pair_evidence_state=="goal_region_both_candidates_supported_object_relation_supported")) | {n:length, rows: map({coverage_completion_pair_id, request_id, scene_key, query, candidate_a_id, candidate_b_id, role_evidence_states})}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_pair_rows.jsonl
+```
+
+Expected contrast contract summary:
+
+```text
+contract status: static_contract_verified_terminal_blocked
+fully covered pair/candidate rows: 2 / 4
+audit-only pair labels: a_wrong_b_correct 1, both_correct 1
+wrong contrast: coverage_completion_pair:005 / rival_identity:21 / BAbdmeyTvMZ / chair
+correct contrast: coverage_completion_pair:008 / rival_identity:24 / HY1NcmCgn3n / chair
+expected future pair/candidate/candidate-role/summary rows: 2 / 4 / 16 / 1
+fixed rule under test: candidate_conditioned_visible_without_depth_association_blocker
+terminal/candidate commit/rejection: blocked
+paper claim: blocked
+next_task: implement_docker_fully_covered_candidate_conditioned_contrast_materializer
+```
+
+Previous multi-case detector/SAM2 contract verification:
 
 ```bash
 jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1.json
@@ -97,7 +280,7 @@ min associated candidate heading count: 36
 next_task: implement_docker_multi_case_detector_sam2_substrate_wrapper_and_run
 ```
 
-Completed detector/SAM2 job:
+Previous multi-case detector/SAM2 job:
 
 ```bash
 bash -n hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/rival_contradiction_region_contamination_multi_case_detector_substrate.sh
@@ -273,13 +456,42 @@ jq '{status, source_gate, implementation_target, next_research_task}' hypothesis
 Expected contract summary:
 
 ```text
-contract status: frozen_contract_static_verified_terminal_blocked
+contract status: frozen_contract_docker_verified_terminal_blocked
 source target/candidate/observation-seed/audit rows: 12 / 24 / 48 / 9
 scene/query coverage: 7 / 3
 required geometry candidate ids: 18 / 18 covered
 expected frame/projection rows: 48 / 48
 minimum projection visible rows/rate: 46 / 0.95
-next task: implement_docker_goal_region_object_relation_coverage_completion_frame_projection_smoke
+next task: freeze_goal_region_object_relation_coverage_completion_detector_sam2_substrate_contract_after_frame_projection_smoke
+```
+
+Coverage-completion frame/projection smoke verification:
+
+```bash
+bash -n hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/goal_region_object_relation_coverage_completion_frame_projection.sh
+docker run --rm --ipc=host --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -w /workspace research3/habitat-h001:20260508-calib-artifacts /opt/conda/bin/python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_goal_region_object_relation_coverage_completion_frame_projection.py
+EXPECTED_FRAME_ROWS=48 hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/goal_region_object_relation_coverage_completion_frame_projection.sh
+jq '{frame_plan_rows, skipped_rows, candidate_artifact_rows, candidate_tuple_required, candidate_tuple_covered, candidate_tuple_missing, gate}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frame_plan_v1/goal_region_object_relation_coverage_completion_frame_plan_summary.json
+jq '{ok, rows_requested, rows_exported, rendered_heading_count, uses_gt_for_action}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/summary.json
+jq '{input_rows, output_rows, row_level_nonblank_gate_passed, removed_blank_heading_count, kept_heading_count, original_heading_count, uses_gt_for_action}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json
+jq '{rows, expected_rows, projection_anchor_visible_rows, projection_anchor_visible_rate, missing_candidate_rows, candidate_selection_source_counts, gt_action_rows, gate}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_projection_v1/projection_anchor_smoke_summary.json
+```
+
+Expected smoke summary:
+
+```text
+verify status: docker_verified_coverage_completion_frame_projection_smoke_terminal_blocked
+frame plan rows: 48, skipped rows 0
+candidate artifact rows: 9
+candidate tuple coverage: 18/18, missing 0
+frame rows exported: 48/48
+rendered headings: 307
+nonblank rows: 48/48, kept headings 304/307
+projection visible rows: 48/48
+projection visible rate: 1.0
+missing candidate rows: 0
+GT action rows: 0
+paper claim rows: 0
 ```
 
 ## GitHub Portability Check
@@ -1887,7 +2099,13 @@ result: detector substrate pass, follow-up evidence safety/full gate fail
 | Next label-free branch after rival contradiction closure | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_branch_after_rival_contradiction_closure_v1.json` and `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_branch_after_rival_contradiction_closure_v1.verify.json` | Static selection pass, consumed by branch contract below | Static `jq` verification passed; selects `goal_region_object_relation_coverage_completion_v1` as a label-free nonterminal observation branch; target failure class/mechanism is `dual_evidence_coverage_gap` / `goal_region_and_object_relation_both_missing`; target scope is `12` pair/request rows across `7` scenes and `3` queries; terminal commits, candidate commits/rejections, formula revision, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
 | Goal-region/object-relation coverage-completion branch contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_v1.json` and `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_v1.verify.json` | Static branch contract pass, materializer required next | Static `jq` verification passed; source row consistency check matched `12/12` target rows; freezes `12` pair/request rows across `7` scenes and `3` queries where both goal-region and object-relation evidence are missing; fixes expected candidate/observation seed rows `24/48` and four nonterminal observation roles per pair; terminal utility, formula revision, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
 | Goal-region/object-relation coverage-completion materializer | `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_goal_region_object_relation_coverage_completion.py`, `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_v1.verify.json`, and `local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1/goal_region_object_relation_coverage_completion_summary.json` | Docker materializer pass, frame/projection contract required next | Docker compile/run passed; target/candidate/observation-seed/audit rows `12/24/48/9`; scene/query coverage `7/3`; observation role counts are `12` each for four roles; nonterminal action rows are `request_goal_region_evidence 24`, `request_joint_goal_region_object_relation_evidence 12`, and `request_object_relation_evidence 12`; action forbidden key count `0`; terminal/candidate commit/rejection rows `0/0/0`; GT-action rows `0`; materializer gate passed; primary blocker `frame_projection_contract_required`; terminal utility, formula revision, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
-| Goal-region/object-relation coverage-completion frame/projection contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.json` and `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.verify.json` | Static contract pass, Docker frame/projection smoke required next | Static `jq` and geometry coverage checks passed; consumes coverage-completion materializer rows `12/24/48/9`; freezes `48` symbolic observation seed rows across `7` scenes and `3` queries; required geometry candidate ids `18/18`, missing `0`; fixes expected frame/projection rows `48/48`, explicit candidate ids, projection visible-rate gate `>=0.95` with minimum `46` visible rows, and future planner/job paths; detector evidence, terminal utility, formula revision, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
+| Goal-region/object-relation coverage-completion frame/projection contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.json` and `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.verify.json` | Static contract pass, consumed by Docker smoke below | Static `jq` and geometry coverage checks passed; consumes coverage-completion materializer rows `12/24/48/9`; freezes `48` symbolic observation seed rows across `7` scenes and `3` queries; required geometry candidate ids `18/18`, missing `0`; fixes expected frame/projection rows `48/48`, explicit candidate ids, projection visible-rate gate `>=0.95` with minimum `46` visible rows, and future planner/job paths; detector evidence, terminal utility, formula revision, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
+| Goal-region/object-relation coverage-completion frame/projection smoke | `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/plan_goal_region_object_relation_coverage_completion_frame_projection.py`, `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/goal_region_object_relation_coverage_completion_frame_projection.sh`, `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.verify.json`, and `local_dataset/runs/h001_goal_region_object_relation_coverage_completion_projection_v1/projection_anchor_smoke_summary.json` | Docker frame/projection pass, detector/SAM2 substrate contract required next | Docker compile/run passed; planner/frame/nonblank/projection rows `48/48/48/48`; candidate artifact rows `9`; candidate tuple coverage `18/18`, missing `0`; rendered headings `307`; nonblank kept headings `304/307` after removing `3` blank headings; projection visible rows `48/48`, visible rate `1.0`; explicit candidate-id rows `48`; missing candidate rows, GT-action rows, terminal/candidate commit/rejection rows, and paper-claim rows are all `0`; detector evidence, terminal utility, formula revision, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
+| Goal-region/object-relation coverage-completion detector/SAM2 substrate contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.json` and `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.verify.json` | Static detector/SAM2 substrate contract pass, Docker wrapper/run required next | Static `jq`, Docker image, checkpoint, frame-plan, frame, nonblank, and projection checks passed; consumes the 48-row coverage-completion frame/projection output; preserves `12` target pairs, `9` scene/query candidate artifacts, `18/18` candidate tuple coverage, `7` scenes, `3` queries, and four roles with `12` rows each; fixes `research3/openvocab-perception:20260513-v3c-gdino-sam2`, `GroundingDINO`, `SAM2`, expected detector rows `48`, max candidates per frame `2`, detector/SAM2/candidate association gates `0.8/0.8/0.4`, minimum associated rows/headings `20/24`, role/scene/query diagnostic gates, and forbids GT-action, terminal/candidate commit/rejection, detector evidence interpretation, formula revision, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims |
+| Fully covered goal-validity failure contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.json` and `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.verify.json` | Static diagnostic contract pass, materializer required next | Static `jq` verification passed; targets `coverage_completion_pair:005` / `rival_identity:21` in `BAbdmeyTvMZ/chair`, where the pair evidence state is `goal_region_both_candidates_supported_object_relation_supported` but the evaluation-only audit is `a_wrong_b_correct`; fixes expected target/candidate/role/candidate-view/baseline-audit rows `1/2/4/8/3`; terminal utility, candidate commit/rejection, `first_eval`, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
+| Fully covered goal-validity failure materializer | `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_fully_covered_goal_validity_failure.py`, `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.verify.json`, and `local_dataset/runs/h001_fully_covered_goal_validity_failure_v1/fully_covered_goal_validity_failure_summary.json` | Docker materializer pass, consumed by asymmetry inspection | Docker compile/run passed; target/candidate/role/candidate-view/baseline-audit rows `1/2/4/8/3`; candidate-view states `associated_depth_consistent 7` and `visible_without_candidate_association 1`; role evidence states include `both_goal_region_candidates_supported`, `goal_region_candidate_b_supported`, `object_relation_context_supported`, and `shared_goal_region_anchor_overlap_observed`; action forbidden keys `[]`; terminal/candidate commit/rejection rows `0/0/0`; GT-action rows `0`; primary blocker `candidate_conditioned_goal_validity_rule_required`; terminal utility, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
+| Fully covered candidate-conditioned asymmetry inspection | `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/inspect_fully_covered_goal_validity_failure_asymmetry.py`, `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1.verify.json`, and `local_dataset/runs/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1/fully_covered_goal_validity_failure_asymmetry_inspection_summary.json` | Docker inspection gate pass, contrast contract required next | Docker compile/run passed; candidate/pair/alternative rows `2/1/6`; candidate-conditioned asymmetry present; candidate B `vlmaps:export:chair:spatial_nms:0` is all-role associated; candidate A `vlmaps:export:chair:spatial_nms:16` is incomplete with `visible_without_depth_association_in_goal_region_context`; rejected terminal shortcuts include binary coverage, association-count best, depth-consistency-count best, and detector-score-mean best; terminal/candidate commit/rejection rows `0/0/0`; GT-action rows `0`; primary blocker `fixed_rule_needs_fully_covered_contrast_validation`; terminal utility, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
+| Fully covered candidate-conditioned contrast contract | `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.json` and `hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.verify.json` | Static contract pass, Docker materializer required next | Static `jq` verification passed; source fully covered pair/candidate rows are `2/4`; audit-only pair labels are `a_wrong_b_correct 1` and `both_correct 1`; wrong contrast row is `coverage_completion_pair:005` in `BAbdmeyTvMZ/chair`; correct contrast row is `coverage_completion_pair:008` in `HY1NcmCgn3n/chair`; expected future pair/candidate/candidate-role/summary rows are `2/4/16/1`; fixed rule under test is `candidate_conditioned_visible_without_depth_association_blocker` as a nonterminal blocker; terminal utility, candidate commit/rejection, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked |
 
 ### 에이전트 추론
 

@@ -1,0 +1,226 @@
+{
+  "schema_version": "h001.contract.fully_covered_goal_validity_failure.v1",
+  "date_checked": "2026-06-13",
+  "status": "frozen_diagnostic_contract_docker_materializer_verified_terminal_blocked",
+  "contract_name": "fully_covered_goal_validity_failure_v1",
+  "purpose": "Freeze the next label-free diagnostic branch after coverage-completion closure. This branch exists because fully covered goal-region and object-relation evidence is not sufficient for ObjectNav goal validity.",
+  "stage": "P4-design",
+  "source": {
+    "branch_selection": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_branch_after_coverage_completion_closure_v1.json",
+    "branch_selection_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_next_label_free_branch_after_coverage_completion_closure_v1.verify.json",
+    "path_closure": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_path_closure_v1.json",
+    "promotion_gate_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1/goal_region_object_relation_coverage_completion_promotion_gate_summary.json",
+    "detector_pair_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_pair_rows.jsonl",
+    "detector_role_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_role_rows.jsonl",
+    "detector_candidate_view_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_candidate_view_rows.jsonl",
+    "evaluation_join_pair_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_pair_rows.jsonl",
+    "evaluation_join_candidate_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_candidate_rows.jsonl",
+    "evaluation_join_baseline_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_baseline_rows.jsonl"
+  },
+  "source_gate": {
+    "branch_selection_static_verified": true,
+    "selected_branch": "fully_covered_goal_validity_failure_v1",
+    "selected_branch_type": "label_free_nonterminal_diagnostic_branch",
+    "path_closure_status": "closed_as_diagnostic_only_terminal_blocked",
+    "promotion_gate_passed": true,
+    "fully_covered_rows": 2,
+    "fully_covered_wrong_or_ambiguous_rows": 1,
+    "fully_covered_both_correct_rows": 1,
+    "object_relation_gap_rows_deferred": 10,
+    "terminal_selector_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "target_filter": {
+    "coverage_completion_pair_evidence_state": "goal_region_both_candidates_supported_object_relation_supported",
+    "target_failure": "fully_covered_evidence_not_sufficient_for_goal_validity",
+    "evaluation_only_pair_label_pattern": "a_wrong_b_correct",
+    "evaluation_only_pair_label_is_action_forbidden": true,
+    "candidate_a_role": "source_candidate_a",
+    "candidate_b_role": "source_candidate_b",
+    "candidate_a_correctness_for_evaluation_only": false,
+    "candidate_b_correctness_for_evaluation_only": true,
+    "terminal_commit": false,
+    "candidate_commit": false,
+    "candidate_rejection": false,
+    "uses_gt_for_action": false
+  },
+  "target_counts": {
+    "target_pair_rows": 1,
+    "target_candidate_rows_expected": 2,
+    "target_role_rows_expected": 4,
+    "target_candidate_view_rows_expected": 8,
+    "target_baseline_audit_rows_expected": 3,
+    "target_scene_count": 1,
+    "target_query_count": 1,
+    "target_scene_counts": {
+      "BAbdmeyTvMZ": 1
+    },
+    "target_query_counts": {
+      "chair": 1
+    }
+  },
+  "target_row_key_fields": [
+    "source_name",
+    "episode_key",
+    "scene_key",
+    "query",
+    "request_id",
+    "coverage_completion_pair_id",
+    "candidate_a_id",
+    "candidate_b_id"
+  ],
+  "target_rows": [
+    {
+      "source_name": "expanded_retrieval_local_context_frames_v1",
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:20:3:chair",
+      "scene_key": "BAbdmeyTvMZ",
+      "query": "chair",
+      "request_id": "rival_identity:21",
+      "coverage_completion_pair_id": "coverage_completion_pair:005",
+      "candidate_a_id": "vlmaps:export:chair:spatial_nms:16",
+      "candidate_b_id": "vlmaps:export:chair:spatial_nms:0",
+      "pair_evidence_state": "goal_region_both_candidates_supported_object_relation_supported",
+      "role_evidence_states": {
+        "candidate_a_goal_region_context_view": "both_goal_region_candidates_supported",
+        "candidate_b_goal_region_context_view": "goal_region_candidate_b_supported",
+        "candidate_pair_object_relation_context_view": "object_relation_context_supported",
+        "shared_goal_region_anchor_view": "shared_goal_region_anchor_overlap_observed"
+      },
+      "candidate_pair_label_pattern_for_evaluation_only": "a_wrong_b_correct"
+    }
+  ],
+  "diagnostic_contract": {
+    "diagnostic_type": "fully_covered_goal_validity_failure_after_evidence_freeze",
+    "core_question": "Does binary coverage completion hide candidate-conditioned evidence asymmetry that should be treated as goal-validity risk instead of terminal support?",
+    "required_label_free_axes": [
+      "candidate_conditioned_goal_region_support",
+      "candidate_conditioned_object_relation_support",
+      "shared_goal_region_anchor_overlap",
+      "cross_view_association_asymmetry",
+      "depth_consistency_asymmetry"
+    ],
+    "evaluation_only_audit_axes": [
+      "wrong_goal_visit_proxy",
+      "wasted_path_proxy_m",
+      "map_pose_consistency_delta",
+      "candidate_correctness_label"
+    ],
+    "allowed_nonterminal_outputs": [
+      "fully_covered_but_goal_validity_unproven",
+      "candidate_conditioned_asymmetry_present",
+      "coverage_state_too_coarse_for_goal_validity",
+      "request_candidate_conditioned_goal_validity_evidence",
+      "audit_only"
+    ],
+    "forbidden_outputs": [
+      "terminal_goal_commit",
+      "candidate_commit",
+      "candidate_rejection",
+      "commit_from_fully_covered_state",
+      "reject_from_evaluation_label",
+      "threshold_tuned_from_joined_label",
+      "claim_wrong_goal_reduction",
+      "claim_wasted_path_reduction",
+      "claim_map_pose_improvement"
+    ]
+  },
+  "candidate_conditioned_source_evidence": {
+    "candidate_a": {
+      "candidate_id": "vlmaps:export:chair:spatial_nms:16",
+      "evaluation_only_label": "wrong",
+      "associated_rows_total": 8,
+      "depth_consistent_rows_total": 8,
+      "candidate_view_states_by_role": {
+        "candidate_a_goal_region_context_view": "associated_depth_consistent",
+        "candidate_b_goal_region_context_view": "visible_without_candidate_association",
+        "candidate_pair_object_relation_context_view": "associated_depth_consistent",
+        "shared_goal_region_anchor_view": "associated_depth_consistent"
+      }
+    },
+    "candidate_b": {
+      "candidate_id": "vlmaps:export:chair:spatial_nms:0",
+      "evaluation_only_label": "correct",
+      "associated_rows_total": 8,
+      "depth_consistent_rows_total": 5,
+      "candidate_view_states_by_role": {
+        "candidate_a_goal_region_context_view": "associated_depth_consistent",
+        "candidate_b_goal_region_context_view": "associated_depth_consistent",
+        "candidate_pair_object_relation_context_view": "associated_depth_consistent",
+        "shared_goal_region_anchor_view": "associated_depth_consistent"
+      }
+    }
+  },
+  "future_output_files": [
+    "fully_covered_goal_validity_failure_target_pair_rows.jsonl",
+    "fully_covered_goal_validity_failure_candidate_rows.jsonl",
+    "fully_covered_goal_validity_failure_role_rows.jsonl",
+    "fully_covered_goal_validity_failure_candidate_view_rows.jsonl",
+    "fully_covered_goal_validity_failure_evaluation_audit_rows.jsonl",
+    "fully_covered_goal_validity_failure_summary.json"
+  ],
+  "minimum_implementation_gates": {
+    "target_pair_rows": 1,
+    "target_candidate_rows": 2,
+    "target_role_rows": 4,
+    "target_candidate_view_rows": 8,
+    "target_baseline_audit_rows": 3,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "simpler_alternatives_to_audit": [
+    "binary_coverage_completion_as_terminal_support",
+    "top_candidate_if_object_relation_supported",
+    "detector_association_count_threshold",
+    "depth_consistency_count_threshold",
+    "semantic_rank_fallback",
+    "defer_all_fully_covered_pairs"
+  ],
+  "contract_scope": {
+    "contract_type": "diagnostic_branch_contract_before_materialization",
+    "implementation_allowed_next": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "implementation_status": {
+    "materializer": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_fully_covered_goal_validity_failure.py",
+    "output": "local_dataset/runs/h001_fully_covered_goal_validity_failure_v1",
+    "summary": "local_dataset/runs/h001_fully_covered_goal_validity_failure_v1/fully_covered_goal_validity_failure_summary.json",
+    "docker_verified": true
+  },
+  "contract_checks": {
+    "source_branch_selection_verified": true,
+    "target_row_enumerated": true,
+    "target_row_matches_fully_covered_wrong_case": true,
+    "label_free_axes_defined": true,
+    "evaluation_only_axes_marked_action_forbidden": true,
+    "forbidden_outputs_defined": true,
+    "implementation_gates_defined": true,
+    "natural_proof_rule_preserved": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "next_research_task": {
+    "task": "inspect_fully_covered_goal_validity_failure_candidate_conditioned_asymmetry",
+    "reason": "The materializer is Docker-verified. The next step should inspect whether the fully covered wrong case contains a fixed label-free candidate-conditioned asymmetry that can become a blocker or arbitration feature without terminal commits or label-based action."
+  },
+  "interpretation_rule": {
+    "fact": "The target row has both goal-region and object-relation evidence marked supported, but the evaluation-only audit marks candidate A wrong and candidate B correct.",
+    "agent_inference": "Coverage completion must become candidate-conditioned goal-validity risk, not a terminal goal-validity score.",
+    "paper_claim_allowed": false
+  }
+}

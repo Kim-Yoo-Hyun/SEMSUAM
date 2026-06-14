@@ -1,0 +1,102 @@
+{
+  "schema_version": "h001.contract.fully_covered_goal_validity_failure_asymmetry_inspection.v1",
+  "date_checked": "2026-06-14",
+  "status": "frozen_inspection_contract_terminal_blocked",
+  "contract_name": "fully_covered_goal_validity_failure_asymmetry_inspection_v1",
+  "purpose": "Inspect whether the fully covered but evaluation-wrong target row contains a label-free candidate-conditioned asymmetry that can become a fixed blocker before any terminal utility or policy-scale claim.",
+  "stage": "P4-design",
+  "source": {
+    "materializer_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.json",
+    "materializer_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_goal_validity_failure_v1.verify.json",
+    "materializer_output": "local_dataset/runs/h001_fully_covered_goal_validity_failure_v1",
+    "target_pair_rows": "local_dataset/runs/h001_fully_covered_goal_validity_failure_v1/fully_covered_goal_validity_failure_target_pair_rows.jsonl",
+    "candidate_rows": "local_dataset/runs/h001_fully_covered_goal_validity_failure_v1/fully_covered_goal_validity_failure_candidate_rows.jsonl",
+    "role_rows": "local_dataset/runs/h001_fully_covered_goal_validity_failure_v1/fully_covered_goal_validity_failure_role_rows.jsonl",
+    "candidate_view_rows": "local_dataset/runs/h001_fully_covered_goal_validity_failure_v1/fully_covered_goal_validity_failure_candidate_view_rows.jsonl",
+    "evaluation_audit_rows": "local_dataset/runs/h001_fully_covered_goal_validity_failure_v1/fully_covered_goal_validity_failure_evaluation_audit_rows.jsonl",
+    "materializer_summary": "local_dataset/runs/h001_fully_covered_goal_validity_failure_v1/fully_covered_goal_validity_failure_summary.json"
+  },
+  "source_gate": {
+    "materializer_gate_passed": true,
+    "target_pair_rows": 1,
+    "candidate_rows": 2,
+    "role_rows": 4,
+    "candidate_view_rows": 8,
+    "evaluation_audit_rows": 3,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "inspection_scope": {
+    "target_pair_id": "coverage_completion_pair:005",
+    "target_request_id": "rival_identity:21",
+    "target_scene_key": "BAbdmeyTvMZ",
+    "target_query": "chair",
+    "pair_evidence_state": "goal_region_both_candidates_supported_object_relation_supported",
+    "candidate_a_id": "vlmaps:export:chair:spatial_nms:16",
+    "candidate_b_id": "vlmaps:export:chair:spatial_nms:0",
+    "evaluation_only_pair_label_pattern": "a_wrong_b_correct",
+    "evaluation_only_label_is_action_forbidden": true
+  },
+  "inspection_axes": [
+    "binary_coverage_completion_state",
+    "candidate_conditioned_associated_role_count",
+    "candidate_conditioned_depth_consistency_count",
+    "candidate_conditioned_all_role_association",
+    "peer_goal_region_view_support",
+    "object_relation_context_support",
+    "shared_goal_region_anchor_support",
+    "simple_alternative_selector_outcome_for_audit_only"
+  ],
+  "simpler_alternatives_to_audit": [
+    "binary_coverage_completion_as_terminal_support",
+    "association_count_best",
+    "depth_consistency_count_best",
+    "detector_score_mean_best",
+    "all_role_association_best",
+    "defer_all_fully_covered_pairs"
+  ],
+  "expected_outputs": {
+    "candidate_asymmetry_rows": 2,
+    "pair_inspection_rows": 1,
+    "alternative_audit_rows": 6,
+    "summary_rows": 1
+  },
+  "forbidden_outputs": [
+    "terminal_goal_commit",
+    "candidate_commit",
+    "candidate_rejection",
+    "use_evaluation_label_for_action",
+    "threshold_tuned_from_label",
+    "claim_wrong_goal_reduction",
+    "claim_wasted_path_reduction",
+    "claim_map_pose_improvement",
+    "paper_claim"
+  ],
+  "promotion_policy": {
+    "candidate_conditioned_blocker_for_this_row_allowed": true,
+    "terminal_arbitration_rule_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false,
+    "required_before_terminal_rule": [
+      "contrast against the other fully covered both_correct row",
+      "fixed rule validation without threshold tuning",
+      "held-out or multi-row evidence that all-role support is not merely label-fitting"
+    ]
+  },
+  "contract_checks": {
+    "source_materializer_verified": true,
+    "inspection_axes_defined": true,
+    "simpler_alternatives_defined": true,
+    "evaluation_only_labels_action_forbidden": true,
+    "terminal_utility_blocked": true,
+    "paper_claim_blocked": true,
+    "natural_proof_rule_preserved": true
+  },
+  "next_research_task": {
+    "task": "implement_fully_covered_goal_validity_failure_asymmetry_inspection",
+    "reason": "The inspection contract is frozen. The next implementation should compute candidate-conditioned asymmetry rows and simpler-alternative audit rows in Docker without terminal commits or label-based action."
+  }
+}

@@ -14,7 +14,7 @@ This does not prove wrong-goal repair utility. The next validation must test row
 
 If a dense non-GT candidate backend provides both correct and wrong positively supported candidates, can the terminal active-observation objective choose a correct candidate without increasing wrong-goal commits, compared with defer-only, first-external, and detector-score-only alternatives?
 
-## Current Multi-Case Substrate Gate
+## Previous Multi-Case Substrate Gate
 
 ### 사실
 
@@ -22,9 +22,9 @@ If a dense non-GT candidate backend provides both correct and wrong positively s
 
 ### 에이전트 추론
 
-This closes the renderability/projection substrate blocker. It does not validate detector evidence, wrong-goal reduction, wasted-path reduction, terminal utility, or paper claims. The next natural workflow step is a multi-case detector/SAM2 substrate contract that consumes these frozen frame/projection outputs.
+This closed the previous renderability/projection substrate blocker. It does not validate detector evidence, wrong-goal reduction, wasted-path reduction, terminal utility, or paper claims. The current active branch is now the coverage-completion missing-evidence branch recorded below.
 
-## Current Multi-Case Detector/SAM2 Contract
+## Previous Multi-Case Detector/SAM2 Contract
 
 ### 사실
 
@@ -45,9 +45,9 @@ multi-case detector substrate gate: true
 
 ### 에이전트 추론
 
-This contract prevents detector output from retroactively changing thresholds or role definitions. If the next Docker run fails, the output should be a role/scene/query/candidate-association failure taxonomy rather than a detector threshold patch or terminal utility claim.
+This contract prevented detector output from retroactively changing thresholds or role definitions. The completed detector substrate remained diagnostic and did not permit terminal utility.
 
-## Current Multi-Case Post-Detector Evidence Contract
+## Previous Multi-Case Post-Detector Evidence Contract
 
 ### 사실
 
@@ -75,9 +75,9 @@ gate: true
 
 ### 에이전트 추론
 
-The next natural step is an evaluation-only join contract. It should attach wrong-goal, wasted-path, and map/pose consistency diagnostics only after the evidence rows above are frozen.
+This led to the evaluation-only join below, where wrong-goal, wasted-path, and map/pose consistency diagnostics were attached only after the evidence rows above were frozen.
 
-## Current Multi-Case Evaluation Join And Promotion Gate
+## Previous Multi-Case Evaluation Join And Promotion Gate
 
 ### 사실
 
@@ -209,10 +209,252 @@ minimum projection visible rows/rate: 46 / 0.95
 terminal/candidate commit/rejection rows: 0 / 0 / 0
 GT action rows: 0
 paper claim rows: 0
-next task: implement_docker_goal_region_object_relation_coverage_completion_frame_projection_smoke
+next task: consumed_by_docker_goal_region_object_relation_coverage_completion_frame_projection_smoke
 ```
 
 This contract freezes Habitat renderability requirements for the missing-evidence branch. It does not run rendering yet and cannot be used as detector evidence, goal-validity resolution, terminal utility, or paper claim.
+
+`goal_region_object_relation_coverage_completion_frame_projection_v1` is Docker-verified with planner `runtime/h001_runtime/plan_goal_region_object_relation_coverage_completion_frame_projection.py` and job `runtime/jobs/goal_region_object_relation_coverage_completion_frame_projection.sh`.
+
+```text
+plan output: local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frame_plan_v1
+frame output: local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1
+projection output: local_dataset/runs/h001_goal_region_object_relation_coverage_completion_projection_v1
+planner/frame/nonblank/projection rows: 48 / 48 / 48 / 48
+candidate artifact rows: 9
+candidate tuple coverage: 18 / 18
+rendered headings: 307
+nonblank kept headings: 304 / 307
+projection visible rows/rate: 48 / 1.0
+missing candidate rows: 0
+GT action rows: 0
+paper claim rows: 0
+next task: freeze_goal_region_object_relation_coverage_completion_detector_sam2_substrate_contract_after_frame_projection_smoke
+```
+
+This smoke verifies that the coverage-completion observation branch is renderable and projection-visible before detector/SAM2 evidence. It still cannot be used as detector evidence, goal-validity resolution, wrong-goal reduction, wasted-path reduction, map/pose utility, terminal utility, or paper claim.
+
+`goal_region_object_relation_coverage_completion_detector_substrate_v1` is statically verified at `manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.json` / `.verify.json`.
+
+```text
+source frame rows: 48
+source nonblank rows: 48
+source projection visible rows/rate: 48 / 1.0
+candidate tuple coverage: 18 / 18
+roles: 4 roles with 12 rows each
+docker image: research3/openvocab-perception:20260513-v3c-gdino-sam2
+expected detector rows: 48
+max candidates per frame: 2
+min detector box / SAM2 / candidate association: 0.8 / 0.8 / 0.4
+min associated rows / headings: 20 / 24
+min associated scene / query count: 4 / 2
+next task: implement_docker_goal_region_object_relation_coverage_completion_detector_sam2_substrate_wrapper_and_run
+```
+
+This contract freezes measurement coverage before running detector/SAM2. The future wrapper must report global, role-stratified, scene/query, candidate-tuple, and evidence-axis diagnostics. Passing this gate can only unlock a post-detector evidence analyzer contract; it cannot directly claim goal-validity resolution, wrong-goal reduction, wasted-path reduction, map/pose utility, terminal utility, or paper contribution.
+
+`goal_region_object_relation_coverage_completion_detector_substrate_v1` is Docker-verified with wrapper `runtime/jobs/goal_region_object_relation_coverage_completion_detector_substrate.sh`.
+
+```text
+output: local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1
+tmux job: h001-coverage-detector-20260613-232446
+job status: completed
+detector/frame rows: 48 / 48
+association rows: 608
+detector box / SAM2 / candidate association: 1.0 / 1.0 / 0.8958
+rows with candidate association: 43
+associated candidate heading count: 194
+role association rows: candidate_a_goal_region_context_view 12, candidate_b_goal_region_context_view 12, candidate_pair_object_relation_context_view 7, shared_goal_region_anchor_view 12
+evidence-axis association rows: goal_region_context_for_candidate_a 12, goal_region_context_for_candidate_b 12, object_relation_context_for_candidate_pair 7, shared_goal_region_anchor_context 12
+nonterminal-action association rows: request_goal_region_evidence 24, request_joint_goal_region_object_relation_evidence 12, request_object_relation_evidence 7
+associated scene/query count: 7 / 3
+failure taxonomy: []
+terminal/candidate commit/rejection rows: 0 / 0 / 0
+GT action rows: 0
+paper claim rows: 0
+coverage-completion detector substrate gate: true
+next task: freeze_goal_region_object_relation_coverage_completion_post_detector_evidence_analyzer_contract
+```
+
+This result lifts the detector/SAM2 substrate blocker only. The object-relation context role has partial association (`7/12`), so the next analyzer must preserve remaining object-relation evidence gaps as nonterminal evidence rather than using detector visibility as terminal `ObjectNav` goal-validity proof.
+
+`goal_region_object_relation_coverage_completion_detector_evidence_v1` is statically verified at `manifests/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1.json` / `.verify.json`.
+
+```text
+source detector/frame rows: 48 / 48
+source association rows: 608
+expected candidate-view/role/pair/request/audit rows: 96 / 48 / 12 / 12 / 12
+required roles: candidate_a_goal_region_context_view, candidate_b_goal_region_context_view, candidate_pair_object_relation_context_view, shared_goal_region_anchor_view
+required evidence axes: goal_region_context_for_candidate_a, goal_region_context_for_candidate_b, object_relation_context_for_candidate_pair, shared_goal_region_anchor_context
+reserved future fields: goal_validity_risk, viewpoint_evidence_gap, map_pose_consistency_uncertainty, wrong_goal_visit, wasted_path_m, map_pose_consistency_delta
+terminal/candidate commit/rejection: blocked
+evaluation-only label use: blocked
+paper claim: blocked
+next task: implement_docker_label_free_goal_region_object_relation_coverage_completion_detector_evidence_materializer
+```
+
+This contract freezes a label-free post-detector evidence-state layer. It may record goal-region support, shared-anchor ambiguity, and object-relation context gaps, but it cannot perform evaluation-only joins, candidate rejection, terminal utility validation, `first_eval` rerun, policy-scale comparison, Step 4-5 promotion, or paper claims.
+
+`goal_region_object_relation_coverage_completion_detector_evidence_v1` is Docker-verified with materializer `runtime/h001_runtime/materialize_goal_region_object_relation_coverage_completion_detector_evidence.py`.
+
+```text
+output: local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1
+candidate-view / role / pair / request / audit rows: 96 / 48 / 12 / 12 / 12
+candidate-view states: associated_depth_consistent 55, associated_depth_mixed 9, visible_without_candidate_association 32
+role states: both_goal_region_candidates_supported 14, goal_region_candidate_a_supported 5, goal_region_candidate_b_supported 5, insufficient_role_evidence 7, object_relation_context_missing_after_observation 10, object_relation_context_supported 2, shared_goal_region_anchor_overlap_observed 5
+pair states: goal_region_both_candidates_supported_object_relation_supported 2, goal_region_both_candidates_supported_object_relation_missing 10
+request states: coverage_completed_for_goal_region_and_object_relation 2, goal_region_completed_object_relation_gap_remains 10
+role rows with any candidate association: 43
+object-relation context rows with association: 7
+pair rows with any candidate association: 12
+terminal/candidate commit/rejection rows: 0 / 0 / 0
+forbidden action keys: []
+GT action: false
+paper claim: false
+evidence gate: true
+next task: freeze_goal_region_object_relation_coverage_completion_evaluation_only_join_contract
+```
+
+This result is a nonterminal evidence-state freeze. The important negative signal is that only `2/12` rows complete both goal-region and object-relation evidence, while `10/12` rows still keep an object-relation gap. The next evaluation-only join may attach labels and wrong-goal/wasted-path/map-pose diagnostics for analysis, but no terminal utility or paper claim is permitted from these evidence rows alone.
+
+`goal_region_object_relation_coverage_completion_evaluation_join_v1` is frozen and Docker-verified with materializer `runtime/h001_runtime/materialize_goal_region_object_relation_coverage_completion_evaluation_join.py`.
+
+```text
+output: local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1
+pair / candidate / baseline / request / promotion rows: 12 / 24 / 36 / 12 / 12
+pair labels: both_correct 4, a_wrong_b_correct 4, both_wrong 4
+candidate labels: correct 12, wrong 12
+baseline wrong-goal rows: NoReobserveReference 6, SemanticOnly 6, SLAMOnlyRich_current 0
+max wasted path exposure: 1.7546m
+SLAM map-pose delta rows/max: 12 / 1.0
+evidence-label cross: fully covered a_wrong_b_correct 1, fully covered both_correct 1, object-relation gap both_wrong 4, object-relation gap both_correct 3, object-relation gap a_wrong_b_correct 3
+terminal selector: blocked
+paper claim: blocked
+next task: freeze_goal_region_object_relation_coverage_completion_promotion_gate_contract
+```
+
+This join is analysis-only. It shows that coverage-completion evidence exposes the right failure surface, but also that fully covered evidence is not terminal proof.
+
+`goal_region_object_relation_coverage_completion_promotion_gate_v1` is frozen and Docker-verified with materializer `runtime/h001_runtime/run_goal_region_object_relation_coverage_completion_promotion_gate.py`.
+
+```text
+output: local_dataset/runs/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1
+promotion gate: true
+blockers: []
+allowed after pass: coverage_completion_evaluation_diagnostic_ready, terminal_utility_blocked_by_wrong_fully_covered_case, object_relation_gap_followup_required
+fully covered rows: 2
+fully covered wrong/ambiguous rows: 1
+object-relation gap rows: 10
+wrong-goal baseline rows: 12
+max wasted path exposure: 1.7546m
+SLAM map-pose delta rows/max: 12 / 1.0
+terminal selector/utility: blocked
+policy-scale claim: blocked
+paper claim: blocked
+next task: close_goal_region_object_relation_coverage_completion_branch_as_diagnostic_only
+```
+
+`goal_region_object_relation_coverage_completion_path_closure_v1` is statically verified at `manifests/h001_goal_region_object_relation_coverage_completion_path_closure_v1.json` / `.verify.json`.
+
+```text
+closed path: goal_region_object_relation_coverage_completion_as_terminal_utility
+closed status: closed_as_diagnostic_only_terminal_blocked
+surviving role: diagnostic evidence for why goal-region coverage and object-relation coverage remain insufficient for terminal ObjectNav goal validity
+blocked: terminal utility, candidate commit/rejection, wrong-goal reduction claim, wasted-path reduction claim, map/pose improvement claim, first_eval, policy-scale comparison, paper claim
+next task: select_next_label_free_branch_after_goal_region_object_relation_coverage_completion_closure
+```
+
+`next_label_free_branch_after_coverage_completion_closure_v1` is statically verified at `manifests/h001_next_label_free_branch_after_coverage_completion_closure_v1.json` / `.verify.json`.
+
+```text
+selected branch: fully_covered_goal_validity_failure_v1
+branch type: label_free_nonterminal_diagnostic_branch
+target failure: fully_covered_evidence_not_sufficient_for_goal_validity
+target rows: 1
+deferred branch: object_relation_gap_followup_v1 with 10 rows
+reason: the wrong fully covered case is the direct terminal-proof blocker; object-relation gap follow-up remains important but cannot make coverage completion terminal-valid until this blocker is explained
+next task: freeze_fully_covered_goal_validity_failure_contract
+```
+
+`fully_covered_goal_validity_failure_v1` is frozen and statically verified at `manifests/h001_fully_covered_goal_validity_failure_v1.json` / `.verify.json`.
+
+```text
+target pair: coverage_completion_pair:005
+request: rival_identity:21
+scene/query: BAbdmeyTvMZ / chair
+pair evidence state: goal_region_both_candidates_supported_object_relation_supported
+evaluation-only blocker: a_wrong_b_correct
+expected target / candidate / role / candidate-view / baseline-audit rows: 1 / 2 / 4 / 8 / 3
+candidate A: vlmaps:export:chair:spatial_nms:16
+candidate B: vlmaps:export:chair:spatial_nms:0
+allowed next: materializer completed; inspect_fully_covered_goal_validity_failure_candidate_conditioned_asymmetry
+blocked: terminal utility, candidate commit/rejection, wrong-goal reduction claim, wasted-path reduction claim, map/pose improvement claim, first_eval, policy-scale comparison, Step 4-5 promotion, paper claim
+```
+
+This contract preserves the natural-proof rule. The target row is selected from evaluation-only diagnosis, but the next materializer must inspect candidate-conditioned goal-region/object-relation/shared-anchor evidence without using labels as action inputs. Binary coverage completion is now closed as terminal proof.
+
+`fully_covered_goal_validity_failure_v1` diagnostic materializer is Docker-verified with script `runtime/h001_runtime/materialize_fully_covered_goal_validity_failure.py`.
+
+```text
+output: local_dataset/runs/h001_fully_covered_goal_validity_failure_v1
+target / candidate / role / candidate-view / baseline-audit rows: 1 / 2 / 4 / 8 / 3
+candidate-view states: associated_depth_consistent 7, visible_without_candidate_association 1
+role evidence states: both_goal_region_candidates_supported 1, goal_region_candidate_b_supported 1, object_relation_context_supported 1, shared_goal_region_anchor_overlap_observed 1
+audit-only candidate labels: correct 1, wrong 1
+audit-only baselines: NoReobserveReference 1, SemanticOnly 1, SLAMOnlyRich_current 1
+action forbidden keys: []
+terminal / candidate commit / candidate rejection rows: 0 / 0 / 0
+GT action rows: 0
+paper claim: blocked
+primary blocker: candidate_conditioned_goal_validity_rule_required
+next task: inspect_fully_covered_goal_validity_failure_candidate_conditioned_asymmetry
+```
+
+This materializer confirms the row can be isolated without action leakage. It does not yet define a rule that separates a fully covered wrong case from a fully covered correct case, so terminal utility and paper claims remain blocked.
+
+`fully_covered_goal_validity_failure_asymmetry_inspection_v1` is Docker-verified with script `runtime/h001_runtime/inspect_fully_covered_goal_validity_failure_asymmetry.py`.
+
+```text
+output: local_dataset/runs/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1
+candidate / pair / alternative audit rows: 2 / 1 / 6
+candidate-conditioned asymmetry present: true
+blocker ready for this row: true
+all-role associated candidate: vlmaps:export:chair:spatial_nms:0
+incomplete candidate: vlmaps:export:chair:spatial_nms:16
+candidate blocker: visible_without_depth_association_in_goal_region_context
+audit-only candidate labels: correct 1, wrong 1
+unsafe simple alternatives: binary_coverage_completion_as_terminal_support, association_count_best, depth_consistency_count_best, detector_score_mean_best
+terminal / candidate commit / candidate rejection rows: 0 / 0 / 0
+GT action rows: 0
+terminal arbitration rule ready: false
+promotion gate after inspection: false
+paper claim: blocked
+primary blocker: fixed_rule_needs_fully_covered_contrast_validation
+next task: freeze_fully_covered_candidate_conditioned_contrast_contract
+```
+
+This inspection shows why binary coverage completion is too coarse: in the same fully covered row, one candidate has all-role association while the other is visible without depth association in the peer goal-region context. This is a promising label-free blocker for this row only. It is not yet a terminal rule because it has not been validated against the fully covered correct contrast row, so terminal utility, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked.
+
+`fully_covered_candidate_conditioned_contrast_v1` is statically verified at `manifests/h001_fully_covered_candidate_conditioned_contrast_v1.json` / `.verify.json`.
+
+```text
+fully covered pair rows: 2
+fully covered candidate rows: 4
+audit-only pair labels: a_wrong_b_correct 1, both_correct 1
+wrong contrast row: coverage_completion_pair:005 / rival_identity:21 / BAbdmeyTvMZ / chair
+correct contrast row: coverage_completion_pair:008 / rival_identity:24 / HY1NcmCgn3n / chair
+wrong row candidates: vlmaps:export:chair:spatial_nms:16, vlmaps:export:chair:spatial_nms:0
+correct row candidates: vlmaps:export:chair:spatial_nms:1, vlmaps:export:chair:spatial_nms:3
+expected pair / candidate / candidate-role / summary rows: 2 / 4 / 16 / 1
+fixed rule under test: candidate_conditioned_visible_without_depth_association_blocker
+rule role: label-free nonterminal blocker
+terminal/candidate commit/rejection: blocked
+evaluation-only labels as action inputs: blocked
+paper claim: blocked
+next task: implement_docker_fully_covered_candidate_conditioned_contrast_materializer
+```
+
+This contract is the natural-proof guard after the single-row asymmetry inspection. It tests whether `visible_without_depth_association_in_goal_region_context` remains a useful blocker when compared against a fully covered `both_correct` row, and it explicitly prevents treating mixed depth support as the same failure mechanism as visible-without-association. Passing the future materializer may only unlock a contrast audit; it still cannot by itself define terminal utility.
 
 ## Current Broader Standoff Diagnostic
 

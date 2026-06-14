@@ -1,0 +1,105 @@
+{
+  "schema_version": "h001.fully_covered_candidate_conditioned_contrast.v1",
+  "date_created": "2026-06-14",
+  "status": "static_contract_frozen_terminal_blocked",
+  "contract_name": "fully_covered_candidate_conditioned_contrast_v1",
+  "research_question": "Can the candidate-conditioned asymmetry observed in the fully covered wrong row become a fixed label-free blocker without rejecting fully covered correct contrast rows?",
+  "source_artifacts": {
+    "detector_pair_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_pair_rows.jsonl",
+    "evaluation_pair_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_pair_rows.jsonl",
+    "evaluation_candidate_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_candidate_rows.jsonl",
+    "asymmetry_inspection_summary": "local_dataset/runs/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1/fully_covered_goal_validity_failure_asymmetry_inspection_summary.json"
+  },
+  "source_gate": {
+    "required_pair_evidence_state": "goal_region_both_candidates_supported_object_relation_supported",
+    "fully_covered_pair_rows": 2,
+    "fully_covered_candidate_rows": 4,
+    "pair_label_patterns_for_audit_only": {
+      "a_wrong_b_correct": 1,
+      "both_correct": 1
+    },
+    "wrong_contrast_row": {
+      "coverage_completion_pair_id": "coverage_completion_pair:005",
+      "request_id": "rival_identity:21",
+      "scene_key": "BAbdmeyTvMZ",
+      "query": "chair",
+      "candidate_a_id": "vlmaps:export:chair:spatial_nms:16",
+      "candidate_b_id": "vlmaps:export:chair:spatial_nms:0",
+      "evaluation_only_label_pattern": "a_wrong_b_correct"
+    },
+    "correct_contrast_row": {
+      "coverage_completion_pair_id": "coverage_completion_pair:008",
+      "request_id": "rival_identity:24",
+      "scene_key": "HY1NcmCgn3n",
+      "query": "chair",
+      "candidate_a_id": "vlmaps:export:chair:spatial_nms:1",
+      "candidate_b_id": "vlmaps:export:chair:spatial_nms:3",
+      "evaluation_only_label_pattern": "both_correct"
+    },
+    "prior_asymmetry_inspection_gate_passed": true,
+    "prior_terminal_arbitration_rule_ready": false
+  },
+  "label_free_inputs_allowed_for_materializer": [
+    "coverage_completion_pair_id",
+    "request_id",
+    "scene_key",
+    "query",
+    "candidate ids",
+    "pair evidence state",
+    "role evidence states",
+    "candidate-view role states",
+    "candidate association counts",
+    "candidate depth-consistency states",
+    "visible-without-association states",
+    "inside-mask and detector association aggregates"
+  ],
+  "evaluation_only_inputs_for_audit_after_freeze": [
+    "candidate_pair_label_pattern_for_evaluation_only",
+    "candidate correctness labels",
+    "wrong candidate ids",
+    "correct candidate ids"
+  ],
+  "forbidden_action_inputs": [
+    "candidate_pair_label_pattern_for_evaluation_only",
+    "candidate correctness labels",
+    "wrong candidate ids",
+    "correct candidate ids",
+    "wrong_goal_visit",
+    "wasted_path",
+    "baseline outcome",
+    "map_pose_consistency_delta_for_evaluation_only",
+    "GT object id",
+    "GT action"
+  ],
+  "fixed_rule_under_test": {
+    "rule_name": "candidate_conditioned_visible_without_depth_association_blocker",
+    "rule_role": "label_free_nonterminal_blocker",
+    "positive_blocker_pattern": "visible_without_depth_association_in_goal_region_context",
+    "must_not_be_treated_as_terminal_commit": true,
+    "must_not_reject_candidate_without_contrast_validation": true,
+    "false_positive_audit_required_on_correct_contrast": true,
+    "mixed_depth_support_must_not_be_equated_with_visible_without_association": true
+  },
+  "expected_outputs": {
+    "pair_contrast_rows": 2,
+    "candidate_contrast_rows": 4,
+    "candidate_role_contrast_rows": 16,
+    "contrast_summary_rows": 1,
+    "alternative_audit_rows_min": 6,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0
+  },
+  "promotion_blockers": [
+    "single_wrong_row_inspection_is_not_generalization",
+    "correct_fully_covered_contrast_false_positive_audit_required",
+    "terminal_utility_requires_multi_case_wrong_goal_wasted_path_map_pose_join"
+  ],
+  "next_research_task": {
+    "task": "implement_docker_fully_covered_candidate_conditioned_contrast_materializer",
+    "allowed_output": "label-free contrast audit rows only",
+    "blocked_output": "terminal selector, candidate commit, candidate rejection, first_eval rerun, policy-scale comparison, Step 4-5 promotion, paper claim"
+  }
+}

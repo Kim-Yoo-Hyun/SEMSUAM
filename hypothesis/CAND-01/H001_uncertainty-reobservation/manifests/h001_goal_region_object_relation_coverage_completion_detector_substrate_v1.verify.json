@@ -1,0 +1,214 @@
+{
+  "schema_version": "h001.verify.goal_region_object_relation_coverage_completion_detector_substrate.v1",
+  "checked_at": "2026-06-13",
+  "ok": true,
+  "status": "docker_verified_coverage_completion_detector_sam2_substrate_terminal_blocked",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.json",
+  "frame_projection_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.json",
+  "frame_projection_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.verify.json",
+  "source_artifacts": {
+    "frame_plan_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frame_plan_v1/goal_region_object_relation_coverage_completion_frame_plan_summary.json",
+    "frame_plan_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frame_plan_v1/goal_region_object_relation_coverage_completion_frame_plan_rows.jsonl",
+    "candidate_artifact": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frame_plan_v1/goal_region_object_relation_coverage_completion_candidate_artifact.jsonl",
+    "filtered_frame_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl",
+    "frame_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/postview_frames_v2.jsonl",
+    "frame_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/summary.json",
+    "nonblank_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+    "projection_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_projection_v1/projection_anchor_smoke_summary.json"
+  },
+  "verified_source_counts": {
+    "frame_plan_rows": 48,
+    "skipped_rows": 0,
+    "candidate_artifact_rows": 9,
+    "candidate_tuple_required": 18,
+    "candidate_tuple_covered": 18,
+    "candidate_tuple_missing": 0,
+    "frame_rows_requested": 48,
+    "frame_rows_exported": 48,
+    "rendered_heading_count": 307,
+    "nonblank_input_rows": 48,
+    "nonblank_output_rows": 48,
+    "kept_heading_count": 304,
+    "removed_blank_heading_count": 3,
+    "projection_rows": 48,
+    "projection_anchor_visible_rows": 48,
+    "projection_anchor_visible_rate": 1.0,
+    "missing_candidate_rows": 0,
+    "explicit_candidate_id_rows": 48,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0
+  },
+  "verified_role_counts": {
+    "candidate_a_goal_region_context_view": 12,
+    "candidate_b_goal_region_context_view": 12,
+    "candidate_pair_object_relation_context_view": 12,
+    "shared_goal_region_anchor_view": 12
+  },
+  "verified_evidence_axis_counts": {
+    "goal_region_context_for_candidate_a": 12,
+    "goal_region_context_for_candidate_b": 12,
+    "object_relation_context_for_candidate_pair": 12,
+    "shared_goal_region_anchor_context": 12
+  },
+  "verified_nonterminal_action_counts": {
+    "request_goal_region_evidence": 24,
+    "request_joint_goal_region_object_relation_evidence": 12,
+    "request_object_relation_evidence": 12
+  },
+  "verified_frame_summary_counts": {
+    "frame_rows": 48,
+    "policy_counts": {
+      "GoalRegionObjectRelationCoverageCompletion": 48
+    },
+    "candidate_ids_per_frame_counts": {
+      "2": 48
+    },
+    "role_counts": {
+      "candidate_a_goal_region_context_view": 12,
+      "candidate_b_goal_region_context_view": 12,
+      "candidate_pair_object_relation_context_view": 12,
+      "shared_goal_region_anchor_view": 12
+    },
+    "viewpoint_pair_role_counts": {
+      "goal_region_object_relation_coverage_completion_candidate_pair": 48
+    },
+    "scene_count": 7,
+    "query_count": 3,
+    "scene_keys": [
+      "4ok3usBNeis",
+      "BAbdmeyTvMZ",
+      "Dd4bFSTQ8gi",
+      "HY1NcmCgn3n",
+      "QaLdnwvtxbs",
+      "bxsVRursffK",
+      "qyAac8rV8Zk"
+    ],
+    "queries": [
+      "bed",
+      "chair",
+      "tv_monitor"
+    ],
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0
+  },
+  "plan_to_frame_join_checks": {
+    "frame_plan_viewpoint_ids": 48,
+    "frame_viewpoint_ids": 48,
+    "missing_frame_viewpoint_ids_from_plan": 0,
+    "frame_rows_with_selected_nonterminal_action": 0,
+    "frame_rows_with_evidence_axis": 0,
+    "plan_rows_join_required_for_evidence_axis_and_action": true
+  },
+  "model_and_image_checks": {
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_image_id": "sha256:fcd8df3370546d92added1e60c35abb1be31f175414efbe311e0246431fd9a95",
+    "docker_image_created": "2026-05-13T20:44:48.792584782+09:00",
+    "groundingdino_config_exists": true,
+    "groundingdino_weights_exists": true,
+    "sam2_checkpoint_exists": true,
+    "checkpoint_paths": {
+      "groundingdino_config": "local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/config.json",
+      "groundingdino_weights": "local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/model.safetensors",
+      "sam2_checkpoint": "local_dataset/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt"
+    }
+  },
+  "docker_verification": {
+    "job": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/goal_region_object_relation_coverage_completion_detector_substrate.sh",
+    "tmux_session": "h001-coverage-detector-20260613-232446",
+    "job_status": "completed",
+    "output": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1",
+    "log": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/logs/goal-region-object-relation-coverage-completion-detector-substrate-20260613-232446.log",
+    "detector_rows": 48,
+    "frame_rows": 48,
+    "association_rows": 608,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.8958333333333334,
+    "rows_with_candidate_association": 43,
+    "associated_candidate_heading_count": 194,
+    "role_row_association_counts": {
+      "candidate_a_goal_region_context_view": 12,
+      "candidate_b_goal_region_context_view": 12,
+      "candidate_pair_object_relation_context_view": 7,
+      "shared_goal_region_anchor_view": 12
+    },
+    "evidence_axis_row_association_counts": {
+      "goal_region_context_for_candidate_a": 12,
+      "goal_region_context_for_candidate_b": 12,
+      "object_relation_context_for_candidate_pair": 7,
+      "shared_goal_region_anchor_context": 12
+    },
+    "nonterminal_action_row_association_counts": {
+      "request_goal_region_evidence": 24,
+      "request_joint_goal_region_object_relation_evidence": 12,
+      "request_object_relation_evidence": 7
+    },
+    "associated_scene_count": 7,
+    "associated_query_count": 3,
+    "failure_taxonomy": [],
+    "base_detector_substrate_gate_passed": true,
+    "coverage_completion_detector_substrate_gate_passed": true,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "static_contract_checks": {
+    "frame_projection_verify_status_is_docker_verified": true,
+    "frame_plan_gate_passed": true,
+    "frame_rows_match_expected": true,
+    "nonblank_rows_match_expected": true,
+    "projection_rows_match_expected": true,
+    "projection_visible_rows_match_expected": true,
+    "candidate_tuple_coverage_complete": true,
+    "candidate_ids_explicit_for_all_rows": true,
+    "required_roles_complete": true,
+    "role_counts_match_expected": true,
+    "plan_to_frame_join_available": true,
+    "docker_image_available": true,
+    "checkpoints_available": true,
+    "gt_action_forbidden": true,
+    "terminal_utility_validation_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "docker_job": {
+    "job": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/goal_region_object_relation_coverage_completion_detector_substrate.sh",
+    "base_job": "hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/jobs/expanded_retrieval_detector_substrate.sh",
+    "output": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1",
+    "detector_output": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1/detector_v3c",
+    "expected_frame_rows": 48,
+    "max_candidates_per_frame": 2,
+    "min_detector_box_rate": 0.8,
+    "min_sam2_mask_rate": 0.8,
+    "min_candidate_association_rate": 0.4,
+    "min_rows_with_candidate_association": 20,
+    "min_associated_candidate_heading_count": 24,
+    "min_rows_with_candidate_association_per_role": 2,
+    "min_associated_scene_count": 4,
+    "min_associated_query_count": 2
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.verify.json",
+    "jq '{status, docker_verification, next_task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_frame_projection_v1.verify.json",
+    "jq '{frame_plan_rows, skipped_rows, candidate_artifact_rows, candidate_tuple_required, candidate_tuple_covered, candidate_tuple_missing, observation_role_counts, evidence_axis_counts, nonterminal_action_counts, gate}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frame_plan_v1/goal_region_object_relation_coverage_completion_frame_plan_summary.json",
+    "jq '{ok, rows_requested, rows_exported, rendered_heading_count, uses_gt_for_action}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/summary.json",
+    "jq '{input_rows, output_rows, row_level_nonblank_gate_passed, removed_blank_heading_count, kept_heading_count, original_heading_count, uses_gt_for_action}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+    "jq '{rows, expected_rows, projection_anchor_visible_rows, projection_anchor_visible_rate, missing_candidate_rows, candidate_selection_source_counts, gt_action_rows, gate}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_projection_v1/projection_anchor_smoke_summary.json",
+    "jq -s '{rows:length, role_counts:(group_by(.role)|map({key:.[0].role,n:length})), policy_counts:(group_by(.policy)|map({key:.[0].policy,n:length})), candidate_ids_per_frame_counts:(group_by(.candidate_ids|length)|map({key:(.[0].candidate_ids|length|tostring),n:length})), gt_action_true:map(select(.uses_gt_for_action==true))|length}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl",
+    "comm -23 <(jq -r '.viewpoint_id' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frame_plan_v1/goal_region_object_relation_coverage_completion_frame_plan_rows.jsonl | sort) <(jq -r '.viewpoint_id' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl | sort) | wc -l",
+    "wc -l local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frame_plan_v1/goal_region_object_relation_coverage_completion_candidate_artifact.jsonl local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frame_plan_v1/goal_region_object_relation_coverage_completion_frame_plan_rows.jsonl",
+    "docker image inspect research3/openvocab-perception:20260513-v3c-gdino-sam2 --format '{{.Id}} {{.Created}}'",
+    "test -f local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/config.json && test -f local_dataset/models/openvocab/groundingdino/IDEA-Research_grounding-dino-tiny/model.safetensors && test -f local_dataset/models/openvocab/sam2/sam2.1_hiera_tiny/sam2.1_hiera_tiny.pt"
+  ],
+  "next_task": "freeze_goal_region_object_relation_coverage_completion_post_detector_evidence_analyzer_contract",
+  "interpretation": {
+    "fact": "The contract consumes the Docker-verified 48-row coverage-completion frame/projection substrate and the Docker detector/SAM2 job completed with 48 detector rows, 608 association rows, candidate association rate 0.8958, associated candidate heading count 194, and an empty failure taxonomy.",
+    "agent_inference": "The detector/SAM2 substrate is strong enough to freeze a post-detector evidence analyzer contract. The object-relation context role is partially associated at 7/12 rows, so the next analyzer must preserve remaining object-relation gaps instead of converting visibility into terminal goal validity.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM complementarity, detector evidence interpretation as utility, terminal utility, formula revision, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim is allowed from this detector/SAM2 substrate result."
+  },
+  "paper_claim_allowed": false
+}

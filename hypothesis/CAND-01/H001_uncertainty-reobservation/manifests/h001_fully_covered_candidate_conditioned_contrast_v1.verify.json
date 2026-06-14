@@ -1,0 +1,45 @@
+{
+  "schema_version": "h001.verify.fully_covered_candidate_conditioned_contrast.v1",
+  "date_checked": "2026-06-14",
+  "status": "static_contract_verified_terminal_blocked",
+  "contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.json",
+  "source_verification": {
+    "fully_covered_pair_rows": 2,
+    "fully_covered_candidate_rows": 4,
+    "fully_covered_pair_label_patterns_for_audit_only": {
+      "a_wrong_b_correct": 1,
+      "both_correct": 1
+    },
+    "wrong_contrast_pair_id": "coverage_completion_pair:005",
+    "correct_contrast_pair_id": "coverage_completion_pair:008",
+    "wrong_contrast_scene_query": "BAbdmeyTvMZ/chair",
+    "correct_contrast_scene_query": "HY1NcmCgn3n/chair",
+    "prior_asymmetry_inspection_gate_passed": true,
+    "prior_terminal_arbitration_rule_ready": false,
+    "prior_primary_blocker": "fixed_rule_needs_fully_covered_contrast_validation"
+  },
+  "static_contract_checks": {
+    "contract_json_valid": true,
+    "source_paths_recorded": true,
+    "fully_covered_wrong_and_correct_rows_identified": true,
+    "candidate_conditioned_rule_under_test_defined": true,
+    "mixed_depth_support_false_positive_guard_defined": true,
+    "evaluation_only_labels_forbidden_as_action_inputs": true,
+    "expected_outputs_defined": true,
+    "terminal_commits_blocked": true,
+    "candidate_commits_blocked": true,
+    "candidate_rejections_blocked": true,
+    "paper_claim_blocked": true,
+    "natural_proof_rule_preserved": true
+  },
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_fully_covered_candidate_conditioned_contrast_v1.verify.json",
+    "jq -s 'map(select(.coverage_completion_pair_evidence_state==\"goal_region_both_candidates_supported_object_relation_supported\")) | {n:length, labels:(map(.candidate_pair_label_pattern_for_evaluation_only)|group_by(.)|map({(.[0]):length})|add), rows: map({coverage_completion_pair_id, request_id, scene_key, query, candidate_a_id, candidate_b_id, candidate_pair_label_pattern_for_evaluation_only})}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_pair_rows.jsonl",
+    "jq -s 'map(select(.coverage_completion_pair_evidence_state==\"goal_region_both_candidates_supported_object_relation_supported\")) | {n:length, candidate_labels:(map({id:.candidate_id, pair:.coverage_completion_pair_id, role:.candidate_pair_role, correct:.candidate_correctness_label_for_evaluation_only, wrong:.candidate_wrong_label_for_evaluation_only, states:.coverage_completion_candidate_view_states_by_role}) )}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_candidate_rows.jsonl",
+    "jq -s 'map(select(.pair_evidence_state==\"goal_region_both_candidates_supported_object_relation_supported\")) | {n:length, rows: map({coverage_completion_pair_id, request_id, scene_key, query, candidate_a_id, candidate_b_id, role_evidence_states})}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_pair_rows.jsonl",
+    "jq '{status, asymmetry_inspection_gate_passed, candidate_conditioned_asymmetry_present, terminal_arbitration_rule_ready, promotion_gate_after_inspection_passed, primary_blocker, next_task}' local_dataset/runs/h001_fully_covered_goal_validity_failure_asymmetry_inspection_v1/fully_covered_goal_validity_failure_asymmetry_inspection_summary.json"
+  ],
+  "next_task": "implement_docker_fully_covered_candidate_conditioned_contrast_materializer",
+  "ok": true
+}

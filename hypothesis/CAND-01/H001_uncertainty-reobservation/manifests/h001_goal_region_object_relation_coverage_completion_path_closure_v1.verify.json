@@ -1,0 +1,34 @@
+{
+  "schema_version": "h001.verify.goal_region_object_relation_coverage_completion_path_closure.v1",
+  "date_checked": "2026-06-13",
+  "status": "static_verified_coverage_completion_path_closed_as_diagnostic_only",
+  "closure": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_path_closure_v1.json",
+  "source_verification": {
+    "promotion_gate_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1/goal_region_object_relation_coverage_completion_promotion_gate_summary.json",
+    "promotion_gate_passed": true,
+    "promotion_gate_blockers": [],
+    "terminal_selector_allowed_after_pass": false,
+    "terminal_utility_validation_allowed_after_pass": false,
+    "policy_scale_claim_allowed_after_pass": false,
+    "paper_claim_allowed_after_pass": false
+  },
+  "closure_checks": {
+    "terminal_utility_blocked": true,
+    "candidate_commit_blocked": true,
+    "candidate_rejection_blocked": true,
+    "wrong_goal_claim_blocked": true,
+    "wasted_path_claim_blocked": true,
+    "map_pose_claim_blocked": true,
+    "first_eval_rerun_blocked": true,
+    "policy_scale_comparison_blocked": true,
+    "paper_claim_blocked": true,
+    "diagnostic_role_preserved": true
+  },
+  "next_task": "select_next_label_free_branch_after_goal_region_object_relation_coverage_completion_closure",
+  "ok": true,
+  "verification_commands": [
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_path_closure_v1.json",
+    "jq empty hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_path_closure_v1.verify.json",
+    "jq '{status, closure_decision, facts, next_research_task}' hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_path_closure_v1.json"
+  ]
+}

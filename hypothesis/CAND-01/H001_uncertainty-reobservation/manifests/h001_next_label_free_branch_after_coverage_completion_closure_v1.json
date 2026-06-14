@@ -1,0 +1,54 @@
+{
+  "schema_version": "h001.selection.next_label_free_branch_after_coverage_completion_closure.v1",
+  "date_checked": "2026-06-13",
+  "status": "frozen_branch_selection_terminal_blocked",
+  "selection_name": "next_label_free_branch_after_coverage_completion_closure_v1",
+  "source": {
+    "path_closure": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_path_closure_v1.json",
+    "path_closure_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_path_closure_v1.verify.json",
+    "promotion_gate_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1/goal_region_object_relation_coverage_completion_promotion_gate_summary.json",
+    "evaluation_join_pair_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_pair_rows.jsonl",
+    "evaluation_join_request_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1/goal_region_object_relation_coverage_completion_evaluation_join_request_rows.jsonl"
+  },
+  "candidate_branches": {
+    "fully_covered_goal_validity_failure_v1": {
+      "branch_type": "label_free_nonterminal_diagnostic_branch",
+      "target_failure": "fully_covered_evidence_not_sufficient_for_goal_validity",
+      "target_rows": 1,
+      "why_first": "This is the direct terminal-proof blocker. If a fully covered goal-region/object-relation row can still be a_wrong_b_correct, coverage completion cannot be used as terminal ObjectNav goal validity.",
+      "expected_next_contract": "freeze_fully_covered_goal_validity_failure_contract"
+    },
+    "object_relation_gap_followup_v1": {
+      "branch_type": "label_free_nonterminal_observation_branch",
+      "target_failure": "object_relation_gap_remains_after_goal_region_completion",
+      "target_rows": 10,
+      "why_deferred": "This branch covers more rows, but resolving it before explaining the wrong fully covered case would still leave the terminal-proof blocker unresolved.",
+      "expected_next_contract": "freeze_object_relation_gap_followup_contract"
+    }
+  },
+  "selected_branch": {
+    "name": "fully_covered_goal_validity_failure_v1",
+    "branch_type": "label_free_nonterminal_diagnostic_branch",
+    "target_failure": "fully_covered_evidence_not_sufficient_for_goal_validity",
+    "target_rows": 1,
+    "source_pair_state": "goal_region_both_candidates_supported_object_relation_supported",
+    "source_pair_label_pattern_for_evaluation_only": "a_wrong_b_correct",
+    "selection_reason": "A terminal selector cannot be derived until the wrong fully covered case is explained. This branch protects the natural-proof rule by preventing coverage completion from being treated as goal validity.",
+    "terminal_utility_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "deferred_branch": {
+    "name": "object_relation_gap_followup_v1",
+    "target_rows": 10,
+    "deferred_until": "fully_covered_goal_validity_failure_v1 is closed or converted into a fixed label-free blocker"
+  },
+  "blocked_shortcuts": [
+    "treat coverage_completed_for_goal_region_and_object_relation as terminal valid",
+    "tune threshold to hide the a_wrong_b_correct fully covered row",
+    "use evaluation label to reject the wrong fully covered candidate",
+    "rerun first_eval before a fixed label-free blocker exists",
+    "claim wrong-goal or wasted-path improvement from this diagnostic subset"
+  ],
+  "next_research_task": "freeze_fully_covered_goal_validity_failure_contract",
+  "paper_claim_allowed": false
+}

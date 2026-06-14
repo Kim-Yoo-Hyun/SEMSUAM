@@ -1,0 +1,264 @@
+{
+  "schema_version": "h001.contract.goal_region_object_relation_coverage_completion_detector_evidence.v1",
+  "date_checked": "2026-06-13",
+  "status": "frozen_design_contract_before_materializer_implementation",
+  "contract_name": "goal_region_object_relation_coverage_completion_detector_evidence_v1",
+  "purpose": "Freeze a label-free post-detector evidence analyzer for the 48-row goal-region/object-relation coverage-completion detector substrate before evaluation-only join, terminal utility, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim.",
+  "stage": "P4-design",
+  "paper_framing": {
+    "semantic_slam_centered": true,
+    "objectnav_wrong_goal_role": "task_level_failure_surface_for_semantic_slam_uncertainty",
+    "active_reobservation_role": "nonterminal evidence acquisition for missing goal-region and object-relation context",
+    "natural_proof_rule": "The detector/SAM2 substrate passed, but the diagnosed failure is still missing or ambiguous evidence, not terminal ObjectNav goal validity. The natural next method step is therefore a frozen label-free evidence-state layer that separates goal-region support, shared-anchor ambiguity, and object-relation evidence gaps.",
+    "paper_claim_allowed": false
+  },
+  "source": {
+    "detector_substrate_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.json",
+    "detector_substrate_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1.verify.json",
+    "detector_substrate_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "detector_substrate_diagnostic": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1/goal_region_object_relation_coverage_completion_detector_substrate_diagnostic.json",
+    "detector_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1/detector_v3c/summary.json",
+    "detector_associations": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl",
+    "detector_frame_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_substrate_v1/expanded_retrieval_detector_frame_summary.jsonl",
+    "target_pair_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1/goal_region_object_relation_coverage_completion_target_pair_rows.jsonl",
+    "source_candidate_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1/goal_region_object_relation_coverage_completion_candidate_rows.jsonl",
+    "source_observation_seed_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1/goal_region_object_relation_coverage_completion_observation_seed_rows.jsonl",
+    "frame_plan_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frame_plan_v1/goal_region_object_relation_coverage_completion_frame_plan_rows.jsonl",
+    "source_frame_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl"
+  },
+  "source_gate": {
+    "detector_substrate_status": "docker_verified_coverage_completion_detector_sam2_substrate_terminal_blocked",
+    "job_status": "completed",
+    "detector_rows": 48,
+    "frame_rows": 48,
+    "association_rows": 608,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.8958333333333334,
+    "rows_with_candidate_association": 43,
+    "associated_candidate_heading_count": 194,
+    "role_counts": {
+      "candidate_a_goal_region_context_view": 12,
+      "candidate_b_goal_region_context_view": 12,
+      "candidate_pair_object_relation_context_view": 12,
+      "shared_goal_region_anchor_view": 12
+    },
+    "role_row_association_counts": {
+      "candidate_a_goal_region_context_view": 12,
+      "candidate_b_goal_region_context_view": 12,
+      "candidate_pair_object_relation_context_view": 7,
+      "shared_goal_region_anchor_view": 12
+    },
+    "evidence_axis_counts": {
+      "goal_region_context_for_candidate_a": 12,
+      "goal_region_context_for_candidate_b": 12,
+      "object_relation_context_for_candidate_pair": 12,
+      "shared_goal_region_anchor_context": 12
+    },
+    "evidence_axis_row_association_counts": {
+      "goal_region_context_for_candidate_a": 12,
+      "goal_region_context_for_candidate_b": 12,
+      "object_relation_context_for_candidate_pair": 7,
+      "shared_goal_region_anchor_context": 12
+    },
+    "nonterminal_action_counts": {
+      "request_goal_region_evidence": 24,
+      "request_joint_goal_region_object_relation_evidence": 12,
+      "request_object_relation_evidence": 12
+    },
+    "nonterminal_action_row_association_counts": {
+      "request_goal_region_evidence": 24,
+      "request_joint_goal_region_object_relation_evidence": 12,
+      "request_object_relation_evidence": 7
+    },
+    "target_pair_rows": 12,
+    "source_candidate_rows": 24,
+    "source_observation_seed_rows": 48,
+    "coverage_completion_pair_rows": 12,
+    "coverage_completion_pair_rows_with_association": 12,
+    "coverage_completion_pair_min_associated_observation_rows": 3,
+    "coverage_completion_pair_max_associated_observation_rows": 4,
+    "associated_scene_count": 7,
+    "associated_query_count": 3,
+    "selected_depth_check_status_counts": {
+      "consistent": 154,
+      "depth_mismatch": 231,
+      "out_of_fov": 108,
+      "unavailable": 115
+    },
+    "projection_anchor_status_counts": {
+      "behind_camera": 777,
+      "out_of_fov": 1723,
+      "visible": 1756
+    },
+    "failure_taxonomy": [],
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "analyzer_contract": {
+    "analyzer_name": "goal_region_object_relation_coverage_completion_detector_evidence_v1",
+    "policy": "GoalRegionObjectRelationCoverageCompletionDetectorEvidence",
+    "source_pair_keys": [
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key",
+      "candidate_a_id",
+      "candidate_b_id"
+    ],
+    "candidate_role_keys": [
+      "request_id",
+      "candidate_id",
+      "candidate_pair_role"
+    ],
+    "candidate_role_semantics": {
+      "candidate_a": "first action-frozen candidate in the source pair, not a correctness label",
+      "candidate_b": "second action-frozen candidate in the source pair, not a correctness label"
+    },
+    "view_role_keys": [
+      "request_id",
+      "coverage_completion_pair_id",
+      "role",
+      "evidence_axis",
+      "candidate_id"
+    ],
+    "required_observation_roles": [
+      "candidate_a_goal_region_context_view",
+      "candidate_b_goal_region_context_view",
+      "candidate_pair_object_relation_context_view",
+      "shared_goal_region_anchor_view"
+    ],
+    "required_evidence_axes": [
+      "goal_region_context_for_candidate_a",
+      "goal_region_context_for_candidate_b",
+      "object_relation_context_for_candidate_pair",
+      "shared_goal_region_anchor_context"
+    ],
+    "required_action_time_features": [
+      "association_rows",
+      "associated_rows",
+      "inside_box_rows",
+      "inside_mask_rows",
+      "depth_consistent_rows",
+      "depth_mismatch_rows",
+      "out_of_fov_rows",
+      "best_box_score_max",
+      "best_depth_error_min_m",
+      "projection_anchor_selected_offset_profile",
+      "goal_region_candidate_support_matrix",
+      "shared_goal_region_anchor_profile",
+      "object_relation_context_support_profile",
+      "candidate_pair_support_profile",
+      "coverage_completion_pair_evidence_profile"
+    ],
+    "allowed_candidate_view_evidence_states": [
+      "associated_depth_consistent",
+      "associated_depth_mixed",
+      "visible_without_candidate_association",
+      "not_observed_in_role"
+    ],
+    "allowed_role_evidence_states": [
+      "goal_region_candidate_a_supported",
+      "goal_region_candidate_b_supported",
+      "both_goal_region_candidates_supported",
+      "shared_goal_region_anchor_overlap_observed",
+      "object_relation_context_supported",
+      "object_relation_context_missing_after_observation",
+      "insufficient_role_evidence"
+    ],
+    "allowed_pair_evidence_states": [
+      "goal_region_both_candidates_supported_object_relation_supported",
+      "goal_region_both_candidates_supported_object_relation_missing",
+      "goal_region_candidate_a_support_only",
+      "goal_region_candidate_b_support_only",
+      "shared_anchor_ambiguous_goal_region_support",
+      "object_relation_context_available_nonterminal",
+      "insufficient_post_detector_evidence"
+    ],
+    "allowed_request_evidence_states": [
+      "coverage_completed_for_goal_region_and_object_relation",
+      "goal_region_completed_object_relation_gap_remains",
+      "shared_goal_region_anchor_ambiguous",
+      "insufficient_evidence_after_observation"
+    ],
+    "reserved_future_schema_fields": {
+      "goal_validity_risk": "reserved for later evidence/evaluation join or utility calculation, not an action input in this analyzer",
+      "viewpoint_evidence_gap": "reserved for later active utility calculation after evidence rows are frozen",
+      "map_pose_consistency_uncertainty": "reserved for later Semantic-SLAM utility, not derived as a terminal score here",
+      "wrong_goal_visit": "evaluation-only after label-free evidence rows are frozen",
+      "wasted_path_m": "evaluation-only after label-free evidence rows are frozen",
+      "map_pose_consistency_delta": "evaluation-only after label-free evidence rows are frozen"
+    },
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "required_outputs": {
+    "candidate_view_rows": "goal_region_object_relation_coverage_completion_detector_candidate_view_rows.jsonl",
+    "role_rows": "goal_region_object_relation_coverage_completion_detector_role_rows.jsonl",
+    "pair_rows": "goal_region_object_relation_coverage_completion_detector_pair_rows.jsonl",
+    "request_rows": "goal_region_object_relation_coverage_completion_detector_request_rows.jsonl",
+    "audit_rows": "goal_region_object_relation_coverage_completion_detector_audit_rows.jsonl",
+    "summary": "goal_region_object_relation_coverage_completion_detector_evidence_summary.json"
+  },
+  "minimum_evidence_gate": {
+    "source_detector_substrate_gate_passed": true,
+    "expected_candidate_view_rows": 96,
+    "expected_role_rows": 48,
+    "expected_pair_rows": 12,
+    "expected_request_rows": 12,
+    "expected_audit_rows": 12,
+    "expected_required_roles": 4,
+    "expected_candidates_per_pair": 2,
+    "minimum_pair_rows_with_any_candidate_association": 12,
+    "minimum_role_rows_with_candidate_association": 43,
+    "minimum_object_relation_context_rows_with_association": 7,
+    "minimum_associated_scene_count": 7,
+    "minimum_associated_query_count": 3,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "candidate_commit_rows_maximum": 0,
+    "candidate_rejection_rows_maximum": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "forbidden_action_inputs": [
+    "candidate correctness label",
+    "valid target label",
+    "success label",
+    "wrong-goal outcome",
+    "wasted path outcome",
+    "map/pose consistency delta",
+    "oracle shortest path",
+    "oracle object id",
+    "GT object id",
+    "GT goal id",
+    "evaluation-only pair label before evidence rows are written",
+    "evaluation-only baseline outcome before evidence rows are written"
+  ],
+  "blocked_actions": [
+    "terminal_goal_commit",
+    "candidate_commit",
+    "candidate_rejection",
+    "terminal_score_tuning",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "step_4_5_promotion",
+    "paper_claim"
+  ],
+  "expected_command_shape": [
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_goal_region_object_relation_coverage_completion_detector_evidence.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_goal_region_object_relation_coverage_completion_detector_evidence --out-root /runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1"
+  ],
+  "next_allowed_step_after_contract": "Implement the Docker label-free coverage-completion detector evidence materializer and write candidate-view, role, pair, request, audit, and summary outputs.",
+  "interpretation_rule": {
+    "fact": "The coverage-completion detector/SAM2 substrate passed the frozen gate with enough role, scene, query, and pair coverage to define evidence rows.",
+    "agent_inference": "The method should preserve detector evidence as nonterminal evidence states because goal-region support and object-relation context are still evidence availability signals, not ObjectNav goal-validity proof.",
+    "paper_claim": "This contract permits only a nonterminal evidence-state materializer. ObjectNav improvement, Semantic-SLAM utility, wrong-goal reduction, wasted-path reduction, map/pose consistency improvement, first_eval rerun, and paper claims remain blocked."
+  },
+  "paper_claim_allowed": false
+}

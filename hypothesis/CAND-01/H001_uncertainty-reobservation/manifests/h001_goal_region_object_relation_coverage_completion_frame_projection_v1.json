@@ -1,7 +1,7 @@
 {
   "schema_version": "h001.contract.goal_region_object_relation_coverage_completion_frame_projection.v1",
   "date_checked": "2026-06-13",
-  "status": "frozen_contract_static_verified_terminal_blocked",
+  "status": "frozen_contract_docker_verified_terminal_blocked",
   "contract_name": "goal_region_object_relation_coverage_completion_frame_projection_v1",
   "purpose": "Freeze the frame/projection smoke contract for the Docker-verified goal_region_object_relation_coverage_completion_v1 materializer before Habitat rendering, detector/SAM2 evidence, evaluation-only join, terminal utility, first_eval rerun, policy-scale comparison, or paper claim.",
   "stage": "P4-design",
@@ -154,7 +154,7 @@
     ],
     "required_frame_outputs": [
       "summary.json",
-      "rival_identity_frame_summary.jsonl",
+      "postview_frames_v2.jsonl",
       "frames/*/*/rgb.png",
       "frames/*/*/depth.npy",
       "frames/*/*/pose.txt",
@@ -255,7 +255,7 @@
     "paper_claim_allowed": false
   },
   "next_research_task": {
-    "task": "implement_docker_goal_region_object_relation_coverage_completion_frame_projection_smoke",
-    "reason": "The 48 symbolic coverage-completion observation seeds are frozen. The next implementation should resolve them into frame-ready Habitat decisions, render frames, filter blank headings, and run projection-anchor smoke with explicit candidate ids before detector/SAM2 evidence or terminal utility."
+    "task": "freeze_goal_region_object_relation_coverage_completion_detector_sam2_substrate_contract_after_frame_projection_smoke",
+    "reason": "The 48 coverage-completion observation rows are now Docker-verified through frame/projection smoke. The next step should freeze the detector/SAM2 substrate contract before any post-detector evidence, evaluation-only join, terminal utility, formula revision, first_eval rerun, policy-scale comparison, or paper claim."
   }
 }

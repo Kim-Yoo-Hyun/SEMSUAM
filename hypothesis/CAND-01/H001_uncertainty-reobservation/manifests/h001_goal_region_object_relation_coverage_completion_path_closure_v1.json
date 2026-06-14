@@ -1,0 +1,62 @@
+{
+  "schema_version": "h001.closure.goal_region_object_relation_coverage_completion_path.v1",
+  "date_checked": "2026-06-13",
+  "status": "closed_as_diagnostic_only_terminal_blocked",
+  "closure_name": "goal_region_object_relation_coverage_completion_path_closure_v1",
+  "closed_path": "goal_region_object_relation_coverage_completion_as_terminal_utility",
+  "source": {
+    "promotion_gate_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1.json",
+    "promotion_gate_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1.verify.json",
+    "promotion_gate_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1/goal_region_object_relation_coverage_completion_promotion_gate_summary.json"
+  },
+  "closure_decision": {
+    "terminal_utility_from_current_path": "blocked",
+    "candidate_commit_from_current_path": "blocked",
+    "candidate_rejection_from_current_path": "blocked",
+    "wrong_goal_reduction_claim_from_current_path": "blocked",
+    "wasted_path_reduction_claim_from_current_path": "blocked",
+    "map_pose_consistency_improvement_claim_from_current_path": "blocked",
+    "first_eval_rerun_from_current_path": "blocked",
+    "policy_scale_comparison_from_current_path": "blocked",
+    "paper_claim_from_current_path": "blocked",
+    "surviving_evidence_role": "diagnostic evidence for why goal-region coverage and object-relation coverage remain insufficient for terminal ObjectNav goal validity"
+  },
+  "facts": {
+    "promotion_gate_passed": true,
+    "allowed_after_pass": [
+      "coverage_completion_evaluation_diagnostic_ready",
+      "terminal_utility_blocked_by_wrong_fully_covered_case",
+      "object_relation_gap_followup_required"
+    ],
+    "fully_covered_rows": 2,
+    "fully_covered_wrong_or_ambiguous_rows": 1,
+    "object_relation_gap_rows": 10,
+    "wrong_goal_baseline_rows_for_evaluation_only": 12,
+    "max_wasted_path_exposure_m_for_evaluation_only": 1.7545644472996156,
+    "slam_map_pose_delta_rows_for_evaluation_only": 12,
+    "slam_map_pose_delta_max_for_evaluation_only": 1.0,
+    "failure_taxonomy": [
+      "fully_covered_evidence_not_sufficient_for_goal_validity",
+      "object_relation_gap_remains_after_goal_region_completion",
+      "baseline_wrong_goal_surface_present",
+      "map_pose_delta_is_evaluation_only"
+    ],
+    "terminal_selector_allowed_after_pass": false,
+    "terminal_utility_validation_allowed_after_pass": false,
+    "policy_scale_claim_allowed_after_pass": false,
+    "paper_claim_allowed_after_pass": false
+  },
+  "agent_inference": {
+    "why_closed": "This branch did acquire useful evidence and exposes wrong-goal/wasted-path/map-pose diagnostic surfaces, but it cannot naturally support a terminal selector. Fully covered goal-region/object-relation evidence includes one a_wrong_b_correct row, and most rows retain object-relation gaps.",
+    "method_implication": "The next method step should select a new label-free branch that explains the wrong fully covered case or resolves object-relation gaps, rather than tuning thresholds on this branch.",
+    "natural_proof_alignment": "The branch is closed because the observed mechanism blocks the intended terminal interpretation; this prevents motivation-driven claim fitting."
+  },
+  "minimum_future_terminal_contract_requirements": [
+    "A future label-free rule must separate fully covered but wrong candidate-pair cases from fully covered correct cases.",
+    "A future branch must reduce object-relation gaps without using evaluation-only labels as action inputs.",
+    "Wrong-goal, wasted-path, and map/pose metrics may be joined only after action/evidence rows are frozen.",
+    "Terminal selector promotion requires fixed held-out validation, not threshold tuning on this diagnostic subset."
+  ],
+  "next_research_task": "select_next_label_free_branch_after_goal_region_object_relation_coverage_completion_closure",
+  "paper_claim_allowed": false
+}

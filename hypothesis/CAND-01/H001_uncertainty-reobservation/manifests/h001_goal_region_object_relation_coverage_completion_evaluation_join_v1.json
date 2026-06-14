@@ -1,0 +1,162 @@
+{
+  "schema_version": "h001.contract.goal_region_object_relation_coverage_completion_evaluation_join.v1",
+  "date_checked": "2026-06-13",
+  "status": "frozen_evaluation_only_join_contract_before_materializer_implementation",
+  "contract_name": "goal_region_object_relation_coverage_completion_evaluation_join_v1",
+  "purpose": "Freeze an evaluation-only join after the label-free goal-region/object-relation coverage-completion evidence rows are written. This join may attach labels, baseline wrong-goal, wasted-path, and map/pose diagnostics for analysis only; it cannot change action rows or define terminal utility.",
+  "stage": "P4-evaluation-only-analysis",
+  "paper_framing": {
+    "semantic_slam_centered": true,
+    "objectnav_wrong_goal_role": "evaluation-only task-side failure surface",
+    "natural_proof_rule": "Because label-free evidence rows are frozen, it is now valid to inspect whether the new evidence states align with pair correctness, wrong-goal baselines, wasted path, and map/pose diagnostics. The join is still analysis-only and cannot rescue a terminal claim.",
+    "paper_claim_allowed": false
+  },
+  "source": {
+    "detector_evidence_contract": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1.json",
+    "detector_evidence_verify": "hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1.verify.json",
+    "detector_evidence_summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_evidence_summary.json",
+    "detector_evidence_candidate_view_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_candidate_view_rows.jsonl",
+    "detector_evidence_role_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_role_rows.jsonl",
+    "detector_evidence_pair_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_pair_rows.jsonl",
+    "detector_evidence_request_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_request_rows.jsonl",
+    "detector_evidence_audit_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_detector_evidence_v1/goal_region_object_relation_coverage_completion_detector_audit_rows.jsonl",
+    "target_pair_rows": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_v1/goal_region_object_relation_coverage_completion_target_pair_rows.jsonl",
+    "source_evaluation_join_pair_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_pair_rows.jsonl",
+    "source_evaluation_join_candidate_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_candidate_rows.jsonl",
+    "source_evaluation_join_baseline_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_baseline_rows.jsonl",
+    "source_evaluation_join_request_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_request_rows.jsonl",
+    "source_evaluation_join_promotion_probe_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_promotion_probe_rows.jsonl"
+  },
+  "source_gate": {
+    "detector_evidence_status": "docker_verified_coverage_completion_post_detector_evidence_materializer_terminal_blocked",
+    "candidate_view_rows": 96,
+    "role_rows": 48,
+    "pair_rows": 12,
+    "request_rows": 12,
+    "audit_rows": 12,
+    "pair_evidence_state_counts": {
+      "goal_region_both_candidates_supported_object_relation_missing": 10,
+      "goal_region_both_candidates_supported_object_relation_supported": 2
+    },
+    "request_evidence_state_counts": {
+      "coverage_completed_for_goal_region_and_object_relation": 2,
+      "goal_region_completed_object_relation_gap_remains": 10
+    },
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "action_evidence_forbidden_keys_found": [],
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "evaluation_subset_contract": {
+    "join_key": [
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key"
+    ],
+    "target_pair_rows": 12,
+    "expected_join_pair_rows": 12,
+    "expected_join_candidate_rows": 24,
+    "expected_join_baseline_rows": 36,
+    "expected_join_request_rows": 12,
+    "expected_join_promotion_probe_rows": 12,
+    "candidate_pair_label_counts_for_evaluation_only": {
+      "a_wrong_b_correct": 4,
+      "both_correct": 4,
+      "both_wrong": 4
+    },
+    "candidate_label_counts_for_evaluation_only": {
+      "correct": 12,
+      "wrong": 12
+    },
+    "baseline_policy_rows": {
+      "NoReobserveReference": 12,
+      "SLAMOnlyRich_current": 12,
+      "SemanticOnly": 12
+    },
+    "baseline_wrong_goal_rows_for_evaluation_only": {
+      "NoReobserveReference": 6,
+      "SLAMOnlyRich_current": 0,
+      "SemanticOnly": 6
+    },
+    "baseline_success_rows_for_evaluation_only": {
+      "NoReobserveReference": 5,
+      "SLAMOnlyRich_current": 0,
+      "SemanticOnly": 2
+    },
+    "total_wrong_goal_baseline_rows_for_evaluation_only": 12,
+    "max_wasted_path_exposure_m_for_evaluation_only": 1.7545644472996156,
+    "slam_map_pose_delta_rows_for_evaluation_only": 12,
+    "slam_map_pose_delta_max_for_evaluation_only": 1.0,
+    "evidence_label_cross_counts_for_evaluation_only": {
+      "goal_region_both_candidates_supported_object_relation_missing|a_wrong_b_correct": 3,
+      "goal_region_both_candidates_supported_object_relation_missing|both_correct": 3,
+      "goal_region_both_candidates_supported_object_relation_missing|both_wrong": 4,
+      "goal_region_both_candidates_supported_object_relation_supported|a_wrong_b_correct": 1,
+      "goal_region_both_candidates_supported_object_relation_supported|both_correct": 1
+    }
+  },
+  "required_outputs": {
+    "pair_rows": "goal_region_object_relation_coverage_completion_evaluation_join_pair_rows.jsonl",
+    "candidate_rows": "goal_region_object_relation_coverage_completion_evaluation_join_candidate_rows.jsonl",
+    "baseline_rows": "goal_region_object_relation_coverage_completion_evaluation_join_baseline_rows.jsonl",
+    "request_rows": "goal_region_object_relation_coverage_completion_evaluation_join_request_rows.jsonl",
+    "promotion_probe_rows": "goal_region_object_relation_coverage_completion_evaluation_join_promotion_probe_rows.jsonl",
+    "summary": "goal_region_object_relation_coverage_completion_evaluation_join_summary.json"
+  },
+  "minimum_join_gate": {
+    "source_evidence_gate_passed": true,
+    "pair_rows": 12,
+    "candidate_rows": 24,
+    "baseline_rows": 36,
+    "request_rows": 12,
+    "promotion_probe_rows": 12,
+    "pair_label_missing_rows": 0,
+    "candidate_label_missing_rows": 0,
+    "baseline_policy_missing_rows": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "terminal_selector_allowed_from_this_join": false,
+    "paper_claim_allowed": false
+  },
+  "forbidden_action_inputs": [
+    "candidate correctness label",
+    "candidate pair label pattern",
+    "valid target label",
+    "success label",
+    "wrong-goal outcome",
+    "wasted path outcome",
+    "map/pose consistency delta",
+    "oracle shortest path",
+    "oracle object id",
+    "GT object id",
+    "GT goal id",
+    "evaluation-only baseline outcome"
+  ],
+  "blocked_actions": [
+    "terminal_goal_commit",
+    "candidate_commit",
+    "candidate_rejection",
+    "threshold_tuning_from_join",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "step_4_5_promotion",
+    "paper_claim"
+  ],
+  "expected_command_shape": [
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/h001_runtime/materialize_goal_region_object_relation_coverage_completion_evaluation_join.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/runtime -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_goal_region_object_relation_coverage_completion_evaluation_join --out-root /runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1"
+  ],
+  "next_allowed_step_after_contract": "Implement the Docker evaluation-only join materializer and write pair, candidate, baseline, request, promotion-probe, and summary outputs.",
+  "interpretation_rule": {
+    "fact": "The label-free evidence rows are frozen and match a 12-row subset of the prior multi-case evaluation-only join.",
+    "agent_inference": "The join should test whether fully covered versus object-relation-gap evidence states explain candidate correctness, wrong-goal exposure, wasted path, and map/pose deltas. Because fully covered rows include one a_wrong_b_correct case, completion cannot be treated as terminal proof.",
+    "paper_claim": "The join permits analysis only. It cannot define a terminal selector, claim wrong-goal reduction, claim wasted-path reduction, claim map/pose improvement, rerun first_eval, or support paper claims."
+  },
+  "paper_claim_allowed": false
+}
