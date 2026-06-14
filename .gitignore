@@ -38,14 +38,26 @@ local_dataset/
 data/
 datasets/
 runs/
-results/
-experiments/
 outputs/
 artifacts/
 checkpoints/
 models/
 wandb/
 mlruns/
+
+# Generated artifacts inside tracked research folders
+experiments/**/runs/
+experiments/**/data/
+experiments/**/outputs/
+experiments/**/artifacts/
+experiments/**/.cache/
+experiments/**/logs/*.log
+results/raw/
+results/runs/
+results/artifacts/
+results/**/*.log
+archive/logs/**/*.log
+archive/cache/
 
 # Large archives and arrays
 *.tar
@@ -68,7 +80,5 @@ literature/**/paper.pdf
 *.pdf
 
 # Runtime scratch
-hypothesis/**/runtime/.cache/
-hypothesis/**/runtime/runs/
-hypothesis/**/runtime/data/
-hypothesis/**/runtime/logs/*.log
+src/**/.cache/
+scripts/**/.cache/

@@ -1,0 +1,143 @@
+{
+  "schema_version": "h001.verify.missing_own_view_recheck_observation.v1",
+  "checked_at": "2026-06-02",
+  "ok": true,
+  "status": "docker_verified_materializer_and_planner_smoke",
+  "contract": "configs/h001/manifests/h001_missing_own_view_recheck_observation_v1.json",
+  "source_selection_summary": "local_dataset/runs/h001_next_label_free_evidence_family_v1/next_label_free_evidence_family_summary.json",
+  "selected_family": "missing_own_view_support_recheck",
+  "selected_branch": "correct_candidate_missing_own_view_support",
+  "selected_action": "request_missing_own_view_recheck",
+  "companion_guard_branch": "negative_missing_support_guard",
+  "request_rows": 7,
+  "target_candidate_rows": 20,
+  "companion_guard_candidate_rows": 20,
+  "query_counts": {
+    "bed": 8,
+    "plant": 6,
+    "sofa": 6
+  },
+  "scene_counts": {
+    "4ok3usBNeis": 4,
+    "QaLdnwvtxbs": 2,
+    "bCPU9suPUw9": 3,
+    "bxsVRursffK": 6,
+    "q3zU7Yy5E5s": 5
+  },
+  "fresh_base_support_rows": 20,
+  "fresh_base_support_class_counts": {
+    "weak_or_partial_candidate_specific_support": 20
+  },
+  "fresh_base_candidate_specific_support_false_rows": 20,
+  "fresh_base_strong_own_view_false_rows": 20,
+  "fresh_base_has_candidate_association_true_rows": 18,
+  "fresh_base_has_candidate_association_false_rows": 2,
+  "existing_plan_rows_for_selected_candidates": 80,
+  "existing_plan_rows_per_target_candidate_min": 4,
+  "existing_plan_rows_per_target_candidate_max": 4,
+  "existing_plan_rows_by_request": {
+    "rival_identity:22": 16,
+    "rival_identity:25": 8,
+    "rival_identity:27": 8,
+    "rival_identity:29": 8,
+    "rival_identity:3": 8,
+    "rival_identity:5": 12,
+    "rival_identity:7": 20
+  },
+  "existing_plan_direction_counts": {
+    "orthogonal_relation_axis": 20,
+    "relation_anchor_to_target": 20,
+    "target_to_relation_anchor": 40
+  },
+  "implementation": {
+    "input_builder": "src/h001_runtime/build_missing_own_view_recheck_inputs.py",
+    "planner": "src/h001_runtime/plan_missing_own_view_recheck.py",
+    "output_root": "local_dataset/runs/h001_missing_own_view_recheck_observation_v1",
+    "docker_input_builder_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_planner_image": "research3/habitat-h001:20260508-calib-artifacts",
+    "input_materializer_gate_passed": true,
+    "observation_plan_gate_passed": true,
+    "request_rows": 7,
+    "target_candidate_rows": 20,
+    "base_support_rows": 20,
+    "source_plan_rows": 80,
+    "plan_rows": 80,
+    "skipped_rows": 0,
+    "candidate_artifact_rows": 5,
+    "candidate_artifact_unique_candidate_count": 16,
+    "plan_rows_per_target_candidate_min": 4,
+    "plan_rows_per_target_candidate_max": 4,
+    "view_role_counts": {
+      "candidate_own_view_recheck": 80
+    },
+    "viewpoint_source_counts": {
+      "candidate_centered_navmesh_standoff_from_source_metadata": 80
+    }
+  },
+  "target_requests": {
+    "rival_identity:3": {
+      "scene_key": "QaLdnwvtxbs",
+      "query": "sofa",
+      "target_candidate_rows": 2,
+      "minimum_existing_plan_rows": 8
+    },
+    "rival_identity:5": {
+      "scene_key": "bCPU9suPUw9",
+      "query": "bed",
+      "target_candidate_rows": 3,
+      "minimum_existing_plan_rows": 12
+    },
+    "rival_identity:7": {
+      "scene_key": "q3zU7Yy5E5s",
+      "query": "bed",
+      "target_candidate_rows": 5,
+      "minimum_existing_plan_rows": 20
+    },
+    "rival_identity:22": {
+      "scene_key": "4ok3usBNeis",
+      "query": "sofa",
+      "target_candidate_rows": 4,
+      "minimum_existing_plan_rows": 16
+    },
+    "rival_identity:25": {
+      "scene_key": "bxsVRursffK",
+      "query": "plant",
+      "target_candidate_rows": 2,
+      "minimum_existing_plan_rows": 8
+    },
+    "rival_identity:27": {
+      "scene_key": "bxsVRursffK",
+      "query": "plant",
+      "target_candidate_rows": 2,
+      "minimum_existing_plan_rows": 8
+    },
+    "rival_identity:29": {
+      "scene_key": "bxsVRursffK",
+      "query": "plant",
+      "target_candidate_rows": 2,
+      "minimum_existing_plan_rows": 8
+    }
+  },
+  "terminal_commit_rows": 0,
+  "candidate_rejection_rows": 0,
+  "action_evidence_forbidden_key_count": 0,
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": false,
+  "terminal_utility_validation_allowed": false,
+  "paper_claim_allowed": false,
+  "verification_commands": [
+    "jq empty configs/h001/manifests/h001_missing_own_view_recheck_observation_v1.json",
+    "jq empty configs/h001/manifests/h001_missing_own_view_recheck_observation_v1.verify.json",
+    "jq '{selected_family,selected_branch,selected_action,request_branch_counts,candidate_branch_counts,preferred_candidate_branch_counts,gate:.gate.next_label_free_evidence_family_selection_gate_passed}' local_dataset/runs/h001_next_label_free_evidence_family_v1/next_label_free_evidence_family_summary.json",
+    "python - <<'PY'\nimport json, collections\nfrom pathlib import Path\nrows=[json.loads(l) for l in Path('local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_candidate_rows.jsonl').open() if l.strip()]\nsel=[r for r in rows if r.get('preferred_candidate_branch')=='correct_candidate_missing_own_view_support']\nprint(len(sel), len({r['rival_identity_request_id'] for r in sel}), dict(collections.Counter(r['query'] for r in sel)))\nPY",
+    "docker run --rm --user \"$(id -u):$(id -g)\" -v \"$PWD\":/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python src/h001_runtime/build_missing_own_view_recheck_inputs.py",
+    "docker run --rm --user \"$(id -u):$(id -g)\" -e HOME=/tmp -e MAMBA_ROOT_PREFIX=/opt/conda -e PYTHONPYCACHEPREFIX=/tmp/pycache -v \"$PWD\":/workspace -w /workspace research3/habitat-h001:20260508-calib-artifacts micromamba run -n base python src/h001_runtime/plan_missing_own_view_recheck.py",
+    "python - <<'PY'\nimport json\nfrom pathlib import Path\nroot=Path('local_dataset/runs/h001_missing_own_view_recheck_observation_v1')\nfiles=['missing_own_view_request_rows.jsonl','missing_own_view_target_candidate_rows.jsonl','missing_own_view_source_plan_rows.jsonl','missing_own_view_base_support_rows.jsonl','missing_own_view_observation_plan.jsonl','missing_own_view_observation_skipped.jsonl','missing_own_view_candidate_artifact.jsonl']\nfor f in files:\n    print(f, sum(1 for line in (root/f).open() if line.strip()))\nsummary=json.loads((root/'missing_own_view_observation_plan_summary.json').read_text())\nprint(summary['gate']['missing_own_view_observation_plan_gate_passed'], summary['plan_rows'], summary['skipped_rows'], summary['action_evidence_forbidden_key_count'], summary['terminal_commit_rows'])\nPY"
+  ],
+  "next_task": "run_missing_own_view_recheck_frame_projection_smoke",
+  "interpretation": {
+    "fact": "The Docker-verified implementation preserves 7 request rows, 20 target candidate rows, 80 source plan references, and writes 80 candidate-centered own-view recheck observation rows with zero skipped rows.",
+    "agent_inference": "The branch is ready for frame/projection smoke. This is still nonterminal substrate evidence and should not be used as candidate rejection or terminal utility evidence.",
+    "paper_claim": "No paper claim is allowed from this materializer/planner smoke alone."
+  }
+}

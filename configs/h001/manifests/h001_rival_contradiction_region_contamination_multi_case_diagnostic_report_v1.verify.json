@@ -1,0 +1,83 @@
+{
+  "schema_version": "h001.verify.rival_contradiction_region_contamination_multi_case_diagnostic_report.v1",
+  "date_checked": "2026-06-13",
+  "ok": true,
+  "verified_artifact": "configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1.json",
+  "status": "docker_verified_nonterminal_diagnostic_report",
+  "source_files_checked": [
+    "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_summary.json",
+    "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frame_plan_v1/rival_contradiction_region_contamination_multi_case_frame_plan_summary.json",
+    "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_frames_v1/summary.json",
+    "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_projection_v1/projection_anchor_smoke_summary.json",
+    "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1/rival_contradiction_region_contamination_multi_case_detector_substrate_diagnostic.json",
+    "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_evidence_summary.json",
+    "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_summary.json",
+    "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1/rival_contradiction_region_contamination_multi_case_promotion_gate_summary.json"
+  ],
+  "implementation_verification": {
+    "script": "src/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_diagnostic_report.py",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "output_root": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1",
+    "output_files": {
+      "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1/rival_contradiction_region_contamination_multi_case_diagnostic_report_summary.json",
+      "report": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1/rival_contradiction_region_contamination_multi_case_diagnostic_report.md"
+    },
+    "actual_counts": {
+      "source_pair_rows": 18,
+      "scene_count": 9,
+      "query_count": 5,
+      "observation_seed_rows": 72,
+      "frame_plan_rows": 72,
+      "rendered_frame_rows": 72,
+      "rendered_heading_count": 472,
+      "projection_visible_rows": 72,
+      "detector_frame_rows": 72,
+      "detector_association_rows": 938,
+      "detector_associated_decision_rows": 64,
+      "detector_evidence_pair_rows": 18,
+      "evaluation_pair_rows": 18,
+      "contamination_or_contradiction_pair_rows": 6,
+      "wrong_labeled_pair_rows": 14,
+      "wrong_labeled_contamination_or_contradiction_pair_rows": 5,
+      "total_wrong_goal_baseline_rows": 17,
+      "slam_map_pose_delta_rows": 18,
+      "slam_map_pose_delta_maximum": 1.0,
+      "terminal_commit_rows": 0,
+      "candidate_commit_rows": 0,
+      "candidate_rejection_rows": 0
+    },
+    "gate_results": {
+      "report_gate_passed": true,
+      "blockers": [],
+      "terminal_utility_contract_allowed": false,
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true,
+      "paper_claim_allowed": false
+    }
+  },
+  "contract_checks": {
+    "selected_nonterminal_diagnostic_report": true,
+    "terminal_utility_contract_rejected_now": true,
+    "facts_paper_claims_inferences_separated": true,
+    "evaluation_only_fields_not_used_for_action": true,
+    "terminal_commits_absent": true,
+    "candidate_commits_absent": true,
+    "candidate_rejections_absent": true,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "verification_commands": [
+    "jq empty configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1.json",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile src/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_diagnostic_report.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_rival_contradiction_region_contamination_multi_case_diagnostic_report",
+    "jq empty local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1/rival_contradiction_region_contamination_multi_case_diagnostic_report_summary.json"
+  ],
+  "interpretation": {
+    "fact": "The multi-case report gate passed with 18 source pair rows, 72 observation/frame/projection rows, 18 detector-evidence pair rows, 17 evaluation-only wrong-goal baseline rows, and 18 map-pose delta rows.",
+    "agent_inference": "The current evidence supports a multi-case diagnostic mechanism report, not a terminal action rule. Terminal utility requires a separate label-free selector or action policy contract.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM performance improvement, Step 4-5 promotion, first_eval readiness, policy-scale comparison, or paper contribution claim is allowed from this report."
+  },
+  "next_task": "define_or_close_label_free_terminal_utility_path_after_nonterminal_diagnostic_report"
+}

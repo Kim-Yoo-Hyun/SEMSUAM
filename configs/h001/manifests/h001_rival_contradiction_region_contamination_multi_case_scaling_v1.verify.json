@@ -1,0 +1,98 @@
+{
+  "checked_at": "2026-06-12",
+  "contract": "configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_scaling_v1.json",
+  "contract_checks": {
+    "candidate_commit_allowed": false,
+    "candidate_ordering_source_action_frozen": true,
+    "candidate_rejection_allowed": false,
+    "candidate_roles_do_not_encode_correctness": true,
+    "first_eval_rerun_allowed": false,
+    "formula_revision_allowed": false,
+    "pair_labels_action_forbidden": true,
+    "paper_claim_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "source_rows_preserved_before_label_join": true,
+    "step_4_5_promotion_allowed": false,
+    "terminal_selector_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "wrong_goal_and_wasted_path_action_forbidden": true
+  },
+  "docker_commands": [
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile src/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_source.py",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_rival_contradiction_region_contamination_multi_case_source"
+  ],
+  "evaluation_only_pair_label_pattern_counts": {
+    "a_wrong_b_correct": 8,
+    "both_correct": 4,
+    "both_wrong": 6
+  },
+  "implementation_gate": {
+    "action_evidence_forbidden_key_count_passed": true,
+    "audit_rows_expected_passed": true,
+    "candidate_commit_rows_passed": true,
+    "candidate_rejection_rows_passed": true,
+    "candidate_role_rows_expected_passed": true,
+    "evaluation_join_pair_rows_expected_passed": true,
+    "minimum_query_count_passed": true,
+    "minimum_scene_count_passed": true,
+    "observation_seed_rows_expected_passed": true,
+    "pair_label_action_forbidden_passed": true,
+    "paper_claim_allowed_true_rows_passed": true,
+    "source_rows_expected_passed": true,
+    "terminal_commit_rows_passed": true,
+    "terminal_selector_from_pair_label_blocked_passed": true,
+    "uses_gt_for_action_true_rows_passed": true
+  },
+  "interpretation": {
+    "agent_inference": "This is the correct next step after the bounded single-case promotion gate: it expands the same failure mechanism across scenes and queries before any terminal utility is defined.",
+    "fact": "The materializer preserves the frozen 18-row pairwise conflict source and writes source, candidate-role, observation seed, audit, and summary rows without GT action fields.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM utility, terminal utility, first_eval rerun, policy-scale comparison, formula revision, Step 4-5 promotion, or paper claim is allowed."
+  },
+  "materializer_gate_passed": true,
+  "next_task": "freeze_multi_case_rival_contradiction_region_contamination_frame_projection_contract",
+  "observation_role_counts": {
+    "candidate_a_own_view": 18,
+    "candidate_b_own_view": 18,
+    "cross_candidate_challenge_view": 18,
+    "shared_region_or_relation_anchor_view": 18
+  },
+  "ok": true,
+  "out_root": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1",
+  "pair_status_pattern_counts": {
+    "independent_contradiction_acquired + independent_evidence_missing": 1,
+    "independent_support_acquired + independent_support_acquired": 10,
+    "independent_support_acquired + independent_support_and_contradiction_conflict": 7
+  },
+  "paper_claim_allowed": false,
+  "primary_blocker": "multi_case_frame_projection_contract_required",
+  "schema_version": "h001.verify.rival_contradiction_region_contamination_multi_case_source.v1",
+  "status": "docker_verified_multi_case_source_materializer_gate_passed_terminal_blocked",
+  "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_summary.json",
+  "verification_commands": [
+    "jq empty configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_scaling_v1.json",
+    "jq empty configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_scaling_v1.verify.json",
+    "jq '{status, source_rows, candidate_role_rows, observation_plan_seed_rows, audit_rows, scene_count, query_count, materializer_gate_passed, primary_blocker, next_task}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_summary.json"
+  ],
+  "verified_output_counts": {
+    "action_evidence_forbidden_key_count": 0,
+    "audit_rows": 3,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "candidate_role_rows": 36,
+    "evaluation_join_pair_rows": 18,
+    "observation_plan_seed_rows": 72,
+    "paper_claim_allowed_true_rows": 0,
+    "query_count": 5,
+    "scene_count": 9,
+    "source_rows": 18,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action_true_rows": 0
+  },
+  "verified_output_files": {
+    "audit_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_audit_rows.jsonl",
+    "candidate_role_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_candidate_role_rows.jsonl",
+    "observation_plan_seed_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_observation_seed_rows.jsonl",
+    "source_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_source_rows.jsonl",
+    "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_summary.json"
+  }
+}

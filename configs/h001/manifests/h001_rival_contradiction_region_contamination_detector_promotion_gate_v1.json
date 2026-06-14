@@ -1,0 +1,54 @@
+{
+  "schema_version": "h001.contract.rival_contradiction_region_contamination_detector_promotion_gate.v1",
+  "date_checked": "2026-06-12",
+  "status": "frozen_design_contract_before_promotion_gate_run",
+  "contract_name": "rival_contradiction_region_contamination_detector_promotion_gate_v1",
+  "purpose": "Check whether the frozen detector evidence plus evaluation-only join satisfies the bounded wrong-goal, wasted-path, and map/pose consistency delta readiness gate for the diagnosed wrong provisional support case.",
+  "source": {
+    "evaluation_join_contract": "configs/h001/manifests/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1.json",
+    "evaluation_join_verify": "configs/h001/manifests/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1.verify.json",
+    "evaluation_join_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1/rival_contradiction_region_contamination_detector_evaluation_join_summary.json",
+    "evaluation_join_promotion_probe_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1/rival_contradiction_region_contamination_detector_evaluation_join_promotion_probe_rows.jsonl",
+    "evaluation_join_pair_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1/rival_contradiction_region_contamination_detector_evaluation_join_pair_rows.jsonl",
+    "evaluation_join_request_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evaluation_join_v1/rival_contradiction_region_contamination_detector_evaluation_join_request_rows.jsonl"
+  },
+  "target_scope": {
+    "scene_key": "QaLdnwvtxbs",
+    "query": "sofa",
+    "request_id": "rival_identity:3",
+    "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:9:1:sofa",
+    "scope": "bounded_single_case_mechanism_probe",
+    "policy_scale_claim_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "promotion_gate": {
+    "required_detector_pair_evidence_state": "rival_region_contamination_or_same_category_overlap_observed",
+    "wrong_provisional_support_flagged_for_evaluation_only": true,
+    "minimum_wrong_goal_baseline_count": 2,
+    "minimum_wasted_path_exposure_m": 1.0,
+    "minimum_map_pose_consistency_delta": 0.5,
+    "maximum_terminal_commit_rows": 0,
+    "maximum_candidate_commit_rows": 0,
+    "maximum_candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "required_outputs": {
+    "gate_rows": "rival_contradiction_region_contamination_detector_promotion_gate_rows.jsonl",
+    "summary": "rival_contradiction_region_contamination_detector_promotion_gate_summary.json"
+  },
+  "claim_boundary": {
+    "allowed_after_pass": "bounded_single_case_mechanism_probe_ready",
+    "not_allowed_after_pass": [
+      "ObjectNav improvement claim",
+      "Semantic-SLAM utility claim",
+      "terminal utility claim",
+      "first_eval rerun",
+      "policy-scale comparison",
+      "paper claim"
+    ],
+    "next_valid_research_step": "Scale the same frozen-schema gate to more rows/scenes or freeze a terminal utility contract only after multi-case evidence shows stable wrong-goal/wasted-path/map-pose behavior."
+  },
+  "paper_claim_allowed": false
+}

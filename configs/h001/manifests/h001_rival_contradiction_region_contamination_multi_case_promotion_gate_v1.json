@@ -1,0 +1,62 @@
+{
+  "schema_version": "h001.contract.rival_contradiction_region_contamination_multi_case_promotion_gate.v1",
+  "date_checked": "2026-06-13",
+  "status": "frozen_design_contract_before_promotion_gate_run",
+  "contract_name": "rival_contradiction_region_contamination_multi_case_promotion_gate_v1",
+  "purpose": "Check whether the frozen multi-case detector evidence plus evaluation-only join is ready for bounded wrong-goal, wasted-path, and map/pose consistency diagnostic interpretation without allowing terminal utility, first_eval, policy-scale comparison, or paper claims.",
+  "source": {
+    "evaluation_join_contract": "configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1.json",
+    "evaluation_join_verify": "configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1.verify.json",
+    "evaluation_join_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_summary.json",
+    "evaluation_join_pair_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_pair_rows.jsonl",
+    "evaluation_join_request_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_request_rows.jsonl",
+    "evaluation_join_promotion_probe_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1/rival_contradiction_region_contamination_multi_case_evaluation_join_promotion_probe_rows.jsonl"
+  },
+  "target_scope": {
+    "scope": "bounded_multi_case_diagnostic_readiness",
+    "source_pair_rows": 18,
+    "scene_count": 9,
+    "query_count": 5,
+    "policy_scale_claim_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "promotion_gate": {
+    "minimum_pair_rows": 18,
+    "minimum_contamination_or_contradiction_pair_rows": 6,
+    "minimum_wrong_labeled_pair_rows": 14,
+    "minimum_wrong_labeled_pair_rows_with_contamination_or_contradiction_evidence": 5,
+    "minimum_wrong_goal_baseline_rows": 17,
+    "minimum_max_wasted_path_exposure_m": 1.75,
+    "minimum_slam_map_pose_delta_rows": 18,
+    "minimum_slam_map_pose_delta_maximum": 1.0,
+    "maximum_terminal_commit_rows": 0,
+    "maximum_candidate_commit_rows": 0,
+    "maximum_candidate_rejection_rows": 0,
+    "promotion_ready_rows_must_remain": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "required_outputs": {
+    "gate_rows": "rival_contradiction_region_contamination_multi_case_promotion_gate_rows.jsonl",
+    "summary": "rival_contradiction_region_contamination_multi_case_promotion_gate_summary.json"
+  },
+  "claim_boundary": {
+    "allowed_after_pass": "bounded_multi_case_diagnostic_readiness_ready",
+    "not_allowed_after_pass": [
+      "ObjectNav improvement claim",
+      "Semantic-SLAM utility claim",
+      "terminal utility claim",
+      "candidate rejection rule",
+      "first_eval rerun",
+      "policy-scale comparison",
+      "paper claim"
+    ],
+    "next_valid_research_step": "Freeze a nonterminal diagnostic report or define a separate terminal utility contract only if a future action rule is specified without using evaluation-only labels."
+  },
+  "expected_command_shape": [
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile src/h001_runtime/run_rival_contradiction_region_contamination_multi_case_promotion_gate.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.run_rival_contradiction_region_contamination_multi_case_promotion_gate --out-root /runs/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1"
+  ],
+  "paper_claim_allowed": false
+}

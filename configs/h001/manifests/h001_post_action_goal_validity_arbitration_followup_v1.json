@@ -1,0 +1,249 @@
+{
+  "schema_version": "h001.contract.post_action_goal_validity_arbitration_followup.v1",
+  "contract_name": "post_action_goal_validity_arbitration_followup_v1",
+  "date_checked": "2026-06-11",
+  "status": "frozen_contract_static_verified",
+  "stage": "P4-design",
+  "purpose": "Freeze the next label-free evidence family after post-action conflict/missing resolution. Conflict rows require pairwise goal-validity arbitration; missing rows require second-view follow-up evidence.",
+  "source": {
+    "resolution_contract": "configs/h001/manifests/h001_post_action_evidence_conflict_missing_resolution_v1.json",
+    "resolution_verify": "configs/h001/manifests/h001_post_action_evidence_conflict_missing_resolution_v1.verify.json",
+    "resolution_summary": "local_dataset/runs/h001_post_action_evidence_conflict_missing_resolution_v1/post_action_evidence_conflict_missing_resolution_summary.json",
+    "resolution_request_rows": "local_dataset/runs/h001_post_action_evidence_conflict_missing_resolution_v1/post_action_evidence_conflict_missing_resolution_request_rows.jsonl",
+    "resolution_candidate_rows": "local_dataset/runs/h001_post_action_evidence_conflict_missing_resolution_v1/post_action_evidence_conflict_missing_resolution_candidate_rows.jsonl",
+    "resolution_route_rows": "local_dataset/runs/h001_post_action_evidence_conflict_missing_resolution_v1/post_action_evidence_conflict_missing_resolution_route_rows.jsonl",
+    "resolution_failure_rows": "local_dataset/runs/h001_post_action_evidence_conflict_missing_resolution_v1/post_action_evidence_conflict_missing_resolution_failure_rows.jsonl",
+    "active_reobservation_promotion_gate": "configs/h001/manifests/h001_active_reobservation_promotion_gate_v1.json",
+    "reviewer_defense_baseline_matrix": "configs/h001/manifests/h001_reviewer_defense_baseline_matrix_v1.json"
+  },
+  "source_gate": {
+    "resolution_gate_passed": true,
+    "active_reobservation_promotion_gate_passed": false,
+    "request_rows": 50,
+    "primary_target_rows": 21,
+    "non_target_audit_rows": 29,
+    "candidate_rows": 97,
+    "primary_candidate_rows": 42,
+    "route_rows": 50,
+    "failure_rows": 50,
+    "route_counts": {
+      "request_conflict_arbitration_evidence": 18,
+      "request_missing_evidence_followup": 3,
+      "keep_audit_control": 29
+    },
+    "conflict_candidate_rows": 36,
+    "missing_candidate_rows": 6,
+    "audit_candidate_rows": 55,
+    "conflict_candidate_status_counts": {
+      "independent_support_acquired": 27,
+      "independent_support_and_contradiction_conflict": 7,
+      "independent_contradiction_acquired": 1,
+      "independent_evidence_missing": 1
+    },
+    "conflict_request_candidate_status_patterns": {
+      "independent_support_acquired + independent_support_acquired": 10,
+      "independent_support_acquired + independent_support_and_contradiction_conflict": 7,
+      "independent_contradiction_acquired + independent_evidence_missing": 1
+    },
+    "missing_candidate_status_counts": {
+      "independent_evidence_missing": 6
+    },
+    "wrong_goal_reduction_only_by_evidence_availability_rows": 9,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0,
+    "primary_blocker": "post_action_evidence_conflict_requires_non_gt_arbitration"
+  },
+  "selected_family": {
+    "family_name": "pairwise_goal_region_map_pose_arbitration_with_missing_followup_v1",
+    "primary_branch": "pairwise_goal_region_map_pose_arbitration_v1",
+    "secondary_branch": "missing_evidence_second_view_followup_v1",
+    "audit_branch": "keep_audit_control_v1",
+    "selection_reason": "Most conflict rows are not evidence-absence rows. Ten conflict requests have two independently supported candidates, and seven have one supported candidate plus one mixed support/contradiction candidate. A terminal score or support-count rerank would not explain goal validity. The next evidence family must compare candidates pairwise with goal-region/object-relation and map-pose consistency evidence, while routing the three missing-evidence rows to a second-view follow-up."
+  },
+  "branch_contracts": [
+    {
+      "branch_name": "pairwise_goal_region_map_pose_arbitration_v1",
+      "source_route": "request_conflict_arbitration_evidence",
+      "request_rows_expected": 18,
+      "candidate_rows_expected": 36,
+      "pair_rows_expected": 18,
+      "allowed_next_actions": [
+        "request_pairwise_goal_region_map_pose_evidence",
+        "defer_pairwise_goal_validity_conflict_unresolved"
+      ],
+      "required_label_free_evidence": [
+        "candidate_pair_ids",
+        "candidate_evidence_status_per_side",
+        "candidate_support_contradiction_counts_per_side",
+        "own_view_vs_rival_view_separation_proxy",
+        "object_relation_or_goal_region_consistency_proxy",
+        "map_pose_consistency_cross_check",
+        "pose_graph_connectivity_delta",
+        "association_quality_proxy",
+        "viewpoint_coverage_delta"
+      ],
+      "forbidden_shortcuts": [
+        "support_count_winner_as_commit",
+        "detector_score_winner_as_commit",
+        "semantic_rank_winner_as_commit",
+        "source_top_shortcut",
+        "evidence_availability_as_goal_validity",
+        "map_pose_only_terminal_commit"
+      ],
+      "terminal_commit_allowed": false
+    },
+    {
+      "branch_name": "missing_evidence_second_view_followup_v1",
+      "source_route": "request_missing_evidence_followup",
+      "request_rows_expected": 3,
+      "candidate_rows_expected": 6,
+      "pair_rows_expected": 3,
+      "allowed_next_actions": [
+        "request_second_view_candidate_specific_evidence",
+        "request_relation_or_map_pose_followup",
+        "defer_missing_evidence_unresolved"
+      ],
+      "required_label_free_evidence": [
+        "candidate_pair_ids",
+        "missing_evidence_reason",
+        "second_view_candidate_specific_probe",
+        "map_pose_consistency_cross_check",
+        "association_quality_proxy",
+        "viewpoint_coverage_delta"
+      ],
+      "forbidden_shortcuts": [
+        "drop_missing_rows",
+        "missing_evidence_as_negative_goal_validity",
+        "support_count_winner_as_commit",
+        "semantic_rank_winner_as_commit"
+      ],
+      "terminal_commit_allowed": false
+    },
+    {
+      "branch_name": "keep_audit_control_v1",
+      "source_route": "keep_audit_control",
+      "request_rows_expected": 29,
+      "candidate_rows_expected": 55,
+      "allowed_next_actions": [
+        "audit_only_same_row_baseline_accounting"
+      ],
+      "terminal_commit_allowed": false
+    }
+  ],
+  "rejected_alternatives": [
+    {
+      "alternative": "support_count_or_detector_score_terminal_rerank",
+      "reason": "Conflict rows include 10 requests where both candidates have independent support acquired, so a support-count or detector-score terminal rerank would not diagnose why goal validity remains ambiguous."
+    },
+    {
+      "alternative": "more_independent_evidence_for_all_rows",
+      "reason": "Only 3 primary rows are missing evidence. Applying a generic extra-observation rule to all 21 primary rows would blur the failure mechanism and add travel cost without explaining candidate conflict."
+    },
+    {
+      "alternative": "map_pose_only_terminal_selector",
+      "reason": "Earlier geometry-only and candidate-relative map/pose selectors were safe-but-sparse or reintroduced wrong-goal risk. Map/pose consistency is allowed only as a cross-check term in pairwise arbitration."
+    },
+    {
+      "alternative": "terminal_utility_contract_now",
+      "reason": "The frozen promotion gate remains failed and evidence availability-only wrong-goal reduction rows are still 9. Terminal utility would be a post-hoc shortcut."
+    }
+  ],
+  "required_output_schema_for_next_implementation": {
+    "output_root": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1",
+    "files": {
+      "request_rows": "post_action_goal_validity_arbitration_followup_request_rows.jsonl",
+      "candidate_rows": "post_action_goal_validity_arbitration_followup_candidate_rows.jsonl",
+      "pair_rows": "post_action_goal_validity_arbitration_followup_pair_rows.jsonl",
+      "audit_rows": "post_action_goal_validity_arbitration_followup_audit_rows.jsonl",
+      "failure_rows": "post_action_goal_validity_arbitration_followup_failure_rows.jsonl",
+      "summary": "post_action_goal_validity_arbitration_followup_summary.json"
+    },
+    "required_row_fields": [
+      "schema_version",
+      "row_type",
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key",
+      "target_role",
+      "source_resolution_route",
+      "selected_evidence_family",
+      "selected_branch",
+      "candidate_id",
+      "candidate_a_id",
+      "candidate_b_id",
+      "candidate_evidence_status",
+      "candidate_support_evidence_count",
+      "candidate_contradiction_evidence_count",
+      "own_view_vs_rival_view_separation_required",
+      "object_relation_or_goal_region_required",
+      "map_pose_consistency_cross_check_required",
+      "followup_required",
+      "terminal_commit",
+      "candidate_commit",
+      "candidate_rejection",
+      "uses_gt_for_action",
+      "paper_claim_allowed"
+    ]
+  },
+  "implementation_gate": {
+    "request_rows_expected": 50,
+    "selected_target_request_rows_expected": 21,
+    "conflict_request_rows_expected": 18,
+    "missing_request_rows_expected": 3,
+    "audit_request_rows_expected": 29,
+    "candidate_rows_expected": 97,
+    "conflict_candidate_rows_expected": 36,
+    "missing_candidate_rows_expected": 6,
+    "audit_candidate_rows_expected": 55,
+    "pairwise_arbitration_pair_rows_expected": 18,
+    "missing_followup_pair_rows_expected": 3,
+    "action_evidence_forbidden_key_count_expected": 0,
+    "terminal_commit_rows_expected": 0,
+    "candidate_commit_rows_expected": 0,
+    "candidate_rejection_rows_expected": 0,
+    "uses_gt_for_action_true_rows_expected": 0,
+    "paper_claim_allowed_true_rows_expected": 0,
+    "gate_pass_interpretation": "Passing this gate only verifies that the next label-free evidence family is materialized with correct branch routing. It does not validate terminal utility, goal validity, or a paper claim."
+  },
+  "contract_scope": {
+    "contract_type": "next_label_free_evidence_family_after_post_action_resolution",
+    "implementation_allowed_next": true,
+    "implementation_target_script": "src/h001_runtime/materialize_post_action_goal_validity_arbitration_followup.py",
+    "implementation_target_output_root": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1",
+    "terminal_utility_validation_allowed": false,
+    "terminal_utility_contract_allowed_now": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "contract_checks": {
+    "source_resolution_verified": true,
+    "conflict_rows_targeted": true,
+    "missing_rows_preserved": true,
+    "audit_rows_preserved": true,
+    "pairwise_arbitration_required_for_conflict": true,
+    "second_view_followup_required_for_missing": true,
+    "support_count_terminal_shortcut_forbidden": true,
+    "detector_score_terminal_shortcut_forbidden": true,
+    "map_pose_only_terminal_shortcut_forbidden": true,
+    "evidence_availability_not_goal_validity": true,
+    "labels_for_action_forbidden": true,
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "next_research_task": {
+    "task": "implement_docker_post_action_goal_validity_arbitration_followup_materializer",
+    "reason": "The next label-free evidence family is frozen. The next implementation should materialize request/candidate/pair/audit/failure rows for pairwise conflict arbitration and missing-evidence follow-up without terminal commits or label leakage."
+  }
+}

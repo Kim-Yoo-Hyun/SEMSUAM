@@ -1,0 +1,296 @@
+{
+  "schema_version": "h001.contract.post_update_goal_validity_gap_reobservation_evaluation_join.v1",
+  "date_checked": "2026-06-11",
+  "status": "frozen_contract_static_verified",
+  "contract_name": "post_update_goal_validity_gap_reobservation_evaluation_join_v1",
+  "purpose": "Freeze the evaluation-only join after the Docker-verified post_update_goal_validity_gap_reobservation_v1 branch action rows. The join may measure goal-validity risk, baseline wrong-goal exposure, wasted-path exposure, re-observation cost, and map/pose consistency on the same rows, but it may not revise branch actions, define a terminal selector, or convert evidence requests into paper claims.",
+  "stage": "P4-design",
+  "paper_framing": {
+    "semantic_slam_centered": true,
+    "objectnav_wrong_goal_role": "task_level_failure_surface_for_semantic_slam_uncertainty",
+    "active_reobservation_role": "nonterminal_evidence_acquisition_after_goal_validity_gap",
+    "natural_proof_rule": "The diagnosed failure is unresolved goal validity after viewpoint evidence improved. The method response is another label-free evidence acquisition branch, and the evaluation join must test that branch without label-tuned action changes.",
+    "paper_claim_allowed": false
+  },
+  "source": {
+    "branch_contract": "configs/h001/manifests/h001_post_update_goal_validity_gap_reobservation_v1.json",
+    "branch_verify": "configs/h001/manifests/h001_post_update_goal_validity_gap_reobservation_v1.verify.json",
+    "branch_summary": "local_dataset/runs/h001_post_update_goal_validity_gap_reobservation_v1/post_update_goal_validity_gap_reobservation_summary.json",
+    "branch_request_rows": "local_dataset/runs/h001_post_update_goal_validity_gap_reobservation_v1/post_update_goal_validity_gap_reobservation_request_rows.jsonl",
+    "branch_candidate_rows": "local_dataset/runs/h001_post_update_goal_validity_gap_reobservation_v1/post_update_goal_validity_gap_reobservation_candidate_rows.jsonl",
+    "branch_baseline_rows": "local_dataset/runs/h001_post_update_goal_validity_gap_reobservation_v1/post_update_goal_validity_gap_reobservation_baseline_rows.jsonl",
+    "branch_failure_rows": "local_dataset/runs/h001_post_update_goal_validity_gap_reobservation_v1/post_update_goal_validity_gap_reobservation_failure_rows.jsonl",
+    "post_update_evaluation_join_summary": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_summary.json",
+    "post_update_evaluation_join_request_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_request_rows.jsonl",
+    "post_update_evaluation_join_selected_candidate_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_selected_candidate_rows.jsonl",
+    "post_update_evaluation_join_baseline_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_baseline_rows.jsonl",
+    "active_reobservation_promotion_gate": "configs/h001/manifests/h001_active_reobservation_promotion_gate_v1.json",
+    "reviewer_defense_baseline_matrix": "configs/h001/manifests/h001_reviewer_defense_baseline_matrix_v1.json"
+  },
+  "source_gate": {
+    "branch_materializer_gate_passed": true,
+    "branch_verify_ok": true,
+    "branch_request_rows": 50,
+    "primary_target_rows": 21,
+    "non_target_audit_rows": 29,
+    "branch_candidate_rows": 97,
+    "primary_target_candidate_rows": 42,
+    "branch_baseline_rows": 150,
+    "primary_target_baseline_rows": 63,
+    "branch_failure_rows": 50,
+    "branch_action_counts": {
+      "request_independent_goal_validity_evidence": 21,
+      "keep_post_update_state_for_audit": 29
+    },
+    "primary_target_goal_validity_risk_state_counts": {
+      "clean_correct_candidate_support": 4,
+      "mixed_goal_validity_risk": 11,
+      "no_valid_candidate_pool_risk": 4,
+      "wrong_goal_candidate_risk": 2
+    },
+    "baseline_wrong_goal_rows_all_50": {
+      "NoReobserveReference": 21,
+      "SemanticOnly": 21,
+      "SLAMOnlyRich_current": 1
+    },
+    "baseline_wrong_goal_rows_primary_target_21": {
+      "NoReobserveReference": 10,
+      "SemanticOnly": 10,
+      "SLAMOnlyRich_current": 0
+    },
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "promotion_gate_attempt_allowed_after_evaluation_join": true,
+    "current_primary_blocker": "post_action_evaluation_join_required"
+  },
+  "frozen_join_scope": {
+    "join_key_fields": [
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key"
+    ],
+    "candidate_join_key_fields": [
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key",
+      "candidate_id"
+    ],
+    "policy_join_key_fields": [
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key",
+      "policy_name"
+    ],
+    "row_scope": {
+      "all_source_request_rows_required": 50,
+      "primary_target_request_rows_required": 21,
+      "audit_control_request_rows_required": 29,
+      "primary_target_filter": {
+        "target_role": "primary_target",
+        "branch_action": "request_independent_goal_validity_evidence",
+        "post_update_request_state": "needs_goal_validity_confirmation",
+        "viewpoint_evidence_gap_state": "viewpoint_gap_reduced_goal_validity_unresolved",
+        "action_frozen_before_next_evaluation_join": true,
+        "terminal_commit": false,
+        "candidate_commit": false,
+        "candidate_rejection": false,
+        "uses_gt_for_action": false
+      },
+      "audit_control_requirement": "The 29 non-target rows must be preserved so same-row accounting cannot be narrowed to only favorable unresolved rows."
+    }
+  },
+  "evaluation_join_rules": {
+    "labels_joined_only_after_branch_action_freeze": true,
+    "branch_action_rows_mutable_after_join": false,
+    "same_row_comparison_required": true,
+    "same_candidate_pool_required": true,
+    "same_reobservation_budget_required": true,
+    "same_travel_cost_accounting_required": true,
+    "commit_based_wrong_goal_required": true,
+    "near_candidate_pass_through_primary_wrong_goal_forbidden": true,
+    "allowed_evaluation_inputs_after_freeze": [
+      "candidate_correctness_label",
+      "candidate_wrong_label",
+      "no_valid_candidate_pool",
+      "wrong_goal_visit_proxy",
+      "success_commit_proxy",
+      "terminal_commit_proxy",
+      "wasted_path_proxy_m",
+      "goal_validity_risk_state",
+      "goal_validity_risk_proxy",
+      "pose_graph_connectivity_delta",
+      "map_pose_consistency_delta",
+      "map_side_delta",
+      "map_task_alignment"
+    ],
+    "forbidden_action_or_policy_changes_after_join": [
+      "change_branch_action_by_candidate_label",
+      "change_target_rows_by_joined_label",
+      "drop_non_target_audit_rows",
+      "rank_by_evaluation_label",
+      "threshold_tuned_from_joined_labels",
+      "convert_evidence_request_to_terminal_success",
+      "terminal_goal_commit",
+      "candidate_commit",
+      "candidate_rejection",
+      "formula_revision",
+      "first_eval_rerun_config",
+      "policy_scale_comparison"
+    ]
+  },
+  "metric_contract": {
+    "branch_action_metrics": {
+      "branch_action_count": "Counts the frozen branch action rows; this is not task success.",
+      "reobserve_travel_cost_m": "Cost charged for the requested evidence acquisition branch.",
+      "evidence_request_rate": "Primary target rows with request_independent_goal_validity_evidence divided by primary target rows."
+    },
+    "task_failure_metrics": {
+      "wrong_goal_visit_proxy": "Commit-based baseline/task proxy only. Branch action rows are nonterminal and may not count as success just because no commit occurs.",
+      "wrong_goal_exposure_vs_baselines": "Baseline wrong-goal rows on the same frozen request keys.",
+      "wasted_path_proxy_m": "Evaluation-only cost proxy from baseline contexts plus branch re-observation travel cost.",
+      "wrong_goal_reduction_only_by_defer_or_request_evidence": "Failure condition. A branch that only avoids wrong-goal by never producing post-action goal-validity evidence is not promotable."
+    },
+    "semantic_slam_metrics": {
+      "goal_validity_risk_state": "Evaluation-only diagnostic of why the branch exists.",
+      "viewpoint_evidence_gap_state": "Post-update nonterminal state that forced another evidence request.",
+      "map_pose_consistency_uncertainty_state": "Map/pose evidence axis preserved on the same rows.",
+      "pose_graph_connectivity_delta": "Map-side delta, not a task success proxy by itself.",
+      "map_pose_consistency_delta": "Map/pose consistency delta, not a candidate correctness proof."
+    }
+  },
+  "required_output_schema_for_next_implementation": {
+    "output_root": "local_dataset/runs/h001_post_update_goal_validity_gap_reobservation_evaluation_join_v1",
+    "required_files": {
+      "request_eval_rows": "post_update_goal_validity_gap_reobservation_evaluation_join_request_rows.jsonl",
+      "candidate_eval_rows": "post_update_goal_validity_gap_reobservation_evaluation_join_candidate_rows.jsonl",
+      "baseline_eval_rows": "post_update_goal_validity_gap_reobservation_evaluation_join_baseline_rows.jsonl",
+      "promotion_probe_rows": "post_update_goal_validity_gap_reobservation_evaluation_join_promotion_probe_rows.jsonl",
+      "failure_rows": "post_update_goal_validity_gap_reobservation_evaluation_join_failure_rows.jsonl",
+      "summary": "post_update_goal_validity_gap_reobservation_evaluation_join_summary.json"
+    },
+    "required_request_row_fields": [
+      "schema_version",
+      "row_type",
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key",
+      "target_role",
+      "branch_action",
+      "action_frozen_before_evaluation_join",
+      "goal_validity_risk_state",
+      "viewpoint_evidence_gap_state",
+      "map_pose_consistency_uncertainty_state",
+      "reobserve_travel_cost_m",
+      "baseline_wrong_goal_exposure",
+      "baseline_wasted_path_exposure_m",
+      "branch_wrong_goal_claim_allowed",
+      "wrong_goal_reduction_only_by_defer_or_request_evidence",
+      "terminal_commit",
+      "candidate_commit",
+      "candidate_rejection",
+      "uses_gt_for_action",
+      "paper_claim_allowed"
+    ],
+    "required_summary_fields": [
+      "request_rows",
+      "primary_target_rows",
+      "non_target_audit_rows",
+      "candidate_rows",
+      "baseline_rows",
+      "promotion_probe_rows",
+      "failure_rows",
+      "branch_action_counts",
+      "baseline_wrong_goal_rows",
+      "baseline_wasted_path_stats",
+      "wrong_goal_reduction_only_by_defer_or_request_evidence_rows",
+      "action_evidence_forbidden_key_count",
+      "terminal_commit_rows",
+      "candidate_commit_rows",
+      "candidate_rejection_rows",
+      "uses_gt_for_action_true_rows",
+      "paper_claim_allowed_true_rows",
+      "evaluation_join_gate_passed",
+      "active_reobservation_promotion_gate_passed",
+      "primary_blocker",
+      "next_task"
+    ]
+  },
+  "evaluation_gate": {
+    "request_rows_expected": 50,
+    "primary_target_rows_expected": 21,
+    "non_target_audit_rows_expected": 29,
+    "candidate_rows_expected": 97,
+    "primary_target_candidate_rows_expected": 42,
+    "baseline_rows_expected": 150,
+    "primary_target_baseline_rows_expected": 63,
+    "minimum_promotion_probe_rows": 21,
+    "action_evidence_forbidden_key_count_expected": 0,
+    "terminal_commit_rows_expected": 0,
+    "candidate_commit_rows_expected": 0,
+    "candidate_rejection_rows_expected": 0,
+    "uses_gt_for_action_true_rows_expected": 0,
+    "paper_claim_allowed_true_rows_expected": 0,
+    "gate_pass_interpretation": "Passing this join gate only means the action-frozen branch is measurable. It does not mean active re-observation improves ObjectNav or Semantic-SLAM utility."
+  },
+  "promotion_gate_after_join": {
+    "active_reobservation_promotion_gate_reference": "configs/h001/manifests/h001_active_reobservation_promotion_gate_v1.json",
+    "promotion_gate_attempt_allowed_after_evaluation_join": true,
+    "promotion_gate_pass_allowed_from_join_alone": false,
+    "expected_failure_if_no_post_action_evidence": "wrong_goal_reduction_only_by_defer_or_request_evidence",
+    "required_before_terminal_utility_contract": [
+      "post-action independent goal-validity evidence exists for the 21 primary target rows or a predeclared subset",
+      "wrong-goal reduction is not explained only by nonterminal defer/request-evidence actions",
+      "wasted path including re-observation cost improves or stays within the frozen threshold",
+      "map/pose consistency does not degrade on the same rows",
+      "stronger baselines from reviewer_defense_baseline_matrix_v1 are implemented or explicitly blocked"
+    ]
+  },
+  "contract_scope": {
+    "contract_type": "evaluation_only_join_after_goal_validity_gap_branch_action_freeze",
+    "implementation_allowed_next": true,
+    "implementation_target_script": "src/h001_runtime/materialize_post_update_goal_validity_gap_reobservation_evaluation_join.py",
+    "implementation_target_output_root": "local_dataset/runs/h001_post_update_goal_validity_gap_reobservation_evaluation_join_v1",
+    "terminal_utility_validation_allowed": false,
+    "terminal_utility_contract_allowed_now": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "contract_checks": {
+    "source_branch_materializer_verified": true,
+    "all_50_source_rows_required": true,
+    "primary_target_rows_frozen": true,
+    "audit_control_rows_preserved": true,
+    "branch_actions_frozen_before_labels": true,
+    "same_row_comparison_required": true,
+    "commit_based_wrong_goal_required": true,
+    "wrong_goal_reduction_by_defer_only_marked_failure": true,
+    "map_pose_consistency_axis_preserved": true,
+    "active_reobservation_promotion_gate_referenced": true,
+    "implementation_allowed_next": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "next_research_task": {
+    "task": "implement_docker_post_update_goal_validity_gap_reobservation_evaluation_join_materializer",
+    "reason": "The evaluation join contract is now frozen. The next implementation should materialize request/candidate/baseline/promotion-probe/failure rows without changing frozen branch actions or claiming terminal utility."
+  }
+}

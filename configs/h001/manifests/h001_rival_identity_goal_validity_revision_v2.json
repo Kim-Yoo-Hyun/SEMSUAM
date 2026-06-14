@@ -1,0 +1,129 @@
+{
+  "schema_version": "h001.rival_identity_goal_validity_revision_contract.v1",
+  "contract_name": "rival_identity_goal_validity_revision_v2",
+  "date_checked": "2026-05-27",
+  "status": "design_contract_only",
+  "rejected_rule": {
+    "name": "goal_validity_arbitration_v1",
+    "independent_output": "local_dataset/runs/h001_rival_identity_goal_validity_independent_post_observation_goal_validity_v1",
+    "commit_success_wrong_no_label": "0/0/0/0",
+    "rejection_reason": "safe but inert on the frozen independent source; it cannot support a paper-facing utility claim"
+  },
+  "counterfactual_result": {
+    "name": "unique_strong_own_view_identity",
+    "output": "local_dataset/runs/h001_rival_identity_goal_validity_independent_post_observation_default_v1",
+    "commit_success_wrong_no_label": "7/4/3/0",
+    "wrong_goal_queries": {
+      "chair": 1,
+      "sofa": 1,
+      "toilet": 1
+    },
+    "interpretation": "loose identity evidence is nontrivial but unsafe on the same frozen evidence"
+  },
+  "failure_diagnostic": {
+    "script": "src/h001_runtime/diagnose_goal_validity_independent_failure.py",
+    "output": "local_dataset/runs/h001_rival_identity_goal_validity_independent_failure_diagnostic_v1",
+    "tradeoff_check": true,
+    "dominant_mechanism_tags": {
+      "cross_view_aliasing_blocks_goal_validity": 14,
+      "planned_candidate_set_has_no_valid_goal": 13,
+      "no_own_candidate_support": 11,
+      "strong_identity_not_goal_validity": 8,
+      "object_existence_branch_blocks_commit": 6,
+      "default_rule_success_lost_by_strict_rule": 4,
+      "default_rule_wrong_goal": 3
+    }
+  },
+  "design_principle": {
+    "fact": "The same detector-backed evidence yields a strict-safe/inert rule and a loose-nontrivial/unsafe rule.",
+    "agent_inference": "The next revision must change the evidence design or candidate-validity model. It must not tune semantic rank, detector score, depth, own-count, or identity-margin thresholds from joined labels."
+  },
+  "allowed_action_inputs": [
+    "episode_key",
+    "scene_key",
+    "query",
+    "candidate_id",
+    "semantic_rank",
+    "semantic_score",
+    "support_score",
+    "candidate geometry",
+    "planned_target_count",
+    "positive_support_candidate_count",
+    "post_own_associated_heading_count",
+    "post_cross_associated_heading_count",
+    "post_identity_margin",
+    "post_best_box_score",
+    "post_min_depth_error_m",
+    "mask/depth projection evidence",
+    "local context candidate evidence",
+    "request_taxonomy_route",
+    "viewpoint geometry metadata"
+  ],
+  "forbidden_action_inputs": [
+    "evaluation_only_candidate_correct",
+    "evaluation_only_success_commit",
+    "evaluation_only_wrong_goal_commit",
+    "GT object id",
+    "GT goal id",
+    "oracle distance to goal",
+    "post-join labels"
+  ],
+  "required_revision_branches": [
+    {
+      "branch": "no_own_candidate_support",
+      "required_action": "route to expanded retrieval or backend recall repair",
+      "blocked_action": "commit based on semantic rank or detector box alone"
+    },
+    {
+      "branch": "cross_view_aliasing",
+      "required_action": "request discriminative rival/paired view or compute multi-view association consistency",
+      "blocked_action": "treat absence of cross support as identity proof"
+    },
+    {
+      "branch": "strong_identity_not_goal_validity",
+      "required_action": "add candidate-validity evidence that distinguishes visible category instance from valid ObjectNav goal",
+      "blocked_action": "commit from unique own-view support alone"
+    },
+    {
+      "branch": "planned_candidate_set_has_no_valid_goal",
+      "required_action": "report backend recall failure and route to expanded retrieval",
+      "blocked_action": "force a choice among invalid planned candidates"
+    },
+    {
+      "branch": "object_existence_validation",
+      "required_action": "keep no-commit branch unless independent existence confirmation evidence is defined",
+      "blocked_action": "single-positive commit without rival contrast"
+    }
+  ],
+  "required_baselines": [
+    "defer_all",
+    "unique_strong_own_view_identity",
+    "goal_validity_arbitration_v1",
+    "semantic_rank_1_only",
+    "detector_box_score_only",
+    "depth_consistency_only",
+    "own_count_only",
+    "combined_simple_guard"
+  ],
+  "diagnostic_gate_for_revision": {
+    "scope": "mechanism_design_only_on_used_independent_source",
+    "wrong_goal_commit_rows": 0,
+    "no_label_commit_rows": 0,
+    "min_success_commit_rows": 1,
+    "must_report_branch_counts": true,
+    "must_report_success_lost_by_defer": true,
+    "must_report_wrong_goal_avoided_by_defer": true,
+    "uses_gt_for_action": false
+  },
+  "paper_claim_gate": {
+    "scope": "fresh_or_predeclared_scene_disjoint_source_after_revision_is_fixed",
+    "wrong_goal_commit_rows": 0,
+    "no_label_commit_rows": 0,
+    "min_success_commit_rows": 1,
+    "must_beat_defer_all_on_success": true,
+    "must_not_exceed_default_rule_wrong_goal": true,
+    "must_include_failure_taxonomy": true,
+    "uses_gt_for_action": false
+  },
+  "paper_claim_allowed": false
+}

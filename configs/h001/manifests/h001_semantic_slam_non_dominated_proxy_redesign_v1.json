@@ -1,0 +1,267 @@
+{
+  "schema_version": "h001.contract.semantic_slam_non_dominated_proxy_redesign.v1",
+  "date_checked": "2026-06-04",
+  "status": "frozen_contract",
+  "contract_name": "semantic_slam_non_dominated_proxy_redesign_v1",
+  "purpose": "Freeze a non-dominated SemanticSLAM proxy redesign after the previous fixed midpoint utility was structurally dominated by SemanticOnly or SLAMOnly on all request groups.",
+  "source": {
+    "previous_comparison_contract": "configs/h001/manifests/h001_semantic_slam_proxy_comparison_v1.json",
+    "previous_comparison_verify": "configs/h001/manifests/h001_semantic_slam_proxy_comparison_v1.verify.json",
+    "previous_comparison_summary": "local_dataset/runs/h001_semantic_slam_proxy_comparison_v1/semantic_slam_proxy_comparison_summary.json",
+    "output_evaluation_verify": "configs/h001/manifests/h001_semantic_slam_proxy_comparison_output_evaluation_v1.verify.json",
+    "output_evaluation_summary": "local_dataset/runs/h001_semantic_slam_proxy_comparison_output_evaluation_v1/semantic_slam_proxy_comparison_output_evaluation_summary.json",
+    "strict_edge_variant_rows": "local_dataset/runs/h001_semantic_slam_strict_edge_variant_proxy_v1/semantic_slam_strict_edge_variant_proxy_rows.jsonl",
+    "source_audit_probe_request_rows": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_probe_request_rows.jsonl"
+  },
+  "source_diagnostic": {
+    "request_groups": 50,
+    "previous_policy_rows": 200,
+    "previous_policy_summary_rows": 4,
+    "previous_component_winner_counts": {
+      "SemanticOnly": 36,
+      "SLAMOnly": 14
+    },
+    "previous_dominance_class": "semantic_slam_midpoint_strictly_dominated_by_best_component",
+    "previous_dominance_rows": 50,
+    "previous_dominance_rate": 1.0,
+    "previous_midpoint_identity_abs_error_max": 1.1102230246251565e-16,
+    "previous_best_component_margin_over_semantic_slam_mean": 0.15364305283757343,
+    "promotion_decision": "do_not_promote_previous_midpoint_utility"
+  },
+  "redesign_scope": {
+    "stage": "P4-design",
+    "comparison_name": "semantic_slam_non_dominated_proxy_redesign_v1",
+    "request_group_count": 50,
+    "join_key": [
+      "source_name",
+      "scene_key",
+      "query",
+      "request_id",
+      "episode_key"
+    ],
+    "same_request_groups_required_for_all_policies": true,
+    "canonical_pose_variant": "pose_spatial_or_loop",
+    "context_pose_variant": "map_pose_context_no_candidate",
+    "loop_variant": "pose_loop",
+    "shortcut_diagnostic_variant": "candidate_overlap_only",
+    "paper_claim_allowed": false,
+    "step_4_5_promotion_satisfied": false
+  },
+  "design_principle": {
+    "fact": "The prior fixed SemanticSLAM score was a midpoint between SemanticOnly and SLAMOnly utilities.",
+    "agent_inference": "A valid redesign must express interaction between semantic uncertainty and map/pose uncertainty, not a scalar interpolation between component utilities.",
+    "paper_claim": "A proxy redesign can only become paper evidence after later task/map outcome validation; this contract alone is not a contribution claim."
+  },
+  "policy_definitions": [
+    {
+      "policy_name": "NoReobserveReference",
+      "role": "non_active_reference",
+      "utility_formula": "U = 0",
+      "allowed_action_inputs": [
+        "request group identity",
+        "source artifact group",
+        "pre-existing proxy rows"
+      ],
+      "forbidden_action_inputs": [
+        "candidate correctness",
+        "GT pose error",
+        "ObjectNav success or wrong-goal labels"
+      ]
+    },
+    {
+      "policy_name": "SemanticOnly",
+      "role": "semantic_component_reference",
+      "semantic_score_formula": "0.6 * semantic_family_weight + 0.4 * min(candidate_id_count / 10, 1)",
+      "travel_penalty_formula": "0.1 * normalized_travel_cost_proxy",
+      "utility_formula": "U_sem = semantic_score - travel_penalty",
+      "allowed_action_inputs": [
+        "semantic_uncertainty_family",
+        "candidate_id_count",
+        "candidate_set_rule_counts",
+        "view_role_counts",
+        "viewpoint_source_counts",
+        "travel_cost_proxy_m"
+      ],
+      "forbidden_action_inputs": [
+        "strict pose graph connectivity metrics",
+        "candidate correctness",
+        "GT pose error",
+        "ObjectNav success or wrong-goal labels"
+      ]
+    },
+    {
+      "policy_name": "SLAMOnly",
+      "role": "pose_map_component_reference",
+      "slam_gap_formula": "0.5 * (1 - largest_component_fraction) + 0.3 * loop_missing_indicator + 0.2 * edge_sparsity_proxy",
+      "travel_penalty_formula": "0.1 * normalized_travel_cost_proxy",
+      "utility_formula": "U_slam = slam_gap_score - travel_penalty",
+      "allowed_action_inputs": [
+        "pose_spatial_or_loop connected_component_count",
+        "pose_spatial_or_loop largest_component_fraction",
+        "pose_spatial_or_loop edge_count",
+        "pose_loop edge_count",
+        "map_pose_context_no_candidate edge_count",
+        "travel_cost_proxy_m"
+      ],
+      "forbidden_action_inputs": [
+        "semantic_uncertainty_family as a utility term",
+        "candidate_id_overlap edges",
+        "candidate correctness",
+        "GT pose error",
+        "ObjectNav success or wrong-goal labels"
+      ]
+    },
+    {
+      "policy_name": "SemanticSLAMInteraction",
+      "role": "non_dominated_interaction_proxy",
+      "semantic_score_formula": "0.6 * semantic_family_weight + 0.4 * min(candidate_id_count / 10, 1)",
+      "slam_gap_formula": "0.5 * (1 - largest_component_fraction) + 0.3 * loop_missing_indicator + 0.2 * edge_sparsity_proxy",
+      "semantic_pressure_formula": "clip((semantic_score - 0.55) / 0.35, 0, 1)",
+      "map_pose_pressure_formula": "clip(slam_gap_score / 0.8, 0, 1)",
+      "interaction_formula": "semantic_pressure * map_pose_pressure",
+      "travel_penalty_formula": "0.1 * normalized_travel_cost_proxy",
+      "utility_formula": "U_interaction = semantic_score - travel_penalty + 0.35 * interaction_formula * slam_gap_score + 0.10 * loop_missing_indicator * semantic_pressure",
+      "design_intent": "SLAM gain changes priority only when semantic uncertainty pressure and map/pose gap are both present. This is not a midpoint, component max, or label-tuned interpolation.",
+      "allowed_action_inputs": [
+        "all SemanticOnly allowed inputs",
+        "all SLAMOnly allowed inputs",
+        "semantic_pressure derived before evaluation labels",
+        "map_pose_pressure derived before evaluation labels"
+      ],
+      "forbidden_action_inputs": [
+        "candidate_id_overlap edges as pose evidence",
+        "candidate correctness",
+        "GT pose error",
+        "ObjectNav success or wrong-goal labels",
+        "weights tuned on evaluation labels",
+        "post-hoc component winner labels"
+      ]
+    }
+  ],
+  "forbidden_redesign_patterns": [
+    {
+      "pattern": "midpoint_or_linear_interpolation_only",
+      "examples": [
+        "0.5 * U_sem + 0.5 * U_slam",
+        "alpha * U_sem + (1 - alpha) * U_slam without an interaction, constraint, or outcome-linked term"
+      ],
+      "reason": "It is structurally dominated by the better component under score-only ranking."
+    },
+    {
+      "pattern": "component_max_shortcut",
+      "examples": [
+        "max(U_sem, U_slam)",
+        "choose SemanticOnly or SLAMOnly after seeing which component wins"
+      ],
+      "reason": "It is an oracle-style policy selection shortcut, not SemanticSLAM complementarity."
+    },
+    {
+      "pattern": "constant_bonus_scale_trick",
+      "examples": [
+        "U_sem + constant",
+        "U_sem + epsilon * U_slam without a semantic-map interaction gate"
+      ],
+      "reason": "It can create rank-1 rows without explaining a failure mechanism."
+    },
+    {
+      "pattern": "label_tuned_weight_search",
+      "examples": [
+        "grid search alpha on wrong-goal labels",
+        "select weights on Success Rate or SPL"
+      ],
+      "reason": "It leaks evaluation objectives into action evidence and weakens reviewer defense."
+    }
+  ],
+  "fixed_semantic_family_weights": {
+    "instance_arbitration_defer_v1": 1.0,
+    "partial_relation_depth_true_goal": 0.9,
+    "missing_own_view_support_recheck": 0.8,
+    "object_relation_goal_validity_confirmation": 0.8,
+    "expanded_retrieval_source_pool": 0.7,
+    "unknown_semantic_uncertainty_family": 0.5
+  },
+  "required_future_outputs": {
+    "comparison_rows": "semantic_slam_non_dominated_proxy_redesign_rows.jsonl",
+    "policy_summary_rows": "semantic_slam_non_dominated_proxy_redesign_policy_summary_rows.jsonl",
+    "non_dominated_diagnostic_rows": "semantic_slam_non_dominated_proxy_redesign_diagnostic_rows.jsonl",
+    "summary": "semantic_slam_non_dominated_proxy_redesign_summary.json"
+  },
+  "required_row_outputs": [
+    "policy_name",
+    "source_name",
+    "scene_key",
+    "query",
+    "request_id",
+    "episode_key",
+    "semantic_score",
+    "slam_gap_score",
+    "semantic_pressure",
+    "map_pose_pressure",
+    "interaction_score",
+    "travel_penalty",
+    "policy_proxy_utility",
+    "component_max_utility",
+    "component_dominance_margin",
+    "non_dominated_by_component",
+    "midpoint_identity_error",
+    "component_max_shortcut_used",
+    "canonical_proxy_ready",
+    "loop_edge_count",
+    "uses_gt_for_action",
+    "terminal_commit",
+    "candidate_commit",
+    "candidate_rejection",
+    "paper_claim_allowed"
+  ],
+  "gate_thresholds": {
+    "expected_policy_count": 4,
+    "expected_request_groups": 50,
+    "expected_comparison_rows": 200,
+    "min_canonical_proxy_ready_rate": 0.9,
+    "min_loop_proxy_ready_rate": 0.5,
+    "max_action_evidence_forbidden_key_count": 0,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "requires_uses_gt_for_action": false,
+    "max_midpoint_identity_rows": 0,
+    "max_component_max_shortcut_rows": 0,
+    "min_non_dominated_interaction_rows": 10,
+    "min_non_dominated_interaction_rate": 0.2,
+    "min_component_reference_winner_rows": 5,
+    "max_interaction_rank1_rate": 0.9,
+    "min_interaction_positive_rows": 10
+  },
+  "evaluation_interpretation_gate": {
+    "can_pass_proxy_gate_without_paper_claim": true,
+    "step_4_5_promotion_requires_later_task_or_map_outcomes": true,
+    "required_later_metrics": [
+      "pose graph connectivity",
+      "semantic accuracy",
+      "map error",
+      "ATE/RPE if available",
+      "Success Rate",
+      "SPL",
+      "wrong_goal_visit",
+      "wasted_path"
+    ],
+    "positive_proxy_result_means": "The redesigned proxy is no longer structurally dominated and is worth a later task/map validation.",
+    "negative_proxy_result_means": "SemanticSLAM remains a weak combination; keep H001 at P4-design and redesign or stop Step 4-5."
+  },
+  "next_implementation_target": {
+    "script": "src/h001_runtime/compare_semantic_slam_non_dominated_proxy.py",
+    "output": "local_dataset/runs/h001_semantic_slam_non_dominated_proxy_redesign_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "verification_command": "python -m h001_runtime.compare_semantic_slam_non_dominated_proxy"
+  },
+  "allowed_next_step_if_contract_frozen": "implement_semantic_slam_non_dominated_proxy_redesign",
+  "blocked_downstream_tasks": [
+    "step_4_5_promotion",
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ]
+}

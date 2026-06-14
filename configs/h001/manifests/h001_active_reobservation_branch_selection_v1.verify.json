@@ -1,0 +1,52 @@
+{
+  "schema_version": "h001.verify.active_reobservation_branch_selection.v1",
+  "date_checked": "2026-06-11",
+  "ok": true,
+  "status": "static_selection_verified",
+  "verified_artifact": "configs/h001/manifests/h001_active_reobservation_branch_selection_v1.json",
+  "selected_branch": "post_update_goal_validity_gap_reobservation_v1",
+  "verified_counts": {
+    "source_request_rows": 50,
+    "source_selected_candidate_rows": 97,
+    "source_candidate_state_rows": 232,
+    "source_baseline_rows": 150,
+    "target_request_rows": 21,
+    "target_scenes": 9,
+    "target_queries": 6,
+    "target_selected_candidate_rows": 42,
+    "broad_risk_or_unresolved_request_rows": 43,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0
+  },
+  "selection_checks": {
+    "selected_branch_defined": true,
+    "primary_target_filter_defined": true,
+    "primary_target_has_nonzero_rows": true,
+    "primary_target_has_scene_diversity": true,
+    "rejected_terminal_shortcuts_documented": true,
+    "promotion_gate_consumed": true,
+    "task_map_evidence_contract_consumed": true,
+    "reviewer_defense_baseline_matrix_consumed": true,
+    "natural_proof_rule_preserved": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "interpretation": {
+    "fact": "The selected diagnostic target is the post-update needs_goal_validity_confirmation branch with 21 request rows across 9 scenes and 6 queries.",
+    "agent_inference": "This is the most natural next label-free branch because the current failure mechanism is not lack of object visibility but unresolved goal validity after active re-observation; the branch therefore tests whether another nonterminal goal-validity evidence step can satisfy the frozen promotion gate without terminal shortcuts.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM complementarity, terminal utility, formula revision, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim is allowed from this selection."
+  },
+  "verification_commands": [
+    "jq empty configs/h001/manifests/h001_active_reobservation_branch_selection_v1.json",
+    "jq empty configs/h001/manifests/h001_active_reobservation_branch_selection_v1.verify.json",
+    "jq '{status, selected_branch: .selected_branch.branch_name, target: .selected_branch.primary_target_counts.request_rows, next_task: .next_research_task.task, checks: .contract_checks}' configs/h001/manifests/h001_active_reobservation_branch_selection_v1.json"
+  ],
+  "next_task": "freeze_post_update_goal_validity_gap_reobservation_contract"
+}

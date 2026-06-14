@@ -1,0 +1,67 @@
+{
+  "ok": true,
+  "date_checked": "2026-05-31",
+  "contract": "h001_expanded_retrieval_goal_validity_object_relation_fresh_evidence_v1",
+  "manifest": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_evidence_v1.json",
+  "label_builder": "src/h001_runtime/build_expanded_retrieval_goal_validity_object_relation_fresh_labels.py",
+  "evidence_analyzer": "src/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_evidence.py",
+  "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_evidence_v1",
+  "label_rows": 36,
+  "label_request_rows": 7,
+  "label_candidate_correct_counts": {
+    "False": 25,
+    "True": 11
+  },
+  "request_rows": 36,
+  "request_source_rows": 7,
+  "evidence_rows": 108,
+  "association_rows": 573,
+  "detector_rows": 144,
+  "rows_with_candidate_association": 119,
+  "associated_candidate_heading_count": 338,
+  "depth_consistent_rows": 321,
+  "depth_mismatch_rows": 223,
+  "out_of_fov_rows": 12,
+  "detector_box_rows": 906,
+  "detector_mask_rows": 906,
+  "direction_source_counts": {
+    "orthogonal_relation_axis": 36,
+    "relation_anchor_to_target": 36,
+    "target_to_relation_anchor": 36
+  },
+  "direction_source_count_by_request": {
+    "rival_identity:3": 3,
+    "rival_identity:5": 3,
+    "rival_identity:7": 3,
+    "rival_identity:22": 3,
+    "rival_identity:25": 3,
+    "rival_identity:27": 3,
+    "rival_identity:29": 3
+  },
+  "evidence_status_counts": {
+    "relation_depth_recheck_partial": 12,
+    "relation_depth_recheck_resolved": 24
+  },
+  "evidence_status_counts_by_direction": {
+    "relation_depth_recheck_partial": 33,
+    "relation_depth_recheck_resolved": 72,
+    "relation_depth_recheck_unresolved": 3
+  },
+  "evaluation_only_candidate_correct_counts": {
+    "False": 25,
+    "True": 11
+  },
+  "evaluation_only_interpretation_counts": {
+    "partial_detector_depth_gap_after_relation_observation": 12,
+    "resolved_detector_depth_gap_for_evaluation_negative_candidate": 21,
+    "resolved_detector_depth_gap_for_evaluation_positive_candidate": 3
+  },
+  "action_evidence_forbidden_key_count": 0,
+  "terminal_commit_rows": 0,
+  "object_relation_evidence_gate_passed": true,
+  "terminal_utility_validation_allowed": false,
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": true,
+  "paper_claim_allowed": false,
+  "next_gate": "apply fixed-rule object-relation arbitration validation on fresh evidence rows"
+}

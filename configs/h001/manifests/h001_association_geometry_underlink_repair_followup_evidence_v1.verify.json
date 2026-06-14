@@ -1,0 +1,110 @@
+{
+  "schema_version": "h001.verify.association_geometry_underlink_repair_followup_evidence.v1",
+  "date_checked": "2026-06-02",
+  "ok": true,
+  "status": "implemented_and_docker_verified",
+  "contract": "configs/h001/manifests/h001_association_geometry_underlink_repair_followup_evidence_v1.json",
+  "implementation": {
+    "analyzer": "src/h001_runtime/analyze_association_geometry_underlink_repair_followup_evidence.py",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "output": "local_dataset/runs/h001_association_geometry_underlink_repair_followup_evidence_v1",
+    "docker_py_compile_passed": true,
+    "docker_run_passed": true
+  },
+  "verified_metrics": {
+    "association_geometry_underlink_repair_followup_evidence_gate_passed": true,
+    "evidence_rows": 6,
+    "request_rows": 2,
+    "source_followup_rows": 2,
+    "source_followup_request_rows": 2,
+    "route_counts": {
+      "route_to_direction_specific_reobservation_repair": 1,
+      "route_to_relation_anchor_selection_repair": 1
+    },
+    "route_family_counts": {
+      "direction_specific_reobservation_repair": 4,
+      "relation_anchor_selection_repair": 2
+    },
+    "probe_role_counts": {
+      "failed_explicit_relation_anchor_row": 1,
+      "failed_requested_direction_anchorless_row": 1,
+      "failed_requested_direction_explicit_anchor_row": 1,
+      "recovered_target_to_relation_anchor_anchorless_row": 1,
+      "recovered_target_to_relation_anchor_explicit_anchor_row": 1,
+      "same_direction_anchorless_recovery_row": 1
+    },
+    "evidence_class_counts": {
+      "explicit_anchor_underlink": 1,
+      "requested_direction_underlink": 2,
+      "same_direction_anchorless_recovery": 1,
+      "target_to_relation_anchor_recovery": 2
+    },
+    "evidence_status_counts": {
+      "repair_recovered_association_and_depth": 3,
+      "underlink_inside_mask_without_candidate_association": 3
+    },
+    "request_outcome_counts": {
+      "anchor_selection_repair_supported_but_nonterminal": 1,
+      "direction_specific_reobservation_supported_but_nonterminal": 1
+    },
+    "failed_probe_rows": 3,
+    "recovered_probe_rows": 3,
+    "recovered_associated_heading_count": 10,
+    "recovered_associated_depth_consistent_count": 9,
+    "promotable_branch_outcome_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "checked_gate": {
+    "repeated_object_residual_diagnostic_gate_passed": true,
+    "repeated_object_promotable_branch_outcome_rows_passed": true,
+    "next_branch_after_repeated_object_closure_passed": true,
+    "promotion_requirement_gate_passed": true,
+    "branch_synthesis_gate_passed": true,
+    "association_geometry_followup_repair_gate_passed": true,
+    "relation_anchor_selection_repair_probe_gate_passed": true,
+    "direction_specific_reobservation_repair_probe_gate_passed": true,
+    "expected_source_branch_rows_passed": true,
+    "expected_request_rows_passed": true,
+    "expected_materialized_output_rows_passed": true,
+    "expected_probe_rows_passed": true,
+    "expected_probe_request_rows_passed": true,
+    "expected_route_counts_passed": true,
+    "required_probe_roles_passed": true,
+    "expected_failed_probe_rows_passed": true,
+    "minimum_recovered_associated_heading_count_passed": true,
+    "minimum_recovered_depth_consistent_count_passed": true,
+    "request_outcomes_passed": true,
+    "promotable_branch_outcome_rows_passed": true,
+    "action_evidence_forbidden_key_gate_passed": true,
+    "terminal_commit_rows_passed": true,
+    "candidate_commit_rows_passed": true,
+    "candidate_rejection_rows_passed": true,
+    "uses_gt_for_action_passed": true,
+    "uses_gt_for_analysis_passed": true,
+    "association_geometry_underlink_repair_followup_evidence_gate_passed": true
+  },
+  "verification_commands": [
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile src/h001_runtime/analyze_association_geometry_underlink_repair_followup_evidence.py",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.analyze_association_geometry_underlink_repair_followup_evidence",
+    "jq '{gate:.gate.association_geometry_underlink_repair_followup_evidence_gate_passed,evidence_rows,request_rows,evidence_class_counts,evidence_status_counts,request_outcome_counts,recovered_associated_heading_count,recovered_associated_depth_consistent_count,promotable_branch_outcome_rows,action_evidence_forbidden_key_count,terminal_commit_rows,candidate_commit_rows,candidate_rejection_rows,uses_gt_for_action,paper_claim_allowed,next:.diagnostic_conclusion.recommended_next_task}' local_dataset/runs/h001_association_geometry_underlink_repair_followup_evidence_v1/association_geometry_underlink_repair_followup_summary.json",
+    "wc -l local_dataset/runs/h001_association_geometry_underlink_repair_followup_evidence_v1/association_geometry_underlink_repair_followup_evidence_rows.jsonl local_dataset/runs/h001_association_geometry_underlink_repair_followup_evidence_v1/association_geometry_underlink_repair_followup_request_rows.jsonl"
+  ],
+  "terminal_utility_validation_allowed": false,
+  "candidate_commit_allowed": false,
+  "candidate_rejection_allowed": false,
+  "first_eval_rerun_allowed": false,
+  "policy_scale_comparison_allowed": false,
+  "paper_claim_allowed": false,
+  "next_task": "design_depth_stagnation_independent_support_or_close_residual_branches",
+  "interpretation": {
+    "fact": "The analyzer aggregates relation-anchor selection and direction-specific repair probes into six label-free evidence rows and two request rows with zero forbidden action keys, zero terminal commits, and zero candidate commit/rejection rows.",
+    "agent_inference": "Association-geometry underlink is repairable as an evidence-acquisition failure, but repaired association/depth evidence still does not establish ObjectNav goal validity. The residual path should move to depth-stagnation independent support or explicit residual branch closure.",
+    "paper_claim": "No paper claim is allowed from this analyzer alone."
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "date_checked": "2026-05-31T17:44:05+09:00",
+  "ok": true,
+  "session": "h001-unique-support-detector-20260531-174311",
+  "image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "device": "cuda",
+  "working_directory": "/home/yoohyun/research3",
+  "command": "TS=20260531-174311 bash scripts/h001_jobs/expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate.sh",
+  "wrapper": "scripts/h001_jobs/expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate.sh",
+  "base_wrapper": "scripts/h001_jobs/expanded_retrieval_detector_substrate.sh",
+  "source_plan_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_v1",
+  "frame_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_frames_v1",
+  "detector_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1",
+  "log": "archive/logs/h001_runtime/unique-support-goal-region-detector-substrate-20260531-174311.log",
+  "verification_commands": [
+    "bash -n scripts/h001_jobs/expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate.sh",
+    "cat local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/job_status.json",
+    "jq '{schema_version, frame_rows, detector_rows, detector_box_rate, sam2_mask_rate, candidate_association_rate, rows_with_candidate_association, associated_candidate_heading_count, projection_anchor_status_counts, projection_anchor_selected_offset_counts, candidate_point_field, uses_gt_for_action, paper_claim_allowed, gate}' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "wc -l local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/detector_v3c/detector_candidate_associations.jsonl local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1/expanded_retrieval_detector_frame_summary.jsonl"
+  ],
+  "metrics": {
+    "frame_rows": 51,
+    "detector_rows": 51,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.6470588235294118,
+    "rows_with_candidate_association": 33,
+    "associated_candidate_heading_count": 87,
+    "detector_box_rows": 467,
+    "detector_mask_rows": 467,
+    "association_rows": 204,
+    "projected_pixel_inside_mask_count": 140,
+    "debug_images_written": 180,
+    "projection_anchor_status_counts": {
+      "behind_camera": 182,
+      "out_of_fov": 607,
+      "visible": 639
+    },
+    "projection_anchor_selected_offset_counts": {
+      "0.0": 58,
+      "0.4": 2,
+      "0.8": 4,
+      "1.2": 7,
+      "1.6": 3,
+      "2.0": 41,
+      "2.4": 89
+    },
+    "candidate_point_field": "grounded_position",
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false,
+    "gate": {
+      "detector_rows_match": true,
+      "detector_box_rate_pass": true,
+      "sam2_mask_rate_pass": true,
+      "candidate_association_rate_pass": true,
+      "no_gt_action_pass": true,
+      "passes_detector_substrate_gate": true
+    }
+  },
+  "notes": [
+    "Detector/SAM2 substrate passed the fixed gate with no GT action leakage.",
+    "This is substrate evidence only; terminal utility and paper claims remain blocked until post-detector evidence analysis supports a fixed non-GT rule."
+  ]
+}

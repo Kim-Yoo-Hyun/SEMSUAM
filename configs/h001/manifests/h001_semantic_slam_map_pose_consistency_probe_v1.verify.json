@@ -1,0 +1,81 @@
+{
+  "schema_version": "h001.verify.semantic_slam_map_pose_consistency_probe.v1",
+  "date_checked": "2026-06-04",
+  "ok": true,
+  "status": "implemented_and_docker_verified_source_audit",
+  "contract": "configs/h001/manifests/h001_semantic_slam_map_pose_consistency_probe_v1.json",
+  "implementation": "src/h001_runtime/audit_semantic_slam_map_pose_consistency_sources.py",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "output": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1",
+  "checked_sources": {
+    "selector_verify": "configs/h001/manifests/h001_next_label_free_evidence_family_after_instance_arbitration_v1.verify.json",
+    "selector_summary": "local_dataset/runs/h001_next_label_free_evidence_family_after_instance_arbitration_v1/next_label_free_evidence_family_after_instance_arbitration_summary.json",
+    "summary": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_consistency_probe_summary.json"
+  },
+  "verified_output": {
+    "stage": "P4-design",
+    "step_4_5_promotion_satisfied": false,
+    "source_inventory_rows": 5,
+    "source_ready_rows": 5,
+    "primary_source_ready": true,
+    "pose_depth_metadata_ready": true,
+    "non_gt_action_gate": true,
+    "probe_request_rows": 50,
+    "probe_request_ready_rows": 50,
+    "pose_graph_proxy_rows": 50,
+    "pose_graph_proxy_ready_rows": 50,
+    "pose_graph_proxy_max_node_count": 24,
+    "pose_graph_proxy_max_edge_count": 236,
+    "pose_graph_proxy_source_counts": {
+      "expanded_retrieval_local_context_frames_v1": 21,
+      "instance_arbitration_evidence_frames_v1": 9,
+      "missing_own_view_recheck_observation_frames_v1": 7,
+      "object_relation_fresh_observation_frames_v1": 7,
+      "partial_relation_depth_observation_frames_v1": 6
+    },
+    "source_inventory_file_rows": 5,
+    "probe_request_file_rows": 50,
+    "pose_graph_proxy_file_rows": 50,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "checked_gate": {
+    "contract_json_valid": true,
+    "implementation_docker_compile_passed": true,
+    "implementation_docker_run_passed": true,
+    "source_audit_gate_passed": true,
+    "p4_proxy_readiness_gate_passed": true,
+    "primary_source_ready_passed": true,
+    "pose_depth_metadata_ready_passed": true,
+    "non_gt_action_gate_passed": true,
+    "action_evidence_forbidden_key_gate_passed": true,
+    "terminal_utility_blocked_passed": true,
+    "candidate_commit_blocked_passed": true,
+    "candidate_rejection_blocked_passed": true,
+    "first_eval_rerun_blocked_passed": true,
+    "policy_scale_comparison_blocked_passed": true,
+    "paper_claim_allowed": false
+  },
+  "verification_commands": [
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile src/h001_runtime/audit_semantic_slam_map_pose_consistency_sources.py",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.audit_semantic_slam_map_pose_consistency_sources",
+    "jq empty configs/h001/manifests/h001_semantic_slam_map_pose_consistency_probe_v1.json",
+    "jq empty configs/h001/manifests/h001_semantic_slam_map_pose_consistency_probe_v1.verify.json"
+  ],
+  "next_task": "define_semantic_slam_pose_graph_connectivity_proxy_gate",
+  "terminal_utility_validation_allowed": false,
+  "candidate_commit_allowed": false,
+  "candidate_rejection_allowed": false,
+  "first_eval_rerun_allowed": false,
+  "policy_scale_comparison_allowed": false,
+  "paper_claim_allowed": false,
+  "interpretation": {
+    "fact": "The source audit is implemented, Docker-compiled, and Docker-run. It writes source inventory, probe request rows, and pose graph proxy rows.",
+    "agent_inference": "Existing label-free RGB/depth/pose/metadata artifacts are sufficient to define the next pose graph connectivity proxy gate, but Step 4-5 promotion and paper claims remain blocked.",
+    "paper_claim": "No SLAM benefit or policy utility claim is allowed from this audit alone."
+  }
+}

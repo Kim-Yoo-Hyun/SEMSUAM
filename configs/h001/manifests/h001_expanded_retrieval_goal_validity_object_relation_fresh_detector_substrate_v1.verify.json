@@ -1,0 +1,54 @@
+{
+  "ok": true,
+  "date_checked": "2026-05-31",
+  "contract": "h001_expanded_retrieval_goal_validity_object_relation_fresh_detector_substrate_v1",
+  "job_status": "completed",
+  "tmux_session": "h001-fresh-object-relation-detector-20260531-013027",
+  "job_wrapper": "scripts/h001_jobs/expanded_retrieval_goal_validity_object_relation_fresh_detector_substrate.sh",
+  "base_script": "scripts/h001_jobs/expanded_retrieval_detector_substrate.sh",
+  "log": "archive/logs/h001_runtime/fresh-object-relation-detector-substrate-20260531-013027.log",
+  "frame_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_frames_v1",
+  "detector_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1",
+  "detector_v3c_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1/detector_v3c",
+  "expected_policy": "ExpandedRetrievalGoalValidityObjectRelationObservation",
+  "expected_frame_rows": 144,
+  "detector_rows": 144,
+  "detector_box_rate": 0.9583333333333334,
+  "sam2_mask_rate": 0.9583333333333334,
+  "candidate_association_rate": 0.8263888888888888,
+  "rows_with_candidate_association": 119,
+  "associated_candidate_heading_count": 338,
+  "association_rows": 573,
+  "detector_box_rows": 906,
+  "detector_mask_rows": 906,
+  "projected_pixel_inside_mask_count": 401,
+  "projection_status_counts": {
+    "out_of_fov": 12,
+    "visible": 561
+  },
+  "projection_anchor_status_counts": {
+    "out_of_fov": 2299,
+    "visible": 1712
+  },
+  "projection_anchor_selected_offset_counts": {
+    "0.0": 205,
+    "0.4": 44,
+    "0.8": 29,
+    "1.2": 24,
+    "1.6": 31,
+    "2.0": 75,
+    "2.4": 165
+  },
+  "gate": {
+    "detector_rows_match": true,
+    "detector_box_rate_pass": true,
+    "sam2_mask_rate_pass": true,
+    "candidate_association_rate_pass": true,
+    "no_gt_action_pass": true,
+    "passes_detector_substrate_gate": true
+  },
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": false,
+  "paper_claim_allowed": false,
+  "next_gate": "run fresh object-relation post-detector evidence analyzer"
+}

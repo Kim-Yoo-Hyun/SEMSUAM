@@ -1,0 +1,322 @@
+{
+  "schema_version": "h001.contract.missing_own_view_recheck_observation.v1",
+  "date_checked": "2026-06-02",
+  "status": "frozen_design_contract_before_implementation",
+  "contract_name": "missing_own_view_recheck_observation_v1",
+  "purpose": "Freeze a nonterminal observation contract for candidates whose relation-depth evidence is resolved but whose independent own-view support is missing.",
+  "implementation_target": {
+    "input_builder": "src/h001_runtime/build_missing_own_view_recheck_inputs.py",
+    "planner": "src/h001_runtime/plan_missing_own_view_recheck.py",
+    "output": "local_dataset/runs/h001_missing_own_view_recheck_observation_v1",
+    "docker_image_for_input_builder": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_image_for_planner": "research3/habitat-h001:20260508-calib-artifacts",
+    "docker_required": true
+  },
+  "source": {
+    "selection_contract": "configs/h001/manifests/h001_next_label_free_evidence_family_v1.json",
+    "selection_verify": "configs/h001/manifests/h001_next_label_free_evidence_family_v1.verify.json",
+    "selection_output": "local_dataset/runs/h001_next_label_free_evidence_family_v1",
+    "selection_summary": "local_dataset/runs/h001_next_label_free_evidence_family_v1/next_label_free_evidence_family_summary.json",
+    "selection_rows": "local_dataset/runs/h001_next_label_free_evidence_family_v1/next_label_free_evidence_family_rows.jsonl",
+    "object_relation_branch_request_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_request_rows.jsonl",
+    "object_relation_branch_candidate_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_candidate_rows.jsonl",
+    "fresh_base_support_candidate_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_base_support_v1/object_relation_fresh_base_support_candidate_rows.jsonl",
+    "fresh_object_relation_plan_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1/goal_validity_object_relation_observation_plan.jsonl",
+    "fresh_object_relation_plan_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1/goal_validity_object_relation_observation_plan_summary.json",
+    "fresh_object_relation_candidate_artifact": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1/goal_validity_object_relation_observation_candidate_artifact.jsonl"
+  },
+  "problem": {
+    "fact": "The next label-free evidence selector chose correct_candidate_missing_own_view_support / request_missing_own_view_recheck after unique-support and partial relation-depth branches were closed as terminal-blocking evidence.",
+    "source_evidence": {
+      "next_label_free_evidence_family_selection_gate_passed": true,
+      "selected_family": "missing_own_view_support_recheck",
+      "selected_branch": "correct_candidate_missing_own_view_support",
+      "selected_action": "request_missing_own_view_recheck",
+      "selected_request_rows": 7,
+      "selected_target_candidate_rows": 20,
+      "companion_guard_branch": "negative_missing_support_guard",
+      "companion_request_rows": 7,
+      "companion_candidate_rows": 20,
+      "fresh_base_support_rows": 20,
+      "fresh_base_support_class_counts": {
+        "weak_or_partial_candidate_specific_support": 20
+      },
+      "fresh_base_candidate_specific_support_false_rows": 20,
+      "fresh_base_strong_own_view_false_rows": 20,
+      "fresh_base_has_candidate_association_true_rows": 18,
+      "fresh_base_has_candidate_association_false_rows": 2,
+      "existing_plan_rows_for_selected_candidates": 80,
+      "existing_plan_rows_per_target_candidate": 4,
+      "action_evidence_forbidden_key_count": 0,
+      "terminal_commit_rows": 0,
+      "candidate_commit_rows": 0,
+      "candidate_rejection_rows": 0,
+      "uses_gt_for_action": false,
+      "paper_claim_allowed": false
+    },
+    "failure_mechanism": "Resolved relation-depth evidence plus weak base support is insufficient for ObjectNav goal validity; absence of independent own-view support must not be treated as invalidity until the robot attempts candidate-centered re-observation.",
+    "agent_inference": "The next method component should convert missing own-view support into active evidence acquisition, not into a candidate rejection or relation-depth commit rule."
+  },
+  "design_scope": {
+    "target_branch": "correct_candidate_missing_own_view_support",
+    "target_action": "request_missing_own_view_recheck",
+    "purpose": "Materialize candidate-centered own-view recheck targets for all selected candidates, preserving the paired negative_missing_support_guard only as a later safety counterfactual.",
+    "allowed_label_use": "Evaluation labels may be joined only after request, target-candidate, source-plan, and observation-plan rows are written.",
+    "terminal_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false,
+    "allowed_action_inputs": [
+      "next label-free family selection summary and rows",
+      "object-relation branch request rows",
+      "object-relation branch candidate rows with action-time routing_inputs",
+      "fresh base support rows before relation arbitration",
+      "fresh object-relation plan rows for candidate positions and standoff metadata",
+      "candidate ids and request identifiers",
+      "scene/query identifiers",
+      "non-GT semantic rank and generated rank",
+      "action-time detector association, visible count, mask hit count, and depth consistency counts",
+      "non-GT candidate position, visit position, and navmesh standoff candidates"
+    ],
+    "forbidden_action_inputs": [
+      "evaluation_only_candidate_correct",
+      "evaluation_only_request_success",
+      "evaluation_only_failure_tag",
+      "correct_candidate_ids",
+      "valid_candidate_ids",
+      "GT object id",
+      "GT goal id",
+      "GT shortest path",
+      "SPL",
+      "wrong-goal labels",
+      "threshold tuning from joined labels"
+    ],
+    "blocked_shortcuts": [
+      "reject_missing_own_view_without_recheck",
+      "promote_negative_missing_support_guard_to_candidate_rejection",
+      "commit_after_relation_depth_resolved_without_own_view_support",
+      "commit_after_any_detector_visibility",
+      "commit_after_base_candidate_association",
+      "treat_existing_relation_depth_views_as_own_view_recheck",
+      "threshold_tuning",
+      "first_eval_rerun",
+      "policy_scale_comparison",
+      "terminal_utility_contract"
+    ]
+  },
+  "target_scope": {
+    "expected_request_rows": 7,
+    "expected_target_candidate_rows": 20,
+    "expected_companion_guard_candidate_rows": 20,
+    "expected_fresh_base_support_rows": 20,
+    "expected_existing_plan_rows_for_selected_candidates": 80,
+    "expected_existing_plan_rows_per_target_candidate_minimum": 4,
+    "expected_query_counts": {
+      "bed": 8,
+      "plant": 6,
+      "sofa": 6
+    },
+    "expected_scene_counts": {
+      "4ok3usBNeis": 4,
+      "QaLdnwvtxbs": 2,
+      "bCPU9suPUw9": 3,
+      "bxsVRursffK": 6,
+      "q3zU7Yy5E5s": 5
+    },
+    "expected_existing_plan_direction_counts": {
+      "orthogonal_relation_axis": 20,
+      "relation_anchor_to_target": 20,
+      "target_to_relation_anchor": 40
+    },
+    "target_requests": [
+      {
+        "expanded_retrieval_request_id": "rival_identity:3",
+        "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:9:1:sofa",
+        "scene_key": "QaLdnwvtxbs",
+        "query": "sofa",
+        "target_candidate_ids": [
+          "vlmaps:export:sofa:spatial_nms:0",
+          "vlmaps:export:sofa:spatial_nms:5"
+        ],
+        "target_candidate_rows": 2,
+        "minimum_existing_plan_rows": 8
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:5",
+        "episode_key": "HM3D ObjectNav v2:val:bCPU9suPUw9:27:2:bed",
+        "scene_key": "bCPU9suPUw9",
+        "query": "bed",
+        "target_candidate_ids": [
+          "vlmaps:export:bed:spatial_nms:0",
+          "vlmaps:export:bed:spatial_nms:1",
+          "vlmaps:export:bed:spatial_nms:5"
+        ],
+        "target_candidate_rows": 3,
+        "minimum_existing_plan_rows": 12
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:7",
+        "episode_key": "HM3D ObjectNav v2:val:q3zU7Yy5E5s:3:0:bed",
+        "scene_key": "q3zU7Yy5E5s",
+        "query": "bed",
+        "target_candidate_ids": [
+          "vlmaps:export:bed:spatial_nms:0",
+          "vlmaps:export:bed:spatial_nms:1",
+          "vlmaps:export:bed:spatial_nms:3",
+          "vlmaps:export:bed:spatial_nms:5",
+          "vlmaps:export:bed:spatial_nms:9"
+        ],
+        "target_candidate_rows": 5,
+        "minimum_existing_plan_rows": 20
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:22",
+        "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:6:2:sofa",
+        "scene_key": "4ok3usBNeis",
+        "query": "sofa",
+        "target_candidate_ids": [
+          "vlmaps:export:sofa:spatial_nms:0",
+          "vlmaps:export:sofa:spatial_nms:1",
+          "vlmaps:export:sofa:spatial_nms:3",
+          "vlmaps:export:sofa:spatial_nms:9"
+        ],
+        "target_candidate_rows": 4,
+        "minimum_existing_plan_rows": 16
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:25",
+        "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:11:1:plant",
+        "scene_key": "bxsVRursffK",
+        "query": "plant",
+        "target_candidate_ids": [
+          "vlmaps:export:plant:spatial_nms:7",
+          "vlmaps:export:plant:spatial_nms:8"
+        ],
+        "target_candidate_rows": 2,
+        "minimum_existing_plan_rows": 8
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:27",
+        "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:18:4:plant",
+        "scene_key": "bxsVRursffK",
+        "query": "plant",
+        "target_candidate_ids": [
+          "vlmaps:export:plant:spatial_nms:7",
+          "vlmaps:export:plant:spatial_nms:8"
+        ],
+        "target_candidate_rows": 2,
+        "minimum_existing_plan_rows": 8
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:29",
+        "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:4:5:plant",
+        "scene_key": "bxsVRursffK",
+        "query": "plant",
+        "target_candidate_ids": [
+          "vlmaps:export:plant:spatial_nms:7",
+          "vlmaps:export:plant:spatial_nms:8"
+        ],
+        "target_candidate_rows": 2,
+        "minimum_existing_plan_rows": 8
+      }
+    ],
+    "label_use": "The target candidate ids are action-time branch rows. Correctness labels are not allowed until after observation rows are written."
+  },
+  "input_builder_contract": {
+    "builder_name": "missing_own_view_recheck_inputs_v1",
+    "input_scope": "object-relation branch candidate rows where preferred_candidate_branch == correct_candidate_missing_own_view_support",
+    "target_candidate_rule": "materialize every selected candidate row and preserve the paired negative_missing_support_guard branch as a non-action safety tag.",
+    "base_support_join_rule": "join fresh base support rows by expanded_retrieval_request_id and candidate_id; require candidate_specific_support false and strong_own_view_evidence false before materialization.",
+    "source_plan_join_rule": "join fresh object-relation plan rows by expanded_retrieval_request_id and candidate_id to recover candidate position, visit position, and prior standoff metadata.",
+    "minimum_source_plan_rows": 80,
+    "minimum_source_plan_rows_per_target_candidate": 4,
+    "blocked": [
+      "evaluation-label join before action rows",
+      "dropping candidates because they are evaluation-negative later",
+      "converting companion guard rows into rejection rows",
+      "candidate-specific threshold changes"
+    ]
+  },
+  "planner_contract": {
+    "planner_name": "missing_own_view_recheck_candidate_centered_v1",
+    "policy": "MissingOwnViewRecheckObservation",
+    "viewpoint_policy": "candidate_centered_multiview_standoff_v1",
+    "candidate_target_rule": "plan at least four candidate-centered own-view recheck observations per target candidate and preserve the source branch, base support, and companion guard metadata on each observation row.",
+    "minimum_plan_rows": 80,
+    "minimum_plan_rows_per_target_candidate": 4,
+    "skipped_request_rows_maximum": 0,
+    "projection_anchor_policy": "projection_anchor_height_sweep_v1",
+    "projection_anchor_height_offsets_m": [
+      0.0,
+      0.4,
+      0.8,
+      1.2,
+      1.6,
+      2.0,
+      2.4
+    ],
+    "preferred_standoff_distance_m": 1.75,
+    "standoff_distances_m": [
+      1.25,
+      1.75,
+      2.25
+    ],
+    "require_navmesh_standoff": true,
+    "fallback_viewpoint_allowed": false,
+    "terminal_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "uses_gt_for_action": false
+  },
+  "required_outputs": {
+    "input_builder": {
+      "request_rows": "missing_own_view_request_rows.jsonl",
+      "target_candidate_rows": "missing_own_view_target_candidate_rows.jsonl",
+      "source_plan_rows": "missing_own_view_source_plan_rows.jsonl",
+      "base_support_rows": "missing_own_view_base_support_rows.jsonl",
+      "summary": "missing_own_view_input_summary.json"
+    },
+    "planner": {
+      "plan": "missing_own_view_observation_plan.jsonl",
+      "skipped": "missing_own_view_observation_skipped.jsonl",
+      "candidate_artifact": "missing_own_view_candidate_artifact.jsonl",
+      "summary": "missing_own_view_observation_plan_summary.json"
+    }
+  },
+  "evaluation_gates": {
+    "source_selection_gate_passed": true,
+    "expected_request_rows": 7,
+    "expected_target_candidate_rows": 20,
+    "expected_base_support_rows": 20,
+    "expected_existing_plan_rows": 80,
+    "minimum_plan_rows": 80,
+    "minimum_plan_rows_per_target_candidate": 4,
+    "skipped_request_rows_maximum": 0,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "candidate_rejection_rows_maximum": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis_after_action_rows_only": true,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "required_simpler_alternatives_to_report_later": [
+    "defer_all_missing_own_view_rows",
+    "reject_missing_own_view_without_recheck",
+    "commit_relation_depth_resolved_without_own_view",
+    "reuse_relation_depth_views_only",
+    "detector_box_score_only_after_recheck",
+    "mask_presence_only_after_recheck"
+  ],
+  "future_promotion_requirements": [
+    "The materializer and planner must preserve all 7 request rows and 20 target candidate rows without action-label leakage.",
+    "Frame/projection and detector/SAM2 substrate must show candidate-centered own-view evidence can be acquired for a sufficient fraction of rows.",
+    "A later analyzer must separate acquired own-view support from ObjectNav goal validity and may not commit or reject candidates from this contract alone.",
+    "A later branch outcome is promotable only if it produces label-free evidence that resolves a blocker beyond the paired negative_missing_support_guard shortcut."
+  ],
+  "next_task": "implement_missing_own_view_recheck_materializer_and_planner_smoke",
+  "interpretation_rule": {
+    "fact": "The selected target candidates are action-time branch rows with weak or partial base support and missing strong own-view evidence.",
+    "agent_inference": "The contract tests whether robot mobility can acquire missing candidate-centered evidence before a guard treats missing support as invalidity.",
+    "paper_claim_allowed": false
+  }
+}

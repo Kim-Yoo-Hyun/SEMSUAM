@@ -1,0 +1,120 @@
+{
+  "schema_version": "h001.contract.expanded_retrieval_goal_validity_unique_support_shared_common_view_branch.v1",
+  "date_checked": "2026-06-01",
+  "status": "frozen_before_implementation",
+  "contract_name": "expanded_retrieval_goal_validity_unique_support_shared_common_view_branch_v1",
+  "purpose": "Freeze shared common-view rival support as a nonterminal failure branch before any terminal goal-region arbitration contract.",
+  "implementation_target": "src/h001_runtime/route_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch.py",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "source": {
+    "shared_common_view_inspection_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_inspection_v1",
+    "shared_common_view_inspection_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_inspection_v1/unique_support_shared_common_view_inspection_summary.json",
+    "pair_inspection_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_inspection_v1/unique_support_shared_common_view_pair_inspection_rows.jsonl",
+    "request_inspection_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_inspection_v1/unique_support_shared_common_view_request_inspection_rows.jsonl",
+    "source_verify": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_inspection_v1.verify.json"
+  },
+  "source_metrics": {
+    "request_inspection_rows": 1,
+    "pair_inspection_rows": 2,
+    "request_ids": [
+      "rival_identity:7"
+    ],
+    "shared_common_pair_rows": 1,
+    "clean_contrastive_pair_rows": 1,
+    "terminal_commit_rows": 0,
+    "terminal_contract_allowed": false,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "branch_definitions": {
+    "shared_common_view_support_failure_branch": "Request-level branch for non-cross-region rows where a rival remains visible from the shared common pair view.",
+    "contaminated_clean_contrastive_pair": "A clean contrastive pair that cannot justify request-level terminal arbitration because the same request also has shared-common-view rival support."
+  },
+  "row_contract": {
+    "request_branch_rows": 1,
+    "pair_branch_rows": 2,
+    "shared_common_view_support_failure_request_rows": 1,
+    "contaminated_clean_contrastive_pair_rows": 1,
+    "terminal_commit_rows": 0,
+    "required_request_fields": [
+      "expanded_retrieval_request_id",
+      "scene_id",
+      "query",
+      "focus_candidate_id",
+      "pair_count",
+      "shared_common_view_rival_support_pair_count",
+      "clean_contrastive_pair_count",
+      "branch_name",
+      "branch_action",
+      "terminal_arbitration_allowed"
+    ]
+  },
+  "allowed_action_inputs": [
+    "shared-common-view inspection request rows",
+    "shared-common-view inspection pair rows",
+    "second-pass support pattern and blocker fields",
+    "candidate ids and request identifiers",
+    "scene/query identifiers"
+  ],
+  "forbidden_action_inputs": [
+    "evaluation correctness labels",
+    "GT goal object id",
+    "GT target object position",
+    "success/failure labels",
+    "wrong-goal labels",
+    "shortest path distance",
+    "SPL",
+    "oracle stop/commit decisions",
+    "post-hoc positive/negative candidate labels"
+  ],
+  "required_gates": {
+    "source_shared_common_view_inspection_gate_passed": true,
+    "expected_request_branch_rows": 1,
+    "expected_pair_branch_rows": 2,
+    "expected_shared_common_view_support_failure_request_rows": 1,
+    "expected_contaminated_clean_contrastive_pair_rows": 1,
+    "terminal_contract_allowed": false,
+    "terminal_commit_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "blocked_actions": [
+    "direct_commit_focus_candidate",
+    "direct_commit_if_any_clean_contrastive_pair",
+    "direct_commit_if_no_cross_region_overlap",
+    "direct_commit_if_shared_common_view_support_is_weak",
+    "threshold_tuning_on_evaluation_labels",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "terminal_utility_validation"
+  ],
+  "simpler_alternatives_to_report": [
+    {
+      "name": "commit_if_any_clean_contrastive_pair",
+      "expected_decision": "rejected_as_terminal_rule"
+    },
+    {
+      "name": "commit_if_no_cross_region_overlap",
+      "expected_decision": "rejected_as_terminal_rule"
+    },
+    {
+      "name": "association_count_best",
+      "expected_decision": "diagnostic_only_not_terminal"
+    },
+    {
+      "name": "defer_shared_common_view",
+      "expected_decision": "safe_but_inert"
+    }
+  ],
+  "expected_outputs": {
+    "out_root": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_shared_common_view_branch_v1",
+    "pair_branch_rows": "unique_support_shared_common_view_branch_pair_rows.jsonl",
+    "request_branch_rows": "unique_support_shared_common_view_branch_request_rows.jsonl",
+    "shared_common_view_failure_rows": "unique_support_shared_common_view_failure_rows.jsonl",
+    "summary": "unique_support_shared_common_view_branch_summary.json"
+  },
+  "next_step_if_passed": "close_unique_support_visibility_branch_as_terminal_blocked_and_select_next_branch_specific_evidence_route",
+  "next_step_if_failed": "diagnose shared-common-view branch mismatch before terminal arbitration.",
+  "paper_claim_allowed": false
+}

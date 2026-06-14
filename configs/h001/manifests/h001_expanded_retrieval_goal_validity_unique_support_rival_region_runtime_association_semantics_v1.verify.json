@@ -1,0 +1,111 @@
+{
+  "date_checked": "2026-06-01T00:07:16+09:00",
+  "ok": true,
+  "status": "runtime_association_semantics_diagnostic_passed",
+  "image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "working_directory": "/home/yoohyun/research3",
+  "contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association_semantics_v1.json",
+  "script": "src/h001_runtime/diagnose_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association.py",
+  "command": "docker run --rm --user \"$(id -u):$(id -g)\" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.diagnose_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association",
+  "source_repair_rerun_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_v1",
+  "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association_semantics_v1",
+  "output_files": {
+    "diagnostic_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association_semantics_v1/unique_support_rival_region_runtime_association_rows.jsonl",
+    "variant_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association_semantics_v1/unique_support_rival_region_runtime_association_variant_summary.json",
+    "summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association_semantics_v1/unique_support_rival_region_runtime_association_summary.json"
+  },
+  "source_metrics": {
+    "source_frame_rows": 30,
+    "source_association_rows": 120,
+    "source_candidate_association_rate": 0.3333333333333333,
+    "source_rows_with_candidate_association": 10,
+    "source_associated_heading_count": 23,
+    "source_association_depth_tolerance_m": 1.25,
+    "source_passes_detector_substrate_gate": false
+  },
+  "diagnostic_metrics": {
+    "diagnostic_rows": 180,
+    "variant_count": 6,
+    "diagnostic_gate_passed": true,
+    "selected_runtime_repair_variant": "mask_depth_2_0_v1",
+    "runtime_repair_gate_passed": true,
+    "rerun_allowed": true,
+    "rerun_output_name": "h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_repair_depth2_v1",
+    "post_detector_evidence_analyzer_allowed": false,
+    "terminal_commit_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "selected_variant_metrics": {
+    "variant": "mask_depth_2_0_v1",
+    "rule": "projected pixel inside SAM2 mask and depth_agreement_m <= 2.0",
+    "runtime_depth_field": "depth_agreement_m",
+    "promotable_runtime_variant": true,
+    "associated_rows": 16,
+    "candidate_association_rate": 0.5333333333333333,
+    "associated_heading_count": 35,
+    "minimum_query_candidate_association_rate": 0.3333333333333333,
+    "minimum_second_pass_role_candidate_association_rate": 0.5,
+    "action_forbidden_key_count": 0
+  },
+  "variant_metrics": {
+    "source_runtime_1_25_v1": {
+      "candidate_association_rate": 0.3333333333333333,
+      "minimum_query_candidate_association_rate": 0.06666666666666667,
+      "minimum_second_pass_role_candidate_association_rate": 0.3,
+      "runtime_repair_gate_passed": false,
+      "promotable_runtime_variant": false
+    },
+    "mask_depth_1_25_v1": {
+      "candidate_association_rate": 0.3333333333333333,
+      "minimum_query_candidate_association_rate": 0.06666666666666667,
+      "minimum_second_pass_role_candidate_association_rate": 0.3,
+      "runtime_repair_gate_passed": false,
+      "promotable_runtime_variant": false
+    },
+    "mask_depth_1_5_v1": {
+      "candidate_association_rate": 0.43333333333333335,
+      "minimum_query_candidate_association_rate": 0.2,
+      "minimum_second_pass_role_candidate_association_rate": 0.4,
+      "runtime_repair_gate_passed": false,
+      "promotable_runtime_variant": false
+    },
+    "mask_depth_2_0_v1": {
+      "candidate_association_rate": 0.5333333333333333,
+      "minimum_query_candidate_association_rate": 0.3333333333333333,
+      "minimum_second_pass_role_candidate_association_rate": 0.5,
+      "runtime_repair_gate_passed": true,
+      "promotable_runtime_variant": true
+    },
+    "mask_only_upper_bound_v1": {
+      "candidate_association_rate": 1.0,
+      "minimum_query_candidate_association_rate": 1.0,
+      "minimum_second_pass_role_candidate_association_rate": 1.0,
+      "runtime_repair_gate_passed": false,
+      "promotable_runtime_variant": false
+    },
+    "box_only_upper_bound_v1": {
+      "candidate_association_rate": 1.0,
+      "minimum_query_candidate_association_rate": 1.0,
+      "minimum_second_pass_role_candidate_association_rate": 1.0,
+      "runtime_repair_gate_passed": false,
+      "promotable_runtime_variant": false
+    }
+  },
+  "verification_commands": [
+    "python -m py_compile src/h001_runtime/diagnose_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association.py",
+    "docker run --rm --user \"$(id -u):$(id -g)\" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile src/h001_runtime/diagnose_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association.py",
+    "docker run --rm --user \"$(id -u):$(id -g)\" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.diagnose_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association",
+    "jq '{selected:.selected_runtime_repair_variant, gate:.runtime_repair_gate_passed, rerun:.rerun_allowed, diagnostic:.diagnostic_gate}' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association_semantics_v1/unique_support_rival_region_runtime_association_summary.json",
+    "wc -l local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_runtime_association_semantics_v1/unique_support_rival_region_runtime_association_rows.jsonl"
+  ],
+  "next_task": "rerun second-pass rival-region detector/SAM2 substrate with predeclared mask_depth_2_0_v1 runtime association repair",
+  "notes": [
+    "This is a runtime association-semantics diagnostic over existing detector/SAM2 rows, not a paper claim.",
+    "The selected variant is the only predeclared promotable runtime variant that clears global, query, and role gates.",
+    "The result allows only the repaired detector/SAM2 substrate rerun with association_depth_tolerance_m=2.0.",
+    "Post-detector evidence analyzer, terminal utility, first_eval rerun, and policy-scale comparison remain blocked until that rerun passes."
+  ]
+}

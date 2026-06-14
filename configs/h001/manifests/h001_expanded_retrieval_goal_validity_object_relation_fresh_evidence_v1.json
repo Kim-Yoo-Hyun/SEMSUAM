@@ -1,0 +1,146 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_object_relation_fresh_evidence_contract.v1",
+  "contract_name": "expanded_retrieval_goal_validity_object_relation_fresh_evidence_v1",
+  "date_checked": "2026-05-31",
+  "status": "frozen_design_contract_before_fresh_evidence_analyzer_run",
+  "source": {
+    "fresh_source_contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_v1.json",
+    "fresh_source_evaluated_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_v1/object_relation_arbitration_fresh_source_evaluated_rows.jsonl",
+    "fresh_observation_input_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_inputs_v1/object_relation_fresh_observation_input_summary.json",
+    "fresh_coverage_gap_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_inputs_v1/object_relation_fresh_observation_coverage_gap_rows.jsonl",
+    "observation_plan_contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1.json",
+    "observation_plan_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1/goal_validity_object_relation_observation_plan_summary.json",
+    "frame_projection_verify": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_frame_projection_v1.verify.json",
+    "projection_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_projection_v1/projection_anchor_smoke_summary.json",
+    "detector_substrate_verify": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_fresh_detector_substrate_v1.verify.json",
+    "detector_job_status": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1/job_status.json",
+    "detector_substrate_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "detector_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1/detector_v3c/summary.json",
+    "detector_associations": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1/detector_v3c/detector_candidate_associations.jsonl",
+    "detector_frame_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_detector_substrate_v1/detector_v3c/frame_summary.jsonl",
+    "fresh_candidate_labels": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_evidence_v1/object_relation_fresh_candidate_labels.jsonl"
+  },
+  "problem": {
+    "fact": "Fresh route-specific object-relation source, planner, frame/projection, and detector/SAM2 substrate are verified without action-time GT labels.",
+    "remaining_blocker": "Detector observations must be converted into candidate-local relation-depth evidence rows before applying the fixed non-GT arbitration rule.",
+    "source_evidence": {
+      "fresh_source_rows": 7,
+      "fresh_candidate_rows": 36,
+      "plan_rows": 144,
+      "projection_visible_rows": 141,
+      "detector_rows": 144,
+      "detector_box_rate": 0.9583333333333334,
+      "sam2_mask_rate": 0.9583333333333334,
+      "candidate_association_rate": 0.8263888888888888,
+      "associated_candidate_heading_count": 338,
+      "terminal_commit_rows": 0,
+      "uses_gt_for_action": false,
+      "paper_claim_allowed": false
+    }
+  },
+  "target_scope": {
+    "expected_request_rows": 36,
+    "expected_plan_rows": 144,
+    "expected_detector_rows": 144,
+    "expected_association_rows": 573,
+    "expected_evidence_rows": 108,
+    "expected_source_request_rows": 7,
+    "expected_request_ids": [
+      "rival_identity:3",
+      "rival_identity:5",
+      "rival_identity:7",
+      "rival_identity:22",
+      "rival_identity:25",
+      "rival_identity:27",
+      "rival_identity:29"
+    ],
+    "label_use": "Candidate correctness labels are expanded only into evaluation-only rows after action-time evidence rows are written."
+  },
+  "evidence_analyzer": {
+    "analyzer_name": "object_relation_detector_depth_evidence_v1_fresh_source",
+    "policy": "ExpandedRetrievalGoalValidityObjectRelationEvidence",
+    "input_scope": "detector/SAM2 association rows from fresh relation-aware observation substrate",
+    "group_keys": [
+      "expanded_retrieval_request_id",
+      "target_candidate_id",
+      "standoff_direction_source"
+    ],
+    "request_aggregation_keys": [
+      "expanded_retrieval_request_id",
+      "target_candidate_id"
+    ],
+    "terminal_commit_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "uses_gt_for_action": false
+  },
+  "run_parameters": {
+    "min_associated_per_direction": 2,
+    "min_depth_consistent_per_direction": 2,
+    "min_associated_per_request": 6,
+    "min_depth_consistent_per_request": 4,
+    "min_resolved_directions": 2,
+    "min_direction_sources": 3
+  },
+  "required_outputs": {
+    "evidence_rows": "goal_validity_object_relation_evidence_rows.jsonl",
+    "request_rows": "goal_validity_object_relation_request_rows.jsonl",
+    "evaluation_only_rows": "goal_validity_object_relation_evaluated_rows.jsonl",
+    "summary": "goal_validity_object_relation_evidence_summary.json"
+  },
+  "minimum_evidence_gate": {
+    "source_observation_plan_gate_passed": true,
+    "source_projection_anchor_smoke_passed": true,
+    "source_detector_substrate_gate_passed": true,
+    "expected_request_rows": 36,
+    "expected_plan_rows": 144,
+    "expected_detector_rows": 144,
+    "expected_association_rows": 573,
+    "minimum_evidence_rows": 108,
+    "minimum_request_rows": 36,
+    "minimum_rows_with_candidate_association": 100,
+    "minimum_associated_candidate_heading_count": 300,
+    "minimum_depth_consistent_rows": 280,
+    "minimum_direction_source_count_per_request": 3,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "forbidden_action_inputs": [
+    "correct_candidate_ids",
+    "valid_candidate_ids",
+    "evaluation_only_candidate_correct",
+    "evaluation_only_success",
+    "evaluation_only_wrong_goal",
+    "GT object id",
+    "GT goal id",
+    "GT room id",
+    "GT scene graph relation",
+    "GT shortest path",
+    "oracle candidate rank",
+    "post-join evaluation rows before action evidence rows are written"
+  ],
+  "blocked_actions": [
+    "direct_candidate_commit",
+    "detector_association_best_commit",
+    "relation_signature_best_commit",
+    "threshold_tuning_from_evaluation_labels",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "terminal_goal_validity_policy"
+  ],
+  "next_implementation_target": {
+    "label_builder": "src/h001_runtime/build_expanded_retrieval_goal_validity_object_relation_fresh_labels.py",
+    "evidence_analyzer": "src/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_evidence.py",
+    "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_evidence_v1",
+    "stage": "fresh_post_detector_evidence_analyzer_before_fixed_rule_arbitration",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_required": true
+  },
+  "interpretation_rule": {
+    "fact": "The fresh detector substrate provides enough candidate-local association and depth evidence to run nonterminal evidence aggregation.",
+    "agent_inference": "The result should decide which candidates are resolved, partial, or unresolved under relation-depth evidence. It must not authorize a terminal ObjectNav commit.",
+    "user_decision_needed": "None for this analyzer. User judgment is needed only if fixed-rule arbitration suggests promotion to a terminal utility contract."
+  },
+  "paper_claim_allowed": false
+}

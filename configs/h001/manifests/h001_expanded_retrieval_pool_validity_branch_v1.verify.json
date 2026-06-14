@@ -1,0 +1,38 @@
+{
+  "schema_version": "h001.manifest_verify.v1",
+  "manifest": "configs/h001/manifests/h001_expanded_retrieval_pool_validity_branch_v1.json",
+  "date_checked": "2026-05-29",
+  "ok": true,
+  "checks": {
+    "contract_name": true,
+    "expected_branch_rows": true,
+    "target_request_id": true,
+    "target_scene_query_key": true,
+    "non_gt_proxy_not_ready": true,
+    "fallback_backend_variant_required": true,
+    "first_fallback_variant_fixed": true,
+    "terminal_commit_blocked": true,
+    "action_evidence_forbidden_key_maximum_zero": true,
+    "labels_joined_after_generation_only": true,
+    "uses_gt_for_action_false": true,
+    "paper_claim_allowed_false": true
+  },
+  "source_counts": {
+    "branch_rows": 1,
+    "target_request_ids": [
+      "rival_identity:13"
+    ],
+    "target_scene_query_keys": [
+      "bxsVRursffK::bed"
+    ],
+    "source_candidate_count": 100,
+    "source_reachable_or_standoff_candidate_count": 100,
+    "source_positive_support_candidate_count": 5,
+    "source_duplicate_candidate_id_count": 0,
+    "source_nonfinite_candidate_position_count": 0,
+    "evaluation_only_contains_valid_candidate": false,
+    "terminal_commit_rows": 0,
+    "action_evidence_forbidden_key_count": 0
+  },
+  "jq_verification": "jq -e '.contract_name == \"expanded_retrieval_pool_validity_branch_v1\" and .source.expected_branch_rows == 1 and (.source.expected_branch_request_ids == [\"rival_identity:13\"]) and (.source.expected_target_scene_query_keys == [\"bxsVRursffK::bed\"]) and .proxy_assessment.non_gt_proxy_ready == false and .fallback_backend_policy.first_fallback_variant.variant_name == \"spatial_nms_p80_k200_d3_v1\" and .evaluation_gates.terminal_commit_rows_maximum == 0 and .evaluation_gates.action_evidence_forbidden_key_count_maximum == 0 and .evaluation_gates.uses_gt_for_action == false and .paper_claim_allowed == false' configs/h001/manifests/h001_expanded_retrieval_pool_validity_branch_v1.json"
+}

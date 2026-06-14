@@ -1,0 +1,1 @@
+../../../scripts/h001_tools/export_text_embeddings.py

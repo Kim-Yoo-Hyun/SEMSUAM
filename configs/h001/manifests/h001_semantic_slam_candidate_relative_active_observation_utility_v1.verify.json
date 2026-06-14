@@ -1,0 +1,92 @@
+{
+  "schema_version": "h001.verify.semantic_slam_candidate_relative_active_observation_utility.v1",
+  "date_checked": "2026-06-06",
+  "ok": true,
+  "verified_artifact": "configs/h001/manifests/h001_semantic_slam_candidate_relative_active_observation_utility_v1.json",
+  "status": "docker_materializer_verified_promotion_blocked",
+  "source_files_checked": [
+    "configs/h001/manifests/h001_semantic_slam_candidate_relative_path_closure_v1.verify.json",
+    "src/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_utility.py",
+    "local_dataset/runs/h001_semantic_slam_candidate_relative_map_pose_evidence_v1/semantic_slam_candidate_relative_map_pose_evidence_summary.json",
+    "local_dataset/runs/h001_semantic_slam_candidate_relative_task_proxy_join_v1/semantic_slam_candidate_relative_task_proxy_summary.json",
+    "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_utility_summary.json"
+  ],
+  "verified_counts": {
+    "source_candidate_rows": 232,
+    "source_request_rows": 50,
+    "source_alternative_rows": 450,
+    "source_baseline_policy_rows": 150,
+    "source_failure_taxonomy_rows": 50,
+    "top_map_pose_tuple_correct_rows": 29,
+    "top_map_pose_tuple_wrong_rows": 21,
+    "top_map_pose_tuple_no_valid_request_rows": 4,
+    "candidate_relative_unique_top_rows": 42,
+    "candidate_relative_unique_top_correct_rows": 23,
+    "candidate_relative_unique_top_wrong_rows": 19,
+    "candidate_relative_unique_top_no_valid_rows": 4,
+    "candidate_relative_tie_or_saturation_rows": 5,
+    "single_candidate_geometry_only_rows": 3,
+    "output_observation_priority_rows": 232,
+    "output_request_risk_summary_rows": 50,
+    "output_simpler_alternative_audit_rows": 300,
+    "output_failure_taxonomy_rows": 50,
+    "output_terminal_commit_rows": 0,
+    "output_candidate_commit_rows": 0,
+    "output_candidate_rejection_rows": 0,
+    "output_uses_gt_for_action_true_rows": 0,
+    "output_action_forbidden_key_count": 0
+  },
+  "output_action_counts": {
+    "selected_observation_action_counts": {
+      "observe_candidate": 3,
+      "observe_candidate_pair": 26,
+      "observe_request_context": 21
+    },
+    "candidate_observation_action_counts": {
+      "audit_only": 48,
+      "observe_candidate": 19,
+      "observe_candidate_pair": 52,
+      "observe_request_context": 113
+    }
+  },
+  "contract_checks": {
+    "path_closure_static_verified": true,
+    "candidate_relative_terminal_top_rule_closed": true,
+    "active_observation_utility_contract_frozen": true,
+    "docker_compile_passed": true,
+    "docker_run_passed": true,
+    "active_observation_materializer_gate_passed": true,
+    "promotion_gate_after_materialization_passed": false,
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "formula_revision_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis_after_action_freeze_only": true,
+    "primary_blocker": "task_proxy_join_after_active_observation_action_freeze_required"
+  },
+  "verified_output_files": [
+    "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_priority_rows.jsonl",
+    "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_request_rows.jsonl",
+    "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_alternative_rows.jsonl",
+    "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_failure_rows.jsonl",
+    "local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_utility_summary.json"
+  ],
+  "verification_commands": [
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile src/h001_runtime/materialize_semantic_slam_candidate_relative_active_observation_utility.py",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_semantic_slam_candidate_relative_active_observation_utility",
+    "jq '{status, actual_counts, selected_observation_action_counts, candidate_observation_action_counts, active_observation_materializer_gate_passed, promotion_gate_after_materialization_passed, primary_blocker, next_task}' local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/semantic_slam_candidate_relative_active_observation_utility_summary.json",
+    "wc -l local_dataset/runs/h001_semantic_slam_candidate_relative_active_observation_utility_v1/*.jsonl"
+  ],
+  "interpretation": {
+    "fact": "The Docker materializer writes active-observation priority, request risk, simpler alternative audit, and failure taxonomy rows from frozen candidate-relative map/pose evidence.",
+    "agent_inference": "Candidate-relative map/pose evidence can now be used as nonterminal observation pressure, but not as terminal goal-validity authority. The next gate is a task-proxy join after active-observation action rows are frozen.",
+    "paper_claim": "No Semantic-SLAM complementarity, ObjectNav improvement, SLAM benefit, terminal utility, first_eval rerun, policy-scale comparison, Step 4-5 promotion, formula revision, or paper claim is allowed from this artifact."
+  },
+  "next_task": "freeze_active_observation_task_proxy_join_contract"
+}

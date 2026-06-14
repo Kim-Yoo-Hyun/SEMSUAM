@@ -1,0 +1,214 @@
+{
+  "schema_version": "h001.expanded_retrieval_pool_validity_second_fallback_contract.v1",
+  "contract_name": "expanded_retrieval_pool_validity_second_fallback_v1",
+  "date_checked": "2026-05-29",
+  "status": "frozen_design_contract_before_implementation",
+  "source": {
+    "previous_contract": "configs/h001/manifests/h001_expanded_retrieval_pool_validity_branch_v1.json",
+    "previous_summary": "local_dataset/runs/h001_expanded_retrieval_pool_validity_branch_v1/pool_validity_summary.json",
+    "previous_generation_rows": "local_dataset/runs/h001_expanded_retrieval_pool_validity_branch_v1/pool_validity_fallback_generation_rows.jsonl",
+    "previous_evaluated_rows": "local_dataset/runs/h001_expanded_retrieval_pool_validity_branch_v1/pool_validity_fallback_evaluated_rows.jsonl",
+    "previous_candidate_artifact": "local_dataset/runs/h001_expanded_retrieval_pool_validity_artifact_spatial_nms_p80_k200_d3_v1/all_scenes_aligned.jsonl",
+    "backend_pool_validity_branch_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_confirmation_v1/backend_pool_validity_branch_rows.jsonl",
+    "deeper_backend_generation_rows": "local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_v1/deeper_backend_generation_rows.jsonl",
+    "deeper_backend_generation_evaluated_rows": "local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_v1/deeper_backend_generation_evaluated_rows.jsonl",
+    "source_filter_action_time": {
+      "handoff_action": "request_non_gt_pool_validity_proxy_or_fallback_backend_variant",
+      "source_deeper_generation_status": "generated_deeper_backend_pool",
+      "source_deeper_backend_variant": "spatial_nms_p90_k100_d5_v1"
+    },
+    "previous_fallback_filter_action_time": {
+      "fallback_generation_status": "generated_pool_validity_fallback_pool",
+      "fallback_backend_variant": "spatial_nms_p80_k200_d3_v1"
+    },
+    "previous_fallback_filter_after_label_join": {
+      "evaluation_only_contains_valid_candidate": false,
+      "evaluation_only_no_valid_candidate_pool": true
+    },
+    "expected_branch_rows": 1,
+    "expected_branch_request_ids": [
+      "rival_identity:13"
+    ],
+    "expected_target_scene_query_keys": [
+      "bxsVRursffK::bed"
+    ]
+  },
+  "observed_facts": {
+    "target_request_id": "rival_identity:13",
+    "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:16:1:bed",
+    "target_scene_key": "bxsVRursffK",
+    "target_query": "bed",
+    "target_scene_query_key": "bxsVRursffK::bed",
+    "source_variant": "spatial_nms_p90_k100_d5_v1",
+    "source_candidate_count": 100,
+    "source_reachable_or_standoff_candidate_count": 100,
+    "source_positive_support_candidate_count": 5,
+    "source_duplicate_candidate_id_count": 0,
+    "source_nonfinite_candidate_position_count": 0,
+    "first_fallback_variant": "spatial_nms_p80_k200_d3_v1",
+    "first_fallback_structural_gate_passed": true,
+    "first_fallback_candidate_count": 200,
+    "first_fallback_retained_from_source_pool_count": 100,
+    "first_fallback_new_beyond_source_pool_count": 100,
+    "first_fallback_reachable_or_standoff_candidate_count": 200,
+    "first_fallback_positive_support_candidate_count": 5,
+    "first_fallback_duplicate_candidate_id_count": 0,
+    "first_fallback_nonfinite_candidate_position_count": 0,
+    "first_fallback_contains_valid_candidate_after_label_join": false,
+    "first_fallback_correct_candidate_count_after_label_join": 0,
+    "first_fallback_no_valid_candidate_pool_after_label_join": true,
+    "terminal_commit_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "problem_statement": {
+    "fact": "The first fallback widened the non-GT spatial-NMS backend from p90/k100/d5 to p80/k200/d3 and produced a structurally valid 200-candidate pool, but evaluation-only label join still found zero valid candidates for bxsVRursffK::bed.",
+    "agent_inference": "The remaining failure is less likely to be solved by another spatial-NMS point-density change. The next predeclared probe should change the backend granularity to connected component candidates so that large high-score regions are represented by component centroids and best-view cells rather than only NMS-selected points.",
+    "paper_constraint": "This is still a diagnostic backend recall branch. It was triggered by evaluation-only no-valid reporting, so it cannot be used as a paper-facing terminal action policy unless later evaluated on a predeclared all-row or non-GT pool-validity trigger."
+  },
+  "second_fallback_backend_policy": {
+    "policy_name": "pool_validity_component_fallback_backend_v1",
+    "diagnostic_scope": "remaining_first_fallback_no_valid_branch_only",
+    "branch_request_scope": [
+      "rival_identity:13"
+    ],
+    "target_scene_query_scope": [
+      "bxsVRursffK::bed"
+    ],
+    "second_fallback_variant": {
+      "variant_name": "components_p80_min1_k200_v1",
+      "selection_mode": "components",
+      "top_percentile": 80.0,
+      "max_candidates": 200,
+      "spatial_nms_min_distance_cells": null,
+      "min_component_cells": 1,
+      "reason": "Switch from point-level spatial NMS to connected-component export after the fixed wider spatial-NMS fallback remained no-valid."
+    },
+    "fixed_before_label_join": true,
+    "compare_against_source_pool": "spatial_nms_p90_k100_d5_v1",
+    "compare_against_first_fallback": "spatial_nms_p80_k200_d3_v1",
+    "terminal_commit_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "allowed_action_inputs": [
+    "backend/pool-validity branch rows written before label join",
+    "first fallback generation rows written before label join",
+    "deeper generation action rows and candidate pool accounting from spatial_nms_p90_k100_d5_v1",
+    "episode_key, scene_key, query, target_scene_query_key, expanded_retrieval_request_id",
+    "source and first-fallback candidate ids, ranks, scores, support scores, positive support, positions, visit positions, reachability, finite-position metadata, duplicate accounting, and backend lineage",
+    "existing non-GT VLMaps feature maps, text embeddings, alignment, and connected-component export settings",
+    "Habitat navmesh and reachability or standoff feasibility computed without GT target labels"
+  ],
+  "forbidden_action_inputs": [
+    "candidate_correct",
+    "evaluation_only_contains_valid_candidate",
+    "evaluation_only_no_valid_candidate_pool",
+    "evaluation_only_correct_candidate_ids",
+    "evaluation_only_first_correct_generated_rank",
+    "selected_for_goal",
+    "wrong_goal_visit",
+    "success label",
+    "GT object id",
+    "GT goal id",
+    "oracle geodesic distance",
+    "choosing component percentile, component minimum size, top-k, or backend family after inspecting component-fallback correctness",
+    "terminal commit or goal switch based on this branch contract"
+  ],
+  "required_outputs": [
+    "second_fallback_branch_rows.jsonl",
+    "second_fallback_generation_rows.jsonl",
+    "second_fallback_evaluation_labels.jsonl",
+    "second_fallback_evaluated_rows.jsonl",
+    "second_fallback_scene_query_artifacts.jsonl",
+    "second_fallback_summary.json"
+  ],
+  "minimum_evidence_requirements": {
+    "component_generation_accounting": [
+      "report variant name, selection mode, percentile, max candidates, and min_component_cells",
+      "report component candidate count, component_cells statistics, backend_source counts, finite-position count, reachable/standoff count, positive-support count, duplicate candidate ids, and duplicate positions",
+      "report overlap with the source p90/k100/d5 spatial-NMS pool and the first p80/k200/d3 spatial-NMS fallback pool",
+      "report target scene/query artifact rows and missing artifact cases"
+    ],
+    "evaluation_only_reporting": [
+      "write component fallback generation rows before joining labels",
+      "join evaluation labels only in evaluated rows or summary",
+      "report whether the component fallback recovers a valid candidate pool after label join",
+      "do not change the component backend settings based on the same fallback label join"
+    ],
+    "failure_accounting": [
+      "if valid candidates are recovered, route only that row to later goal-validity confirmation evidence",
+      "if no valid candidate is recovered, record bxsVRursffK::bed as a backend/source-map recall blind spot for this branch",
+      "do not send a no-valid pool to goal-validity confirmation"
+    ]
+  },
+  "required_simpler_alternatives": [
+    "treat_first_fallback_spatial_nms_pool_as_valid",
+    "pass_first_fallback_no_valid_row_to_goal_validity_confirmation",
+    "lower_spatial_nms_percentile_again_without_changing_backend_granularity",
+    "raise_spatial_nms_candidate_budget_only",
+    "use_detector_visible_category_as_pool_validity",
+    "defer_still_no_valid_row_without_testing_the_predeclared_component_fallback"
+  ],
+  "evaluation_gates": {
+    "input_branch_rows": 1,
+    "target_request_ids_exact": [
+      "rival_identity:13"
+    ],
+    "target_scene_query_keys_exact": [
+      "bxsVRursffK::bed"
+    ],
+    "first_fallback_must_be_structurally_valid": true,
+    "first_fallback_must_be_no_valid_after_label_join": true,
+    "second_fallback_backend_variant_required": true,
+    "second_fallback_variant": "components_p80_min1_k200_v1",
+    "second_fallback_selection_mode": "components",
+    "component_candidate_count_minimum_per_request": 20,
+    "component_candidate_count_primary_target_per_request": 50,
+    "duplicate_candidate_id_count_maximum": 0,
+    "nonfinite_candidate_position_count_maximum": 0,
+    "rows_with_reachable_or_standoff_candidate_minimum": 1,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "must_report_component_settings": true,
+    "must_report_overlap_with_source_and_first_fallback": true,
+    "must_report_recovery_after_label_join": true,
+    "must_join_labels_only_after_generation_rows": true,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed_before_predeclared_validation": false
+  },
+  "expected_next_analyzer_or_job": {
+    "name": "expanded_retrieval_pool_validity_second_fallback_v1",
+    "role": "consume the single first-fallback no-valid branch row and materialize the fixed component-level fallback backend before deciding whether the branch is recoverable or a backend blind spot",
+    "input_scope": "rival_identity:13 only, using label-free branch rows plus first-fallback generation rows; labels may be joined only after component rows are written",
+    "target_request_scope": "rival_identity:13 only",
+    "expected_output_root": "local_dataset/runs/h001_expanded_retrieval_pool_validity_second_fallback_v1",
+    "expected_artifact_root": "local_dataset/runs/h001_expanded_retrieval_pool_validity_artifact_components_p80_min1_k200_v1",
+    "required_job_overrides": {
+      "CONTRACT": "configs/h001/manifests/h001_expanded_retrieval_pool_validity_second_fallback_v1.json",
+      "OUT_ROOT": "local_dataset/runs/h001_expanded_retrieval_pool_validity_second_fallback_v1",
+      "ARTIFACT_OUT": "local_dataset/runs/h001_expanded_retrieval_pool_validity_artifact_components_p80_min1_k200_v1",
+      "ARTIFACT_ID": "expanded_retrieval_pool_validity_components_p80_min1_k200_v1",
+      "TRAJECTORY_SUFFIX": "expanded_retrieval_pool_validity_components_p80_min1_k200_v1",
+      "CANDIDATE_SELECTION_MODE": "components",
+      "TOP_PERCENTILE": "80.0",
+      "MAX_CANDIDATES": "200",
+      "MIN_COMPONENT_CELLS": "1"
+    }
+  },
+  "promotion_rules": {
+    "contract_only": "Freezing this contract permits a diagnostic component fallback backend analyzer/job, not terminal ObjectNav commitment.",
+    "if_component_fallback_recovers_valid_pool": "The row may move to a later goal-validity confirmation evidence branch only after component fallback rows are written label-free and recovery is checked by evaluation-only join.",
+    "if_component_fallback_still_no_valid": "Record bxsVRursffK::bed as a backend/source-map recall blind spot and keep terminal utility blocked for this branch.",
+    "paper_claim_blocked": "No first_eval rerun, policy-scale comparison, or paper utility claim is allowed from this contract alone."
+  },
+  "next_steps": [
+    "Implement or parameterize the second-fallback analyzer/job so the component variant name and output file names are explicit.",
+    "Generate the fixed components_p80_min1_k200_v1 artifact in a background job with timestamped logs.",
+    "Join labels only after component fallback rows are written and report recovered-valid versus still-no-valid.",
+    "Keep candidate-specific goal-validity evidence for rival_identity:12 and rival_identity:14 as a separate branch."
+  ],
+  "paper_claim_allowed": false
+}

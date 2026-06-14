@@ -1,0 +1,236 @@
+{
+  "schema_version": "h001.contract.semantic_slam_task_map_evidence.v1",
+  "date_checked": "2026-06-11",
+  "status": "frozen_contract_static_verified",
+  "contract_name": "semantic_slam_task_map_evidence_v1",
+  "purpose": "Freeze the paper-facing interpretation of the joined task/map evidence after active-observation post-update evaluation join. ObjectNav wrong-goal and wasted path are task-level failure surfaces of Semantic-SLAM uncertainty, not a separate application or a terminal utility claim.",
+  "stage": "P4-design",
+  "paper_framing": {
+    "semantic_slam_centered": true,
+    "objectnav_wrong_goal_role": "task_level_failure_surface_for_semantic_slam_uncertainty_not_a_separate_application",
+    "objectnav_wasted_path_role": "task_level_cost_surface_for_wrong_goal_and_reobservation_behavior",
+    "active_reobservation_role": "evidence_acquisition_bridge_between_semantic_map_uncertainty_and_map_pose_uncertainty",
+    "paper_claim_allowed": false
+  },
+  "source": {
+    "post_update_evaluation_join_contract": "configs/h001/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.json",
+    "post_update_evaluation_join_verify": "configs/h001/manifests/h001_semantic_slam_active_observation_post_update_evaluation_join_v1.verify.json",
+    "post_update_evaluation_join_summary": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_summary.json",
+    "request_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_request_rows.jsonl",
+    "selected_candidate_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_selected_candidate_rows.jsonl",
+    "candidate_state_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_candidate_state_rows.jsonl",
+    "baseline_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_baseline_rows.jsonl",
+    "failure_rows": "local_dataset/runs/h001_semantic_slam_active_observation_post_update_evaluation_join_v1/active_observation_post_update_evaluation_join_failure_rows.jsonl"
+  },
+  "source_gate": {
+    "source_status": "post_update_evaluation_join_gate_passed_promotion_blocked",
+    "post_update_evaluation_join_gate_passed": true,
+    "promotion_gate_after_evaluation_join_passed": false,
+    "primary_blocker": "evaluation_join_only_nonterminal_goal_validity_arbitration_required",
+    "actual_counts": {
+      "action_evidence_forbidden_key_count": 0,
+      "baseline_rows": 150,
+      "candidate_commit_rows": 0,
+      "candidate_rejection_rows": 0,
+      "candidate_state_rows": 232,
+      "failure_rows": 50,
+      "goal_validity_risk_join_available_rows": 50,
+      "map_pose_consistency_join_available_rows": 50,
+      "map_pose_delta_evaluable_rows": 50,
+      "paper_claim_allowed_true_rows": 0,
+      "request_label_missing_rows": 0,
+      "request_rows": 50,
+      "selected_candidate_label_missing_rows": 0,
+      "selected_candidate_rows": 97,
+      "terminal_commit_rows": 0,
+      "uses_gt_for_action_true_rows": 0,
+      "viewpoint_evidence_gap_available_rows": 50,
+      "wasted_path_proxy_evaluable_rows": 150,
+      "wrong_goal_proxy_evaluable_rows": 150
+    },
+    "request_goal_validity_risk_state_counts": {
+      "clean_correct_candidate_support": 11,
+      "mixed_goal_validity_risk": 23,
+      "no_valid_candidate_pool_risk": 4,
+      "wrong_goal_candidate_risk": 12
+    },
+    "request_viewpoint_evidence_gap_state_counts": {
+      "viewpoint_gap_reduced_ambiguity_reduced": 26,
+      "viewpoint_gap_reduced_goal_validity_unresolved": 21,
+      "viewpoint_gap_reduced_support_acquired": 3
+    },
+    "request_map_pose_uncertainty_state_counts": {
+      "map_pose_ready_uncertainty_measured": 50
+    },
+    "baseline_policy_counts": {
+      "NoReobserveReference": {
+        "map_task_alignment_rows": 0,
+        "rows": 50,
+        "success_commit_proxy_rows": 28,
+        "terminal_commit_proxy_rows": 49,
+        "wasted_path_proxy_m_mean": 0.6937538089727587,
+        "wrong_goal_visit_proxy_rows": 21
+      },
+      "SemanticOnly": {
+        "map_task_alignment_rows": 0,
+        "rows": 50,
+        "success_commit_proxy_rows": 20,
+        "terminal_commit_proxy_rows": 41,
+        "wasted_path_proxy_m_mean": 0.7016471279240141,
+        "wrong_goal_visit_proxy_rows": 21
+      },
+      "SLAMOnlyRich_current": {
+        "map_task_alignment_rows": 2,
+        "rows": 50,
+        "success_commit_proxy_rows": 2,
+        "terminal_commit_proxy_rows": 3,
+        "wasted_path_proxy_m_mean": 0.03499999857897532,
+        "wrong_goal_visit_proxy_rows": 1
+      }
+    }
+  },
+  "evidence_axes": {
+    "task_failure_surface": {
+      "role": "ObjectNav wrong-goal and wasted path expose where semantic/map/pose uncertainty affects robot action.",
+      "primary_fields": [
+        "goal_validity_risk_state",
+        "wrong_goal_visit_proxy",
+        "wasted_path_proxy_m",
+        "terminal_commit_proxy",
+        "success_commit_proxy"
+      ],
+      "interpretation_rule": "These fields evaluate task-level failure symptoms after action rows are frozen. They do not define ObjectNav as a separate application track and do not authorize terminal commitment.",
+      "wrong_goal_metric_rule": "Primary wrong_goal_visit remains commit-based. Near-candidate pass-through without explicit stop, commit, or terminal intent is diagnostic only."
+    },
+    "viewpoint_evidence_axis": {
+      "role": "Active re-observation is the mechanism that converts uncertainty into evidence acquisition.",
+      "primary_fields": [
+        "viewpoint_evidence_gap_state",
+        "selected_observation_action",
+        "selected_candidate_count",
+        "evidence_delta_available",
+        "reobserve_travel_cost_m",
+        "post_update_request_state"
+      ],
+      "interpretation_rule": "Viewpoint evidence gap can justify observation, deferral, or later arbitration input, but it is not a goal-validity proof by itself."
+    },
+    "map_pose_axis": {
+      "role": "Map/pose consistency keeps the contribution Semantic-SLAM-centered rather than pure ObjectNav re-ranking.",
+      "primary_fields": [
+        "map_pose_consistency_uncertainty_state",
+        "pose_graph_connectivity_delta",
+        "map_pose_consistency_delta",
+        "map_side_delta",
+        "map_task_alignment"
+      ],
+      "interpretation_rule": "Map/pose fields must be reported as a separate map-side evidence axis and may not be collapsed into candidate-overlap or semantic-score shortcuts."
+    }
+  },
+  "task_map_join_contract": {
+    "same_row_requirement": "The same request rows must expose goal_validity_risk, viewpoint_evidence_gap, map_pose_consistency_uncertainty, wrong-goal proxy, wasted-path proxy, and map/pose delta fields.",
+    "request_rows_required": 50,
+    "baseline_rows_required": 150,
+    "goal_validity_join_required_rows": 50,
+    "viewpoint_gap_join_required_rows": 50,
+    "map_pose_join_required_rows": 50,
+    "wrong_goal_proxy_evaluable_rows_required": 150,
+    "wasted_path_proxy_evaluable_rows_required": 150,
+    "map_pose_delta_evaluable_rows_required": 50,
+    "forbidden_join_uses": [
+      "repair_action_rows_with_evaluation_labels",
+      "tune_terminal_rule_from_joined_labels",
+      "convert_map_pose_alignment_to_commit_rule",
+      "convert_support_acquired_to_goal_validity",
+      "use_wrong_goal_proxy_as_action_input"
+    ]
+  },
+  "baseline_matrix_requirements": {
+    "existing_rows_available": [
+      "NoReobserveReference",
+      "SemanticOnly",
+      "SLAMOnlyRich_current"
+    ],
+    "required_next_non_gt_baselines": [
+      "NoReobserveReference",
+      "SemanticOnly",
+      "SLAMOnly",
+      "SemanticSLAMInteraction",
+      "RandomReobserve",
+      "FrontierReobserve",
+      "CARe_style_confidence_replanning",
+      "VLFM_style_semantic_exploration_reference",
+      "OneMap_style_semantic_memory_reference"
+    ],
+    "required_oracle_references": [
+      "GTTargetOracle",
+      "GTCandidateOracle",
+      "GTViewOracle"
+    ],
+    "minimum_comparison_axes": [
+      "wrong_goal_visit_proxy",
+      "wasted_path_proxy_m",
+      "goal_validity_risk_state",
+      "viewpoint_evidence_gap_state",
+      "map_pose_consistency_delta",
+      "map_task_alignment",
+      "terminal_commit_proxy",
+      "defer_rate"
+    ],
+    "simpler_alternative_groups": [
+      "confidence_threshold_only",
+      "random_reobservation_budget_matched",
+      "frontier_or_geometry_only_reobservation",
+      "direct_semantic_memory_commit",
+      "detector_score_confirmation"
+    ],
+    "baseline_matrix_next_task": "define_reviewer_defense_baseline_matrix"
+  },
+  "contract_scope": {
+    "contract_type": "paper_framing_and_evidence_schema_freeze_after_same_row_join",
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false,
+    "not_allowed_to_define": [
+      "terminal_goal_candidate_selector",
+      "candidate_commit_rule",
+      "candidate_rejection_rule",
+      "SLAMOnlyRich_formula_update",
+      "SemanticSLAMInteraction_formula_update",
+      "ObjectNav_final_policy",
+      "first_eval_rerun_config",
+      "policy_scale_comparison",
+      "Step_4_5_promotion",
+      "paper_claim"
+    ],
+    "allowed_next_contracts": [
+      "reviewer_defense_baseline_matrix",
+      "non_gt_goal_validity_arbitration_after_baseline_matrix"
+    ]
+  },
+  "contract_checks": {
+    "source_join_gate_passed": true,
+    "promotion_remains_blocked": true,
+    "same_row_goal_validity_viewpoint_map_pose_available": true,
+    "objectnav_wrong_goal_is_task_failure_surface": true,
+    "objectnav_not_separate_application": true,
+    "wrong_goal_metric_is_commit_based": true,
+    "near_candidate_pass_through_excluded_from_primary_wrong_goal": true,
+    "task_failure_axis_and_map_pose_axis_separated": true,
+    "evaluation_labels_for_action_forbidden": true,
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "next_research_task": {
+    "task": "define_reviewer_defense_baseline_matrix",
+    "reason": "The evidence schema is now fixed; the next reviewer-facing step is to predeclare which non-GT baselines, oracle references, simpler alternatives, and ablations can test whether active re-observation utility is more than semantic thresholding, random extra views, or geometry-only exploration."
+  }
+}

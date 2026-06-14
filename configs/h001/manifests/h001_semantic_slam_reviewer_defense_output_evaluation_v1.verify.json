@@ -1,0 +1,114 @@
+{
+  "schema_version": "h001.verify.semantic_slam_reviewer_defense_output_evaluation.v1",
+  "date_checked": "2026-06-05",
+  "ok": true,
+  "status": "completed_reviewer_defense_output_evaluation",
+  "implementation": "src/h001_runtime/evaluate_semantic_slam_reviewer_defense_output.py",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "input": {
+    "root": "local_dataset/runs/h001_semantic_slam_reviewer_defense_v1",
+    "diagnostic_rows": "semantic_slam_reviewer_defense_diagnostic_rows.jsonl",
+    "summary": "semantic_slam_reviewer_defense_summary.json",
+    "verify": "configs/h001/manifests/h001_semantic_slam_reviewer_defense_contract_v1.verify.json"
+  },
+  "output": {
+    "root": "local_dataset/runs/h001_semantic_slam_reviewer_defense_output_evaluation_v1",
+    "evaluation_rows": "semantic_slam_reviewer_defense_output_evaluation_rows.jsonl",
+    "summary": "semantic_slam_reviewer_defense_output_evaluation_summary.json"
+  },
+  "verified_output": {
+    "request_groups": 50,
+    "evaluation_rows": 50,
+    "policy_rows": 200,
+    "policy_summary_rows": 4,
+    "diagnostic_rows": 50,
+    "primary_blocker": "slam_only_rich_underpowered",
+    "policy_rank1_rows": {
+      "NoReobserveReference": 0,
+      "SLAMOnlyRich": 3,
+      "SemanticOnly": 10,
+      "SemanticSLAMInteractionGuarded": 37
+    },
+    "policy_rank1_rates": {
+      "NoReobserveReference": 0.0,
+      "SLAMOnlyRich": 0.06,
+      "SemanticOnly": 0.2,
+      "SemanticSLAMInteractionGuarded": 0.74
+    },
+    "slam_only_rich_rank1_rows": 3,
+    "slam_only_rich_rank1_required": 5,
+    "slam_only_rich_rank1_deficit": 2,
+    "semantic_only_shadowed_by_interaction_rows": 40,
+    "semantic_only_shadowed_by_interaction_rate": 0.8,
+    "interaction_rank1_rows": 37,
+    "interaction_rank1_rate": 0.74,
+    "map_pose_explained_interaction_rows": 40,
+    "unexplained_positive_bonus_rows": 0,
+    "blocker_class_counts": {
+      "interaction_overrides_slam_component": 1,
+      "semantic_wins_but_guarded_interaction_adds_small_map_pose_bonus": 29,
+      "semantic_wins_with_weak_map_pose_proxy": 17,
+      "slam_only_wins_but_insufficient_count": 3
+    },
+    "component_winner_counts": {
+      "SLAMOnlyRich": 4,
+      "SemanticOnly": 46
+    },
+    "slam_minus_semantic_utility_min_mean_max": [
+      -0.84,
+      -0.3229809523809524,
+      0.14833333333333332
+    ],
+    "map_pose_outcome_proxy_min_mean_max": [
+      0.0,
+      0.3646190476190474,
+      0.8083333333333332
+    ],
+    "semantic_score_min_mean_max": [
+      0.5800000000000001,
+      0.6876000000000001,
+      0.84
+    ],
+    "canonical_proxy_ready_rate": 0.92,
+    "loop_edge_availability_rate": 0.72,
+    "output_evaluation_gate_passed": false,
+    "action_safety_gate_passed": true,
+    "comparison_gate_passed": true,
+    "reviewer_defense_output_gate_passed": false,
+    "semantic_shadow_rate_passed": true,
+    "interaction_rank1_rate_passed": true,
+    "map_pose_explained_interaction_rows_passed": true,
+    "unexplained_positive_bonus_rows_passed": true,
+    "component_max_shortcut_rows_passed": true,
+    "candidate_overlap_pose_evidence_rows_passed": true,
+    "slam_only_rich_rank1_rows_passed": false,
+    "task_or_map_outcome_validation_attached_passed": false,
+    "step_4_5_promotion_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "checked_gate": {
+    "docker_py_compile_passed": true,
+    "docker_run_passed": true,
+    "evaluation_row_count_passed": true,
+    "action_safety_gate_passed": true,
+    "comparison_gate_passed": true,
+    "reviewer_defense_output_gate_passed": false,
+    "primary_blocker_recorded": true,
+    "downstream_blocked_passed": true
+  },
+  "verification_commands": [
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile src/h001_runtime/evaluate_semantic_slam_reviewer_defense_output.py",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.evaluate_semantic_slam_reviewer_defense_output",
+    "wc -l local_dataset/runs/h001_semantic_slam_reviewer_defense_output_evaluation_v1/semantic_slam_reviewer_defense_output_evaluation_rows.jsonl",
+    "jq '.primary_blocker, .gate.output_evaluation_gate_passed' local_dataset/runs/h001_semantic_slam_reviewer_defense_output_evaluation_v1/semantic_slam_reviewer_defense_output_evaluation_summary.json"
+  ],
+  "next_task": "diagnose_slam_only_rich_underpowered_before_proxy_formula_change",
+  "interpretation": {
+    "fact": "The evaluator writes 50 output-evaluation rows and records SLAMOnlyRich rank-1 deficit 2 against the frozen minimum 5.",
+    "agent_inference": "The guarded interaction is less shortcut-prone than the previous additive proxy, but independent SLAM-side utility is still underpowered and must be diagnosed before any proxy formula change.",
+    "paper_claim": "No SemanticSLAM complementarity, ObjectNav benefit, SLAM benefit, terminal utility, first_eval, or policy-scale comparison claim is allowed from this output evaluation."
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "schema_version": "h001.contract.semantic_slam_candidate_relative_path_closure.v1",
+  "date_checked": "2026-06-06",
+  "status": "frozen_non_promotable_top_rule_and_revision_requirements",
+  "contract_name": "semantic_slam_candidate_relative_path_closure_v1",
+  "purpose": "Close the current candidate-relative SemanticSLAM map/pose top-rule path as non-promotable after the Docker task-proxy join, while preserving candidate-relative map/pose evidence only as a possible active-observation utility source.",
+  "stage": "P4-design",
+  "source": {
+    "candidate_relative_evidence_contract": "configs/h001/manifests/h001_semantic_slam_candidate_relative_map_pose_evidence_v1.json",
+    "candidate_relative_evidence_verify": "configs/h001/manifests/h001_semantic_slam_candidate_relative_map_pose_evidence_v1.verify.json",
+    "candidate_relative_evidence_summary": "local_dataset/runs/h001_semantic_slam_candidate_relative_map_pose_evidence_v1/semantic_slam_candidate_relative_map_pose_evidence_summary.json",
+    "candidate_relative_task_proxy_contract": "configs/h001/manifests/h001_semantic_slam_candidate_relative_task_proxy_join_v1.json",
+    "candidate_relative_task_proxy_verify": "configs/h001/manifests/h001_semantic_slam_candidate_relative_task_proxy_join_v1.verify.json",
+    "candidate_relative_task_proxy_summary": "local_dataset/runs/h001_semantic_slam_candidate_relative_task_proxy_join_v1/semantic_slam_candidate_relative_task_proxy_summary.json"
+  },
+  "source_gate": {
+    "candidate_relative_evidence_materializer_gate_passed": true,
+    "candidate_relative_task_proxy_join_gate_passed": true,
+    "candidate_relative_task_proxy_promotion_gate_passed": false,
+    "primary_blocker": "candidate_relative_top_rule_wrong_goal_risk",
+    "expected_candidate_rows": 232,
+    "expected_request_rows": 50,
+    "expected_alternative_rows": 450,
+    "expected_baseline_policy_rows": 150,
+    "expected_failure_taxonomy_rows": 50,
+    "source_request_label_missing_rows": 0,
+    "source_candidate_label_missing_rows": 0,
+    "source_candidate_label_correct_wrong_no_valid_rows": [
+      84,
+      148,
+      24
+    ],
+    "top_map_pose_tuple_correct_wrong_no_valid_rows": [
+      29,
+      21,
+      4
+    ],
+    "candidate_relative_unique_top_correct_wrong_no_valid_rows": [
+      23,
+      19,
+      4
+    ],
+    "candidate_relative_unique_top_rows": 42,
+    "candidate_relative_tie_or_saturation_rows": 5,
+    "single_candidate_geometry_only_rows": 3,
+    "candidate_overlap_only_request_rows": 4,
+    "max_action_evidence_forbidden_key_count": 0,
+    "requires_uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "closure_decision": {
+    "closed_path": "candidate_relative_map_pose_top_rule_as_terminal_selector",
+    "closed_status": "closed_as_non_promotable_under_task_proxy_join",
+    "closure_reason": [
+      "task-label coverage is complete, so the blocker is not missing evaluation plumbing",
+      "the top map-pose candidate rule would commit all 50 request rows but yields 21 wrong-goal rows and 4 no-valid rows",
+      "the candidate-relative unique-top subset is still unsafe with 19 wrong-goal rows and 4 no-valid rows out of 42 rows",
+      "the candidate_relative_dominant_map_pose_support tag is not a valid goal-correctness authority because it has 23 correct, 19 wrong, and 4 no-valid rows",
+      "map/pose contrast currently measures candidate observability or geometric salience, not ObjectNav goal validity",
+      "revising the utility formula from this top-rule would tune around a demonstrated wrong-goal mechanism"
+    ],
+    "closed_shortcuts": [
+      "commit_top_map_pose_tuple_candidate",
+      "commit_candidate_relative_unique_top_candidate",
+      "commit_candidate_relative_dominant_map_pose_support_candidate",
+      "commit_top_projection_visible_heading_candidate",
+      "commit_top_pose_heading_candidate",
+      "commit_top_projection_status_visible_candidate",
+      "commit_closest_target_distance_candidate",
+      "increase_SLAMOnlyRich_weight_after_candidate_relative_contrast",
+      "weaken_semantic_score_to_force_map_pose_selection",
+      "fallback_to_semantic_rank_when_map_pose_risk_is_high",
+      "fallback_to_detector_score_or_local_context",
+      "use_task_proxy_labels_as_selector_inputs",
+      "tune_category_specific_threshold_after_label_join"
+    ],
+    "blocked_downstream_tasks": [
+      "revised_SLAMOnlyRich_formula",
+      "terminal_utility_contract",
+      "first_eval_rerun",
+      "policy_scale_comparison",
+      "Step_4_5_promotion",
+      "paper_claim"
+    ]
+  },
+  "surviving_evidence_role": {
+    "allowed_role": "active_observation_or_uncertainty_diagnostic_only",
+    "not_allowed_role": "terminal_goal_candidate_selector",
+    "reason": "Candidate-relative map/pose evidence can expose uncertainty and rival ambiguity, but current rows show it cannot decide ObjectNav goal validity by itself.",
+    "allowed_outputs_before_revision": [
+      "observation_priority_rows",
+      "uncertainty_failure_taxonomy_rows",
+      "risk_aware_defer_rows",
+      "map_pose_task_proxy_audit_rows"
+    ],
+    "forbidden_outputs_before_revision": [
+      "terminal_commit_rows",
+      "candidate_rejection_rows",
+      "formula_weight_update",
+      "first_eval_rerun",
+      "policy_scale_comparison",
+      "paper_claim"
+    ]
+  },
+  "revision_requirements": {
+    "target_question": "Can candidate-relative map/pose uncertainty choose active re-observation targets that reduce wrong-goal/no-valid risk without acting as a direct terminal selector?",
+    "required_design_shift": "Convert candidate-relative map/pose contrast into active-observation utility and risk-aware defer logic, not a direct top-candidate commit rule.",
+    "required_evidence_properties": [
+      "action-time rows must output observe/defer priorities, not terminal commits",
+      "candidate-relative terms must be paired with a non-GT risk guard for no-valid and same-category rival ambiguity",
+      "map/pose-native terms must remain separated from semantic rank, detector score, source-top, local-context, oracle, and evaluation labels",
+      "the revision must report when map/pose contrast is high but goal-validity evidence is weak or contradictory",
+      "the revision must include simpler alternatives such as defer-all, current_unique_ready, top_map_pose_tuple, top_projection_visible_heading, and semantic/detector fallback audits",
+      "task labels may be joined only after action rows are frozen and only as evaluation-only diagnostics",
+      "promotion requires at least one map-side metric and one task-side proxy to improve together on held-out or fresh validation"
+    ],
+    "minimum_next_contract_outputs": [
+      "observation_priority_rows",
+      "request_risk_summary_rows",
+      "simpler_alternative_audit_rows",
+      "failure_taxonomy_rows",
+      "summary"
+    ],
+    "minimum_next_contract_gates": {
+      "action_evidence_forbidden_key_count": 0,
+      "uses_gt_for_action": false,
+      "terminal_commit_rows": 0,
+      "candidate_rejection_rows": 0,
+      "task_proxy_join_after_action_freeze_required": true,
+      "top_rule_wrong_goal_rows_must_be_reported": true,
+      "no_valid_rows_must_be_separated": true,
+      "heldout_or_fresh_validation_required_before_paper_claim": true
+    }
+  },
+  "next_research_task": {
+    "task": "freeze_candidate_relative_active_observation_utility_contract",
+    "proposed_contract": "h001_semantic_slam_candidate_relative_active_observation_utility_v1.json",
+    "first_question": "Can the unsafe top-rule rows be converted into observe/defer priorities that target uncertainty instead of terminal goal selection?",
+    "implementation_allowed_now": false,
+    "reason_implementation_blocked": "The active-observation utility definition must be frozen before any runtime materializer or formula revision."
+  },
+  "interpretation_rule": {
+    "fact": "Candidate-relative map/pose evidence and task labels join with full source-row coverage, but top-rule and unique-top candidates still include wrong-goal and no-valid cases.",
+    "agent_inference": "The current candidate-relative map/pose path is not a terminal utility path. Its defensible role is active observation or uncertainty diagnosis, not direct candidate commitment.",
+    "paper_claim_allowed": false
+  }
+}

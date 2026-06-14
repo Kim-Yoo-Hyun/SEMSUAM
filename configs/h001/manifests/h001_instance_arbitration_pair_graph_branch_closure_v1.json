@@ -1,0 +1,113 @@
+{
+  "schema_version": "h001.contract.instance_arbitration_pair_graph_branch_closure.v1",
+  "date_checked": "2026-06-03",
+  "status": "frozen_before_implementation",
+  "contract_name": "instance_arbitration_pair_graph_branch_closure_v1",
+  "purpose": "Close the instance-arbitration pair-graph branch as terminal-blocking shortcut-audit evidence after the Docker-verified follow-up analyzer produced zero promotable branch outcomes.",
+  "implementation_target": {
+    "analyzer": "src/h001_runtime/close_instance_arbitration_pair_graph_branch.py",
+    "output": "local_dataset/runs/h001_instance_arbitration_pair_graph_branch_closure_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_required": true
+  },
+  "source": {
+    "pair_graph_followup_contract": "configs/h001/manifests/h001_instance_arbitration_pair_graph_consistency_followup_v1.json",
+    "pair_graph_followup_verify": "configs/h001/manifests/h001_instance_arbitration_pair_graph_consistency_followup_v1.verify.json",
+    "pair_graph_followup_output": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1",
+    "pair_graph_followup_summary": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1/instance_arbitration_pair_graph_consistency_summary.json",
+    "pair_graph_candidate_rows": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1/instance_arbitration_pair_graph_candidate_rows.jsonl",
+    "pair_graph_pair_rows": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1/instance_arbitration_pair_graph_pair_rows.jsonl",
+    "pair_graph_request_rows": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1/instance_arbitration_pair_graph_request_rows.jsonl",
+    "pair_graph_shortcut_audit_rows": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1/instance_arbitration_pair_graph_shortcut_audit_rows.jsonl",
+    "instance_arbitration_residual_summary": "local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1/instance_arbitration_residual_summary.json",
+    "post_object_relation_selector_summary": "local_dataset/runs/h001_next_label_free_evidence_family_after_object_relation_v1/next_label_free_evidence_family_after_object_relation_summary.json"
+  },
+  "source_gate": {
+    "pair_graph_consistency_followup_gate_passed": true,
+    "source_residual_diagnostic_gate_passed": true,
+    "expected_candidate_graph_rows": 51,
+    "expected_pair_graph_rows": 121,
+    "expected_request_graph_rows": 9,
+    "expected_shortcut_audit_rows": 357,
+    "expected_lossless_candidate_membership_rows": 17,
+    "expected_max_pair_winner_candidate_membership_rows": 14,
+    "expected_unique_lossless_request_rows": 2,
+    "expected_multiple_lossless_request_rows": 7,
+    "expected_promotable_branch_outcome_rows": 0,
+    "expected_terminal_commit_rows": 0,
+    "expected_candidate_commit_rows": 0,
+    "expected_candidate_rejection_rows": 0,
+    "max_action_evidence_forbidden_key_count": 0,
+    "requires_uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "closure_scope": {
+    "closure_name": "instance_arbitration_pair_graph_branch_closure_v1",
+    "branch_family": "instance_arbitration_pair_graph_consistency",
+    "expected_branch_status_rows": 1,
+    "expected_request_closure_rows": 9,
+    "expected_candidate_closure_rows": 51,
+    "expected_pair_closure_rows": 121,
+    "expected_shortcut_closure_rows": 357,
+    "expected_request_closure_status_counts": {
+      "closed_as_multiple_lossless_pair_graph_candidates_unresolved": 7,
+      "closed_as_unique_lossless_candidate_blocked_by_common_view_overlap": 2
+    },
+    "expected_candidate_closure_status_counts": {
+      "closed_as_lossless_blocked_by_common_view_overlap": 2,
+      "closed_as_lossless_but_multiple_graph_candidates": 15,
+      "closed_as_max_pair_win_nonterminal_due_pair_losses": 4,
+      "closed_as_pair_or_contrast_contradiction_nonterminal": 18,
+      "closed_as_rival_leakage_nonterminal": 12
+    },
+    "expected_pair_closure_status_counts": {
+      "closed_as_common_view_overlap_blocks_pair_resolution": 36,
+      "closed_as_no_candidate_support_blocks_pair_resolution": 25,
+      "closed_as_one_sided_support_nonterminal_graph_edge": 53,
+      "closed_as_one_sided_support_with_leakage_nonterminal": 7
+    },
+    "expected_shortcut_blocked_reason_counts": {
+      "candidate_rejection_by_pair_loss_forbidden_without_goal_validity_evidence": 33,
+      "common_view_overlap_blocks_shortcut_commit": 10,
+      "defer_all_is_control_baseline_not_utility_evidence": 51,
+      "multiple_lossless_pair_graph_candidates_block_shortcut_commit": 46,
+      "shortcut_rule_not_applicable_to_candidate": 217
+    },
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "blocked_actions": [
+    "commit_graph_winner",
+    "commit_lossless_candidate",
+    "commit_max_pair_win_candidate",
+    "commit_source_top_lossless_candidate",
+    "commit_detector_strong_lossless_candidate",
+    "reject_candidate_with_pair_loss",
+    "threshold_tuning_after_label_join",
+    "terminal_utility_contract",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "expected_outputs": {
+    "branch_status_rows": "instance_arbitration_pair_graph_branch_status_rows.jsonl",
+    "request_closure_rows": "instance_arbitration_pair_graph_branch_request_rows.jsonl",
+    "candidate_closure_rows": "instance_arbitration_pair_graph_branch_candidate_rows.jsonl",
+    "pair_closure_rows": "instance_arbitration_pair_graph_branch_pair_rows.jsonl",
+    "shortcut_closure_rows": "instance_arbitration_pair_graph_branch_shortcut_rows.jsonl",
+    "summary": "instance_arbitration_pair_graph_branch_closure_summary.json"
+  },
+  "next_step_if_passed": "select_next_label_free_evidence_family_after_instance_arbitration_pair_graph_closure",
+  "next_step_if_failed": "diagnose_instance_arbitration_pair_graph_branch_closure_mismatch",
+  "interpretation_rule": {
+    "fact": "The pair-graph follow-up produced zero promotable branch outcomes while auditing all candidate, pair, request, and shortcut rows.",
+    "agent_inference": "Instance-arbitration pair-graph evidence should be closed as terminal-blocking shortcut taxonomy because graph winners and lossless candidates are not goal-validity authority under common-view overlap, rival leakage, and pair-loss conflicts.",
+    "paper_claim": "No paper claim is allowed from this contract alone."
+  },
+  "paper_claim_allowed": false
+}

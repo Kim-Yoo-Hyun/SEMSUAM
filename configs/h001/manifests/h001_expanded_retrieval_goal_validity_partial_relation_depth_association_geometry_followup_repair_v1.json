@@ -1,0 +1,146 @@
+{
+  "schema_version": "h001.contract.expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair.v1",
+  "date_checked": "2026-06-01",
+  "status": "frozen_design_contract_before_implementation",
+  "contract_name": "expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair_v1",
+  "purpose": "Freeze the nonterminal follow-up repair routes after the association-geometry diagnostic split, without allowing terminal ObjectNav goal commit or candidate rejection.",
+  "source": {
+    "association_geometry_repair_contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1.json",
+    "association_geometry_repair_verify": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1.verify.json",
+    "association_geometry_repair_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1",
+    "association_geometry_repair_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1/partial_relation_depth_association_geometry_repair_summary.json",
+    "association_geometry_repair_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1/partial_relation_depth_association_geometry_repair_rows.jsonl",
+    "association_geometry_repair_request_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1/partial_relation_depth_association_geometry_repair_request_rows.jsonl"
+  },
+  "source_gate": {
+    "association_geometry_repair_diagnostic_gate_passed": true,
+    "expected_repair_rows": 2,
+    "expected_repair_request_rows": 2,
+    "expected_query_counts": {
+      "bed": 1,
+      "sofa": 1
+    },
+    "expected_candidate_ids": [
+      "vlmaps:export:bed:spatial_nms:9",
+      "vlmaps:export:sofa:spatial_nms:2"
+    ],
+    "expected_repair_diagnostic_action_counts": {
+      "request_anchor_selection_repair_for_association_geometry": 1,
+      "request_direction_specific_reobservation_repair": 1
+    },
+    "expected_request_repair_next_action_counts": {
+      "design_direction_specific_reobservation_repair_contract": 1,
+      "design_relation_anchor_selection_repair_contract": 1
+    },
+    "expected_exact_failed_completion_associated_heading_count": 0,
+    "expected_exact_failed_completion_depth_consistent_count": 0,
+    "expected_exact_failed_completion_inside_mask_count": 5,
+    "minimum_same_requested_direction_associated_heading_count": 2,
+    "minimum_other_requested_direction_associated_heading_count": 14,
+    "max_action_evidence_forbidden_key_count": 0,
+    "max_terminal_commit_rows": 0,
+    "requires_uses_gt_for_action": false,
+    "requires_uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "design_scope": {
+    "input_level": "row-level and request-level association-geometry repair diagnostic rows",
+    "output_level": "nonterminal follow-up repair route rows",
+    "allowed_action_inputs": [
+      "repair_diagnostic_action",
+      "request_repair_next_action",
+      "candidate_id",
+      "target_candidate_id",
+      "scene_key",
+      "query",
+      "failed_evidence_index",
+      "exact_failed_completion_frame",
+      "exact_failed_completion_association",
+      "same_requested_direction_association",
+      "other_requested_direction_association",
+      "source residual failure class",
+      "source branch action"
+    ],
+    "forbidden_action_inputs": [
+      "evaluation_correctness",
+      "success_label",
+      "wrong_goal_label",
+      "gt_target_object_id",
+      "gt_goal_position",
+      "posthoc_correct_candidate_id",
+      "category_specific_threshold_from_labels",
+      "oracle view or shortest path target"
+    ]
+  },
+  "followup_route_mapping": {
+    "request_anchor_selection_repair_for_association_geometry": {
+      "expected_request_rows": 1,
+      "expected_query": "sofa",
+      "branch_action": "route_to_relation_anchor_selection_repair",
+      "branch_reason": "The exact failed completion view has inside-mask projection but zero association, while another same-requested-direction completion row associates the same candidate.",
+      "allowed_next_evidence": [
+        "relation_anchor_candidate_selection_replay",
+        "explicit_anchor_vs_anchorless_completion_audit",
+        "fixed_relation_anchor_selection_rule_probe"
+      ],
+      "blocked_shortcuts": [
+        "commit_by_same_requested_direction_association",
+        "commit_by_inside_mask_presence",
+        "choose_relation_anchor_from_evaluation_label",
+        "label_tuned_relation_anchor_selection"
+      ]
+    },
+    "request_direction_specific_reobservation_repair": {
+      "expected_request_rows": 1,
+      "expected_query": "bed",
+      "branch_action": "route_to_direction_specific_reobservation_repair",
+      "branch_reason": "The requested relation-anchor-to-target completion falls back to a non-relation direction with zero association, while another requested direction strongly associates the same candidate.",
+      "allowed_next_evidence": [
+        "direction_feasibility_replay",
+        "target_to_relation_anchor_reobservation_plan",
+        "navmesh_fallback_direction_audit",
+        "fixed_direction_priority_rule_probe"
+      ],
+      "blocked_shortcuts": [
+        "commit_by_other_direction_depth_consistency",
+        "reject_failed_direction_candidate_as_invalid",
+        "choose_direction_from_evaluation_label",
+        "label_tuned_direction_selection"
+      ]
+    }
+  },
+  "followup_repair_gate": {
+    "all_repair_rows_must_be_routed": true,
+    "all_known_repair_actions_must_have_mapping": true,
+    "unknown_repair_action": "fail_closed_defer_unmapped_association_geometry_repair_action",
+    "terminal_commits_allowed": false,
+    "candidate_rejection_allowed": false,
+    "threshold_tuning_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "required_future_outputs": {
+    "followup_rows": "partial_relation_depth_association_geometry_followup_repair_rows.jsonl",
+    "followup_request_rows": "partial_relation_depth_association_geometry_followup_repair_request_rows.jsonl",
+    "summary": "partial_relation_depth_association_geometry_followup_repair_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "src/h001_runtime/route_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair.py",
+    "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair_v1",
+    "verification_command": "python -m h001_runtime.route_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair"
+  },
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "The exact failed completion views still have zero candidate association and zero depth-consistent signal, while alternative completion geometry recovers association.",
+    "agent_inference": "Association-geometry underlink should be split into relation-anchor selection repair and direction-specific re-observation repair before any terminal ObjectNav goal-validity rule is considered.",
+    "paper_claim_allowed": false
+  }
+}

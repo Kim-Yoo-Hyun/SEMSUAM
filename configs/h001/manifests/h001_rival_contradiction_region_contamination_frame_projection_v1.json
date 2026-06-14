@@ -1,0 +1,253 @@
+{
+  "schema_version": "h001.contract.rival_contradiction_region_contamination_frame_projection.v1",
+  "date_checked": "2026-06-12",
+  "status": "frozen_contract_static_verified",
+  "contract_name": "rival_contradiction_region_contamination_frame_projection_v1",
+  "purpose": "Freeze the frame/projection smoke contract for the Docker-verified rival_contradiction_region_contamination_evidence_v1 materializer before any rendering, detector/SAM2 evidence, terminal utility, formula revision, first_eval rerun, policy-scale comparison, or paper claim.",
+  "stage": "P4-design",
+  "paper_framing": {
+    "semantic_slam_centered": true,
+    "objectnav_wrong_goal_role": "task_level_failure_surface_for_semantic_slam_uncertainty",
+    "active_reobservation_role": "renderability_check_for_nonterminal_rival_contradiction_or_region_contamination_evidence",
+    "natural_proof_rule": "The previous pairwise rule failed because positive goal-region/object-relation support can select a wrong same-category instance. The required method step is therefore not to tune a terminal score, but to render and project fixed supported-vs-rival observation roles that can later test contamination or contradiction.",
+    "paper_claim_allowed": false
+  },
+  "source": {
+    "source_contract": "configs/h001/manifests/h001_rival_contradiction_region_contamination_evidence_v1.json",
+    "source_verify": "configs/h001/manifests/h001_rival_contradiction_region_contamination_evidence_v1.verify.json",
+    "source_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_evidence_v1/rival_contradiction_region_contamination_summary.json",
+    "source_request_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_evidence_v1/rival_contradiction_region_contamination_request_rows.jsonl",
+    "source_pair_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_evidence_v1/rival_contradiction_region_contamination_pair_rows.jsonl",
+    "source_candidate_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_evidence_v1/rival_contradiction_region_contamination_candidate_rows.jsonl",
+    "source_observation_plan_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_evidence_v1/rival_contradiction_region_contamination_observation_plan_rows.jsonl",
+    "source_audit_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_evidence_v1/rival_contradiction_region_contamination_audit_rows.jsonl",
+    "source_failure_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_evidence_v1/rival_contradiction_region_contamination_failure_rows.jsonl",
+    "geometry_candidate_artifact_source": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_candidate_artifact.jsonl",
+    "geometry_plan_reference_source": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_plan.jsonl"
+  },
+  "source_gate": {
+    "status": "materializer_gate_passed_terminal_blocked",
+    "materializer_gate_passed": true,
+    "request_rows": 21,
+    "pair_rows": 21,
+    "target_request_rows": 1,
+    "target_pair_rows": 1,
+    "audit_pair_rows": 20,
+    "candidate_rows": 2,
+    "observation_plan_rows": 4,
+    "audit_rows": 20,
+    "failure_rows": 21,
+    "pair_target_role_counts": {
+      "target_rival_contradiction_region_contamination": 1,
+      "audit_or_coverage_family": 20
+    },
+    "pair_state_counts": {
+      "rival_contradiction_or_region_contamination_evidence_required": 1,
+      "coverage_completion_family_required": 12,
+      "goal_region_conditioned_relation_recheck_required": 4,
+      "missing_evidence_second_view_followup_required": 3,
+      "contrastive_goal_region_rival_support_audit_required": 1
+    },
+    "observation_role_counts": {
+      "supported_candidate_own_view": 1,
+      "rival_candidate_own_view": 1,
+      "shared_region_or_relation_anchor_view": 1,
+      "cross_candidate_challenge_view": 1
+    },
+    "target_scene_key": "QaLdnwvtxbs",
+    "target_query": "sofa",
+    "target_request_id": "rival_identity:3",
+    "target_episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:9:1:sofa",
+    "provisionally_supported_candidate_id": "vlmaps:export:sofa:spatial_nms:1",
+    "rival_candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action_true_rows": 0,
+    "paper_claim_allowed_true_rows": 0,
+    "primary_blocker": "frame_projection_or_post_observation_evidence_required"
+  },
+  "frame_projection_contract": {
+    "policy": "RivalContradictionRegionContaminationEvidence",
+    "viewpoint_policy": "paired_supported_vs_rival_region_contamination_probe_v1",
+    "expected_decision_rows": 4,
+    "minimum_frame_rows": 4,
+    "minimum_projection_rows": 4,
+    "minimum_rendered_heading_count": 4,
+    "minimum_visible_row_rate": 1.0,
+    "max_candidates_per_decision": 2,
+    "max_candidates_per_frame": 2,
+    "candidate_point_field": "grounded_position",
+    "yaw_offsets_deg": [
+      -30,
+      0,
+      30
+    ],
+    "projection_anchor_height_offsets_m": [
+      0.0,
+      0.4,
+      0.8,
+      1.2,
+      1.6,
+      2.0,
+      2.4
+    ],
+    "required_observation_roles": [
+      "supported_candidate_own_view",
+      "rival_candidate_own_view",
+      "shared_region_or_relation_anchor_view",
+      "cross_candidate_challenge_view"
+    ],
+    "required_evidence_axes": [
+      "supported_candidate_own_region_evidence",
+      "rival_candidate_own_region_evidence",
+      "region_context_overlap_or_contamination",
+      "relation_anchor_contradiction_or_leakage"
+    ],
+    "required_frame_ready_fields": [
+      "schema_version",
+      "policy",
+      "scene_id",
+      "scene_key",
+      "query",
+      "episode_key",
+      "request_id",
+      "candidate_id",
+      "candidate_ids",
+      "target_candidate_id",
+      "context_candidate_id",
+      "candidate_a_id",
+      "candidate_b_id",
+      "provisionally_supported_candidate_id",
+      "rival_candidate_id",
+      "observation_role",
+      "evidence_axis",
+      "viewpoint_id",
+      "viewpoint_policy",
+      "viewpoint_position",
+      "viewpoint_rotation",
+      "target_position",
+      "target_visit_position",
+      "standoff_direction_source",
+      "standoff_distance_requested",
+      "standoff_navmesh_navigable",
+      "standoff_navmesh_snapped",
+      "uses_gt_for_action",
+      "paper_claim_allowed"
+    ],
+    "required_candidate_artifact_fields": [
+      "scene_id",
+      "scene_key",
+      "query",
+      "candidates",
+      "candidate_id",
+      "position",
+      "visit_position",
+      "score",
+      "semantic_rank",
+      "uses_gt_for_action"
+    ],
+    "required_frame_outputs": [
+      "summary.json",
+      "rival_identity_frame_summary.jsonl",
+      "frames/*/*/rgb.png",
+      "frames/*/*/depth.npy",
+      "frames/*/*/pose.txt",
+      "frames/*/*/metadata.json",
+      "nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl",
+      "nonblank_filter_v1/nonblank_frame_filter_summary.json"
+    ],
+    "required_projection_outputs": [
+      "projection_anchor_smoke_summary.json",
+      "projection_anchor_smoke_rows.jsonl"
+    ],
+    "required_summary_checks": {
+      "input_plan_gate_passed": true,
+      "frame_rows_exported_equals_expected": true,
+      "row_level_nonblank_gate_passed": true,
+      "projection_anchor_smoke_passed": true,
+      "projection_anchor_visible_rows_equals_expected": true,
+      "missing_candidate_rows": 0,
+      "candidate_selection_source": "explicit_candidate_ids",
+      "gt_action_rows": 0,
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": false,
+      "paper_claim_allowed": false
+    },
+    "pre_render_resolution_required": {
+      "symbolic_observation_plan_must_be_resolved": true,
+      "resolve_scene_id_from_geometry_candidate_artifact": true,
+      "resolve_candidate_positions_from_geometry_candidate_artifact": true,
+      "create_frame_ready_plan_before_export": true,
+      "reuse_evaluation_labels_for_planning": false,
+      "reuse_wrong_goal_or_success_labels_for_planning": false,
+      "drop_or_reorder_target_pair": false,
+      "drop_or_reorder_observation_roles": false
+    }
+  },
+  "implementation_target": {
+    "job": "scripts/h001_jobs/rival_contradiction_region_contamination_frame_projection.sh",
+    "optional_frame_ready_planner": "src/h001_runtime/plan_rival_contradiction_region_contamination_frame_projection.py",
+    "docker_image": "research3/habitat-h001:20260508-calib-artifacts",
+    "data_mount": "local_dataset/data:/data:ro",
+    "runs_mount": "local_dataset/runs:/runs",
+    "pre_render_plan_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_frame_plan_v1",
+    "frame_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_frames_v1",
+    "projection_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_projection_v1",
+    "status_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_projection_v1/frame_projection_job_status.json",
+    "expected_command_shape": [
+      "bash -n scripts/h001_jobs/rival_contradiction_region_contamination_frame_projection.sh",
+      "EXPECTED_FRAME_ROWS=4 scripts/h001_jobs/rival_contradiction_region_contamination_frame_projection.sh",
+      "jq '{ok, rows_requested, rows_exported, rendered_heading_count, uses_gt_for_action}' local_dataset/runs/h001_rival_contradiction_region_contamination_frames_v1/summary.json",
+      "jq '{input_rows, output_rows, row_level_nonblank_gate_passed, strict_no_blank_heading_gate_passed, uses_gt_for_action}' local_dataset/runs/h001_rival_contradiction_region_contamination_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+      "jq '{rows, expected_rows, projection_anchor_visible_rows, projection_anchor_visible_rate, missing_candidate_rows, gt_action_rows, gate, uses_gt_for_action}' local_dataset/runs/h001_rival_contradiction_region_contamination_projection_v1/projection_anchor_smoke_summary.json"
+    ]
+  },
+  "blocked_outputs": [
+    "detector_evidence_claim",
+    "region_contamination_decision",
+    "rival_contradiction_decision",
+    "terminal_goal_commit",
+    "candidate_commit",
+    "candidate_rejection",
+    "formula_revision",
+    "first_eval_rerun_config",
+    "policy_scale_comparison",
+    "step_4_5_promotion",
+    "paper_claim"
+  ],
+  "contract_scope": {
+    "contract_type": "frame_projection_smoke_contract_after_nonterminal_evidence_materializer",
+    "implementation_allowed_next": true,
+    "detector_or_post_observation_analyzer_allowed_after_frame_projection_passes": true,
+    "evaluation_join_required_after_evidence_rows_are_frozen": true,
+    "terminal_utility_validation_allowed": false,
+    "terminal_utility_contract_allowed_now": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "contract_checks": {
+    "source_materializer_consumed": true,
+    "source_materializer_gate_passed": true,
+    "symbolic_plan_rows_expected": 4,
+    "required_observation_roles_complete": true,
+    "candidate_pair_preserved": true,
+    "same_candidate_order_required": true,
+    "geometry_candidate_artifact_available": true,
+    "frame_ready_resolution_required_before_render": true,
+    "explicit_candidate_ids_required": true,
+    "projection_visible_rate_fixed_before_detector": true,
+    "gt_action_forbidden": true,
+    "terminal_shortcuts_blocked": true,
+    "candidate_rejection_blocked": true,
+    "paper_claim_allowed": false
+  },
+  "next_research_task": {
+    "task": "implement_docker_rival_contradiction_region_contamination_frame_projection_smoke",
+    "reason": "The symbolic observation roles are frozen. The next implementation should resolve them into frame-ready Habitat decisions, render frames, filter blank headings, and run projection-anchor smoke with explicit candidate ids before any detector/SAM2 evidence or terminal utility."
+  }
+}

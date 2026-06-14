@@ -1,0 +1,152 @@
+{
+  "schema_version": "h001.contract.rival_contradiction_region_contamination_multi_case_scaling.v1",
+  "date_checked": "2026-06-12",
+  "status": "frozen_static_contract_terminal_utility_blocked",
+  "contract_name": "rival_contradiction_region_contamination_multi_case_scaling_v1",
+  "purpose": "Freeze the next multi-case source contract for scaling the bounded rival_contradiction_region_contamination_detector_* ladder beyond the single QaLdnwvtxbs/sofa/rival_identity:3 mechanism probe.",
+  "decision": {
+    "selected_path": "scale_detector_evidence_ladder_before_terminal_utility",
+    "rejected_path": "freeze_terminal_utility_contract_now",
+    "reason": "The bounded detector/evidence/evaluation/promotion ladder passed on one diagnostic row only. The action-frozen source pool contains 18 pairwise conflict rows across 9 scenes and 5 queries, so the next natural step is multi-case scaling under the same no-GT-action discipline rather than converting the single-row result into terminal utility."
+  },
+  "source": {
+    "bounded_promotion_contract": "configs/h001/manifests/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1.json",
+    "bounded_promotion_verify": "configs/h001/manifests/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1.verify.json",
+    "bounded_promotion_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_promotion_gate_v1/rival_contradiction_region_contamination_detector_promotion_gate_summary.json",
+    "action_source_contract": "configs/h001/manifests/h001_post_action_goal_validity_arbitration_followup_v1.json",
+    "action_source_verify": "configs/h001/manifests/h001_post_action_goal_validity_arbitration_followup_v1.verify.json",
+    "action_source_pair_rows": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1/post_action_goal_validity_arbitration_followup_pair_rows.jsonl",
+    "action_source_candidate_rows": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_v1/post_action_goal_validity_arbitration_followup_candidate_rows.jsonl",
+    "evaluation_join_contract": "configs/h001/manifests/h001_post_action_goal_validity_arbitration_followup_evaluation_join_v1.json",
+    "evaluation_join_verify": "configs/h001/manifests/h001_post_action_goal_validity_arbitration_followup_evaluation_join_v1.verify.json",
+    "evaluation_join_pair_rows": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_evaluation_join_v1/post_action_goal_validity_arbitration_followup_evaluation_join_pair_rows.jsonl",
+    "evaluation_join_summary": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_evaluation_join_v1/post_action_goal_validity_arbitration_followup_evaluation_join_summary.json"
+  },
+  "source_gate": {
+    "bounded_single_case_gate_passed": true,
+    "bounded_gate_rows": 1,
+    "bounded_wrong_goal_baseline_count": 2,
+    "bounded_max_wasted_path_exposure_m": 1.7432420154092887,
+    "bounded_map_pose_consistency_delta": 1.0,
+    "bounded_allowed_after_pass": "bounded_single_case_mechanism_probe_ready",
+    "multi_case_source_total_pair_rows": 21,
+    "multi_case_pairwise_conflict_rows": 18,
+    "multi_case_missing_followup_rows": 3,
+    "multi_case_pairwise_scenes": 9,
+    "multi_case_pairwise_queries": 5,
+    "multi_case_pairwise_scene_keys": [
+      "4ok3usBNeis",
+      "BAbdmeyTvMZ",
+      "Dd4bFSTQ8gi",
+      "HY1NcmCgn3n",
+      "QaLdnwvtxbs",
+      "bCPU9suPUw9",
+      "bxsVRursffK",
+      "q3zU7Yy5E5s",
+      "qyAac8rV8Zk"
+    ],
+    "multi_case_pairwise_queries_list": [
+      "bed",
+      "chair",
+      "plant",
+      "sofa",
+      "tv_monitor"
+    ],
+    "pair_status_pattern_counts": {
+      "independent_support_acquired + independent_support_acquired": 10,
+      "independent_support_acquired + independent_support_and_contradiction_conflict": 7,
+      "independent_contradiction_acquired + independent_evidence_missing": 1
+    },
+    "evaluation_only_pair_label_pattern_counts": {
+      "a_wrong_b_correct": 8,
+      "both_correct": 4,
+      "both_wrong": 6
+    },
+    "evaluation_only_wrong_goal_candidate_pair_rows": 14,
+    "evaluation_only_correct_wrong_pair_rows": 8,
+    "pair_map_pose_consistency_abs_delta_min": 0.0,
+    "pair_map_pose_consistency_abs_delta_max": 0.0,
+    "pair_label_is_action_forbidden": true,
+    "terminal_selector_allowed_from_pair_label": false,
+    "uses_gt_for_action_true_rows": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0
+  },
+  "frozen_source_filter": {
+    "source_name": "expanded_retrieval_local_context_frames_v1",
+    "target_role": "primary_target",
+    "selected_branch": "pairwise_goal_region_map_pose_arbitration_v1",
+    "selected_action": "request_pairwise_goal_region_map_pose_evidence",
+    "source_resolution_route": "request_conflict_arbitration_evidence",
+    "terminal_commit": false,
+    "candidate_commit": false,
+    "candidate_rejection": false,
+    "uses_gt_for_action": false,
+    "required_pair_rows": 18,
+    "minimum_scene_count": 5,
+    "minimum_query_count": 3
+  },
+  "scaling_contract": {
+    "next_artifact_name": "rival_contradiction_region_contamination_multi_case_source_v1",
+    "next_materializer": "src/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_source.py",
+    "expected_output_root": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1",
+    "required_outputs": {
+      "source_rows": "rival_contradiction_region_contamination_multi_case_source_rows.jsonl",
+      "candidate_role_rows": "rival_contradiction_region_contamination_multi_case_candidate_role_rows.jsonl",
+      "observation_plan_seed_rows": "rival_contradiction_region_contamination_multi_case_observation_seed_rows.jsonl",
+      "audit_rows": "rival_contradiction_region_contamination_multi_case_audit_rows.jsonl",
+      "summary": "rival_contradiction_region_contamination_multi_case_summary.json"
+    },
+    "role_policy": {
+      "candidate_ordering_source": "action_frozen_pair_rows",
+      "candidate_a_and_b_must_not_be_interpreted_as_correctness": true,
+      "supported_vs_rival_alias_allowed_only_when_non_gt_rule_state_predefines_it": true,
+      "default_pair_roles": [
+        "candidate_a_own_view",
+        "candidate_b_own_view",
+        "shared_region_or_relation_anchor_view",
+        "cross_candidate_challenge_view"
+      ],
+      "forbidden_role_sources": [
+        "candidate correctness label",
+        "pair label pattern",
+        "wrong-goal outcome",
+        "wasted-path outcome",
+        "GT object identity"
+      ]
+    },
+    "future_ladder": [
+      "multi_case_source_materializer",
+      "multi_case_frame_projection_contract",
+      "multi_case_detector_substrate",
+      "multi_case_post_detector_evidence",
+      "multi_case_evaluation_only_join",
+      "multi_case_promotion_gate"
+    ]
+  },
+  "blocked_until_multi_case_gate": {
+    "terminal_utility_contract_allowed_now": false,
+    "terminal_selector_allowed_now": false,
+    "candidate_commit_allowed_now": false,
+    "candidate_rejection_allowed_now": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "formula_revision_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false,
+    "minimum_future_promotion_requirements": [
+      "the source materializer preserves all 18 frozen pairwise conflict rows before evaluation labels",
+      "frame/projection and detector/SAM2 substrate pass without GT action fields",
+      "post-detector evidence rows are frozen before evaluation-only labels are joined",
+      "wrong-goal, wasted-path, and map/pose consistency metrics are measured on the same frozen rows",
+      "the result distinguishes supported evidence, rival evidence, and unresolved/contaminated pair states without tuning on labels"
+    ]
+  },
+  "interpretation": {
+    "fact": "A single-case detector promotion gate passed, and a separate action-frozen source pool contains 18 pairwise conflict rows across 9 scenes and 5 queries with complete evaluation-only pair labels.",
+    "agent_inference": "The next natural paper-safe step is multi-case scaling of the detector/evidence ladder. Freezing a terminal utility contract now would overclaim from one diagnostic row and would violate the natural-proof rule.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM utility, terminal utility, first_eval rerun, policy-scale comparison, or paper claim is allowed from this contract."
+  },
+  "paper_claim_allowed": false
+}

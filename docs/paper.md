@@ -26,7 +26,7 @@ Paper 관련 작업을 시작하는 에이전트는 아래 순서로 읽는다.
 6. `docs/hypothesis.md`
 7. `docs/paper.md`
 8. `summary.md`
-9. `hypothesis/CAND-01/H001_uncertainty-reobservation/README.md`
+9. `experiments/h001_uncertainty-reobservation/README.md`
 10. 대상 numbered hypothesis 문서
 
 ## Core Lesson

@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "checked_at": "2026-06-01",
+  "contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_branch_closure_v1.json",
+  "script": "src/h001_runtime/close_expanded_retrieval_goal_validity_unique_support_branch.py",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_branch_closure_v1",
+  "summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_branch_closure_v1/unique_support_branch_closure_summary.json",
+  "closed_branch": "unique_support_visibility_not_goal_validity",
+  "closure_status": "terminal_blocked",
+  "closure_request_rows": 4,
+  "closure_mechanism_counts": {
+    "cross_region_overlap_failure_branch": 3,
+    "shared_common_view_support_failure_branch": 1
+  },
+  "unclosed_unique_support_request_rows": 0,
+  "selected_next_branch": "partial_relation_depth_true_goal",
+  "selected_next_action": "request_additional_relation_depth_evidence",
+  "selected_next_request_rows": 6,
+  "selected_next_candidate_rows": 12,
+  "selected_next_request_ids": [
+    "rival_identity:3",
+    "rival_identity:5",
+    "rival_identity:22",
+    "rival_identity:25",
+    "rival_identity:27",
+    "rival_identity:29"
+  ],
+  "terminal_commit_rows": 0,
+  "action_evidence_forbidden_key_count": 0,
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": false,
+  "paper_claim_allowed": false,
+  "recommended_next_task": "freeze_partial_relation_depth_true_goal_observation_contract"
+}

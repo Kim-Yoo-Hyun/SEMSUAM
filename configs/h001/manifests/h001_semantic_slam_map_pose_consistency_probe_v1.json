@@ -1,0 +1,208 @@
+{
+  "schema_version": "h001.contract.semantic_slam_map_pose_consistency_probe.v1",
+  "date_checked": "2026-06-03",
+  "status": "frozen_design_contract_before_source_audit",
+  "contract_name": "semantic_slam_map_pose_consistency_probe_v1",
+  "purpose": "Freeze a P4-design semantic-SLAM map/pose consistency probe after semantic object evidence branches closed without promotable terminal outcomes.",
+  "source": {
+    "selector_contract": "configs/h001/manifests/h001_next_label_free_evidence_family_after_instance_arbitration_v1.json",
+    "selector_verify": "configs/h001/manifests/h001_next_label_free_evidence_family_after_instance_arbitration_v1.verify.json",
+    "selector_output": "local_dataset/runs/h001_next_label_free_evidence_family_after_instance_arbitration_v1",
+    "selector_summary": "local_dataset/runs/h001_next_label_free_evidence_family_after_instance_arbitration_v1/next_label_free_evidence_family_after_instance_arbitration_summary.json",
+    "evaluation_contract": "experiments/h001_uncertainty-reobservation/07_evaluation_contract.md",
+    "schedule": "experiments/h001_uncertainty-reobservation/15_schedule.md",
+    "primary_frame_source": {
+      "name": "instance_arbitration_evidence_frames_v1",
+      "frame_output": "local_dataset/runs/h001_instance_arbitration_evidence_frames_v1",
+      "frame_summary": "local_dataset/runs/h001_instance_arbitration_evidence_frames_v1/summary.json",
+      "frame_rows": "local_dataset/runs/h001_instance_arbitration_evidence_frames_v1/postview_frames_v2.jsonl",
+      "nonblank_summary": "local_dataset/runs/h001_instance_arbitration_evidence_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+      "projection_summary": "local_dataset/runs/h001_instance_arbitration_evidence_projection_v1/projection_anchor_smoke_summary.json"
+    },
+    "support_frame_sources": [
+      {
+        "name": "missing_own_view_recheck_observation_frames_v1",
+        "frame_output": "local_dataset/runs/h001_missing_own_view_recheck_observation_frames_v1",
+        "frame_summary": "local_dataset/runs/h001_missing_own_view_recheck_observation_frames_v1/summary.json",
+        "frame_rows": "local_dataset/runs/h001_missing_own_view_recheck_observation_frames_v1/postview_frames_v2.jsonl",
+        "nonblank_summary": "local_dataset/runs/h001_missing_own_view_recheck_observation_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+        "projection_summary": "local_dataset/runs/h001_missing_own_view_recheck_observation_projection_v1/projection_anchor_smoke_summary.json"
+      },
+      {
+        "name": "partial_relation_depth_observation_frames_v1",
+        "frame_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_frames_v1",
+        "frame_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_frames_v1/summary.json",
+        "frame_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_frames_v1/postview_frames_v2.jsonl",
+        "nonblank_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+        "projection_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_projection_v1/projection_anchor_smoke_summary.json"
+      },
+      {
+        "name": "object_relation_fresh_observation_frames_v1",
+        "frame_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_frames_v1",
+        "frame_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_frames_v1/summary.json",
+        "frame_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_frames_v1/postview_frames_v2.jsonl",
+        "nonblank_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+        "projection_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_projection_v1/projection_anchor_smoke_summary.json"
+      },
+      {
+        "name": "expanded_retrieval_local_context_frames_v1",
+        "frame_output": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1",
+        "frame_summary": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1/summary.json",
+        "frame_rows": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1/postview_frames_v2.jsonl",
+        "nonblank_summary": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_frames_v1/nonblank_filter_v1/nonblank_frame_filter_summary.json",
+        "projection_summary": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_projection_smoke_v1/projection_anchor_smoke_summary.json"
+      }
+    ]
+  },
+  "source_gate": {
+    "selector_gate_passed": true,
+    "selected_family": "semantic_slam_map_pose_consistency_probe_v1",
+    "semantic_branch_promotable_rows": 0,
+    "semantic_object_branches_exhausted": true,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "max_action_evidence_forbidden_key_count": 0,
+    "requires_uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "design_scope": {
+    "stage": "P4-design",
+    "step_4_5_promotion_satisfied": false,
+    "why_p4_design_is_allowed": "The selector chose the Step 4-5 family after semantic object branches were exhausted, but this contract only freezes source auditing and proxy metric plumbing. It does not promote a Step 4-5 paper claim.",
+    "target_family": "semantic_slam_map_pose_consistency_probe_v1",
+    "primary_question": "Can existing label-free re-observation frame/pose/depth artifacts support a map/pose consistency probe that compares SemanticOnly, SLAMOnly, and SemanticSLAM without GT action leakage?",
+    "first_proxy_metric": "pose_graph_connectivity",
+    "allowed_label_use": "GT may be used only after action-time probe rows are written, for evaluation references such as ATE/RPE or candidate correctness audit. GT cannot choose viewpoints, graph edges, candidates, or utility weights.",
+    "allowed_action_inputs": [
+      "frame export summaries",
+      "RGB/depth/pose/metadata file existence",
+      "camera poses and rendered viewpoint positions",
+      "scene_key, query, request id, episode id",
+      "non-GT candidate ids and candidate positions",
+      "view role and viewpoint source",
+      "non-GT semantic uncertainty features",
+      "non-GT travel cost or standoff/navmesh metadata",
+      "non-GT detector/association metadata only as semantic evidence topology"
+    ],
+    "forbidden_action_inputs": [
+      "candidate correctness",
+      "ObjectNav success label",
+      "wrong-goal visit label",
+      "SPL",
+      "GT object id",
+      "GT goal id",
+      "GT shortest path",
+      "ATE/RPE before action rows are fixed",
+      "pose graph edge labels derived from GT trajectory outcome",
+      "utility weights tuned on held-out evaluation labels"
+    ],
+    "blocked_shortcuts": [
+      "open_terminal_utility_from_p4_design_contract",
+      "rerun_first_eval_from_probe_contract_only",
+      "claim_slam_benefit_without_pose_or_map_metric",
+      "claim_semantic_slam_complementarity_without_slamonly_baseline",
+      "use_gt_pose_error_to_select_viewpoint",
+      "use_detector_or_semantic_visibility_as_goal_validity",
+      "merge_semantic_object_shortcut_results_into_map_pose_claim"
+    ]
+  },
+  "probe_contract": {
+    "probe_name": "semantic_slam_map_pose_consistency_probe_v1",
+    "first_required_output": "source_audit",
+    "minimum_source_families_to_audit": 1,
+    "primary_source_required": true,
+    "primary_source_min_frame_rows": 100,
+    "primary_source_min_rendered_headings": 500,
+    "primary_source_requires_rgb_depth_pose_metadata": true,
+    "primary_source_requires_nonblank_gate": true,
+    "primary_source_requires_projection_gate": true,
+    "first_proxy_definition": {
+      "name": "pose_graph_connectivity_proxy_v1",
+      "nodes": "rendered or row-level camera poses from label-free re-observation artifacts",
+      "candidate_edges": [
+        "same request / same scene spatial proximity edge",
+        "overlapping candidate-id or target-position neighborhood edge",
+        "loop-closure opportunity proxy from revisiting nearby viewpoint neighborhoods"
+      ],
+      "minimum_logged_quantities": [
+        "node_count",
+        "edge_count",
+        "connected_component_count",
+        "largest_component_fraction",
+        "mean_degree",
+        "optional_lambda2_if_graph_library_available",
+        "travel_cost_proxy",
+        "semantic_uncertainty_family"
+      ],
+      "not_allowed": [
+        "GT trajectory error for graph construction",
+        "post-hoc success label for edge selection",
+        "candidate correctness for node filtering"
+      ]
+    },
+    "policy_comparison_required_later": [
+      "NoReobserve",
+      "RandomReobserve",
+      "SemanticOnly",
+      "SLAMOnly",
+      "SemanticSLAM"
+    ],
+    "metric_roles": {
+      "task_behavior_later": [
+        "Success Rate",
+        "SPL",
+        "wrong_goal_visit",
+        "wasted_path"
+      ],
+      "map_pose_proxy_now": [
+        "pose graph connectivity",
+        "loop-closure opportunity count",
+        "localization failure proxy if available"
+      ],
+      "map_pose_full_later": [
+        "semantic accuracy",
+        "map error",
+        "ATE/RPE"
+      ]
+    },
+    "success_condition_for_source_audit": {
+      "source_inventory_rows_minimum": 1,
+      "primary_source_ready": true,
+      "pose_depth_metadata_ready": true,
+      "non_gt_action_gate": true,
+      "recommended_next_task": "implement_semantic_slam_map_pose_consistency_source_audit"
+    },
+    "terminal_utility_validation_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "required_future_outputs": {
+    "source_inventory_rows": "semantic_slam_map_pose_source_inventory_rows.jsonl",
+    "probe_request_rows": "semantic_slam_map_pose_probe_request_rows.jsonl",
+    "pose_graph_proxy_rows": "semantic_slam_map_pose_graph_proxy_rows.jsonl",
+    "summary": "semantic_slam_map_pose_consistency_probe_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "src/h001_runtime/audit_semantic_slam_map_pose_consistency_sources.py",
+    "output": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "verification_command": "python -m h001_runtime.audit_semantic_slam_map_pose_consistency_sources"
+  },
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "The prior selector selected semantic_slam_map_pose_consistency_probe_v1 after semantic branch promotable rows were zero.",
+    "agent_inference": "The next implementation should audit whether existing RGB/depth/pose artifacts can support pose graph connectivity and map/pose proxy metrics before adding any SLAM backend or policy-scale comparison.",
+    "paper_claim_allowed": false
+  }
+}

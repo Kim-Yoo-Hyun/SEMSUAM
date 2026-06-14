@@ -1,0 +1,93 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_object_relation_branch_evidence_verify.v1",
+  "date_checked": "2026-05-31",
+  "ok": true,
+  "contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1.json",
+  "script": "src/h001_runtime/route_expanded_retrieval_goal_validity_object_relation_branch_evidence.py",
+  "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1",
+  "source_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_arbitration_failure_v1/object_relation_fresh_arbitration_failure_summary.json",
+  "verified_source_metrics": {
+    "fresh_arbitration_failure_diagnostic_gate_passed": true,
+    "candidate_failure_rows": 36,
+    "request_failure_rows": 7,
+    "primary_failure_class_counts": {
+      "negative_rejected_missing_independent_support": 17,
+      "positive_deferred_partial_relation_depth": 8,
+      "wrong_provisional_unique_support": 4,
+      "positive_rejected_missing_independent_support": 3,
+      "negative_deferred_partial_relation_depth": 4
+    },
+    "request_failure_tag_counts": {
+      "negative_candidates_blocked_by_missing_support": 7,
+      "correct_goal_relation_depth_partial": 5,
+      "unique_independent_support_selects_wrong_goal": 4,
+      "object_visibility_preferred_over_true_goal_validity": 4,
+      "correct_goal_rejected_by_missing_strong_own_view": 3,
+      "true_candidate_support_blocked_by_relation_depth_partial": 3,
+      "semantic_top_can_be_wrong_visible_object": 3
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "frozen_branch_design": {
+    "branch_count": 4,
+    "branch_names": [
+      "unique_support_visibility_not_goal_validity",
+      "correct_candidate_missing_own_view_support",
+      "partial_relation_depth_true_goal",
+      "negative_missing_support_guard"
+    ],
+    "terminal_commit_allowed": false,
+    "next_implementation_target": "src/h001_runtime/route_expanded_retrieval_goal_validity_object_relation_branch_evidence.py"
+  },
+  "verified_run_metrics": {
+    "branch_evidence_router_gate_passed": true,
+    "request_rows": 7,
+    "candidate_rows": 36,
+    "evaluated_branch_request_rows": 7,
+    "request_branch_counts": {
+      "correct_candidate_missing_own_view_support": 7,
+      "negative_missing_support_guard": 7,
+      "partial_relation_depth_true_goal": 6,
+      "unique_support_visibility_not_goal_validity": 4
+    },
+    "candidate_branch_counts": {
+      "correct_candidate_missing_own_view_support": 20,
+      "negative_missing_support_guard": 20,
+      "partial_relation_depth_true_goal": 12,
+      "unique_support_visibility_not_goal_validity": 4
+    },
+    "failure_tag_branch_coverage": {
+      "correct_goal_rejected_by_missing_strong_own_view": "3/3",
+      "correct_goal_relation_depth_partial": "5/5",
+      "negative_candidates_blocked_by_missing_support": "7/7",
+      "object_visibility_preferred_over_true_goal_validity": "4/4",
+      "semantic_top_can_be_wrong_visible_object": "3/3",
+      "true_candidate_support_blocked_by_relation_depth_partial": "3/3",
+      "unique_independent_support_selects_wrong_goal": "4/4"
+    },
+    "selected_next_branch": "unique_support_visibility_not_goal_validity",
+    "selected_next_action": "request_contrastive_goal_region_evidence",
+    "uncovered_failure_tags": [],
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "verification_commands": [
+    "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/src research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile src/h001_runtime/route_expanded_retrieval_goal_validity_object_relation_branch_evidence.py",
+    "docker run --rm -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPATH=/workspace/src research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.route_expanded_retrieval_goal_validity_object_relation_branch_evidence --contract configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1.json --out-root local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1",
+    "jq empty configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1.json",
+    "jq empty configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1.verify.json",
+    "jq '.gate.branch_evidence_router_gate_passed' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_evidence_summary.json"
+  ],
+  "interpretation": {
+    "fact": "The branch router was Docker-compiled and Docker-run after the design contract was frozen.",
+    "agent_inference": "The router covers every known fresh failure tag without terminal commits. The next contract should prioritize the unique-support visibility branch before terminal utility."
+  }
+}

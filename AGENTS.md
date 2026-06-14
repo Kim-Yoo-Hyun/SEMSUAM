@@ -19,12 +19,18 @@
 - `TODO.md`는 `Now`, `Next`, `Running`, `Recently Completed`만 관리한다. 긴 설명은 가까운 workflow 문서나 local README에 둔다.
 - `docs/index.md`는 전체 문서 지도다. 세부 연구 판단이나 실험 로그를 길게 보관하지 않는다.
 - `docs/literature.md`는 문헌 조사 workflow와 작성 규칙을 관리한다. 문헌 조사 결과와 cross-paper synthesis는 `literature/README.md`에 둔다.
-- `docs/hypothesis.md`는 hypothesis 검증 workflow와 promotion 기준을 관리한다. 실제 hypothesis 상태는 `hypothesis/README.md`와 각 hypothesis 폴더에 둔다.
+- `docs/hypothesis.md`는 hypothesis 검증 workflow와 promotion 기준을 관리한다. 실제 H001 hypothesis 상태는 `experiments/h001_uncertainty-reobservation/README.md`와 가까운 experiment workflow 문서에 둔다.
 - `docs/paper.md`는 paper framing, novelty, reviewer-defense 기준을 관리한다. 논문 관련 판단은 이 문서를 우선 적용한다.
 - `docs/reproducibility.md`는 데이터, checkpoint, Docker, artifact, 재현 명령, 백업/복구 기준을 관리한다. 실험 재현이나 artifact 관련 판단은 이 문서를 우선 적용한다.
+- `src/`는 핵심 Python runtime package를 관리한다.
+- `scripts/`는 Docker 실행 wrapper와 helper script를 관리한다.
+- `configs/`는 Dockerfile, manifest, verify contract, 고정 설정을 관리한다.
+- `experiments/`는 active hypothesis workspace, experiment workflow, ablation/analysis 기록을 관리한다.
+- `results/`는 가벼운 결과 요약, table, log summary를 관리한다.
+- `archive/`는 삭제가 애매하지만 shareable core path에서 제외한 legacy/raw material을 보존한다.
 - 각 폴더의 `README.md`는 해당 폴더의 local entry point다.
 - `literature/README.md`는 문헌 조사 결과의 field map, trend synthesis, cross-paper insight, open question을 관리한다.
-- `hypothesis/README.md`는 hypothesis index와 active gate를 관리한다.
+- `experiments/README.md`는 active hypothesis/experiment index를 관리한다.
 - `paper/README.md`는 paper workspace가 실제로 필요해질 때 만들고, 파일 역할, 읽는 순서, 업데이트 규칙을 관리한다.
 - 세부 결과나 긴 실험 기록은 `AGENTS.md`나 루트 `README.md`에 쓰지 말고, 해당 workflow 문서 또는 가장 가까운 폴더의 `README`, report, artifact 문서에 기록한다.
 
@@ -63,8 +69,8 @@
 
 - `experiments/`, `paper/`, `decisions/`, `data/`, `figures/`, `results/` 같은 빈 디렉터리를 미리 만들지 않는다.
 - 루트에는 `AGENTS.md`, `.gitignore`, `README.md`, `TODO.md`, `summary.md`만 둔다.
-- 새 연구 단계가 실제로 필요해지면 관련 workflow 또는 hypothesis 폴더 안에 짧은 workflow 문서를 만든다. 예: `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-YYYYMMDD-eval.md`.
-- Dockerfile, `.py`, `.sh`, runtime workflow 문서는 루트에 두지 않고 관련 hypothesis 내부에 둔다.
+- 새 연구 단계가 실제로 필요해지면 관련 workflow 또는 experiment 폴더 안에 짧은 workflow 문서를 만든다. 예: `experiments/h001_uncertainty-reobservation/runtime/workflow-YYYYMMDD-eval.md`.
+- 핵심 `.py` package는 `src/`, 실행 wrapper와 helper script는 `scripts/`, Dockerfile과 manifest/config는 `configs/`, runtime workflow 문서는 관련 `experiments/` 폴더에 둔다.
 - workflow 문서는 다음을 포함한다.
   - 지금 이 단계가 필요한 이유
   - 연결되는 연구 질문, 기여 후보, 또는 논문 주장
@@ -110,20 +116,20 @@
 - 논문 본문용 experiment 또는 실제 구현이 필요한 연구 단계는 Docker 기반 재현 환경에서 진행한다.
 - smoke test도 Docker 기반으로 수행한다. Host Python 환경은 문서 작업, 가벼운 파일 검증, Docker 실행 전 사전 점검에만 사용한다.
 - Docker image, base image, dataset mount, GPU option, 실행 command는 workflow 또는 hypothesis feasibility 문서에 기록한다.
-- 루트 `README.md`는 entrypoint 역할만 한다. 세부 실험 로그, dataset log, paper summary는 해당 workflow/hypothesis/literature 문서에 둔다.
+- 루트 `README.md`는 entrypoint 역할만 한다. 세부 실험 로그, dataset log, paper summary는 해당 workflow/experiment/literature 문서에 둔다.
 
 ## Long-running and Background Tasks
 
 - Dataset download, model checkpoint download, Docker pull/build, decompression, indexing, preprocessing 같은 long-running I/O-heavy job을 기다리며 Codex를 막아두지 않는다.
 - 긴 작업은 별도 `tmux` session, `nohup`, 또는 background job으로 실행한다.
 - 가능한 경우 `aria2c`, `wget -c`, `rsync --partial`, fixed cache/local-dir를 쓰는 `huggingface-cli download`처럼 재개 가능한 command를 사용한다.
-- 로그는 해당 workflow/hypothesis 작업 디렉터리의 `logs/` 아래 timestamped filename으로 남긴다. 빈 `logs/` 폴더는 미리 만들지 않고 실제 job을 띄울 때 만든다.
-- job을 시작할 때 exact command, working directory, output path, expected files, verification command를 `TODO.md` 또는 관련 hypothesis README/workflow 문서에 기록한다.
+- 로그는 해당 workflow/experiment 작업 디렉터리의 `logs/` 아래 timestamped filename으로 남긴다. 빈 `logs/` 폴더는 미리 만들지 않고 실제 job을 띄울 때 만든다.
+- job을 시작할 때 exact command, working directory, output path, expected files, verification command를 `TODO.md` 또는 관련 experiment README/workflow 문서에 기록한다.
 - job launch 후에는 계속 monitoring하지 말고 main research task로 돌아간다.
 - progress 확인은 사용자가 명시적으로 요청했거나 dependent task가 결과를 필요로 할 때만 한다.
 - 큰 log를 scan하거나 전체 출력하지 않는다. `tail`, `head`, 또는 relevant error `grep`만 사용한다.
 - 완료 검증은 file count, expected directory layout, checksum if available, 또는 lightweight sanity script로 수행한다.
-- job status는 `TODO.md` 또는 관련 hypothesis README에 `launched`, `running`, `completed`, `failed`, `needs verification` 중 하나로 갱신한다.
+- job status는 `TODO.md` 또는 관련 experiment README에 `launched`, `running`, `completed`, `failed`, `needs verification` 중 하나로 갱신한다.
 
 Template:
 

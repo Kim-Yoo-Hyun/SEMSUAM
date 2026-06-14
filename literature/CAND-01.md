@@ -384,7 +384,7 @@ The first smoke test used a `VLMaps` demo scene inside Docker and passed. HM3D O
 ### 사용자 판단 필요
 
 - Whether MP3D is needed later as a secondary benchmark.
-- Docker smoke test workflow is written at `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260507-smoke.md`.
+- Docker smoke test workflow is written at `experiments/h001_uncertainty-reobservation/runtime/workflow-20260507-smoke.md`.
 
 ## Step 4-5 SLAM Proxy and Metric Plan
 
@@ -483,7 +483,7 @@ Small-scale indoor robot deployment에서도 uncertain semantic memory를 다시
 
 ## What to Verify Next
 
-- Stage 1 Docker smoke test result는 `hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260507-smoke.md`에 있다.
+- Stage 1 Docker smoke test result는 `experiments/h001_uncertainty-reobservation/runtime/workflow-20260507-smoke.md`에 있다.
 - Habitat MP3D/HM3D scene data 접근 권한과 local storage path를 확보했는가? Current status: not found in checked Docker mounts.
 - Full `VLMaps` runtime image가 first probe에 필요한가, 아니면 precomputed artifacts로 충분한가?
 - `CARe-style` uncertainty formula를 exact reproduction 없이 재구현해도 baseline으로 충분한가?

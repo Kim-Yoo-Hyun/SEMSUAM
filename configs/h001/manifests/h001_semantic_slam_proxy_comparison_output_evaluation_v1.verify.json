@@ -1,0 +1,82 @@
+{
+  "schema_version": "h001.verify.semantic_slam_proxy_comparison_output_evaluation.v1",
+  "date_checked": "2026-06-04",
+  "ok": true,
+  "status": "completed_semantic_slam_proxy_output_evaluation",
+  "implementation": "src/h001_runtime/evaluate_semantic_slam_proxy_comparison_output.py",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "input": {
+    "root": "local_dataset/runs/h001_semantic_slam_proxy_comparison_v1",
+    "comparison_rows": "semantic_slam_proxy_comparison_rows.jsonl",
+    "summary": "semantic_slam_proxy_comparison_summary.json"
+  },
+  "output": {
+    "root": "local_dataset/runs/h001_semantic_slam_proxy_comparison_output_evaluation_v1",
+    "group_evaluation_rows": "semantic_slam_proxy_comparison_group_evaluation_rows.jsonl",
+    "summary": "semantic_slam_proxy_comparison_output_evaluation_summary.json"
+  },
+  "verified_output": {
+    "request_groups": 50,
+    "group_evaluation_rows": 50,
+    "component_winner_counts": {
+      "SemanticOnly": 36,
+      "SLAMOnly": 14
+    },
+    "component_winner_rates": {
+      "SemanticOnly": 0.72,
+      "SLAMOnly": 0.28
+    },
+    "dominance_class_counts": {
+      "semantic_slam_midpoint_strictly_dominated_by_best_component": 50
+    },
+    "semantic_score_dominant_rows": 36,
+    "slam_score_dominant_rows": 14,
+    "strict_dominated_rows": 50,
+    "strict_dominated_rate": 1.0,
+    "midpoint_identity_abs_error_max": 1.1102230246251565e-16,
+    "best_component_margin_over_semantic_slam_mean": 0.15364305283757343,
+    "best_component_margin_over_semantic_slam_min": 0.01589041095890409,
+    "best_component_margin_over_semantic_slam_max": 0.3994520547945205,
+    "component_gap_mean": 0.3072861056751468,
+    "canonical_proxy_ready_rate": 0.92,
+    "loop_edge_availability_rate": 0.72,
+    "source_proxy_comparison_gate_passed": true,
+    "output_evaluation_gate_passed": true,
+    "uses_gt_for_action": false,
+    "step_4_5_promotion_satisfied": false,
+    "terminal_utility_validation_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "checked_gate": {
+    "docker_py_compile_passed": true,
+    "docker_run_passed": true,
+    "summary_json_valid": true,
+    "verify_json_valid": true,
+    "source_proxy_comparison_gate_passed": true,
+    "no_gt_action_leakage_passed": true,
+    "no_paper_claim_passed": true,
+    "midpoint_identity_passed": true,
+    "dominance_diagnostic_passed": true,
+    "output_evaluation_gate_passed": true
+  },
+  "verification_commands": [
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile src/h001_runtime/evaluate_semantic_slam_proxy_comparison_output.py",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.evaluate_semantic_slam_proxy_comparison_output",
+    "jq empty local_dataset/runs/h001_semantic_slam_proxy_comparison_output_evaluation_v1/semantic_slam_proxy_comparison_output_evaluation_summary.json",
+    "jq empty configs/h001/manifests/h001_semantic_slam_proxy_comparison_output_evaluation_v1.verify.json",
+    "wc -l local_dataset/runs/h001_semantic_slam_proxy_comparison_output_evaluation_v1/semantic_slam_proxy_comparison_group_evaluation_rows.jsonl"
+  ],
+  "decision": {
+    "promotion_decision": "do_not_promote",
+    "utility_redesign_required": true,
+    "richer_slam_proxy_recommended": true,
+    "recommended_next_task": "freeze_non_dominated_semantic_slam_proxy_redesign_contract"
+  },
+  "interpretation": {
+    "fact": "The current SemanticSLAM utility is exactly the midpoint of SemanticOnly and SLAMOnly utilities up to floating-point error, and it is strictly dominated by the best component on all 50 request groups.",
+    "agent_inference": "The zero rank-1 SemanticSLAM result is structural under the current score-only scalar design; Step 4-5 should not be promoted without a non-dominated utility redesign or a richer SLAM-side proxy tied to task/map outcomes.",
+    "paper_claim": "No SemanticSLAM complementarity, navigation utility, or SLAM benefit claim is allowed from this evaluation."
+  }
+}

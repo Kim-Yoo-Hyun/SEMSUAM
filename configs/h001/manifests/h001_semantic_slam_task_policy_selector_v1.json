@@ -1,0 +1,299 @@
+{
+  "schema_version": "h001.contract.semantic_slam_task_policy_selector.v1",
+  "date_checked": "2026-06-05",
+  "status": "frozen_contract",
+  "contract_name": "semantic_slam_task_policy_selector_v1",
+  "purpose": "Freeze non-GT policy selector rules needed after the task label join materializer resolved label coverage but left all task proxy rows unevaluable because selected-candidate and terminal-commit proxies were missing.",
+  "stage": "P4-design",
+  "source": {
+    "task_label_join_contract": "configs/h001/manifests/h001_semantic_slam_task_label_join_v1.json",
+    "task_label_join_verify": "configs/h001/manifests/h001_semantic_slam_task_label_join_v1.verify.json",
+    "task_label_join_summary": "local_dataset/runs/h001_semantic_slam_task_label_join_v1/semantic_slam_task_label_join_summary.json",
+    "task_label_policy_rows": "local_dataset/runs/h001_semantic_slam_task_label_join_v1/semantic_slam_task_label_policy_rows.jsonl",
+    "task_map_probe_request_rows": "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_probe_request_rows.jsonl",
+    "task_map_outcome_probe_rows": "local_dataset/runs/h001_semantic_slam_task_map_outcome_probe_v1/semantic_slam_task_map_outcome_probe_rows.jsonl",
+    "primary_action_feature_backbone": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_evaluated_rows.jsonl"
+  },
+  "triggering_result": {
+    "task_label_join_gate_passed": true,
+    "outcome_proxy_gate_passed": false,
+    "policy_label_join_rows": 150,
+    "label_backbone_join_rows": 150,
+    "candidate_label_join_rows": 150,
+    "task_proxy_evaluable_rows": 0,
+    "policy_selector_missing_rows": 150,
+    "primary_blocker": "policy_selector_missing",
+    "revised_slam_formula_allowed": false
+  },
+  "action_time_feature_inventory": {
+    "primary_backbone_request_rows": 21,
+    "primary_backbone_unique_request_keys": 21,
+    "source_request_rows": 50,
+    "source_policy_rows": 150,
+    "source_family_rows": {
+      "expanded_retrieval_local_context_frames_v1": 21,
+      "instance_arbitration_evidence_frames_v1": 9,
+      "missing_own_view_recheck_observation_frames_v1": 7,
+      "object_relation_fresh_observation_frames_v1": 7,
+      "partial_relation_depth_observation_frames_v1": 6
+    },
+    "candidate_id_rows_full": 21,
+    "candidate_count_distribution": {
+      "2": 1,
+      "4": 2,
+      "5": 5,
+      "6": 13
+    },
+    "source_top_candidate_count_distribution": {
+      "0": 1,
+      "1": 20
+    },
+    "strong_own_view_candidate_count_distribution": {
+      "0": 2,
+      "1": 10,
+      "2": 5,
+      "3": 1,
+      "5": 3
+    },
+    "detector_strong_candidate_count_distribution": {
+      "2": 1,
+      "4": 20
+    },
+    "local_context_candidate_count_distribution": {
+      "0": 6,
+      "1": 10,
+      "2": 5
+    },
+    "route_branch_rows": {
+      "instance_arbitration_defer_v1": 9,
+      "goal_validity_confirmation_v1": 7,
+      "source_pool_repair_v1": 5
+    }
+  },
+  "join_keys": {
+    "request_identity_key": [
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key"
+    ],
+    "request_id_normalization": [
+      "request_id",
+      "rival_identity_request_id",
+      "expanded_retrieval_request_id"
+    ],
+    "source_policy_key": [
+      "source_name",
+      "policy_name",
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key"
+    ]
+  },
+  "allowed_action_inputs": {
+    "primary_action_feature_backbone_fields": [
+      "action_candidate_summary.candidate_ids",
+      "action_candidate_summary.source_top_candidate_ids",
+      "action_candidate_summary.strong_own_view_candidate_ids",
+      "action_candidate_summary.detector_strong_candidate_ids",
+      "action_candidate_summary.local_context_candidate_ids",
+      "source_pool_proxy.available",
+      "source_pool_proxy.candidate_count",
+      "source_pool_proxy.positive_support_candidate_count",
+      "source_pool_proxy.positive_support_top4_count",
+      "source_pool_proxy.score_ge_0_91_count",
+      "source_pool_proxy.semantic_top2_score_gap",
+      "source_pool_proxy.top4_score_range",
+      "source_pool_proxy.top_score_uncertainty"
+    ],
+    "task_map_probe_fields": [
+      "source_name",
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key",
+      "candidate_ids_preview",
+      "candidate_id_count",
+      "travel_cost_proxy_m",
+      "pose_graph_connectivity_delta",
+      "map_pose_consistency_delta",
+      "map_side_delta"
+    ],
+    "label_join_fields_allowed_only_after_action": [
+      "candidate_correctness_label",
+      "candidate_wrong_label",
+      "no_valid_candidate_pool",
+      "wrong_goal_visit_proxy",
+      "wasted_path_proxy_m"
+    ]
+  },
+  "forbidden_action_inputs": [
+    "evaluation_candidate_summary",
+    "evaluation_only_variant_outcomes",
+    "evaluation_only_correct_candidate_ids",
+    "evaluation_only_wrong_candidate_ids",
+    "evaluation_only_no_valid_candidate_pool",
+    "candidate_correctness_label",
+    "candidate_wrong_label",
+    "no_valid_candidate_pool",
+    "wrong_goal_visit_proxy",
+    "wasted_path_proxy_m",
+    "success_commit",
+    "wrong_goal_commit",
+    "no_valid_commit",
+    "GTTargetOracle",
+    "GTCandidateOracle",
+    "GTViewOracle",
+    "shortest_path_distance",
+    "oracle_action"
+  ],
+  "selector_definitions": {
+    "NoReobserveReference": {
+      "selector_id": "source_top_direct_commit_v1",
+      "role": "direct semantic-memory commit baseline",
+      "policy_selected_candidate_id_rule": "If action_candidate_summary.source_top_candidate_ids has exactly one id, select that id. Otherwise defer and set policy_selected_candidate_id null.",
+      "terminal_commit_proxy_rule": "true when exactly one source-top candidate is selected; false when source-top is missing or ambiguous.",
+      "candidate_specific_map_pose_required": false,
+      "uses_reobservation_evidence": false,
+      "uses_gt_for_action": false,
+      "expected_unique_request_terminal_commit_rows": 20,
+      "expected_source_request_terminal_commit_rows": 49
+    },
+    "SemanticOnly": {
+      "selector_id": "local_context_then_unique_own_view_v1",
+      "role": "diagnostic semantic evidence selector after active observation",
+      "policy_selected_candidate_id_rule": "If action_candidate_summary.local_context_candidate_ids has exactly one id, select it. Else if action_candidate_summary.strong_own_view_candidate_ids has exactly one id, select it. Otherwise defer and set policy_selected_candidate_id null.",
+      "terminal_commit_proxy_rule": "true only for the unique local-context or unique own-view cases above; false for ambiguous or missing support.",
+      "candidate_specific_map_pose_required": false,
+      "uses_reobservation_evidence": true,
+      "uses_gt_for_action": false,
+      "expected_unique_request_terminal_commit_rows": 16,
+      "expected_source_request_terminal_commit_rows": 41
+    },
+    "SLAMOnlyRich_current": {
+      "selector_id": "candidate_specific_slam_selector_missing_v1",
+      "role": "blocked current SLAM/map-side utility branch",
+      "policy_selected_candidate_id_rule": "Do not select source-top, semantic-top, or detector-best as a stand-in for a SLAM selector. Current artifacts provide row-level map/pose utility but no candidate-specific map/pose selector.",
+      "terminal_commit_proxy_rule": "null until a candidate-specific map/pose selector contract is frozen and implemented.",
+      "candidate_specific_map_pose_required": true,
+      "uses_reobservation_evidence": true,
+      "uses_gt_for_action": false,
+      "expected_unique_request_terminal_commit_rows": 0,
+      "expected_source_request_terminal_commit_rows": 0,
+      "expected_selector_missing_rows": 50,
+      "blocked_reason": "candidate_specific_map_pose_selector_missing"
+    }
+  },
+  "expected_future_outputs": {
+    "out_root": "local_dataset/runs/h001_semantic_slam_task_policy_selector_v1",
+    "row_files": {
+      "selector_rows": "semantic_slam_task_policy_selector_rows.jsonl",
+      "failure_rows": "semantic_slam_task_policy_selector_failure_rows.jsonl",
+      "summary": "semantic_slam_task_policy_selector_summary.json"
+    },
+    "minimum_selector_row_fields": [
+      "schema_version",
+      "row_type",
+      "source_name",
+      "policy_name",
+      "episode_key",
+      "request_id",
+      "query",
+      "scene_key",
+      "selector_id",
+      "selector_action",
+      "policy_selected_candidate_id",
+      "terminal_commit_proxy",
+      "selector_missing",
+      "selector_missing_reason",
+      "uses_gt_for_action",
+      "paper_claim_allowed"
+    ]
+  },
+  "expected_materializer_counts": {
+    "source_request_rows": 50,
+    "policy_selector_rows": 150,
+    "NoReobserveReference_rows": 50,
+    "NoReobserveReference_terminal_commit_rows": 49,
+    "NoReobserveReference_defer_rows": 1,
+    "SemanticOnly_rows": 50,
+    "SemanticOnly_terminal_commit_rows": 41,
+    "SemanticOnly_defer_rows": 9,
+    "SLAMOnlyRich_current_rows": 50,
+    "SLAMOnlyRich_current_selector_missing_rows": 50,
+    "total_terminal_commit_rows": 90,
+    "total_defer_rows": 10,
+    "total_selector_missing_rows": 50
+  },
+  "success_gates": {
+    "selector_contract_gate": {
+      "source_request_rows_required": 50,
+      "policy_selector_rows_required": 150,
+      "NoReobserveReference_terminal_commit_rows_min": 49,
+      "SemanticOnly_terminal_commit_rows_min": 41,
+      "SLAMOnlyRich_current_selector_missing_rows_required": 50,
+      "action_evidence_forbidden_key_count": 0,
+      "uses_gt_for_action": false,
+      "paper_claim_allowed": false
+    },
+    "outcome_proxy_gate_after_selector_materializer": {
+      "task_proxy_evaluable_rows_min": 90,
+      "selector_missing_rows_max": 50,
+      "SLAMOnlyRich_current_task_proxy_evaluable_rows_required": 0,
+      "revised_slam_formula_allowed_after_pass": false,
+      "paper_claim_allowed": false
+    },
+    "formula_revision_unlock_gate": {
+      "candidate_specific_slam_selector_contract_required": true,
+      "SLAMOnlyRich_current_selector_missing_rows_max": 0,
+      "SLAMOnlyRich_current_task_proxy_evaluable_rows_min": 35,
+      "nontrivial_terminal_commit_rows_min": 35,
+      "map_task_alignment_rows_min": 10,
+      "revised_slam_formula_allowed_after_pass": true,
+      "paper_claim_allowed": false
+    }
+  },
+  "failure_taxonomy": [
+    {
+      "tag": "source_top_missing_or_ambiguous",
+      "meaning": "NoReobserveReference cannot select exactly one source-top candidate."
+    },
+    {
+      "tag": "semantic_support_ambiguous_or_missing",
+      "meaning": "SemanticOnly cannot select exactly one local-context or strong own-view candidate."
+    },
+    {
+      "tag": "candidate_specific_map_pose_selector_missing",
+      "meaning": "SLAMOnlyRich_current has row-level map/pose utility but no candidate-specific selector."
+    },
+    {
+      "tag": "action_label_leakage",
+      "meaning": "Evaluation-only labels or oracle fields appear in selector input or action rows."
+    },
+    {
+      "tag": "defer_all_shortcut",
+      "meaning": "A selector tries to pass task proxy gates by deferring all rows instead of making nontrivial candidate decisions."
+    },
+    {
+      "tag": "semantic_shortcut_substituted_for_slam",
+      "meaning": "A source-top, semantic-top, detector-best, or local-context candidate is used as the SLAMOnlyRich selector without candidate-specific map/pose evidence."
+    }
+  ],
+  "implementation_permissions": {
+    "policy_selector_materializer_allowed": true,
+    "partial_task_proxy_join_after_selector_allowed": true,
+    "candidate_specific_slam_selector_contract_allowed": true,
+    "revised_slam_only_formula_implementation_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "interpretation": {
+    "fact": "Action-time candidate groups are available for all 21 unique request keys, and the two semantic baselines can be given non-GT diagnostic selectors. The current SLAMOnlyRich branch has no candidate-specific map/pose selector.",
+    "agent_inference": "The next safe implementation is a selector materializer that fills NoReobserveReference and SemanticOnly selected-candidate / terminal-commit proxies while explicitly marking SLAMOnlyRich_current as selector-missing. Formula revision remains blocked.",
+    "paper_claim": "No navigation utility, SLAM benefit, SemanticSLAM complementarity, Step 4-5 promotion, formula revision, terminal utility, first_eval, policy-scale, or paper claim is allowed from this selector contract alone."
+  },
+  "next_task": "implement_semantic_slam_task_policy_selector_materializer"
+}

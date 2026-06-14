@@ -1,0 +1,73 @@
+{
+  "schema_version": "h001.verify.expanded_retrieval_goal_validity_partial_relation_depth_branch_handling.v1",
+  "date_checked": "2026-06-01",
+  "status": "docker_verified",
+  "contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1.json",
+  "source_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_residual_taxonomy_v1",
+  "checked_source_summary": {
+    "partial_relation_depth_residual_taxonomy_gate_passed": true,
+    "taxonomy_rows": 15,
+    "request_taxonomy_rows": 6,
+    "residual_failure_class_counts": {
+      "association_present_without_depth_improvement": 7,
+      "depth_signal_not_candidate_associated": 3,
+      "mask_projection_without_association_or_depth": 5
+    },
+    "request_residual_status_counts": {
+      "association_geometry_underlink": 2,
+      "association_present_but_depth_not_improved": 1,
+      "repeated_object_relation_anchor_ambiguity": 3
+    },
+    "rows_with_inside_mask": 15,
+    "rows_with_zero_completion_association": 8,
+    "rows_with_completion_association": 7,
+    "rows_with_completion_depth_consistent": 10,
+    "dominant_scene_query": "bxsVRursffK/plant",
+    "dominant_scene_query_rows": 12,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "checked_branch_mapping": {
+    "association_geometry_underlink": "route_to_association_geometry_repair_branch",
+    "association_present_but_depth_not_improved": "route_to_depth_stagnation_branch",
+    "repeated_object_relation_anchor_ambiguity": "route_to_repeated_object_relation_anchor_ambiguity_branch"
+  },
+  "docker_verification": {
+    "image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "working_directory": "/workspace",
+    "pythonpath": "/workspace/src",
+    "command": "python -m h001_runtime.route_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling",
+    "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1",
+    "summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_handling_summary.json",
+    "output_files": [
+      "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_rows.jsonl",
+      "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_request_rows.jsonl",
+      "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_handling_summary.json"
+    ]
+  },
+  "checked_runtime_summary": {
+    "branch_rows": 15,
+    "request_branch_rows": 6,
+    "branch_action_counts": {
+      "route_to_association_geometry_repair_branch": 2,
+      "route_to_depth_stagnation_branch": 1,
+      "route_to_repeated_object_relation_anchor_ambiguity_branch": 3
+    },
+    "unmapped_request_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "partial_relation_depth_branch_handling_gate_passed": true
+  },
+  "branch_handling_contract_gate_passed": true,
+  "partial_relation_depth_branch_handling_gate_passed": true,
+  "terminal_utility_validation_allowed": false,
+  "first_eval_rerun_allowed": false,
+  "policy_scale_comparison_allowed": false,
+  "paper_claim_allowed": false,
+  "next_task": "design_association_geometry_repair_branch_contract"
+}

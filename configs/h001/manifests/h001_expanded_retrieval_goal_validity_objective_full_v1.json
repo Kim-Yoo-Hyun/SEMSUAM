@@ -1,0 +1,92 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_objective_contract.v1",
+  "contract_name": "expanded_retrieval_goal_validity_objective_full_v1",
+  "date_checked": "2026-05-29",
+  "status": "frozen_full_detector_diagnostic_contract_before_terminal_utility_validation",
+  "source": {
+    "planner_contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_evidence_v1.json",
+    "full_substrate_contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_full_substrate_v1.json",
+    "plan_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_plan_v1/goal_validity_evidence_plan.jsonl",
+    "detector_frame_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1/expanded_retrieval_detector_frame_summary.jsonl",
+    "detector_associations": "local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1/expanded_retrieval_detector_associations.jsonl",
+    "detector_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_evidence_detector_substrate_full_v1/expanded_retrieval_detector_substrate_summary.json",
+    "evaluation_labels_after_action_only": "local_dataset/runs/h001_expanded_retrieval_deeper_backend_generation_v1/deeper_backend_generation_evaluation_labels.jsonl"
+  },
+  "scope": {
+    "expected_request_rows": 2,
+    "expected_request_ids": [
+      "rival_identity:12",
+      "rival_identity:14"
+    ],
+    "expected_plan_rows": 158,
+    "expected_detector_rows": 158,
+    "detector_scope": "full_recovered_row_candidate_specific_substrate",
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "objective": {
+    "objective_name": "candidate_specific_goal_validity_objective_v1",
+    "stage": "post_full_detector_diagnostic_before_terminal_policy",
+    "evidence_classes": [
+      "candidate_specific_support",
+      "category_only_visibility",
+      "weak_or_partial_candidate_specific_support",
+      "no_visual_support",
+      "not_scored_in_bounded_substrate",
+      "cross_view_or_rival_ambiguous"
+    ],
+    "support_thresholds": {
+      "min_associated_heading_count": 1,
+      "min_mask_hit_count": 1,
+      "min_visible_count": 1,
+      "min_consistent_depth_count": 1
+    },
+    "request_level_rule": {
+      "complete_detector_substrate_required": true,
+      "terminal_commit_allowed": false,
+      "reason": "Full candidate-specific detector/SAM2 evidence can be compared against the bounded wrong-only diagnostic, but terminal utility remains blocked until a separate terminal policy contract is defined."
+    }
+  },
+  "simpler_alternatives": [
+    "defer_all",
+    "semantic_top_observed",
+    "detector_score_best_observed",
+    "positive_support_best_observed",
+    "candidate_specific_support_best_observed"
+  ],
+  "evaluation_gates": {
+    "planned_request_rows": 2,
+    "planned_candidate_rows": 158,
+    "observed_detector_candidate_rows_minimum": 158,
+    "observed_detector_request_rows_minimum": 2,
+    "unscored_candidate_rows_maximum": 0,
+    "detector_box_rate_minimum": 0.8,
+    "sam2_mask_rate_minimum": 0.8,
+    "candidate_association_rate_minimum": 0.4,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "bounded_detector_substrate_incomplete_expected": false,
+    "full_detector_substrate_required_expected": false,
+    "full_detector_substrate_complete_expected": true,
+    "uses_gt_for_action": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "required_outputs": {
+    "candidate_rows": "goal_validity_objective_candidate_rows.jsonl",
+    "request_rows": "goal_validity_objective_request_rows.jsonl",
+    "decision_rows": "goal_validity_objective_decision_rows.jsonl",
+    "evaluated_rows": "goal_validity_objective_evaluated_rows.jsonl",
+    "summary": "goal_validity_objective_summary.json"
+  },
+  "comparison_target": {
+    "bounded_objective_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_objective_smoke_v1/goal_validity_objective_summary.json",
+    "bounded_observed_candidates": 20,
+    "bounded_observed_wrong_candidates": 20,
+    "bounded_unscored_candidates": 138
+  },
+  "interpretation_rule": {
+    "fact": "The full detector/SAM2 substrate covers all 158 recovered-row candidate-specific plan rows across two request rows.",
+    "agent_inference": "This analyzer can compare full candidate-specific evidence against the bounded wrong-only diagnostic. It still blocks terminal utility validation because terminal commit behavior needs a separate predeclared policy contract."
+  }
+}

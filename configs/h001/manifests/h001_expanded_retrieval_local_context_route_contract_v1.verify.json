@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "date_checked": "2026-05-28",
+  "manifest": "configs/h001/manifests/h001_expanded_retrieval_local_context_route_contract_v1.json",
+  "checks": {
+    "json_parse": true,
+    "defines_source_pool_repair_branch": true,
+    "defines_goal_validity_confirmation_branch": true,
+    "defines_instance_arbitration_defer_branch": true,
+    "forbids_gt_for_action": true,
+    "forbids_threshold_tuning_from_joined_labels": true,
+    "keeps_terminal_commits_blocked": true,
+    "requires_label_join_only_after_action_rows": true,
+    "paper_claim_allowed_false": true
+  },
+  "verification_command": "python -m json.tool configs/h001/manifests/h001_expanded_retrieval_local_context_route_contract_v1.json >/dev/null"
+}

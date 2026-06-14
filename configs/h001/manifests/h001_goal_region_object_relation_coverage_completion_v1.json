@@ -1,0 +1,303 @@
+{
+  "schema_version": "h001.contract.goal_region_object_relation_coverage_completion.v1",
+  "date_checked": "2026-06-13",
+  "status": "frozen_branch_contract_static_verified",
+  "contract_name": "goal_region_object_relation_coverage_completion_v1",
+  "purpose": "Freeze the next label-free nonterminal observation branch before implementation. This branch exists because the largest unclosed failure mechanism after the rival contradiction diagnostic-only closure is simultaneous missing goal-region and object-relation evidence.",
+  "stage": "P4-design",
+  "source": {
+    "branch_selection_contract": "configs/h001/manifests/h001_next_label_free_branch_after_rival_contradiction_closure_v1.json",
+    "branch_selection_verify": "configs/h001/manifests/h001_next_label_free_branch_after_rival_contradiction_closure_v1.verify.json",
+    "pairwise_failure_diagnostic_summary": "local_dataset/runs/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1/pairwise_goal_region_map_pose_rule_failure_diagnostic_summary.json",
+    "pairwise_failure_pair_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1/pairwise_goal_region_map_pose_rule_failure_diagnostic_pair_rows.jsonl"
+  },
+  "source_gate": {
+    "branch_selection_static_verified": true,
+    "selected_branch": "goal_region_object_relation_coverage_completion_v1",
+    "branch_type": "label_free_nonterminal_observation_branch",
+    "pairwise_failure_diagnostic_gate_passed": true,
+    "source_pair_rows": 21,
+    "target_pair_rows": 12,
+    "target_request_rows": 12,
+    "target_scene_count": 7,
+    "target_query_count": 3,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "target_filter": {
+    "recommended_next_family": "goal_region_object_relation_coverage_completion_v1",
+    "failure_class": "dual_evidence_coverage_gap",
+    "failure_mechanism": "goal_region_and_object_relation_both_missing",
+    "goal_region_contrast_state": "goal_region_pair_evidence_missing",
+    "goal_region_pair_evidence_available": false,
+    "object_relation_anchor_consistency_state": "object_relation_evidence_missing",
+    "object_relation_candidate_a_available": false,
+    "object_relation_candidate_b_available": false,
+    "terminal_commit": false,
+    "candidate_commit": false,
+    "candidate_rejection": false,
+    "uses_gt_for_action": false
+  },
+  "target_counts": {
+    "pair_rows": 12,
+    "request_rows": 12,
+    "candidate_rows_expected": 24,
+    "observation_roles_per_pair": 4,
+    "observation_seed_rows_expected": 48,
+    "scene_count": 7,
+    "query_count": 3,
+    "query_counts": {
+      "bed": 6,
+      "chair": 5,
+      "tv_monitor": 1
+    },
+    "scene_counts": {
+      "4ok3usBNeis": 2,
+      "BAbdmeyTvMZ": 3,
+      "Dd4bFSTQ8gi": 2,
+      "HY1NcmCgn3n": 1,
+      "QaLdnwvtxbs": 2,
+      "bxsVRursffK": 1,
+      "qyAac8rV8Zk": 1
+    },
+    "label_pattern_counts_for_evaluation_only": {
+      "a_wrong_b_correct": 4,
+      "both_correct": 4,
+      "both_wrong": 4
+    }
+  },
+  "target_row_key_fields": [
+    "source_name",
+    "episode_key",
+    "scene_key",
+    "query",
+    "request_id",
+    "candidate_a_id",
+    "candidate_b_id"
+  ],
+  "target_rows": [
+    {
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:17:3:chair",
+      "scene_key": "4ok3usBNeis",
+      "query": "chair",
+      "request_id": "rival_identity:0",
+      "candidate_a_id": "vlmaps:export:chair:spatial_nms:3",
+      "candidate_b_id": "vlmaps:export:chair:spatial_nms:9",
+      "candidate_pair_label_pattern_for_evaluation_only": "both_correct"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:4ok3usBNeis:9:1:chair",
+      "scene_key": "4ok3usBNeis",
+      "query": "chair",
+      "request_id": "rival_identity:2",
+      "candidate_a_id": "vlmaps:export:chair:spatial_nms:3",
+      "candidate_b_id": "vlmaps:export:chair:spatial_nms:9",
+      "candidate_pair_label_pattern_for_evaluation_only": "both_correct"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:3:1:bed",
+      "scene_key": "BAbdmeyTvMZ",
+      "query": "bed",
+      "request_id": "rival_identity:23",
+      "candidate_a_id": "vlmaps:export:bed:spatial_nms:2",
+      "candidate_b_id": "vlmaps:export:bed:spatial_nms:0",
+      "candidate_pair_label_pattern_for_evaluation_only": "a_wrong_b_correct"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:19:5:bed",
+      "scene_key": "BAbdmeyTvMZ",
+      "query": "bed",
+      "request_id": "rival_identity:28",
+      "candidate_a_id": "vlmaps:export:bed:spatial_nms:2",
+      "candidate_b_id": "vlmaps:export:bed:spatial_nms:0",
+      "candidate_pair_label_pattern_for_evaluation_only": "a_wrong_b_correct"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:BAbdmeyTvMZ:20:3:chair",
+      "scene_key": "BAbdmeyTvMZ",
+      "query": "chair",
+      "request_id": "rival_identity:21",
+      "candidate_a_id": "vlmaps:export:chair:spatial_nms:16",
+      "candidate_b_id": "vlmaps:export:chair:spatial_nms:0",
+      "candidate_pair_label_pattern_for_evaluation_only": "a_wrong_b_correct"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:Dd4bFSTQ8gi:5:1:bed",
+      "scene_key": "Dd4bFSTQ8gi",
+      "query": "bed",
+      "request_id": "rival_identity:8",
+      "candidate_a_id": "vlmaps:export:bed:spatial_nms:0",
+      "candidate_b_id": "vlmaps:export:bed:spatial_nms:1",
+      "candidate_pair_label_pattern_for_evaluation_only": "both_wrong"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:Dd4bFSTQ8gi:1:5:chair",
+      "scene_key": "Dd4bFSTQ8gi",
+      "query": "chair",
+      "request_id": "rival_identity:26",
+      "candidate_a_id": "vlmaps:export:chair:spatial_nms:3",
+      "candidate_b_id": "vlmaps:export:chair:spatial_nms:5",
+      "candidate_pair_label_pattern_for_evaluation_only": "both_correct"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:HY1NcmCgn3n:18:0:chair",
+      "scene_key": "HY1NcmCgn3n",
+      "query": "chair",
+      "request_id": "rival_identity:24",
+      "candidate_a_id": "vlmaps:export:chair:spatial_nms:1",
+      "candidate_b_id": "vlmaps:export:chair:spatial_nms:3",
+      "candidate_pair_label_pattern_for_evaluation_only": "both_correct"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:0:1:bed",
+      "scene_key": "QaLdnwvtxbs",
+      "query": "bed",
+      "request_id": "rival_identity:12",
+      "candidate_a_id": "vlmaps:export:bed:spatial_nms:6",
+      "candidate_b_id": "vlmaps:export:bed:spatial_nms:9",
+      "candidate_pair_label_pattern_for_evaluation_only": "both_wrong"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:QaLdnwvtxbs:5:2:bed",
+      "scene_key": "QaLdnwvtxbs",
+      "query": "bed",
+      "request_id": "rival_identity:14",
+      "candidate_a_id": "vlmaps:export:bed:spatial_nms:6",
+      "candidate_b_id": "vlmaps:export:bed:spatial_nms:9",
+      "candidate_pair_label_pattern_for_evaluation_only": "both_wrong"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:bxsVRursffK:16:1:bed",
+      "scene_key": "bxsVRursffK",
+      "query": "bed",
+      "request_id": "rival_identity:13",
+      "candidate_a_id": "vlmaps:export:bed:spatial_nms:2",
+      "candidate_b_id": "vlmaps:export:bed:spatial_nms:3",
+      "candidate_pair_label_pattern_for_evaluation_only": "both_wrong"
+    },
+    {
+      "episode_key": "HM3D ObjectNav v2:val:qyAac8rV8Zk:9:5:tv_monitor",
+      "scene_key": "qyAac8rV8Zk",
+      "query": "tv_monitor",
+      "request_id": "rival_identity:10",
+      "candidate_a_id": "vlmaps:export:tv_monitor:spatial_nms:19",
+      "candidate_b_id": "vlmaps:export:tv_monitor:spatial_nms:8",
+      "candidate_pair_label_pattern_for_evaluation_only": "a_wrong_b_correct"
+    }
+  ],
+  "observation_contract": {
+    "observation_branch_type": "coverage_completion_before_arbitration",
+    "required_observation_roles": [
+      "candidate_a_goal_region_context_view",
+      "candidate_b_goal_region_context_view",
+      "candidate_pair_object_relation_context_view",
+      "shared_goal_region_anchor_view"
+    ],
+    "role_intent": {
+      "candidate_a_goal_region_context_view": "Acquire independent goal-region/context evidence around candidate A without using evaluation labels.",
+      "candidate_b_goal_region_context_view": "Acquire independent goal-region/context evidence around candidate B without using evaluation labels.",
+      "candidate_pair_object_relation_context_view": "Acquire candidate-pair object-relation evidence that can later distinguish missing evidence from contradiction.",
+      "shared_goal_region_anchor_view": "Acquire shared regional context so candidate-specific support is not mistaken for goal validity."
+    },
+    "allowed_nonterminal_actions": [
+      "request_goal_region_evidence",
+      "request_object_relation_evidence",
+      "request_joint_goal_region_object_relation_evidence",
+      "defer_until_coverage_complete",
+      "audit_only"
+    ],
+    "future_output_files": [
+      "goal_region_object_relation_coverage_completion_target_pair_rows.jsonl",
+      "goal_region_object_relation_coverage_completion_candidate_rows.jsonl",
+      "goal_region_object_relation_coverage_completion_observation_seed_rows.jsonl",
+      "goal_region_object_relation_coverage_completion_audit_rows.jsonl",
+      "goal_region_object_relation_coverage_completion_summary.json"
+    ]
+  },
+  "forbidden_shortcuts": [
+    "terminal_goal_commit",
+    "candidate_commit",
+    "candidate_rejection",
+    "commit_from_coverage_availability",
+    "reject_from_missing_coverage",
+    "select_by_pair_label",
+    "select_by_correct_candidate_label",
+    "select_by_wrong_goal_outcome",
+    "select_by_wasted_path",
+    "select_by_map_pose_delta_after_join",
+    "threshold_tuned_from_joined_labels",
+    "reuse_rival_contamination_state_as_commit_rule",
+    "detector_score_fallback_as_terminal_rule",
+    "semantic_rank_fallback_as_terminal_rule"
+  ],
+  "later_evaluation_join_schema_open_fields": [
+    "goal_validity_risk",
+    "viewpoint_evidence_gap",
+    "map_pose_consistency_uncertainty",
+    "wrong_goal_visit",
+    "wasted_path_m",
+    "map_pose_consistency_delta"
+  ],
+  "minimum_implementation_gates": {
+    "target_pair_rows": 12,
+    "target_request_rows": 12,
+    "candidate_rows_expected": 24,
+    "observation_seed_rows_expected": 48,
+    "observation_roles_per_pair": 4,
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "simpler_alternatives_to_audit": [
+    "defer_all",
+    "request_goal_region_only",
+    "request_object_relation_only",
+    "request_random_view",
+    "request_frontier_view",
+    "reuse_current_rival_contamination_state",
+    "semantic_rank_fallback",
+    "detector_score_fallback"
+  ],
+  "contract_scope": {
+    "contract_type": "branch_contract_before_implementation",
+    "implementation_allowed_next": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "contract_checks": {
+    "target_filter_defined": true,
+    "target_rows_enumerated": true,
+    "target_rows_match_selection_counts": true,
+    "observation_roles_defined": true,
+    "allowed_actions_nonterminal_only": true,
+    "forbidden_shortcuts_defined": true,
+    "later_evaluation_join_schema_open": true,
+    "natural_proof_rule_preserved": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "next_research_task": {
+    "task": "implement_goal_region_object_relation_coverage_completion_materializer",
+    "reason": "The branch contract is now frozen. The next implementation should materialize target pair rows, candidate rows, observation seed rows, audit rows, and a summary without terminal commits or evaluation-only action inputs."
+  },
+  "interpretation_rule": {
+    "fact": "The frozen target rows all have missing goal-region pair evidence and missing object-relation evidence.",
+    "agent_inference": "The method step forced by the failure mechanism is coverage-completion observation, not terminal scoring.",
+    "paper_claim_allowed": false
+  }
+}

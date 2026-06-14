@@ -1,0 +1,79 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_contract.v1",
+  "contract_name": "expanded_retrieval_goal_validity_object_relation_fresh_observation_plan_v1",
+  "date_checked": "2026-05-30",
+  "status": "frozen_plan_contract_before_frame_generation",
+  "source": {
+    "fresh_source_contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_v1.json",
+    "fresh_source_action_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_v1/object_relation_arbitration_fresh_source_action_rows.jsonl",
+    "fresh_source_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_v1/object_relation_arbitration_fresh_source_summary.json",
+    "local_context_plan_rows": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_plan_v1/expanded_retrieval_local_context_plan.jsonl",
+    "local_context_evidence_rows": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_revision_v1/expanded_retrieval_local_context_revision_evidence_rows.jsonl",
+    "planner_input_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_fresh_observation_inputs_v1"
+  },
+  "target_scope": {
+    "expected_request_ids": [
+      "rival_identity:3",
+      "rival_identity:5",
+      "rival_identity:7",
+      "rival_identity:22",
+      "rival_identity:25",
+      "rival_identity:27",
+      "rival_identity:29"
+    ],
+    "expected_target_candidate_rows": 36,
+    "interpretation": "Use every action-time candidate id from the route-specific goal-validity source as a fresh object-relation observation target."
+  },
+  "planner": {
+    "name": "object_relation_depth_recheck_standoff_v1",
+    "reuse_script": "src/h001_runtime/plan_expanded_retrieval_goal_validity_object_relation_observation.py",
+    "relation_anchor_rule": {
+      "required_action_time_predicates": [
+        "anchor_available_proxy"
+      ],
+      "max_relation_anchor_candidates_per_target": 4,
+      "minimum_relation_anchor_candidates_per_plan": 1,
+      "anchor_source": "same route-specific candidate set with action-time positions from local-context plan rows"
+    },
+    "viewpoints_per_target": 4,
+    "docker_image": "research3/habitat-h001:20260508-calib-artifacts",
+    "docker_required": true
+  },
+  "minimum_plan_gate": {
+    "coverage_repair_gate_passed": true,
+    "source_coverage_gap_rows": 36,
+    "source_repair_action_rows": 36,
+    "observation_target_rows": 36,
+    "waiver_rows": 0,
+    "planned_request_rows": 7,
+    "plan_rows_minimum": 120,
+    "plan_rows_per_request_minimum": 16,
+    "skipped_rows_maximum": 0,
+    "candidate_artifact_rows_minimum": 5,
+    "relation_anchor_candidates_per_plan_minimum": 1,
+    "output_forbidden_action_fields": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "required_outputs": {
+    "planner_inputs": {
+      "coverage_gap_rows": "object_relation_fresh_observation_coverage_gap_rows.jsonl",
+      "repair_action_rows": "object_relation_fresh_observation_repair_action_rows.jsonl",
+      "context_object_rows": "object_relation_fresh_observation_context_object_rows.jsonl",
+      "summary": "object_relation_fresh_observation_input_summary.json"
+    },
+    "plan": {
+      "plan": "goal_validity_object_relation_observation_plan.jsonl",
+      "skipped": "goal_validity_object_relation_observation_skipped.jsonl",
+      "candidate_artifact": "goal_validity_object_relation_observation_candidate_artifact.jsonl",
+      "summary": "goal_validity_object_relation_observation_plan_summary.json"
+    }
+  },
+  "next_gate_after_plan": {
+    "frame_generation": "Docker Habitat frame export and projection smoke",
+    "detector_substrate": "Docker openvocab-perception detector/SAM2 substrate",
+    "arbitration_validation": "Apply the fixed relation-depth guarded rule only after fresh evidence rows exist"
+  },
+  "paper_claim_allowed": false
+}

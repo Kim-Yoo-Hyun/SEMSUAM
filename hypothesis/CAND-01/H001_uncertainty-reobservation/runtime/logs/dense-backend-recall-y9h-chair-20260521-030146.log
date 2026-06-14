@@ -1,201 +1,0 @@
-[18:01:47:035500]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.scn` exists but failed to load.
-{
-  "alignment": "/out/export/alignment.json",
-  "counts": {
-    "depth": 256,
-    "pose": 256,
-    "rgb": 256,
-    "semantic": 256
-  },
-  "manifest": "/out/export/trajectory_manifest.json",
-  "next_expected_files": [
-    "map/grid_lseg_1.npy",
-    "map/weight_lseg_1.npy",
-    "map/obstacles.npy"
-  ],
-  "ok": true,
-  "out_dir": "/out/export",
-  "scene_id": "hm3d_v0.2/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.glb",
-  "trajectory_id": "y9hTuugGdiq_dense_backend_recall_v1",
-  "uses_gt_for_action": false
-}
-__file__:  /opt/vlmaps/examples/context.py
-imported path: /opt/vlmaps
-cuda
-Loading CLIP model...
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-loading scene /work/scene
-/work/scene/map/color_top_down_1.npy is saved.
-/work/scene/map/grid_1_gt.npy is saved.
-/work/scene/map/grid_lseg_1.npy is saved.
-/work/scene/map/weight_lseg_1.npy is saved.
-/work/scene/map/obstacles.npy is saved.
-  0%|          | 0/256 [00:00<?, ?it/s]  0%|          | 1/256 [00:00<02:18,  1.84it/s]  1%|          | 2/256 [00:00<01:48,  2.35it/s]  1%|          | 3/256 [00:01<01:40,  2.51it/s]  2%|▏         | 4/256 [00:01<01:34,  2.67it/s]  2%|▏         | 5/256 [00:01<01:34,  2.67it/s]  2%|▏         | 6/256 [00:02<01:30,  2.76it/s]  3%|▎         | 7/256 [00:02<01:29,  2.78it/s]  3%|▎         | 8/256 [00:02<01:27,  2.85it/s]  4%|▎         | 9/256 [00:03<01:27,  2.81it/s]  4%|▍         | 10/256 [00:03<01:24,  2.90it/s]  4%|▍         | 11/256 [00:04<01:24,  2.91it/s]  5%|▍         | 12/256 [00:04<01:24,  2.88it/s]  5%|▌         | 13/256 [00:04<01:26,  2.81it/s]  5%|▌         | 14/256 [00:05<01:23,  2.90it/s]  6%|▌         | 15/256 [00:05<01:22,  2.91it/s]  6%|▋         | 16/256 [00:05<01:22,  2.91it/s]  7%|▋         | 17/256 [00:06<01:23,  2.86it/s]  7%|▋         | 18/256 [00:06<01:23,  2.84it/s]  7%|▋         | 19/256 [00:06<01:22,  2.87it/s]  8%|▊         | 20/256 [00:07<01:24,  2.79it/s]  8%|▊         | 21/256 [00:07<01:23,  2.83it/s]  9%|▊         | 22/256 [00:07<01:22,  2.84it/s]  9%|▉         | 23/256 [00:08<01:20,  2.88it/s]  9%|▉         | 24/256 [00:08<01:21,  2.86it/s] 10%|▉         | 25/256 [00:08<01:20,  2.88it/s] 10%|█         | 26/256 [00:09<01:18,  2.92it/s] 11%|█         | 27/256 [00:09<01:18,  2.91it/s] 11%|█         | 28/256 [00:09<01:18,  2.91it/s] 11%|█▏        | 29/256 [00:10<01:18,  2.89it/s] 12%|█▏        | 30/256 [00:10<01:19,  2.86it/s] 12%|█▏        | 31/256 [00:10<01:17,  2.91it/s] 12%|█▎        | 32/256 [00:11<01:18,  2.87it/s] 13%|█▎        | 33/256 [00:11<01:16,  2.92it/s] 13%|█▎        | 34/256 [00:12<01:17,  2.86it/s] 14%|█▎        | 35/256 [00:12<01:16,  2.87it/s] 14%|█▍        | 36/256 [00:12<01:18,  2.81it/s] 14%|█▍        | 37/256 [00:13<01:18,  2.79it/s] 15%|█▍        | 38/256 [00:13<01:17,  2.80it/s] 15%|█▌        | 39/256 [00:13<01:15,  2.87it/s] 16%|█▌        | 40/256 [00:14<01:13,  2.93it/s] 16%|█▌        | 41/256 [00:14<01:15,  2.83it/s] 16%|█▋        | 42/256 [00:14<01:14,  2.86it/s] 17%|█▋        | 43/256 [00:15<01:15,  2.83it/s] 17%|█▋        | 44/256 [00:15<01:13,  2.88it/s] 18%|█▊        | 45/256 [00:15<01:12,  2.89it/s] 18%|█▊        | 46/256 [00:16<01:12,  2.88it/s] 18%|█▊        | 47/256 [00:16<01:11,  2.93it/s] 19%|█▉        | 48/256 [00:16<01:10,  2.93it/s] 19%|█▉        | 49/256 [00:17<01:11,  2.90it/s] 20%|█▉        | 50/256 [00:17<01:11,  2.89it/s] 20%|█▉        | 51/256 [00:17<01:10,  2.90it/s] 20%|██        | 52/256 [00:18<01:08,  2.96it/s] 21%|██        | 53/256 [00:18<01:09,  2.93it/s] 21%|██        | 54/256 [00:18<01:09,  2.89it/s] 21%|██▏       | 55/256 [00:19<01:10,  2.84it/s] 22%|██▏       | 56/256 [00:19<01:12,  2.78it/s] 22%|██▏       | 57/256 [00:20<01:09,  2.85it/s] 23%|██▎       | 58/256 [00:20<01:08,  2.88it/s] 23%|██▎       | 59/256 [00:20<01:07,  2.91it/s] 23%|██▎       | 60/256 [00:21<01:08,  2.87it/s] 24%|██▍       | 61/256 [00:21<01:08,  2.83it/s] 24%|██▍       | 62/256 [00:21<01:08,  2.84it/s] 25%|██▍       | 63/256 [00:22<01:06,  2.92it/s] 25%|██▌       | 64/256 [00:22<01:06,  2.90it/s] 25%|██▌       | 65/256 [00:22<01:04,  2.95it/s] 26%|██▌       | 66/256 [00:23<01:03,  2.98it/s] 26%|██▌       | 67/256 [00:23<01:03,  2.98it/s] 27%|██▋       | 68/256 [00:23<01:05,  2.86it/s] 27%|██▋       | 69/256 [00:24<01:04,  2.89it/s] 27%|██▋       | 70/256 [00:24<01:03,  2.94it/s] 28%|██▊       | 71/256 [00:24<01:03,  2.93it/s] 28%|██▊       | 72/256 [00:25<01:01,  2.99it/s] 29%|██▊       | 73/256 [00:25<01:02,  2.92it/s] 29%|██▉       | 74/256 [00:25<01:03,  2.86it/s] 29%|██▉       | 75/256 [00:26<01:02,  2.90it/s] 30%|██▉       | 76/256 [00:26<01:02,  2.90it/s] 30%|███       | 77/256 [00:26<01:01,  2.89it/s] 30%|███       | 78/256 [00:27<01:01,  2.92it/s] 31%|███       | 79/256 [00:27<01:00,  2.94it/s] 31%|███▏      | 80/256 [00:27<01:00,  2.90it/s] 32%|███▏      | 81/256 [00:28<01:00,  2.89it/s] 32%|███▏      | 82/256 [00:28<01:00,  2.86it/s] 32%|███▏      | 83/256 [00:29<01:01,  2.82it/s] 33%|███▎      | 84/256 [00:29<01:01,  2.82it/s] 33%|███▎      | 85/256 [00:29<01:00,  2.84it/s] 34%|███▎      | 86/256 [00:30<00:58,  2.89it/s] 34%|███▍      | 87/256 [00:30<00:57,  2.94it/s] 34%|███▍      | 88/256 [00:30<00:58,  2.88it/s] 35%|███▍      | 89/256 [00:31<00:57,  2.88it/s] 35%|███▌      | 90/256 [00:31<00:57,  2.90it/s] 36%|███▌      | 91/256 [00:31<00:58,  2.84it/s] 36%|███▌      | 92/256 [00:32<00:56,  2.91it/s] 36%|███▋      | 93/256 [00:32<00:56,  2.86it/s] 37%|███▋      | 94/256 [00:32<00:56,  2.86it/s] 37%|███▋      | 95/256 [00:33<00:56,  2.83it/s] 38%|███▊      | 96/256 [00:33<00:56,  2.81it/s] 38%|███▊      | 97/256 [00:33<00:55,  2.89it/s] 38%|███▊      | 98/256 [00:34<00:55,  2.86it/s] 39%|███▊      | 99/256 [00:34<00:55,  2.84it/s] 39%|███▉      | 100/256 [00:34<00:54,  2.88it/s] 39%|███▉      | 101/256 [00:35<00:53,  2.90it/s] 40%|███▉      | 102/256 [00:35<00:52,  2.95it/s] 40%|████      | 103/256 [00:35<00:51,  2.95it/s] 41%|████      | 104/256 [00:36<00:52,  2.87it/s] 41%|████      | 105/256 [00:36<00:52,  2.85it/s] 41%|████▏     | 106/256 [00:37<00:52,  2.86it/s] 42%|████▏     | 107/256 [00:37<00:53,  2.80it/s] 42%|████▏     | 108/256 [00:37<00:52,  2.82it/s] 43%|████▎     | 109/256 [00:38<00:51,  2.87it/s] 43%|████▎     | 110/256 [00:38<00:50,  2.88it/s] 43%|████▎     | 111/256 [00:38<00:50,  2.88it/s] 44%|████▍     | 112/256 [00:39<00:49,  2.89it/s] 44%|████▍     | 113/256 [00:39<00:48,  2.94it/s] 45%|████▍     | 114/256 [00:39<00:49,  2.87it/s] 45%|████▍     | 115/256 [00:40<00:50,  2.81it/s] 45%|████▌     | 116/256 [00:40<00:48,  2.86it/s] 46%|████▌     | 117/256 [00:40<00:47,  2.91it/s] 46%|████▌     | 118/256 [00:41<00:47,  2.93it/s] 46%|████▋     | 119/256 [00:41<00:46,  2.95it/s] 47%|████▋     | 120/256 [00:41<00:47,  2.89it/s] 47%|████▋     | 121/256 [00:42<00:47,  2.85it/s] 48%|████▊     | 122/256 [00:42<00:47,  2.81it/s] 48%|████▊     | 123/256 [00:42<00:45,  2.90it/s] 48%|████▊     | 124/256 [00:43<00:46,  2.85it/s] 49%|████▉     | 125/256 [00:43<00:45,  2.85it/s] 49%|████▉     | 126/256 [00:43<00:44,  2.94it/s] 50%|████▉     | 127/256 [00:44<00:43,  2.96it/s] 50%|█████     | 128/256 [00:44<00:43,  2.94it/s] 50%|█████     | 129/256 [00:44<00:43,  2.90it/s] 51%|█████     | 130/256 [00:45<00:44,  2.85it/s] 51%|█████     | 131/256 [00:45<00:44,  2.83it/s] 52%|█████▏    | 132/256 [00:46<00:43,  2.86it/s] 52%|█████▏    | 133/256 [00:46<00:42,  2.89it/s] 52%|█████▏    | 134/256 [00:46<00:42,  2.89it/s] 53%|█████▎    | 135/256 [00:47<00:40,  2.97it/s] 53%|█████▎    | 136/256 [00:47<00:41,  2.91it/s] 54%|█████▎    | 137/256 [00:47<00:42,  2.82it/s] 54%|█████▍    | 138/256 [00:48<00:41,  2.87it/s] 54%|█████▍    | 139/256 [00:48<00:39,  2.95it/s] 55%|█████▍    | 140/256 [00:48<00:39,  2.95it/s] 55%|█████▌    | 141/256 [00:49<00:39,  2.93it/s] 55%|█████▌    | 142/256 [00:49<00:39,  2.89it/s] 56%|█████▌    | 143/256 [00:49<00:39,  2.89it/s] 56%|█████▋    | 144/256 [00:50<00:38,  2.89it/s] 57%|█████▋    | 145/256 [00:50<00:38,  2.86it/s] 57%|█████▋    | 146/256 [00:50<00:39,  2.82it/s] 57%|█████▋    | 147/256 [00:51<00:37,  2.90it/s] 58%|█████▊    | 148/256 [00:51<00:36,  2.92it/s] 58%|█████▊    | 149/256 [00:51<00:37,  2.89it/s] 59%|█████▊    | 150/256 [00:52<00:35,  2.95it/s] 59%|█████▉    | 151/256 [00:52<00:36,  2.89it/s] 59%|█████▉    | 152/256 [00:52<00:35,  2.89it/s] 60%|█████▉    | 153/256 [00:53<00:35,  2.90it/s] 60%|██████    | 154/256 [00:53<00:35,  2.89it/s] 61%|██████    | 155/256 [00:54<00:35,  2.83it/s] 61%|██████    | 156/256 [00:54<00:35,  2.83it/s] 61%|██████▏   | 157/256 [00:54<00:34,  2.90it/s] 62%|██████▏   | 158/256 [00:55<00:34,  2.88it/s] 62%|██████▏   | 159/256 [00:55<00:33,  2.86it/s] 62%|██████▎   | 160/256 [00:55<00:33,  2.86it/s] 63%|██████▎   | 161/256 [00:56<00:33,  2.80it/s] 63%|██████▎   | 162/256 [00:56<00:32,  2.85it/s] 64%|██████▎   | 163/256 [00:56<00:32,  2.85it/s] 64%|██████▍   | 164/256 [00:57<00:31,  2.92it/s] 64%|██████▍   | 165/256 [00:57<00:31,  2.88it/s] 65%|██████▍   | 166/256 [00:57<00:31,  2.87it/s] 65%|██████▌   | 167/256 [00:58<00:31,  2.82it/s] 66%|██████▌   | 168/256 [00:58<00:30,  2.84it/s] 66%|██████▌   | 169/256 [00:58<00:29,  2.90it/s] 66%|██████▋   | 170/256 [00:59<00:29,  2.87it/s] 67%|██████▋   | 171/256 [00:59<00:29,  2.86it/s] 67%|██████▋   | 172/256 [00:59<00:29,  2.88it/s] 68%|██████▊   | 173/256 [01:00<00:28,  2.93it/s] 68%|██████▊   | 174/256 [01:00<00:27,  2.95it/s] 68%|██████▊   | 175/256 [01:00<00:28,  2.89it/s] 69%|██████▉   | 176/256 [01:01<00:27,  2.91it/s] 69%|██████▉   | 177/256 [01:01<00:27,  2.92it/s] 70%|██████▉   | 178/256 [01:01<00:26,  2.93it/s] 70%|██████▉   | 179/256 [01:02<00:26,  2.91it/s] 70%|███████   | 180/256 [01:02<00:25,  2.93it/s] 71%|███████   | 181/256 [01:03<00:25,  2.90it/s] 71%|███████   | 182/256 [01:03<00:25,  2.91it/s] 71%|███████▏  | 183/256 [01:03<00:25,  2.91it/s] 72%|███████▏  | 184/256 [01:04<00:24,  2.89it/s] 72%|███████▏  | 185/256 [01:04<00:23,  2.96it/s] 73%|███████▎  | 186/256 [01:04<00:23,  2.97it/s] 73%|███████▎  | 187/256 [01:05<00:22,  3.00it/s] 73%|███████▎  | 188/256 [01:05<00:22,  3.00it/s] 74%|███████▍  | 189/256 [01:05<00:22,  3.03it/s] 74%|███████▍  | 190/256 [01:06<00:22,  2.95it/s] 75%|███████▍  | 191/256 [01:06<00:21,  2.98it/s] 75%|███████▌  | 192/256 [01:06<00:21,  3.02it/s] 75%|███████▌  | 193/256 [01:07<00:20,  3.01it/s] 76%|███████▌  | 194/256 [01:07<00:20,  3.01it/s] 76%|███████▌  | 195/256 [01:07<00:20,  2.99it/s] 77%|███████▋  | 196/256 [01:08<00:20,  2.96it/s] 77%|███████▋  | 197/256 [01:08<00:19,  3.02it/s] 77%|███████▋  | 198/256 [01:08<00:19,  3.04it/s] 78%|███████▊  | 199/256 [01:09<00:19,  2.99it/s] 78%|███████▊  | 200/256 [01:09<00:19,  2.92it/s] 79%|███████▊  | 201/256 [01:09<00:18,  2.90it/s] 79%|███████▉  | 202/256 [01:10<00:18,  2.97it/s] 79%|███████▉  | 203/256 [01:10<00:18,  2.93it/s] 80%|███████▉  | 204/256 [01:10<00:17,  2.91it/s] 80%|████████  | 205/256 [01:11<00:17,  2.95it/s] 80%|████████  | 206/256 [01:11<00:16,  2.97it/s] 81%|████████  | 207/256 [01:11<00:16,  2.93it/s] 81%|████████▏ | 208/256 [01:12<00:17,  2.73it/s] 82%|████████▏ | 209/256 [01:12<00:16,  2.79it/s] 82%|████████▏ | 210/256 [01:12<00:16,  2.87it/s] 82%|████████▏ | 211/256 [01:13<00:15,  2.87it/s] 83%|████████▎ | 212/256 [01:13<00:14,  2.94it/s] 83%|████████▎ | 213/256 [01:13<00:14,  2.88it/s] 84%|████████▎ | 214/256 [01:14<00:14,  2.88it/s] 84%|████████▍ | 215/256 [01:14<00:14,  2.85it/s] 84%|████████▍ | 216/256 [01:14<00:13,  2.91it/s] 85%|████████▍ | 217/256 [01:15<00:13,  2.95it/s] 85%|████████▌ | 218/256 [01:15<00:13,  2.91it/s] 86%|████████▌ | 219/256 [01:15<00:12,  2.94it/s] 86%|████████▌ | 220/256 [01:16<00:12,  2.95it/s] 86%|████████▋ | 221/256 [01:16<00:11,  2.97it/s] 87%|████████▋ | 222/256 [01:16<00:11,  2.90it/s] 87%|████████▋ | 223/256 [01:17<00:11,  2.87it/s] 88%|████████▊ | 224/256 [01:17<00:11,  2.90it/s] 88%|████████▊ | 225/256 [01:17<00:10,  2.92it/s] 88%|████████▊ | 226/256 [01:18<00:10,  2.96it/s] 89%|████████▊ | 227/256 [01:18<00:09,  2.96it/s] 89%|████████▉ | 228/256 [01:19<00:09,  2.95it/s] 89%|████████▉ | 229/256 [01:19<00:09,  2.91it/s] 90%|████████▉ | 230/256 [01:19<00:08,  2.97it/s] 90%|█████████ | 231/256 [01:20<00:08,  2.93it/s] 91%|█████████ | 232/256 [01:20<00:08,  2.96it/s] 91%|█████████ | 233/256 [01:20<00:07,  2.98it/s] 91%|█████████▏| 234/256 [01:21<00:07,  2.92it/s] 92%|█████████▏| 235/256 [01:21<00:07,  2.90it/s] 92%|█████████▏| 236/256 [01:21<00:06,  2.95it/s] 93%|█████████▎| 237/256 [01:22<00:06,  2.92it/s] 93%|█████████▎| 238/256 [01:22<00:06,  2.96it/s] 93%|█████████▎| 239/256 [01:22<00:05,  2.94it/s] 94%|█████████▍| 240/256 [01:23<00:05,  2.83it/s] 94%|█████████▍| 241/256 [01:23<00:05,  2.83it/s] 95%|█████████▍| 242/256 [01:23<00:05,  2.79it/s] 95%|█████████▍| 243/256 [01:24<00:04,  2.82it/s] 95%|█████████▌| 244/256 [01:24<00:04,  2.83it/s] 96%|█████████▌| 245/256 [01:24<00:03,  2.85it/s] 96%|█████████▌| 246/256 [01:25<00:03,  2.89it/s] 96%|█████████▋| 247/256 [01:25<00:03,  2.93it/s] 97%|█████████▋| 248/256 [01:25<00:02,  2.97it/s] 97%|█████████▋| 249/256 [01:26<00:02,  2.94it/s] 98%|█████████▊| 250/256 [01:26<00:02,  2.96it/s] 98%|█████████▊| 251/256 [01:26<00:01,  2.97it/s] 98%|█████████▊| 252/256 [01:27<00:01,  3.00it/s] 99%|█████████▉| 253/256 [01:27<00:01,  2.99it/s] 99%|█████████▉| 254/256 [01:27<00:00,  2.90it/s]100%|█████████▉| 255/256 [01:28<00:00,  2.90it/s]100%|██████████| 256/256 [01:28<00:00,  2.83it/s]/work/scene/map/color_top_down_1.npy is saved.
-/work/scene/map/grid_1_gt.npy is saved.
-/work/scene/map/grid_lseg_1.npy is saved.
-/work/scene/map/weight_lseg_1.npy is saved.
-/work/scene/map/obstacles.npy is saved.
-100%|██████████| 256/256 [01:29<00:00,  2.86it/s]
-{
-  "checkpoint": "/models/vlmaps/lseg/checkpoints/demo_e200.ckpt",
-  "cuda_device": "NVIDIA GeForce RTX 5090",
-  "data_dir": "/work/scene",
-  "expected_files": [
-    "map/grid_lseg_1.npy",
-    "map/weight_lseg_1.npy",
-    "map/obstacles.npy"
-  ],
-  "map_dir": "/work/scene/map",
-  "status": "completed"
-}
-{
-  "num_candidates": 100,
-  "out": "/out/variants/spatial_nms_p95_k100_d10/raw/chair.jsonl"
-}
-[18:03:45:703477]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.scn` exists but failed to load.
-{
-  "candidates": 100,
-  "coordinate_frame": "habitat_world",
-  "out": "/out/variants/spatial_nms_p95_k100_d10/aligned.jsonl",
-  "rows": 1
-}
-{
-  "num_candidates": 200,
-  "out": "/out/variants/spatial_nms_p90_k200_d5/raw/chair.jsonl"
-}
-[18:03:48:798146]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.scn` exists but failed to load.
-{
-  "candidates": 200,
-  "coordinate_frame": "habitat_world",
-  "out": "/out/variants/spatial_nms_p90_k200_d5/aligned.jsonl",
-  "rows": 1
-}
-{
-  "num_candidates": 200,
-  "out": "/out/variants/components_p90_min1_k200/raw/chair.jsonl"
-}
-[18:03:51:867754]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.scn` exists but failed to load.
-{
-  "candidates": 200,
-  "coordinate_frame": "habitat_world",
-  "out": "/out/variants/components_p90_min1_k200/aligned.jsonl",
-  "rows": 1
-}
-{
-  "num_candidates": 200,
-  "out": "/out/variants/components_p80_min1_k200/raw/chair.jsonl"
-}
-[18:03:54:837365]:[Error]:[Scene] SemanticScene.cpp(139)::loadSemanticSceneDescriptor : SSD Load Failure! File with SemanticAttributes-provided name `/data/scene_datasets/hm3d/val/00808-y9hTuugGdiq/y9hTuugGdiq.basis.scn` exists but failed to load.
-{
-  "candidates": 200,
-  "coordinate_frame": "habitat_world",
-  "out": "/out/variants/components_p80_min1_k200/aligned.jsonl",
-  "rows": 1
-}
-{
-  "by_artifact": {
-    "components_p80_min1_k200": {
-      "candidate_count_max": 200,
-      "candidate_count_min": 200,
-      "recall_at_k": {
-        "1": 0.0,
-        "10": 1.0,
-        "100": 1.0,
-        "20": 1.0,
-        "200": 1.0,
-        "5": 1.0,
-        "50": 1.0
-      },
-      "rows": 2,
-      "rows_with_correct": 2,
-      "rows_with_correct_rate": 1.0
-    },
-    "components_p90_min1_k200": {
-      "candidate_count_max": 200,
-      "candidate_count_min": 200,
-      "recall_at_k": {
-        "1": 0.0,
-        "10": 1.0,
-        "100": 1.0,
-        "20": 1.0,
-        "200": 1.0,
-        "5": 1.0,
-        "50": 1.0
-      },
-      "rows": 2,
-      "rows_with_correct": 2,
-      "rows_with_correct_rate": 1.0
-    },
-    "spatial_nms_p90_k200_d5": {
-      "candidate_count_max": 200,
-      "candidate_count_min": 200,
-      "recall_at_k": {
-        "1": 0.0,
-        "10": 1.0,
-        "100": 1.0,
-        "20": 1.0,
-        "200": 1.0,
-        "5": 1.0,
-        "50": 1.0
-      },
-      "rows": 2,
-      "rows_with_correct": 2,
-      "rows_with_correct_rate": 1.0
-    },
-    "spatial_nms_p95_k100_d10": {
-      "candidate_count_max": 100,
-      "candidate_count_min": 100,
-      "recall_at_k": {
-        "1": 0.0,
-        "10": 1.0,
-        "100": 1.0,
-        "20": 1.0,
-        "200": 1.0,
-        "5": 1.0,
-        "50": 1.0
-      },
-      "rows": 2,
-      "rows_with_correct": 2,
-      "rows_with_correct_rate": 1.0
-    }
-  },
-  "candidate_artifacts_requested": [
-    "spatial_nms_p95_k100_d10=/out/variants/spatial_nms_p95_k100_d10/aligned.jsonl",
-    "spatial_nms_p90_k200_d5=/out/variants/spatial_nms_p90_k200_d5/aligned.jsonl",
-    "components_p90_min1_k200=/out/variants/components_p90_min1_k200/aligned.jsonl",
-    "components_p80_min1_k200=/out/variants/components_p80_min1_k200/aligned.jsonl"
-  ],
-  "episode_keys": [
-    "HM3D ObjectNav v2:val:y9hTuugGdiq:17:4:chair",
-    "HM3D ObjectNav v2:val:y9hTuugGdiq:16:3:chair"
-  ],
-  "episode_recovered_by_any_artifact": {
-    "HM3D ObjectNav v2:val:y9hTuugGdiq:16:3:chair": true,
-    "HM3D ObjectNav v2:val:y9hTuugGdiq:17:4:chair": true
-  },
-  "episode_recovered_by_any_artifact_rate": 1.0,
-  "episodes": 2,
-  "followup_evidence_rows": "/runs/h001_first_eval_replacement_pair_objective_v4b_external_candidate_detector_heldout_v1/external_candidate_followup_evidence_v5_local_rival_route/external_candidate_followup_evidence_rows.jsonl",
-  "interpretation": {
-    "agent_inference": "If no available artifact recovers a correct candidate, the blocker is candidate generation rather than detector observation or identity arbitration.",
-    "fact": "This probe measures recall of already materialized non-GT candidate pools.",
-    "paper_claim_status": "not_a_paper_claim"
-  },
-  "manifest": "/workspace/hypothesis/CAND-01/H001_uncertainty-reobservation/manifests/h001_first_eval_replacement_v1.json",
-  "manifest_split": "first_eval_replacement_v1",
-  "missing_artifacts": [],
-  "next_step": "materialize the best non-GT dense backend as a fixed artifact and run detector observation",
-  "out_root": "/out/recall_probe",
-  "output_files": {
-    "rows": "dense_backend_recall_probe_rows.jsonl",
-    "summary": "dense_backend_recall_probe_summary.json"
-  },
-  "recommendation_counts": {
-    "promote_dense_backend_candidate_generation": 1
-  },
-  "recovered_rows": 8,
-  "rows": 8,
-  "schema_version": "h001.dense_backend_recall_probe.v1",
-  "uses_gt_for_action": false,
-  "uses_gt_for_analysis": true
-}

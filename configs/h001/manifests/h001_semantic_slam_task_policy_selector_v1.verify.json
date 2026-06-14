@@ -1,0 +1,133 @@
+{
+  "schema_version": "h001.verify.semantic_slam_task_policy_selector.v1",
+  "date_checked": "2026-06-05",
+  "ok": true,
+  "verified_artifact": "configs/h001/manifests/h001_semantic_slam_task_policy_selector_v1.json",
+  "status": "materializer_docker_verified",
+  "source_files_checked": [
+    "configs/h001/manifests/h001_semantic_slam_task_label_join_v1.json",
+    "configs/h001/manifests/h001_semantic_slam_task_label_join_v1.verify.json",
+    "local_dataset/runs/h001_semantic_slam_task_label_join_v1/semantic_slam_task_label_join_summary.json",
+    "local_dataset/runs/h001_semantic_slam_task_label_join_v1/semantic_slam_task_label_policy_rows.jsonl",
+    "local_dataset/runs/h001_semantic_slam_map_pose_consistency_probe_v1/semantic_slam_map_pose_probe_request_rows.jsonl",
+    "local_dataset/runs/h001_semantic_slam_task_map_outcome_probe_v1/semantic_slam_task_map_outcome_probe_rows.jsonl",
+    "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_evaluated_rows.jsonl"
+  ],
+  "source_counts": {
+    "primary_action_feature_backbone_rows": 21,
+    "primary_action_feature_unique_request_keys": 21,
+    "task_map_probe_source_request_rows": 50,
+    "task_map_probe_unique_request_keys": 21,
+    "task_label_policy_rows": 150,
+    "task_label_unique_request_keys": 21,
+    "task_label_policy_count": 3,
+    "source_family_rows": {
+      "expanded_retrieval_local_context_frames_v1": 21,
+      "instance_arbitration_evidence_frames_v1": 9,
+      "missing_own_view_recheck_observation_frames_v1": 7,
+      "object_relation_fresh_observation_frames_v1": 7,
+      "partial_relation_depth_observation_frames_v1": 6
+    },
+    "primary_backbone_candidate_id_rows_full": 21,
+    "source_top_exactly_one_unique_request_rows": 20,
+    "source_top_missing_or_ambiguous_unique_request_rows": 1,
+    "local_context_exactly_one_unique_request_rows": 10,
+    "strong_own_view_exactly_one_unique_request_rows": 10,
+    "strong_own_view_any_unique_request_rows": 19,
+    "detector_strong_any_unique_request_rows": 21,
+    "local_context_any_unique_request_rows": 15
+  },
+  "expected_selector_counts_after_source_request_expansion": {
+    "source_request_rows": 50,
+    "policy_selector_rows": 150,
+    "NoReobserveReference_rows": 50,
+    "NoReobserveReference_terminal_commit_rows": 49,
+    "NoReobserveReference_defer_rows": 1,
+    "SemanticOnly_rows": 50,
+    "SemanticOnly_terminal_commit_rows": 41,
+    "SemanticOnly_local_context_commit_rows": 23,
+    "SemanticOnly_unique_own_view_commit_rows": 18,
+    "SemanticOnly_defer_rows": 9,
+    "SLAMOnlyRich_current_rows": 50,
+    "SLAMOnlyRich_current_selector_missing_rows": 50,
+    "total_terminal_commit_rows": 90,
+    "total_defer_rows": 10,
+    "total_selector_missing_rows": 50
+  },
+  "implementation_verification": {
+    "script": "src/h001_runtime/materialize_semantic_slam_task_policy_selector.py",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "output_root": "local_dataset/runs/h001_semantic_slam_task_policy_selector_v1",
+    "output_files": {
+      "selector_rows": "local_dataset/runs/h001_semantic_slam_task_policy_selector_v1/semantic_slam_task_policy_selector_rows.jsonl",
+      "failure_rows": "local_dataset/runs/h001_semantic_slam_task_policy_selector_v1/semantic_slam_task_policy_selector_failure_rows.jsonl",
+      "summary": "local_dataset/runs/h001_semantic_slam_task_policy_selector_v1/semantic_slam_task_policy_selector_summary.json"
+    },
+    "actual_counts": {
+      "source_request_rows": 50,
+      "policy_selector_rows": 150,
+      "NoReobserveReference_rows": 50,
+      "NoReobserveReference_terminal_commit_rows": 49,
+      "NoReobserveReference_defer_rows": 1,
+      "SemanticOnly_rows": 50,
+      "SemanticOnly_terminal_commit_rows": 41,
+      "SemanticOnly_local_context_commit_rows": 23,
+      "SemanticOnly_unique_own_view_commit_rows": 18,
+      "SemanticOnly_defer_rows": 9,
+      "SLAMOnlyRich_current_rows": 50,
+      "SLAMOnlyRich_current_selector_missing_rows": 50,
+      "total_terminal_commit_rows": 90,
+      "total_defer_rows": 10,
+      "total_selector_missing_rows": 50,
+      "failure_rows": 60,
+      "action_evidence_forbidden_key_count": 0
+    },
+    "failure_taxonomy": {
+      "candidate_specific_map_pose_selector_missing": 50,
+      "semantic_support_ambiguous_or_missing": 9,
+      "source_top_missing_or_ambiguous": 1
+    },
+    "gate_results": {
+      "selector_contract_gate_passed": true,
+      "partial_task_proxy_join_after_selector_allowed": true,
+      "candidate_specific_slam_selector_contract_allowed": true,
+      "revised_slam_formula_allowed": false,
+      "terminal_utility_validation_allowed": false,
+      "first_eval_rerun_allowed": false,
+      "policy_scale_comparison_allowed": false,
+      "paper_claim_allowed": false
+    }
+  },
+  "contract_checks": {
+    "request_key_normalization_defined": true,
+    "source_policy_key_defined": true,
+    "allowed_action_inputs_defined": true,
+    "forbidden_action_inputs_defined": true,
+    "NoReobserveReference_selector_defined": true,
+    "SemanticOnly_selector_defined": true,
+    "SLAMOnlyRich_current_selector_marked_missing": true,
+    "semantic_shortcut_substitution_for_slam_forbidden": true,
+    "defer_all_shortcut_forbidden": true,
+    "evaluation_labels_action_use_forbidden": true,
+    "policy_selector_materializer_allowed": true,
+    "candidate_specific_slam_selector_contract_allowed": true,
+    "revised_slam_only_formula_implementation_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "verification_commands": [
+    "jq empty configs/h001/manifests/h001_semantic_slam_task_policy_selector_v1.json",
+    "jq empty configs/h001/manifests/h001_semantic_slam_task_policy_selector_v1.verify.json",
+    "docker run --rm --ipc=host -v \"$PWD\":/workspace -w /workspace -e PYTHONPATH=/workspace/src research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m compileall src/h001_runtime/materialize_semantic_slam_task_policy_selector.py",
+    "docker run --rm --ipc=host -v \"$PWD\":/workspace -w /workspace -e PYTHONPATH=/workspace/src research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.materialize_semantic_slam_task_policy_selector",
+    "docker run --rm -i --ipc=host -v \"$PWD\":/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python - <<'PY' ... verify selector rows 150, failure rows 60, NoReobserve commits 49, SemanticOnly commits 41, SLAMOnlyRich_current selector-missing 50, forbidden keys 0 ... PY"
+  ],
+  "interpretation": {
+    "fact": "The materializer writes 150 selector rows and 60 failure rows. NoReobserveReference has 49 terminal commit proxies, SemanticOnly has 41 terminal commit proxies, and SLAMOnlyRich_current remains selector-missing for all 50 source request rows.",
+    "agent_inference": "The selector measurement plumbing is now complete for NoReobserveReference and SemanticOnly, but the next defensible step is a candidate-specific SLAM/map-pose selector contract rather than a SLAMOnlyRich formula revision.",
+    "paper_claim": "No ObjectNav, SLAM, SemanticSLAM complementarity, Step 4-5, formula revision, terminal utility, first_eval, policy-scale, or paper claim is allowed from this materializer."
+  },
+  "next_task": "freeze_candidate_specific_slam_map_pose_selector_contract"
+}

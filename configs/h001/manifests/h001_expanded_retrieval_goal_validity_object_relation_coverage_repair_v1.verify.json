@@ -1,0 +1,64 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_object_relation_coverage_repair_verify.v1",
+  "date_checked": "2026-05-29",
+  "ok": true,
+  "contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_coverage_repair_v1.json",
+  "source_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_object_relation_summary.json",
+  "preconditions": {
+    "scene_graph_object_relation_gate_passed": true,
+    "scene_graph_object_relation_signal_ready": false,
+    "recommended_next_action": "request_object_relation_observation",
+    "request_rows": 2,
+    "candidate_relation_rows": 158,
+    "pair_relation_rows": 420,
+    "context_object_rows": 7788,
+    "target_contrast_pair_rows_after_label_join": 18,
+    "same_component_target_pair_rows_after_label_join": 12,
+    "same_component_selector_visual_dominates_after_label_join": 10,
+    "target_pair_relation_delta_sign_counts_after_label_join": {
+      "contrast_relation_higher": 18
+    },
+    "relation_separability_probe_supports_signal": true,
+    "relation_coverage_complete": true,
+    "detector_coverage_complete": false,
+    "rows_with_detector_association_by_request": {
+      "rival_identity:12": "77/79",
+      "rival_identity:14": "77/79"
+    },
+    "detector_missing_candidate_rows": 4,
+    "detector_missing_unique_candidate_ids": [
+      "vlmaps:export:bed:spatial_nms:5",
+      "vlmaps:export:bed:spatial_nms:90"
+    ],
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "evaluation_only_reference_check": {
+    "missing_detector_candidate_correct_rows": 0,
+    "missing_detector_target_pair_rows": 0,
+    "note": "These counts are analysis-only and must not be used for action-time coverage repair decisions."
+  },
+  "frozen_decision": {
+    "primary_next_action": "request_object_relation_observation",
+    "terminal_commit_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "blocked_actions": [
+      "direct_candidate_commit",
+      "threshold_tuning",
+      "first_eval_rerun",
+      "policy_scale_comparison"
+    ]
+  },
+  "verification_commands": [
+    "jq '{gate:.gate.scene_graph_object_relation_gate_passed, signal:.diagnostic_conclusion.scene_graph_object_relation_signal_ready, probe:.post_label_relation_separability_probe.relation_separability_probe_supports_signal, coverage:.post_label_relation_separability_probe.relation_coverage_complete, detector:.post_label_relation_separability_probe.detector_coverage_complete, next:.diagnostic_conclusion.recommended_next_action, requests:.request_rows, candidates:.candidate_relation_rows, pairs:.pair_relation_rows, context:.context_object_rows, target_pairs:.post_label_relation_separability_probe.evaluation_only_target_contrast_pair_rows, same_component:.post_label_relation_separability_probe.evaluation_only_same_component_target_pair_rows, selector_visual:.post_label_relation_separability_probe.evaluation_only_same_component_selector_visual_dominates_rows, target_delta:.post_label_relation_separability_probe.evaluation_only_target_pair_relation_delta_sign_counts, forbidden:.action_evidence_forbidden_key_count, terminal:.terminal_commit_rows, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_object_relation_summary.json",
+    "jq -r 'select(.detector_associated_rows == 0) | [.expanded_retrieval_request_id,.candidate_id,.target_generated_rank,.target_semantic_rank,.relation_density_bucket,.context_object_count,.relation_view_consistency_profile] | @tsv' local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_candidate_relation_rows.jsonl",
+    "jq -r 'select(.detector_associated_rows == 0) | [.expanded_retrieval_request_id,.candidate_id,.target_generated_rank,.evaluation_only_candidate_correct,.evaluation_only_candidate_rank] | @tsv' local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_evaluated_candidate_relation_rows.jsonl",
+    "jq -r 'select(.evaluation_only_target_contrast_pair == true and (.selector_detector_associated_rows == 0 or .contrast_detector_associated_rows == 0)) | [.expanded_retrieval_request_id,.selector_candidate_id,.contrast_candidate_id] | @tsv' local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_evaluated_pair_relation_rows.jsonl"
+  ],
+  "interpretation": {
+    "fact": "The coverage repair contract is frozen from a Docker-verified scene-graph/object-relation analyzer output.",
+    "agent_inference": "The relation separability probe is promising but should be treated as a diagnostic until detector coverage gaps are repaired or waived by an action-time rule."
+  }
+}

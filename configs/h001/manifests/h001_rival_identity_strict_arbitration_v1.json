@@ -1,0 +1,112 @@
+{
+  "schema_version": "h001.rival_identity_strict_arbitration_contract.v1",
+  "contract_name": "rival_identity_goal_validity_arbitration_v1",
+  "date_checked": "2026-05-27",
+  "status": "implemented_diagnostic_validation_passed",
+  "source_negative_result": {
+    "post_observation_output": "local_dataset/runs/h001_rival_identity_broader_post_observation_standoff_navmesh_v1",
+    "unsafe_diagnostic_output": "local_dataset/runs/h001_rival_identity_unsafe_commit_diagnostic_standoff_navmesh_v1",
+    "commit_success_wrong_no_label": "7/0/7/0",
+    "unsafe_commit_queries": {
+      "bed": 4,
+      "chair": 2,
+      "tv_monitor": 1
+    },
+    "diagnosis": "own-view category evidence validates visible object existence but not valid ObjectNav goal identity"
+  },
+  "diagnostic_validation_result": {
+    "implementation": "src/h001_runtime/analyze_rival_identity_post_observation.py --objective goal_validity_arbitration_v1",
+    "output": "local_dataset/runs/h001_rival_identity_broader_post_observation_goal_validity_v1",
+    "request_evidence_decision_rows": "28/110/28",
+    "commit_success_wrong_no_label": "2/2/0/0",
+    "post_observation_gate_passed": true,
+    "paper_claim_allowed": false,
+    "claim_blocker": "same broader split was used for unsafe diagnostic and objective design; independent or predeclared validation is still required"
+  },
+  "allowed_action_inputs": [
+    "episode_key",
+    "query",
+    "candidate_id",
+    "semantic_rank",
+    "semantic_score",
+    "support_score",
+    "planned_target_count",
+    "positive_support_candidate_count",
+    "post_own_associated_heading_count",
+    "post_cross_associated_heading_count",
+    "post_identity_margin",
+    "post_best_box_score",
+    "post_min_depth_error_m",
+    "post_own_target_roles",
+    "post_cross_target_roles",
+    "request_taxonomy_route"
+  ],
+  "forbidden_action_inputs": [
+    "evaluation_only_candidate_correct",
+    "evaluation_only_goal_visit",
+    "evaluation_only_wrong_goal_visit",
+    "gt_goal_id",
+    "gt_object_id",
+    "oracle_distance_to_goal"
+  ],
+  "decision_stages": [
+    {
+      "stage": "candidate_set_validity",
+      "purpose": "separate no-valid-candidate or low-validity-surrogate rows from rival-identity arbitration",
+      "rule": "if all candidates only show object-existence evidence without a navigation-goal validity surrogate, defer to expanded retrieval or object-existence validation"
+    },
+    {
+      "stage": "local_semantic_geometric_consistency",
+      "purpose": "avoid committing to category detections that are geometrically plausible but semantically ambiguous",
+      "rule": "a candidate must agree across semantic prior, detector/mask evidence, depth/projection consistency, and local context; one cue alone is insufficient"
+    },
+    {
+      "stage": "rival_contrast",
+      "purpose": "commit only when the selected candidate is not merely visible but also discriminative against rivals",
+      "rule": "if any rival has comparable own-view support, better semantic prior, or unresolved cross-view aliasing, defer or request another observation"
+    },
+    {
+      "stage": "commit_or_defer",
+      "purpose": "preserve safety before utility",
+      "rule": "commit only after all previous stages pass; otherwise route to defer_unresolved_identity, request_expanded_retrieval, or defer_object_existence_validation"
+    }
+  ],
+  "blocked_simple_repairs": [
+    "own_count_threshold_only",
+    "identity_margin_threshold_only",
+    "semantic_rank_threshold_only",
+    "detector_box_threshold_only",
+    "depth_error_threshold_only",
+    "category_detector_confidence_only"
+  ],
+  "required_baselines": [
+    "defer_all_rival_identity",
+    "semantic_rank_1_only",
+    "detector_box_score_only",
+    "depth_consistency_only",
+    "own_count_only",
+    "combined_simple_guard",
+    "existing_unique_strong_own_view_identity"
+  ],
+  "promotion_gates": {
+    "wrong_goal_commit_rows": 0,
+    "no_label_commit_rows": 0,
+    "min_success_commit_rows": 1,
+    "min_resolved_request_rows": 1,
+    "safe_nontrivial_simple_guard_required": false,
+    "must_beat_defer_only_on_success": true,
+    "must_not_exceed_any_simple_guard_wrong_goal": true,
+    "uses_gt_for_action": false
+  },
+  "failure_taxonomy_required": [
+    "candidate_set_no_valid_goal_candidate",
+    "visible_wrong_object_commit",
+    "wrong_candidate_has_stronger_own_view_support_than_correct",
+    "semantic_prior_favors_wrong_over_correct",
+    "comparable_rival_support",
+    "cross_view_aliasing",
+    "simple_guard_inert",
+    "expanded_retrieval_needed"
+  ],
+  "paper_claim_allowed": false
+}

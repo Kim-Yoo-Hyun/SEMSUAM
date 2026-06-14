@@ -1,0 +1,3102 @@
+{
+  "contract": {
+    "maximum_rows_per_scene": 3,
+    "minimum_no_reobserve_wrong_goal_rows": 8,
+    "minimum_queries": 3,
+    "minimum_rows": 20,
+    "minimum_rows_with_correct_and_wrong_candidates": 12,
+    "minimum_scenes": 5,
+    "minimum_source_selected_wrong_rows": 6
+  },
+  "contract_summary": {
+    "checks": {
+      "maximum_rows_per_scene": true,
+      "minimum_no_reobserve_wrong_goal_rows": true,
+      "minimum_queries": true,
+      "minimum_rows": true,
+      "minimum_rows_with_correct_and_wrong_candidates": true,
+      "minimum_scenes": true,
+      "minimum_source_selected_wrong_rows": true
+    },
+    "class_counts": {
+      "correct_and_wrong_positive_selected_correct": 4,
+      "wrong_goal_baseline_selected_wrong_correct_present": 16
+    },
+    "missing_to_contract": {
+      "no_reobserve_wrong_goal_rows": 0,
+      "queries": 0,
+      "rows": 0,
+      "rows_with_correct_and_wrong_candidates": 0,
+      "scenes": 0,
+      "source_selected_wrong_rows": 0
+    },
+    "no_reobserve_wrong_goal_rows": 16,
+    "passes_contract": true,
+    "queries": 6,
+    "query_counts": {
+      "bed": 6,
+      "chair": 1,
+      "plant": 6,
+      "sofa": 4,
+      "toilet": 2,
+      "tv_monitor": 1
+    },
+    "rows": 20,
+    "rows_with_correct_and_wrong_candidates": 20,
+    "scene_counts": {
+      "5cdEh9F2hJL": 2,
+      "CrMo8WxCyVb": 3,
+      "TEEsavR23oF": 2,
+      "eF36g7L6Z9M": 2,
+      "h1zeeAwLh9Z": 2,
+      "mL8ThkuaVTM": 3,
+      "p53SfW6mjZe": 2,
+      "svBbv1Pavdk": 2,
+      "wcojb4TFT35": 2
+    },
+    "scenes": 9,
+    "source_selected_wrong_rows": 16
+  },
+  "created_at": "2026-05-23T08:01:18.029750+00:00",
+  "creation_command": "python -m h001_runtime.build_dense_conflict_generalization_manifest",
+  "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+  "detector_job_allowed": false,
+  "excluded_scene_keys": [
+    "y9hTuugGdiq"
+  ],
+  "manifest_schema_version": "h001.split_manifest.v1",
+  "manifest_status": "frozen_pending_recall_gate",
+  "next_gate": "run non-GT candidate recall gate on this frozen manifest; detector/association validation remains blocked until that gate passes",
+  "pool_summary": {
+    "no_reobserve_wrong_goal_rows": 26,
+    "queries": 6,
+    "query_counts": {
+      "bed": 18,
+      "chair": 18,
+      "plant": 16,
+      "sofa": 18,
+      "toilet": 12,
+      "tv_monitor": 8
+    },
+    "rows": 90,
+    "rows_with_correct_and_wrong_candidates": 62,
+    "scene_counts": {
+      "5cdEh9F2hJL": 10,
+      "CrMo8WxCyVb": 10,
+      "TEEsavR23oF": 10,
+      "eF36g7L6Z9M": 10,
+      "h1zeeAwLh9Z": 10,
+      "mL8ThkuaVTM": 10,
+      "p53SfW6mjZe": 10,
+      "svBbv1Pavdk": 10,
+      "wcojb4TFT35": 10
+    },
+    "scenes": 9,
+    "source_selected_wrong_rows": 31
+  },
+  "query_counts": {
+    "bed": 6,
+    "chair": 1,
+    "plant": 6,
+    "sofa": 4,
+    "toilet": 2,
+    "tv_monitor": 1
+  },
+  "rows": [
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 4,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:4",
+        "vlmaps:export:bed:spatial_nms:5",
+        "vlmaps:export:bed:spatial_nms:9"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 4,
+      "dense_conflict_first_correct_rank": 2,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.00032019615173339844,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9905858635902405,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:0",
+          "candidate_position": [
+            0.08324809074401873,
+            1.6000645160675049,
+            8.849786949157714
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9905858635902405,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:1",
+          "candidate_position": [
+            -7.316751909255982,
+            1.6000645160675049,
+            1.8497869491577141
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9902656674385071,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:2",
+          "candidate_position": [
+            -5.216751909255981,
+            1.6000645160675049,
+            2.849786949157714
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9889712929725647,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:3",
+          "candidate_position": [
+            0.1832480907440186,
+            1.6000645160675049,
+            7.849786949157715
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9889017343521118,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:4",
+          "candidate_position": [
+            0.4332480907440188,
+            1.6000645160675049,
+            10.149786949157715
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9885039925575256,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 16,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:0",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:6",
+        "vlmaps:export:bed:spatial_nms:7",
+        "vlmaps:export:bed:spatial_nms:8",
+        "vlmaps:export:bed:spatial_nms:10",
+        "vlmaps:export:bed:spatial_nms:11",
+        "vlmaps:export:bed:spatial_nms:12",
+        "vlmaps:export:bed:spatial_nms:13"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 16,
+      "deterministic_hash": "621d5fc75544fd5844b0c023080f213126ba2a87b943fbef254b5a4fca410587",
+      "episode_key": "HM3D ObjectNav v2:val:CrMo8WxCyVb:24:2:bed",
+      "geodesic_distance": 1.09821,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 24,
+      "scene_id": "hm3d_v0.2/val/00810-CrMo8WxCyVb/CrMo8WxCyVb.basis.glb",
+      "scene_key": "CrMo8WxCyVb",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 0,
+      "selection_seed": 20260523,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/CrMo8WxCyVb.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        -2.03852,
+        0.05006,
+        4.76019
+      ],
+      "start_rotation": [
+        0,
+        0.99581,
+        0,
+        -0.09145
+      ],
+      "target_or_query": "bed",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 1,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:toilet:spatial_nms:1"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 1,
+      "dense_conflict_first_correct_rank": 2,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.0018497705459594727,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:toilet:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9873050451278687,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:toilet:spatial_nms:0",
+          "candidate_position": [
+            1.406215476989746,
+            1.5184034407138824,
+            -6.23811993598938
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9873050451278687,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:toilet:spatial_nms:1",
+          "candidate_position": [
+            -4.693784523010255,
+            1.5184034407138824,
+            3.61188006401062
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9854552745819092,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:toilet:spatial_nms:2",
+          "candidate_position": [
+            9.656215476989747,
+            1.5184034407138824,
+            0.9118800640106202
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9190695285797119,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:toilet:spatial_nms:3",
+          "candidate_position": [
+            0.8062154769897463,
+            1.5184034407138824,
+            -3.7381199359893804
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9124660491943359,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:toilet:spatial_nms:4",
+          "candidate_position": [
+            1.8062154769897458,
+            1.5184034407138824,
+            -4.48811993598938
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9068830013275146,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 19,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:toilet:spatial_nms:0",
+        "vlmaps:export:toilet:spatial_nms:2",
+        "vlmaps:export:toilet:spatial_nms:3",
+        "vlmaps:export:toilet:spatial_nms:4",
+        "vlmaps:export:toilet:spatial_nms:5",
+        "vlmaps:export:toilet:spatial_nms:6",
+        "vlmaps:export:toilet:spatial_nms:7",
+        "vlmaps:export:toilet:spatial_nms:8",
+        "vlmaps:export:toilet:spatial_nms:9",
+        "vlmaps:export:toilet:spatial_nms:10"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 19,
+      "deterministic_hash": "b220d81bcef7dfdfbd21ae7d779b631a137853d8d9b991c3969a551b87b34172",
+      "episode_key": "HM3D ObjectNav v2:val:5cdEh9F2hJL:14:2:toilet",
+      "geodesic_distance": 4.33864,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 14,
+      "scene_id": "hm3d_v0.2/val/00853-5cdEh9F2hJL/5cdEh9F2hJL.basis.glb",
+      "scene_key": "5cdEh9F2hJL",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 1,
+      "selection_seed": 20260523,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/5cdEh9F2hJL.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        -1.00729,
+        0.0184,
+        2.38804
+      ],
+      "start_rotation": [
+        0,
+        0.99918,
+        0,
+        0.04042
+      ],
+      "target_or_query": "toilet",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 4,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:1",
+        "vlmaps:export:plant:spatial_nms:3",
+        "vlmaps:export:plant:spatial_nms:5",
+        "vlmaps:export:plant:spatial_nms:7"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 4,
+      "dense_conflict_first_correct_rank": 2,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.006752312183380127,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9284737706184387,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:0",
+          "candidate_position": [
+            -4.263024997711181,
+            1.6633779406547546,
+            -3.367619848251343
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9284737706184387,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:1",
+          "candidate_position": [
+            -7.6130249977111815,
+            1.6633779406547546,
+            -3.117619848251343
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9217214584350586,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:2",
+          "candidate_position": [
+            -6.463024997711182,
+            1.6633779406547546,
+            -0.017619848251342773
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9084472060203552,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:3",
+          "candidate_position": [
+            0.9369750022888184,
+            1.6633779406547546,
+            -4.117619848251342
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9072973132133484,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:4",
+          "candidate_position": [
+            -5.213024997711182,
+            1.6633779406547546,
+            -8.217619848251342
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9071205258369446,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 16,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:2",
+        "vlmaps:export:plant:spatial_nms:4",
+        "vlmaps:export:plant:spatial_nms:6",
+        "vlmaps:export:plant:spatial_nms:8",
+        "vlmaps:export:plant:spatial_nms:9",
+        "vlmaps:export:plant:spatial_nms:10",
+        "vlmaps:export:plant:spatial_nms:11",
+        "vlmaps:export:plant:spatial_nms:12",
+        "vlmaps:export:plant:spatial_nms:13"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 16,
+      "deterministic_hash": "1d2efc4751cb356424b9dbc2e1bc40c447705efaa51586eaa6c2e47758d1752b",
+      "episode_key": "HM3D ObjectNav v2:val:TEEsavR23oF:18:1:plant",
+      "geodesic_distance": 10.40271,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 18,
+      "scene_id": "hm3d_v0.2/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb",
+      "scene_key": "TEEsavR23oF",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 2,
+      "selection_seed": 20260523,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/TEEsavR23oF.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        -1.07321,
+        3.11339,
+        -7.6465
+      ],
+      "start_rotation": [
+        0,
+        0.75742,
+        0,
+        -0.65293
+      ],
+      "target_or_query": "plant",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 4,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:1",
+        "vlmaps:export:plant:spatial_nms:3",
+        "vlmaps:export:plant:spatial_nms:5",
+        "vlmaps:export:plant:spatial_nms:7"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 4,
+      "dense_conflict_first_correct_rank": 2,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.006752312183380127,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9284737706184387,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:0",
+          "candidate_position": [
+            -4.263024997711181,
+            1.6633779406547546,
+            -3.367619848251343
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9284737706184387,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:1",
+          "candidate_position": [
+            -7.6130249977111815,
+            1.6633779406547546,
+            -3.117619848251343
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9217214584350586,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:2",
+          "candidate_position": [
+            -6.463024997711182,
+            1.6633779406547546,
+            -0.017619848251342773
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9084472060203552,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:3",
+          "candidate_position": [
+            0.9369750022888184,
+            1.6633779406547546,
+            -4.117619848251342
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9072973132133484,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:4",
+          "candidate_position": [
+            -5.213024997711182,
+            1.6633779406547546,
+            -8.217619848251342
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9071205258369446,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 16,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:2",
+        "vlmaps:export:plant:spatial_nms:4",
+        "vlmaps:export:plant:spatial_nms:6",
+        "vlmaps:export:plant:spatial_nms:8",
+        "vlmaps:export:plant:spatial_nms:9",
+        "vlmaps:export:plant:spatial_nms:10",
+        "vlmaps:export:plant:spatial_nms:11",
+        "vlmaps:export:plant:spatial_nms:12",
+        "vlmaps:export:plant:spatial_nms:13"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 16,
+      "deterministic_hash": "fb336a4f204cf787c8a0e88531bc77c74ef92b049e83f42507afd7a9ec68af8e",
+      "episode_key": "HM3D ObjectNav v2:val:TEEsavR23oF:19:2:plant",
+      "geodesic_distance": 5.62858,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 19,
+      "scene_id": "hm3d_v0.2/val/00800-TEEsavR23oF/TEEsavR23oF.basis.glb",
+      "scene_key": "TEEsavR23oF",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 3,
+      "selection_seed": 20260523,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/TEEsavR23oF.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        1.80694,
+        0.01338,
+        -6.01683
+      ],
+      "start_rotation": [
+        0,
+        0.88112,
+        0,
+        0.47288
+      ],
+      "target_or_query": "plant",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 4,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:4",
+        "vlmaps:export:bed:spatial_nms:5",
+        "vlmaps:export:bed:spatial_nms:9"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 4,
+      "dense_conflict_first_correct_rank": 2,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.00032019615173339844,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9905858635902405,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:0",
+          "candidate_position": [
+            0.08324809074401873,
+            1.6000645160675049,
+            8.849786949157714
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9905858635902405,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:1",
+          "candidate_position": [
+            -7.316751909255982,
+            1.6000645160675049,
+            1.8497869491577141
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9902656674385071,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:2",
+          "candidate_position": [
+            -5.216751909255981,
+            1.6000645160675049,
+            2.849786949157714
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9889712929725647,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:3",
+          "candidate_position": [
+            0.1832480907440186,
+            1.6000645160675049,
+            7.849786949157715
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9889017343521118,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:4",
+          "candidate_position": [
+            0.4332480907440188,
+            1.6000645160675049,
+            10.149786949157715
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9885039925575256,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 16,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:0",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:6",
+        "vlmaps:export:bed:spatial_nms:7",
+        "vlmaps:export:bed:spatial_nms:8",
+        "vlmaps:export:bed:spatial_nms:10",
+        "vlmaps:export:bed:spatial_nms:11",
+        "vlmaps:export:bed:spatial_nms:12",
+        "vlmaps:export:bed:spatial_nms:13"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 16,
+      "deterministic_hash": "0bfaa07e7b3ac6e2c5164aa3873574559b5b996e60422bf5637991863e56cabe",
+      "episode_key": "HM3D ObjectNav v2:val:CrMo8WxCyVb:22:5:bed",
+      "geodesic_distance": 2.05406,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 22,
+      "scene_id": "hm3d_v0.2/val/00810-CrMo8WxCyVb/CrMo8WxCyVb.basis.glb",
+      "scene_key": "CrMo8WxCyVb",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 4,
+      "selection_seed": 20260523,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/CrMo8WxCyVb.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        -1.29381,
+        0.01499,
+        6.59744
+      ],
+      "start_rotation": [
+        0,
+        0.53187,
+        0,
+        0.84683
+      ],
+      "target_or_query": "bed",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 1,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:sofa:spatial_nms:2"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 1,
+      "dense_conflict_first_correct_rank": 3,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.028501391410827637,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:sofa:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9657269716262817,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:0",
+          "candidate_position": [
+            4.1496520996093755,
+            1.5490234345197678,
+            -6.093148899078369
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9657269716262817,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:1",
+          "candidate_position": [
+            8.199652099609375,
+            1.5490234345197678,
+            -8.94314889907837
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9372255802154541,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+          "candidate_position": [
+            9.599652099609376,
+            1.5490234345197678,
+            -0.693148899078369
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9254359602928162,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:3",
+          "candidate_position": [
+            6.899652099609376,
+            1.5490234345197678,
+            -8.243148899078369
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.923520565032959,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:4",
+          "candidate_position": [
+            -1.900347900390625,
+            1.5490234345197678,
+            -5.5431488990783695
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9181348085403442,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 19,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:sofa:spatial_nms:0",
+        "vlmaps:export:sofa:spatial_nms:1",
+        "vlmaps:export:sofa:spatial_nms:3",
+        "vlmaps:export:sofa:spatial_nms:4",
+        "vlmaps:export:sofa:spatial_nms:5",
+        "vlmaps:export:sofa:spatial_nms:6",
+        "vlmaps:export:sofa:spatial_nms:7",
+        "vlmaps:export:sofa:spatial_nms:8",
+        "vlmaps:export:sofa:spatial_nms:9",
+        "vlmaps:export:sofa:spatial_nms:10"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 19,
+      "deterministic_hash": "5dc1011dfda395fdac424a7541de561306f8f925856a9621d9be45e749071f61",
+      "episode_key": "HM3D ObjectNav v2:val:h1zeeAwLh9Z:21:3:sofa",
+      "geodesic_distance": 6.90545,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 21,
+      "scene_id": "hm3d_v0.2/val/00815-h1zeeAwLh9Z/h1zeeAwLh9Z.basis.glb",
+      "scene_key": "h1zeeAwLh9Z",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 5,
+      "selection_seed": 20260523,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/h1zeeAwLh9Z.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        5.7242,
+        2.49902,
+        -7.82929
+      ],
+      "start_rotation": [
+        0,
+        0.54049,
+        0,
+        -0.84135
+      ],
+      "target_or_query": "sofa",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 1,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:2"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 1,
+      "dense_conflict_first_correct_rank": 3,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.0007669925689697266,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9908363819122314,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:0",
+          "candidate_position": [
+            6.245557880401611,
+            4.323992013931274,
+            -1.6381212949752808
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9908363819122314,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:1",
+          "candidate_position": [
+            7.495557880401611,
+            4.323992013931274,
+            -1.7381212949752807
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9900693893432617,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:2",
+          "candidate_position": [
+            -0.05444211959838885,
+            4.323992013931274,
+            2.3618787050247194
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9883970618247986,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:3",
+          "candidate_position": [
+            7.195557880401612,
+            4.323992013931274,
+            -0.08812129497528076
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9883072972297668,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:4",
+          "candidate_position": [
+            0.745557880401611,
+            4.323992013931274,
+            1.1118787050247194
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9877689480781555,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 19,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:0",
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:4",
+        "vlmaps:export:bed:spatial_nms:5",
+        "vlmaps:export:bed:spatial_nms:6",
+        "vlmaps:export:bed:spatial_nms:7",
+        "vlmaps:export:bed:spatial_nms:8",
+        "vlmaps:export:bed:spatial_nms:9",
+        "vlmaps:export:bed:spatial_nms:10"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 19,
+      "deterministic_hash": "0857fbe3f4f3050d41472efc972a5872dd5d19ac7f99703c0ea7d95a523c874a",
+      "episode_key": "HM3D ObjectNav v2:val:mL8ThkuaVTM:2:4:bed",
+      "geodesic_distance": 6.92742,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 2,
+      "scene_id": "hm3d_v0.2/val/00820-mL8ThkuaVTM/mL8ThkuaVTM.basis.glb",
+      "scene_key": "mL8ThkuaVTM",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 6,
+      "selection_seed": 20260523,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/mL8ThkuaVTM.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        0.08954,
+        -2.67601,
+        0.92285
+      ],
+      "start_rotation": [
+        0,
+        0.98294,
+        0,
+        -0.18393
+      ],
+      "target_or_query": "bed",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 1,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:2"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 1,
+      "dense_conflict_first_correct_rank": 3,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.0007669925689697266,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9908363819122314,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:0",
+          "candidate_position": [
+            6.245557880401611,
+            4.323992013931274,
+            -1.6381212949752808
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9908363819122314,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:1",
+          "candidate_position": [
+            7.495557880401611,
+            4.323992013931274,
+            -1.7381212949752807
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9900693893432617,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:2",
+          "candidate_position": [
+            -0.05444211959838885,
+            4.323992013931274,
+            2.3618787050247194
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9883970618247986,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:3",
+          "candidate_position": [
+            7.195557880401612,
+            4.323992013931274,
+            -0.08812129497528076
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9883072972297668,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:4",
+          "candidate_position": [
+            0.745557880401611,
+            4.323992013931274,
+            1.1118787050247194
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9877689480781555,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 19,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:0",
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:4",
+        "vlmaps:export:bed:spatial_nms:5",
+        "vlmaps:export:bed:spatial_nms:6",
+        "vlmaps:export:bed:spatial_nms:7",
+        "vlmaps:export:bed:spatial_nms:8",
+        "vlmaps:export:bed:spatial_nms:9",
+        "vlmaps:export:bed:spatial_nms:10"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 19,
+      "deterministic_hash": "66e54cd16afaf34784ffdd9424978ab70d6b40495ec0c029eaaa138f0980f4b1",
+      "episode_key": "HM3D ObjectNav v2:val:mL8ThkuaVTM:18:0:bed",
+      "geodesic_distance": 6.14787,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 18,
+      "scene_id": "hm3d_v0.2/val/00820-mL8ThkuaVTM/mL8ThkuaVTM.basis.glb",
+      "scene_key": "mL8ThkuaVTM",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 7,
+      "selection_seed": 20260523,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/mL8ThkuaVTM.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        0.88444,
+        -2.67601,
+        0.96654
+      ],
+      "start_rotation": [
+        0,
+        0.99492,
+        0,
+        -0.10063
+      ],
+      "target_or_query": "bed",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 1,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:sofa:spatial_nms:2"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 1,
+      "dense_conflict_first_correct_rank": 3,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.028501391410827637,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:sofa:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9657269716262817,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:0",
+          "candidate_position": [
+            4.1496520996093755,
+            1.5490234345197678,
+            -6.093148899078369
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9657269716262817,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:1",
+          "candidate_position": [
+            8.199652099609375,
+            1.5490234345197678,
+            -8.94314889907837
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9372255802154541,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+          "candidate_position": [
+            9.599652099609376,
+            1.5490234345197678,
+            -0.693148899078369
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9254359602928162,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:3",
+          "candidate_position": [
+            6.899652099609376,
+            1.5490234345197678,
+            -8.243148899078369
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.923520565032959,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:4",
+          "candidate_position": [
+            -1.900347900390625,
+            1.5490234345197678,
+            -5.5431488990783695
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9181348085403442,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 19,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:sofa:spatial_nms:0",
+        "vlmaps:export:sofa:spatial_nms:1",
+        "vlmaps:export:sofa:spatial_nms:3",
+        "vlmaps:export:sofa:spatial_nms:4",
+        "vlmaps:export:sofa:spatial_nms:5",
+        "vlmaps:export:sofa:spatial_nms:6",
+        "vlmaps:export:sofa:spatial_nms:7",
+        "vlmaps:export:sofa:spatial_nms:8",
+        "vlmaps:export:sofa:spatial_nms:9",
+        "vlmaps:export:sofa:spatial_nms:10"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 19,
+      "deterministic_hash": "8fbbebd7b55eb46e117d045194e78925709ee05b1996730e5ca633b22a86549e",
+      "episode_key": "HM3D ObjectNav v2:val:h1zeeAwLh9Z:18:2:sofa",
+      "geodesic_distance": 7.38557,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 18,
+      "scene_id": "hm3d_v0.2/val/00815-h1zeeAwLh9Z/h1zeeAwLh9Z.basis.glb",
+      "scene_key": "h1zeeAwLh9Z",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 8,
+      "selection_seed": 20260523,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/h1zeeAwLh9Z.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        1.34562,
+        2.49902,
+        -3.61718
+      ],
+      "start_rotation": [
+        0,
+        0.22114,
+        0,
+        -0.97524
+      ],
+      "target_or_query": "sofa",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 1,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:tv_monitor:spatial_nms:3"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 1,
+      "dense_conflict_first_correct_rank": 4,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.0039435625076293945,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:tv_monitor:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9225258827209473,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:tv_monitor:spatial_nms:0",
+          "candidate_position": [
+            1.8062154769897458,
+            1.5184034407138824,
+            4.46188006401062
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9225258827209473,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:tv_monitor:spatial_nms:1",
+          "candidate_position": [
+            10.356215476989746,
+            1.5184034407138824,
+            -6.98811993598938
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9185823202133179,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:tv_monitor:spatial_nms:2",
+          "candidate_position": [
+            9.206215476989748,
+            1.5184034407138824,
+            4.961880064010621
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9163463711738586,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:tv_monitor:spatial_nms:3",
+          "candidate_position": [
+            11.506215476989746,
+            1.5184034407138824,
+            -6.03811993598938
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9154577255249023,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:tv_monitor:spatial_nms:4",
+          "candidate_position": [
+            9.256215476989746,
+            1.5184034407138824,
+            -6.98811993598938
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9133851528167725,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 19,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:tv_monitor:spatial_nms:0",
+        "vlmaps:export:tv_monitor:spatial_nms:1",
+        "vlmaps:export:tv_monitor:spatial_nms:2",
+        "vlmaps:export:tv_monitor:spatial_nms:4",
+        "vlmaps:export:tv_monitor:spatial_nms:5",
+        "vlmaps:export:tv_monitor:spatial_nms:6",
+        "vlmaps:export:tv_monitor:spatial_nms:7",
+        "vlmaps:export:tv_monitor:spatial_nms:8",
+        "vlmaps:export:tv_monitor:spatial_nms:9",
+        "vlmaps:export:tv_monitor:spatial_nms:10"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 19,
+      "deterministic_hash": "3d4be3bd03d38a58540f6db74560b6c80fe789a31eb3007a78c604ae1991c769",
+      "episode_key": "HM3D ObjectNav v2:val:5cdEh9F2hJL:13:0:tv_monitor",
+      "geodesic_distance": 10.87323,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 13,
+      "scene_id": "hm3d_v0.2/val/00853-5cdEh9F2hJL/5cdEh9F2hJL.basis.glb",
+      "scene_key": "5cdEh9F2hJL",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 9,
+      "selection_seed": 20260523,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/5cdEh9F2hJL.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        6.72834,
+        0.0184,
+        3.9248
+      ],
+      "start_rotation": [
+        0,
+        0.19632,
+        0,
+        0.98054
+      ],
+      "target_or_query": "tv_monitor",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 6,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:5",
+        "vlmaps:export:bed:spatial_nms:8",
+        "vlmaps:export:bed:spatial_nms:12",
+        "vlmaps:export:bed:spatial_nms:15",
+        "vlmaps:export:bed:spatial_nms:18"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 6,
+      "dense_conflict_first_correct_rank": 4,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.0012632012367248535,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9912919402122498,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:0",
+          "candidate_position": [
+            -2.7440460920333862,
+            -1.4951868057250977,
+            4.456500387191772
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9912919402122498,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:1",
+          "candidate_position": [
+            -1.2440460920333862,
+            -1.4951868057250977,
+            6.206500387191773
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9900287389755249,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:2",
+          "candidate_position": [
+            -14.344046092033388,
+            -1.4951868057250977,
+            -1.7434996128082276
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.989739179611206,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:3",
+          "candidate_position": [
+            -7.044046092033387,
+            -1.4951868057250977,
+            6.456500387191773
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9889233112335205,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:4",
+          "candidate_position": [
+            0.20595390796661395,
+            -1.4951868057250977,
+            5.056500387191773
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9887509942054749,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 14,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:0",
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:4",
+        "vlmaps:export:bed:spatial_nms:6",
+        "vlmaps:export:bed:spatial_nms:7",
+        "vlmaps:export:bed:spatial_nms:9",
+        "vlmaps:export:bed:spatial_nms:10",
+        "vlmaps:export:bed:spatial_nms:11",
+        "vlmaps:export:bed:spatial_nms:13"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 14,
+      "deterministic_hash": "02232dccdb8e1315c3d007db874295099aa76a1111f47ea4bf903e54874b4909",
+      "episode_key": "HM3D ObjectNav v2:val:p53SfW6mjZe:13:0:bed",
+      "geodesic_distance": 5.07042,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 13,
+      "scene_id": "hm3d_v0.2/val/00814-p53SfW6mjZe/p53SfW6mjZe.basis.glb",
+      "scene_key": "p53SfW6mjZe",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 10,
+      "selection_seed": 20260523,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/p53SfW6mjZe.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        0.15948,
+        3.40481,
+        1.55573
+      ],
+      "start_rotation": [
+        0,
+        0.98654,
+        0,
+        -0.16352
+      ],
+      "target_or_query": "bed",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 2,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:toilet:spatial_nms:3",
+        "vlmaps:export:toilet:spatial_nms:13"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 2,
+      "dense_conflict_first_correct_rank": 4,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.017785310745239258,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:toilet:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9764547944068909,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:toilet:spatial_nms:0",
+          "candidate_position": [
+            -3.266751909255982,
+            1.6000645160675049,
+            4.949786949157715
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9764547944068909,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:toilet:spatial_nms:1",
+          "candidate_position": [
+            1.4832480907440186,
+            1.6000645160675049,
+            1.4497869491577147
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9586694836616516,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:toilet:spatial_nms:2",
+          "candidate_position": [
+            -6.416751909255982,
+            1.6000645160675049,
+            9.699786949157716
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9524165987968445,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:toilet:spatial_nms:3",
+          "candidate_position": [
+            1.7332480907440186,
+            1.6000645160675049,
+            0.39978694915771484
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9360113143920898,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:toilet:spatial_nms:4",
+          "candidate_position": [
+            -7.216751909255982,
+            1.6000645160675049,
+            1.1997869491577147
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9350906014442444,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 18,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:toilet:spatial_nms:0",
+        "vlmaps:export:toilet:spatial_nms:1",
+        "vlmaps:export:toilet:spatial_nms:2",
+        "vlmaps:export:toilet:spatial_nms:4",
+        "vlmaps:export:toilet:spatial_nms:5",
+        "vlmaps:export:toilet:spatial_nms:6",
+        "vlmaps:export:toilet:spatial_nms:7",
+        "vlmaps:export:toilet:spatial_nms:8",
+        "vlmaps:export:toilet:spatial_nms:9",
+        "vlmaps:export:toilet:spatial_nms:10"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 18,
+      "deterministic_hash": "0fb1aef773d2be3dffb480e610d02fc7de448daded34ae5ffc0a80e8973561d7",
+      "episode_key": "HM3D ObjectNav v2:val:CrMo8WxCyVb:1:2:toilet",
+      "geodesic_distance": 6.10437,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 1,
+      "scene_id": "hm3d_v0.2/val/00810-CrMo8WxCyVb/CrMo8WxCyVb.basis.glb",
+      "scene_key": "CrMo8WxCyVb",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 11,
+      "selection_seed": 20260523,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/CrMo8WxCyVb.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        -4.90195,
+        0.02469,
+        2.21322
+      ],
+      "start_rotation": [
+        0,
+        0.5956,
+        0,
+        0.80328
+      ],
+      "target_or_query": "toilet",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 6,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:3",
+        "vlmaps:export:bed:spatial_nms:5",
+        "vlmaps:export:bed:spatial_nms:8",
+        "vlmaps:export:bed:spatial_nms:12",
+        "vlmaps:export:bed:spatial_nms:15",
+        "vlmaps:export:bed:spatial_nms:18"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 6,
+      "dense_conflict_first_correct_rank": 4,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.0012632012367248535,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:bed:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9912919402122498,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:0",
+          "candidate_position": [
+            -2.7440460920333862,
+            -1.4951868057250977,
+            4.456500387191772
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9912919402122498,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:1",
+          "candidate_position": [
+            -1.2440460920333862,
+            -1.4951868057250977,
+            6.206500387191773
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9900287389755249,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:2",
+          "candidate_position": [
+            -14.344046092033388,
+            -1.4951868057250977,
+            -1.7434996128082276
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.989739179611206,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:3",
+          "candidate_position": [
+            -7.044046092033387,
+            -1.4951868057250977,
+            6.456500387191773
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9889233112335205,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:bed:spatial_nms:4",
+          "candidate_position": [
+            0.20595390796661395,
+            -1.4951868057250977,
+            5.056500387191773
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9887509942054749,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 14,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:bed:spatial_nms:0",
+        "vlmaps:export:bed:spatial_nms:1",
+        "vlmaps:export:bed:spatial_nms:2",
+        "vlmaps:export:bed:spatial_nms:4",
+        "vlmaps:export:bed:spatial_nms:6",
+        "vlmaps:export:bed:spatial_nms:7",
+        "vlmaps:export:bed:spatial_nms:9",
+        "vlmaps:export:bed:spatial_nms:10",
+        "vlmaps:export:bed:spatial_nms:11",
+        "vlmaps:export:bed:spatial_nms:13"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 14,
+      "deterministic_hash": "87d0eabb9f496c898f0793570eb4128751922eb810de330f20e769c9b5bf8561",
+      "episode_key": "HM3D ObjectNav v2:val:p53SfW6mjZe:15:3:bed",
+      "geodesic_distance": 9.68348,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 15,
+      "scene_id": "hm3d_v0.2/val/00814-p53SfW6mjZe/p53SfW6mjZe.basis.glb",
+      "scene_key": "p53SfW6mjZe",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 12,
+      "selection_seed": 20260523,
+      "source_episode_id": "3",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/p53SfW6mjZe.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        -1.48625,
+        0.00481,
+        6.91513
+      ],
+      "start_rotation": [
+        0,
+        0.39071,
+        0,
+        0.92051
+      ],
+      "target_or_query": "bed",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 2,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:5",
+        "vlmaps:export:plant:spatial_nms:13"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 2,
+      "dense_conflict_first_correct_rank": 6,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.03356611728668213,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9246062636375427,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:0",
+          "candidate_position": [
+            5.795557880401612,
+            4.323992013931274,
+            1.5118787050247193
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9246062636375427,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:1",
+          "candidate_position": [
+            3.195557880401611,
+            4.323992013931274,
+            1.0118787050247193
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.8910401463508606,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:2",
+          "candidate_position": [
+            -0.9044421195983894,
+            4.323992013931274,
+            1.8118787050247196
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.8700791001319885,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:3",
+          "candidate_position": [
+            6.495557880401611,
+            4.323992013931274,
+            -0.03812129497528072
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.8688909411430359,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:4",
+          "candidate_position": [
+            8.795557880401612,
+            4.323992013931274,
+            0.21187870502471928
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.868278443813324,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 18,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:1",
+        "vlmaps:export:plant:spatial_nms:2",
+        "vlmaps:export:plant:spatial_nms:3",
+        "vlmaps:export:plant:spatial_nms:4",
+        "vlmaps:export:plant:spatial_nms:6",
+        "vlmaps:export:plant:spatial_nms:7",
+        "vlmaps:export:plant:spatial_nms:8",
+        "vlmaps:export:plant:spatial_nms:9",
+        "vlmaps:export:plant:spatial_nms:10"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 18,
+      "deterministic_hash": "8228767ea29f414addd27e8f54cd5db6774f29e3cdd40a289ee78bdc472b5165",
+      "episode_key": "HM3D ObjectNav v2:val:mL8ThkuaVTM:14:5:plant",
+      "geodesic_distance": 5.00914,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 14,
+      "scene_id": "hm3d_v0.2/val/00820-mL8ThkuaVTM/mL8ThkuaVTM.basis.glb",
+      "scene_key": "mL8ThkuaVTM",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 13,
+      "selection_seed": 20260523,
+      "source_episode_id": "5",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/mL8ThkuaVTM.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        0.14236,
+        0.02399,
+        0.51687
+      ],
+      "start_rotation": [
+        0,
+        0.1507,
+        0,
+        -0.98858
+      ],
+      "target_or_query": "plant",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 2,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:8",
+        "vlmaps:export:plant:spatial_nms:12"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 2,
+      "dense_conflict_first_correct_rank": 9,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.0200539231300354,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.8838686943054199,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:0",
+          "candidate_position": [
+            3.600209283828735,
+            1.629751443862915,
+            7.553530120849608
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.8838686943054199,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:1",
+          "candidate_position": [
+            6.450209283828736,
+            1.629751443862915,
+            2.4035301208496094
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.8638147711753845,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:2",
+          "candidate_position": [
+            7.0002092838287355,
+            1.629751443862915,
+            6.403530120849609
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.8636446595191956,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:3",
+          "candidate_position": [
+            3.7502092838287355,
+            1.629751443862915,
+            13.003530120849609
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.8620129823684692,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:4",
+          "candidate_position": [
+            2.9002092838287354,
+            1.629751443862915,
+            0.20353012084960653
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.8619498610496521,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 18,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:1",
+        "vlmaps:export:plant:spatial_nms:2",
+        "vlmaps:export:plant:spatial_nms:3",
+        "vlmaps:export:plant:spatial_nms:4",
+        "vlmaps:export:plant:spatial_nms:5",
+        "vlmaps:export:plant:spatial_nms:6",
+        "vlmaps:export:plant:spatial_nms:7",
+        "vlmaps:export:plant:spatial_nms:9",
+        "vlmaps:export:plant:spatial_nms:10"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 18,
+      "deterministic_hash": "d5d06614ef2fa9ae5f2901006012e18ee68571b81d979a9e799f706b71f98af9",
+      "episode_key": "HM3D ObjectNav v2:val:eF36g7L6Z9M:23:2:plant",
+      "geodesic_distance": 5.24716,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 23,
+      "scene_id": "hm3d_v0.2/val/00821-eF36g7L6Z9M/eF36g7L6Z9M.basis.glb",
+      "scene_key": "eF36g7L6Z9M",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 14,
+      "selection_seed": 20260523,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/eF36g7L6Z9M.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        -0.66352,
+        -3.52025,
+        4.82927
+      ],
+      "start_rotation": [
+        0,
+        0.99998,
+        0,
+        0.00674
+      ],
+      "target_or_query": "plant",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "wrong_goal_baseline_selected_wrong_correct_present",
+      "dense_conflict_correct_candidate_count": 2,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:8",
+        "vlmaps:export:plant:spatial_nms:12"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 2,
+      "dense_conflict_first_correct_rank": 9,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": true,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": true,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": true,
+      "dense_conflict_top2_score_gap": 0.0200539231300354,
+      "dense_conflict_top_candidate_correct": false,
+      "dense_conflict_top_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.8838686943054199,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:0",
+          "candidate_position": [
+            3.600209283828735,
+            1.629751443862915,
+            7.553530120849608
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.8838686943054199,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": true
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:1",
+          "candidate_position": [
+            6.450209283828736,
+            1.629751443862915,
+            2.4035301208496094
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.8638147711753845,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:2",
+          "candidate_position": [
+            7.0002092838287355,
+            1.629751443862915,
+            6.403530120849609
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.8636446595191956,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:3",
+          "candidate_position": [
+            3.7502092838287355,
+            1.629751443862915,
+            13.003530120849609
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.8620129823684692,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:4",
+          "candidate_position": [
+            2.9002092838287354,
+            1.629751443862915,
+            0.20353012084960653
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.8619498610496521,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 18,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:1",
+        "vlmaps:export:plant:spatial_nms:2",
+        "vlmaps:export:plant:spatial_nms:3",
+        "vlmaps:export:plant:spatial_nms:4",
+        "vlmaps:export:plant:spatial_nms:5",
+        "vlmaps:export:plant:spatial_nms:6",
+        "vlmaps:export:plant:spatial_nms:7",
+        "vlmaps:export:plant:spatial_nms:9",
+        "vlmaps:export:plant:spatial_nms:10"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 18,
+      "deterministic_hash": "04f7affec56c8c2b211057d43babd07ff9da4c79ead81d36b192080fee42a8c6",
+      "episode_key": "HM3D ObjectNav v2:val:eF36g7L6Z9M:10:1:plant",
+      "geodesic_distance": 15.97983,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 10,
+      "scene_id": "hm3d_v0.2/val/00821-eF36g7L6Z9M/eF36g7L6Z9M.basis.glb",
+      "scene_key": "eF36g7L6Z9M",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 15,
+      "selection_seed": 20260523,
+      "source_episode_id": "1",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/eF36g7L6Z9M.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        -3.19399,
+        0.02975,
+        -3.53125
+      ],
+      "start_rotation": [
+        0,
+        0.02501,
+        0,
+        -0.99969
+      ],
+      "target_or_query": "plant",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "correct_and_wrong_positive_selected_correct",
+      "dense_conflict_correct_candidate_count": 16,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:0",
+        "vlmaps:export:plant:spatial_nms:1",
+        "vlmaps:export:plant:spatial_nms:2",
+        "vlmaps:export:plant:spatial_nms:3",
+        "vlmaps:export:plant:spatial_nms:4",
+        "vlmaps:export:plant:spatial_nms:5",
+        "vlmaps:export:plant:spatial_nms:6",
+        "vlmaps:export:plant:spatial_nms:7",
+        "vlmaps:export:plant:spatial_nms:8",
+        "vlmaps:export:plant:spatial_nms:9"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 16,
+      "dense_conflict_first_correct_rank": 1,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": false,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": false,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": false,
+      "dense_conflict_top2_score_gap": 0.0027163028717041016,
+      "dense_conflict_top_candidate_correct": true,
+      "dense_conflict_top_candidate_id": "vlmaps:export:plant:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9442315101623535,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:0",
+          "candidate_position": [
+            3.39128246307373,
+            1.5775474309921265,
+            -0.3326027870178223
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9442315101623535,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:1",
+          "candidate_position": [
+            -0.7587175369262695,
+            1.5775474309921265,
+            -3.0326027870178223
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9415152072906494,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:2",
+          "candidate_position": [
+            6.09128246307373,
+            1.5775474309921265,
+            -1.8826027870178224
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9340236783027649,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:3",
+          "candidate_position": [
+            6.891282463073731,
+            1.5775474309921265,
+            -0.032602787017822266
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9251933693885803,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:plant:spatial_nms:4",
+          "candidate_position": [
+            3.34128246307373,
+            1.5775474309921265,
+            2.767397212982178
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9218165874481201,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 4,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:plant:spatial_nms:13",
+        "vlmaps:export:plant:spatial_nms:16",
+        "vlmaps:export:plant:spatial_nms:18",
+        "vlmaps:export:plant:spatial_nms:19"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 4,
+      "deterministic_hash": "cf58c998bcc2e5ccc0d9d0007b195b48958c0dbd80ad9d417fedd3cbff780611",
+      "episode_key": "HM3D ObjectNav v2:val:svBbv1Pavdk:25:4:plant",
+      "geodesic_distance": 3.22449,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 25,
+      "scene_id": "hm3d_v0.2/val/00813-svBbv1Pavdk/svBbv1Pavdk.basis.glb",
+      "scene_key": "svBbv1Pavdk",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 16,
+      "selection_seed": 20260523,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/svBbv1Pavdk.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        8.44209,
+        0.02755,
+        5.09747
+      ],
+      "start_rotation": [
+        0,
+        0.72718,
+        0,
+        -0.68644
+      ],
+      "target_or_query": "plant",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "correct_and_wrong_positive_selected_correct",
+      "dense_conflict_correct_candidate_count": 6,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:chair:spatial_nms:0",
+        "vlmaps:export:chair:spatial_nms:2",
+        "vlmaps:export:chair:spatial_nms:5",
+        "vlmaps:export:chair:spatial_nms:7",
+        "vlmaps:export:chair:spatial_nms:10",
+        "vlmaps:export:chair:spatial_nms:15"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 6,
+      "dense_conflict_first_correct_rank": 1,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": false,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": false,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": false,
+      "dense_conflict_top2_score_gap": 0.007624506950378418,
+      "dense_conflict_top_candidate_correct": true,
+      "dense_conflict_top_candidate_id": "vlmaps:export:chair:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9918839335441589,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:chair:spatial_nms:0",
+          "candidate_position": [
+            1.0907821655273438,
+            -0.7050800323486328,
+            -5.105318307876587
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9918839335441589,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:chair:spatial_nms:1",
+          "candidate_position": [
+            -1.1092178344726562,
+            -0.7050800323486328,
+            -5.155318307876588
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9842594265937805,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:chair:spatial_nms:2",
+          "candidate_position": [
+            -3.0092178344726563,
+            -0.7050800323486328,
+            -6.655318307876588
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.97981858253479,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:chair:spatial_nms:3",
+          "candidate_position": [
+            -0.5092178344726562,
+            -0.7050800323486328,
+            -8.205318307876588
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9633215665817261,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:chair:spatial_nms:4",
+          "candidate_position": [
+            0.9407821655273438,
+            -0.7050800323486328,
+            -3.9053183078765867
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9590375423431396,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 14,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:chair:spatial_nms:1",
+        "vlmaps:export:chair:spatial_nms:3",
+        "vlmaps:export:chair:spatial_nms:4",
+        "vlmaps:export:chair:spatial_nms:6",
+        "vlmaps:export:chair:spatial_nms:8",
+        "vlmaps:export:chair:spatial_nms:9",
+        "vlmaps:export:chair:spatial_nms:11",
+        "vlmaps:export:chair:spatial_nms:12",
+        "vlmaps:export:chair:spatial_nms:13",
+        "vlmaps:export:chair:spatial_nms:14"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 14,
+      "deterministic_hash": "0daad988d838d86ef66641a741a243c157456f42e572a7c29d02af66e01f569d",
+      "episode_key": "HM3D ObjectNav v2:val:wcojb4TFT35:24:2:chair",
+      "geodesic_distance": 4.2754,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 24,
+      "scene_id": "hm3d_v0.2/val/00802-wcojb4TFT35/wcojb4TFT35.basis.glb",
+      "scene_key": "wcojb4TFT35",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 17,
+      "selection_seed": 20260523,
+      "source_episode_id": "2",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/wcojb4TFT35.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        1.4114,
+        0.04492,
+        -12.56338
+      ],
+      "start_rotation": [
+        0,
+        0.86033,
+        0,
+        0.50973
+      ],
+      "target_or_query": "chair",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "correct_and_wrong_positive_selected_correct",
+      "dense_conflict_correct_candidate_count": 1,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:sofa:spatial_nms:0"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 1,
+      "dense_conflict_first_correct_rank": 1,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": false,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": false,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": false,
+      "dense_conflict_top2_score_gap": 0.008850395679473877,
+      "dense_conflict_top_candidate_correct": true,
+      "dense_conflict_top_candidate_id": "vlmaps:export:sofa:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.940535306930542,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:0",
+          "candidate_position": [
+            1.290782165527344,
+            -0.7050800323486328,
+            -1.3053183078765869
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.940535306930542,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:1",
+          "candidate_position": [
+            -1.9592178344726563,
+            -0.7050800323486328,
+            -0.8053183078765866
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9316849112510681,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+          "candidate_position": [
+            0.04078216552734393,
+            -0.7050800323486328,
+            -1.4053183078765867
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9241301417350769,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:3",
+          "candidate_position": [
+            -2.1092178344726564,
+            -0.7050800323486328,
+            -2.455318307876587
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9186587929725647,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:4",
+          "candidate_position": [
+            -2.959217834472656,
+            -0.7050800323486328,
+            -9.705318307876588
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9149091243743896,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 19,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:sofa:spatial_nms:1",
+        "vlmaps:export:sofa:spatial_nms:2",
+        "vlmaps:export:sofa:spatial_nms:3",
+        "vlmaps:export:sofa:spatial_nms:4",
+        "vlmaps:export:sofa:spatial_nms:5",
+        "vlmaps:export:sofa:spatial_nms:6",
+        "vlmaps:export:sofa:spatial_nms:7",
+        "vlmaps:export:sofa:spatial_nms:8",
+        "vlmaps:export:sofa:spatial_nms:9",
+        "vlmaps:export:sofa:spatial_nms:10"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 19,
+      "deterministic_hash": "8c3be3b07b8a0f85f6731a031ddc6f43cc15f9b12f6985d366861b9fe31efd10",
+      "episode_key": "HM3D ObjectNav v2:val:wcojb4TFT35:27:0:sofa",
+      "geodesic_distance": 3.50401,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 27,
+      "scene_id": "hm3d_v0.2/val/00802-wcojb4TFT35/wcojb4TFT35.basis.glb",
+      "scene_key": "wcojb4TFT35",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 18,
+      "selection_seed": 20260523,
+      "source_episode_id": "0",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/wcojb4TFT35.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        -1.14506,
+        -0.00508,
+        -6.21265
+      ],
+      "start_rotation": [
+        0,
+        0.99971,
+        0,
+        -0.02395
+      ],
+      "target_or_query": "sofa",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    },
+    {
+      "benchmark": "HM3D ObjectNav v2",
+      "dataset": "hm3d_objectnav_v2",
+      "dense_conflict_candidate_count": 20,
+      "dense_conflict_class": "correct_and_wrong_positive_selected_correct",
+      "dense_conflict_correct_candidate_count": 4,
+      "dense_conflict_correct_candidate_ids": [
+        "vlmaps:export:sofa:spatial_nms:0",
+        "vlmaps:export:sofa:spatial_nms:1",
+        "vlmaps:export:sofa:spatial_nms:2",
+        "vlmaps:export:sofa:spatial_nms:4"
+      ],
+      "dense_conflict_correct_positive_support_candidate_count": 4,
+      "dense_conflict_first_correct_rank": 1,
+      "dense_conflict_generalization_role": "primary_generalization",
+      "dense_conflict_generalization_schema_version": "h001.dense_conflict_generalization_manifest.v1",
+      "dense_conflict_no_reobserve_wrong_goal_with_correct_present": false,
+      "dense_conflict_positive_support_candidate_count": 20,
+      "dense_conflict_positive_support_proxy": "candidate_correctness_labels_from_coverage_sanity",
+      "dense_conflict_role": "primary",
+      "dense_conflict_rows_with_correct_and_wrong_candidates": true,
+      "dense_conflict_selected_wrong_positive_support": false,
+      "dense_conflict_source_coverage_path": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+      "dense_conflict_source_name": "first_eval_replacement_spatial_nms_p97_k20",
+      "dense_conflict_source_selected_wrong_candidate": false,
+      "dense_conflict_top2_score_gap": 0.007885754108428955,
+      "dense_conflict_top_candidate_correct": true,
+      "dense_conflict_top_candidate_id": "vlmaps:export:sofa:spatial_nms:0",
+      "dense_conflict_top_candidate_score": 0.9222608804702759,
+      "dense_conflict_top_candidates": [
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:0",
+          "candidate_position": [
+            7.391282463073731,
+            1.5775474309921265,
+            0.7173972129821777
+          ],
+          "candidate_rank": 1,
+          "candidate_reachable": true,
+          "candidate_score": 0.9222608804702759,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:1",
+          "candidate_position": [
+            1.2912824630737294,
+            1.5775474309921265,
+            -3.1826027870178226
+          ],
+          "candidate_rank": 2,
+          "candidate_reachable": null,
+          "candidate_score": 0.9143751263618469,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:2",
+          "candidate_position": [
+            1.4412824630737298,
+            1.5775474309921265,
+            -1.9826027870178224
+          ],
+          "candidate_rank": 3,
+          "candidate_reachable": null,
+          "candidate_score": 0.9107805490493774,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": false,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:3",
+          "candidate_position": [
+            8.59128246307373,
+            1.5775474309921265,
+            6.967397212982178
+          ],
+          "candidate_rank": 4,
+          "candidate_reachable": null,
+          "candidate_score": 0.9095243215560913,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        },
+        {
+          "candidate_correct": true,
+          "candidate_correct_source": "gt_position_radius",
+          "candidate_id": "vlmaps:export:sofa:spatial_nms:4",
+          "candidate_position": [
+            8.59128246307373,
+            1.5775474309921265,
+            0.5673972129821777
+          ],
+          "candidate_rank": 5,
+          "candidate_reachable": null,
+          "candidate_score": 0.9088423252105713,
+          "uses_gt_for_action": false,
+          "wrong_goal_visit": false
+        }
+      ],
+      "dense_conflict_wrong_candidate_count": 16,
+      "dense_conflict_wrong_candidate_ids": [
+        "vlmaps:export:sofa:spatial_nms:3",
+        "vlmaps:export:sofa:spatial_nms:5",
+        "vlmaps:export:sofa:spatial_nms:6",
+        "vlmaps:export:sofa:spatial_nms:7",
+        "vlmaps:export:sofa:spatial_nms:8",
+        "vlmaps:export:sofa:spatial_nms:9",
+        "vlmaps:export:sofa:spatial_nms:10",
+        "vlmaps:export:sofa:spatial_nms:11",
+        "vlmaps:export:sofa:spatial_nms:12",
+        "vlmaps:export:sofa:spatial_nms:13"
+      ],
+      "dense_conflict_wrong_positive_support_candidate_count": 16,
+      "deterministic_hash": "6e041523c5926c3c45f24c1ea171c527c9ca16980c33928d17d11e64e7dfd6ad",
+      "episode_key": "HM3D ObjectNav v2:val:svBbv1Pavdk:22:4:sofa",
+      "geodesic_distance": 3.18962,
+      "manifest_schema_version": "h001.split_manifest.v1",
+      "row_index": 22,
+      "scene_id": "hm3d_v0.2/val/00813-svBbv1Pavdk/svBbv1Pavdk.basis.glb",
+      "scene_key": "svBbv1Pavdk",
+      "selected_split": "dense_conflict_generalization_v1",
+      "selection_rank": 19,
+      "selection_seed": 20260523,
+      "source_episode_id": "4",
+      "source_file": "datasets/objectnav/hm3d/v2/objectnav_hm3d_v2/val/content/svBbv1Pavdk.json.gz",
+      "source_selected_split": "first_eval_replacement_v1",
+      "source_split": "val",
+      "start_position": [
+        7.55962,
+        0.02755,
+        -2.0518
+      ],
+      "start_rotation": [
+        0,
+        0.52388,
+        0,
+        -0.85179
+      ],
+      "target_or_query": "sofa",
+      "uses_gt_for_action": false,
+      "uses_gt_for_analysis": true
+    }
+  ],
+  "scene_counts": {
+    "5cdEh9F2hJL": 2,
+    "CrMo8WxCyVb": 3,
+    "TEEsavR23oF": 2,
+    "eF36g7L6Z9M": 2,
+    "h1zeeAwLh9Z": 2,
+    "mL8ThkuaVTM": 3,
+    "p53SfW6mjZe": 2,
+    "svBbv1Pavdk": 2,
+    "wcojb4TFT35": 2
+  },
+  "selected_split": "dense_conflict_generalization_v1",
+  "selection_seed": 20260523,
+  "selection_strategy": {
+    "maximum_rows_per_scene": 3,
+    "name": "scene_disjoint_first_eval_style_round_robin",
+    "priority": [
+      "source_selected_wrong_candidate",
+      "no_reobserve_wrong_goal_with_correct_present",
+      "rows_with_correct_and_wrong_candidates",
+      "first_correct_rank",
+      "stable_hash"
+    ],
+    "requires_correct_and_wrong_candidates": true,
+    "requires_non_gt_candidates": true,
+    "source_policy": "NoReobserve"
+  },
+  "source_candidate_artifact": "/runs/h001_first_eval_replacement_artifacts_spatial_nms_p97_k20_v1/all_scenes_aligned.jsonl",
+  "source_coverage_decisions": "/runs/h001_first_eval_replacement_policy_spatial_nms_p97_k20_v1/coverage_sanity/candidate_decisions.jsonl",
+  "source_manifests": [
+    "/workspace/configs/h001/manifests/h001_first_eval_replacement_v1.json"
+  ],
+  "source_name": "first_eval_replacement_spatial_nms_p97_k20",
+  "split_counts": {
+    "dense_conflict_generalization_v1": 20
+  },
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": true
+}

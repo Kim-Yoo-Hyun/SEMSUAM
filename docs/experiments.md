@@ -1,12 +1,12 @@
 # Experiment Workflow
 
-이 문서는 hypothesis-stage probe가 논문 본문용 experiment로 승격될 때 적용할 workflow와 rule을 정의한다. 실제 experiment contract, script, artifact, result는 해당 hypothesis folder 아래에 둔다.
+이 문서는 hypothesis-stage probe가 논문 본문용 experiment로 승격될 때 적용할 workflow와 rule을 정의한다. 실제 experiment contract, script, artifact, result는 해당 `experiments/` workspace 아래에 둔다.
 
 ## Role
 
 - `docs/experiments.md`는 full experiment 승격 기준과 운영 규칙만 관리한다.
-- 실험별 세부 contract는 가까운 hypothesis runtime/workflow 문서에 둔다.
-- 결과 요약은 가까운 hypothesis `README.md`, workflow 문서, 또는 `docs/reproducibility.md`에 둔다.
+- 실험별 세부 contract는 가까운 experiment runtime/workflow 문서에 둔다.
+- 결과 요약은 가까운 experiment `README.md`, workflow 문서, 또는 `docs/reproducibility.md`에 둔다.
 - 논문 claim 판단은 `docs/paper.md`를 우선 적용한다.
 - Docker, dataset, checkpoint, artifact 복구 기준은 `docs/reproducibility.md`를 우선 적용한다.
 
@@ -22,7 +22,7 @@ Experiment 작업을 시작하는 에이전트는 아래 순서로 읽는다.
 6. `docs/experiments.md`
 7. `docs/paper.md`
 8. `docs/reproducibility.md`
-9. 대상 hypothesis `README.md`
+9. 대상 experiment workspace `README.md`
 10. 대상 workflow 또는 experiment contract
 
 ## Promotion From Hypothesis

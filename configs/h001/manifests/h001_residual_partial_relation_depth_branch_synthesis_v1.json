@@ -1,0 +1,109 @@
+{
+  "schema_version": "h001.contract.residual_partial_relation_depth_branch_synthesis.v1",
+  "date_checked": "2026-06-01",
+  "status": "frozen_design_contract_before_implementation",
+  "contract_name": "residual_partial_relation_depth_branch_synthesis_v1",
+  "purpose": "Synthesize the completed residual partial relation-depth branch outcomes before any terminal utility contract. The synthesis must account for every residual request and preserve the fact that all current outcomes are nonterminal repair or audit branches.",
+  "source": {
+    "branch_handling_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_handling_summary.json",
+    "association_geometry_repair_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1/partial_relation_depth_association_geometry_repair_summary.json",
+    "association_geometry_followup_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_followup_repair_v1/partial_relation_depth_association_geometry_followup_repair_summary.json",
+    "relation_anchor_selection_repair_summary": "local_dataset/runs/h001_relation_anchor_selection_repair_v1/relation_anchor_selection_repair_summary.json",
+    "direction_specific_reobservation_repair_summary": "local_dataset/runs/h001_direction_specific_reobservation_repair_v1/direction_specific_reobservation_repair_summary.json",
+    "repeated_object_relation_anchor_ambiguity_summary": "local_dataset/runs/h001_repeated_object_relation_anchor_ambiguity_v1/repeated_object_relation_anchor_ambiguity_summary.json",
+    "depth_stagnation_branch_summary": "local_dataset/runs/h001_depth_stagnation_branch_v1/depth_stagnation_branch_summary.json"
+  },
+  "source_gate": {
+    "expected_residual_request_rows": 6,
+    "expected_residual_source_branch_rows": 15,
+    "expected_request_status_counts": {
+      "association_geometry_underlink": 2,
+      "association_present_but_depth_not_improved": 1,
+      "repeated_object_relation_anchor_ambiguity": 3
+    },
+    "expected_branch_action_counts": {
+      "route_to_association_geometry_repair_branch": 2,
+      "route_to_depth_stagnation_branch": 1,
+      "route_to_repeated_object_relation_anchor_ambiguity_branch": 3
+    },
+    "expected_family_request_rows": {
+      "association_geometry_underlink": 2,
+      "depth_stagnation": 1,
+      "repeated_object_relation_anchor_ambiguity": 3
+    },
+    "expected_family_source_branch_rows": {
+      "association_geometry_underlink": 2,
+      "depth_stagnation": 1,
+      "repeated_object_relation_anchor_ambiguity": 12
+    },
+    "expected_family_output_rows": {
+      "association_geometry_underlink": 8,
+      "depth_stagnation": 1,
+      "repeated_object_relation_anchor_ambiguity": 12
+    },
+    "max_action_evidence_forbidden_key_count": 0,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "requires_uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "synthesis_contract": {
+    "output_level": "branch-family synthesis rows plus one summary",
+    "required_branch_families": [
+      "association_geometry_underlink",
+      "repeated_object_relation_anchor_ambiguity",
+      "depth_stagnation"
+    ],
+    "required_conclusion": "terminal_utility_remains_blocked",
+    "promotable_terminal_outcome_rows_required_before_utility": 1,
+    "current_promotable_terminal_outcome_rows": 0,
+    "allowed_action_inputs": [
+      "source branch-handling counts",
+      "source residual status counts",
+      "branch family request and row counts",
+      "branch family nonterminal action counts",
+      "branch family gate pass/fail state",
+      "terminal commit and candidate commit/rejection counts",
+      "label-free branch interpretation"
+    ],
+    "forbidden_action_inputs": [
+      "evaluation_correctness",
+      "success_label",
+      "wrong_goal_label",
+      "gt_target_object_id",
+      "oracle candidate identity",
+      "posthoc selected target",
+      "label-tuned terminal utility"
+    ],
+    "blocked_shortcuts": [
+      "open_terminal_utility_from_positive_detector_depth_signal",
+      "open_terminal_utility_from_nonterminal_branch_gate_pass",
+      "treat_association_geometry_repair_as_goal_validity",
+      "treat_repeated_object_anchor_audit_as_goal_validity",
+      "treat_depth_stagnation_audit_as_goal_validity"
+    ]
+  },
+  "required_future_outputs": {
+    "family_rows": "residual_partial_relation_depth_branch_synthesis_rows.jsonl",
+    "summary": "residual_partial_relation_depth_branch_synthesis_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "src/h001_runtime/synthesize_residual_partial_relation_depth_branches.py",
+    "output": "local_dataset/runs/h001_residual_partial_relation_depth_branch_synthesis_v1",
+    "verification_command": "python -m h001_runtime.synthesize_residual_partial_relation_depth_branches"
+  },
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "The residual partial relation-depth branch handling has six request rows and fifteen source branch rows, and all three branch families now have Docker-verified nonterminal outputs.",
+    "agent_inference": "Because none of the branch outcomes establishes a label-free commit or rejection rule, terminal utility must remain blocked. The next method work should define what extra evidence would make a branch outcome promotable, not start first_eval or policy-scale evaluation.",
+    "paper_claim_allowed": false
+  }
+}

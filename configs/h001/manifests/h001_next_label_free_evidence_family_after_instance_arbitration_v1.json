@@ -1,0 +1,89 @@
+{
+  "schema_version": "h001.contract.next_label_free_evidence_family_after_instance_arbitration.v1",
+  "date_checked": "2026-06-03",
+  "status": "frozen_selection_contract_after_instance_arbitration_pair_graph_closure",
+  "contract_name": "next_label_free_evidence_family_after_instance_arbitration_v1",
+  "purpose": "Select the next label-free evidence family after source-pool repair, object-relation/goal-validity branches, missing-own-view guard handling, and instance-arbitration pair-graph closure all produced zero promotable terminal outcomes.",
+  "source": {
+    "route_specific_summary": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_summary.json",
+    "route_specific_rows": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_rows.jsonl",
+    "post_object_relation_selector_summary": "local_dataset/runs/h001_next_label_free_evidence_family_after_object_relation_v1/next_label_free_evidence_family_after_object_relation_summary.json",
+    "source_pool_second_fallback_summary": "local_dataset/runs/h001_expanded_retrieval_pool_validity_second_fallback_v1/second_fallback_summary.json",
+    "residual_branch_closure_summary": "local_dataset/runs/h001_residual_branch_closure_v1/residual_branch_closure_summary.json",
+    "missing_own_view_guard_branch_closure_summary": "local_dataset/runs/h001_missing_own_view_guard_branch_closure_v1/missing_own_view_guard_branch_closure_summary.json",
+    "instance_arbitration_pair_graph_branch_closure_summary": "local_dataset/runs/h001_instance_arbitration_pair_graph_branch_closure_v1/instance_arbitration_pair_graph_branch_closure_summary.json"
+  },
+  "source_gate": {
+    "route_contract_gate_passed": true,
+    "post_object_relation_selector_gate_passed": true,
+    "source_pool_second_fallback_gate_passed": true,
+    "source_pool_blind_spot_recorded": true,
+    "residual_branch_closure_gate_passed": true,
+    "missing_own_view_guard_branch_closure_gate_passed": true,
+    "instance_arbitration_pair_graph_branch_closure_gate_passed": true,
+    "max_semantic_branch_promotable_rows": 0,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "max_action_evidence_forbidden_key_count": 0,
+    "requires_uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "selection_decision": {
+    "selected_family": "semantic_slam_map_pose_consistency_probe_v1",
+    "selected_action": "freeze_semantic_slam_map_pose_consistency_probe_contract",
+    "selected_output_status": "selected_next_label_free_evidence_family_after_semantic_object_branch_closure",
+    "expected_route_branch_counts": {
+      "source_pool_repair_v1": 5,
+      "goal_validity_confirmation_v1": 7,
+      "instance_arbitration_defer_v1": 9
+    },
+    "closed_or_not_selected_families": {
+      "source_pool_repair_v1": "closed_as_backend_source_map_blind_spot_after_two_fallbacks",
+      "goal_validity_confirmation_v1": "closed_as_object_relation_and_missing_own_view_family_without_promotable_terminal_outcome",
+      "object_relation_branch_family": "closed_without_promotable_terminal_outcome",
+      "instance_arbitration_defer_v1": "closed_as_pair_graph_shortcut_taxonomy_without_promotable_terminal_outcome",
+      "depth_stagnation_independent_support_probe": "deferred_until_broader_rows_or_map_pose_side_support"
+    },
+    "selected_reason": [
+      "source-pool repair was followed through backend expansion, deeper generation, and two fallback variants; the remaining row is a backend/source-map blind spot",
+      "goal-validity/object-relation evidence was followed through unique-support, partial relation-depth, missing-own-view, and negative-missing-support guard handling without a promotable terminal outcome",
+      "instance_arbitration_defer_v1 was followed through candidate/pair/request evidence, detector evidence, residual diagnosis, pair-graph follow-up, and branch closure with zero promotable outcomes",
+      "continuing to create semantic object shortcut rules would weaken novelty by turning evidence visibility, pair graph status, or missing support into goal-validity authority",
+      "H001's final hypothesis includes Step 4-5 semantic-SLAM uncertainty, so the next label-free evidence family should test map/pose consistency rather than rerun first_eval or define terminal utility"
+    ]
+  },
+  "blocked_shortcuts": [
+    "open_terminal_utility_after_zero_promotable_semantic_branch_closure",
+    "rerun_first_eval_after_instance_arbitration_closure_only",
+    "promote_pair_graph_winner_or_lossless_candidate_to_goal_validity",
+    "promote_backend_blind_spot_to_success_or_failure_commit",
+    "use_missing_support_or_detector_visibility_as_candidate_rejection",
+    "tune_thresholds_after_label_join",
+    "run_policy_scale_comparison_before_map_pose_consistency_probe"
+  ],
+  "required_future_outputs": {
+    "selection_rows": "next_label_free_evidence_family_after_instance_arbitration_rows.jsonl",
+    "summary": "next_label_free_evidence_family_after_instance_arbitration_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "src/h001_runtime/select_next_evidence_family_after_instance_arbitration.py",
+    "output": "local_dataset/runs/h001_next_label_free_evidence_family_after_instance_arbitration_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "verification_command": "python -m h001_runtime.select_next_evidence_family_after_instance_arbitration"
+  },
+  "next_research_task_after_selection": "freeze_semantic_slam_map_pose_consistency_probe_contract",
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "The selector may use existing action-time route rows and closure summaries; evaluation labels are not action inputs.",
+    "agent_inference": "After all current semantic object evidence families close as nonterminal, the strongest next label-free family is a semantic-SLAM map/pose consistency probe aligned with H001 Step 4-5.",
+    "paper_claim_allowed": false
+  }
+}

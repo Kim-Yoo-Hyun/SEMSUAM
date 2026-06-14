@@ -1,0 +1,80 @@
+{
+  "schema_version": "h001.verify.rival_contradiction_region_contamination_detector_evidence.v1",
+  "checked_at": "2026-06-12",
+  "ok": true,
+  "status": "docker_verified_label_free_detector_evidence_materializer",
+  "contract": "configs/h001/manifests/h001_rival_contradiction_region_contamination_detector_evidence_v1.json",
+  "source_verify": "configs/h001/manifests/h001_rival_contradiction_region_contamination_detector_substrate_v1.verify.json",
+  "docker_commands": [
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile src/h001_runtime/materialize_rival_contradiction_region_contamination_detector_evidence.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_rival_contradiction_region_contamination_detector_evidence --out-root /runs/h001_rival_contradiction_region_contamination_detector_evidence_v1"
+  ],
+  "outputs": {
+    "output_root": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1",
+    "candidate_role_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_candidate_role_rows.jsonl",
+    "role_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_role_rows.jsonl",
+    "pair_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_pair_rows.jsonl",
+    "audit_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_audit_rows.jsonl",
+    "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_evidence_summary.json"
+  },
+  "result": {
+    "candidate_role_rows": 8,
+    "role_rows": 4,
+    "pair_rows": 1,
+    "audit_rows": 1,
+    "candidate_evidence_state_counts": {
+      "associated_depth_consistent": 4,
+      "associated_depth_mixed": 3,
+      "visible_without_candidate_association": 1
+    },
+    "role_evidence_state_counts": {
+      "rival_only_associated": 1,
+      "supported_and_rival_both_associated": 3
+    },
+    "pair_evidence_state_counts": {
+      "rival_region_contamination_or_same_category_overlap_observed": 1
+    },
+    "dual_candidate_association_role_count": 3,
+    "single_candidate_isolation_role_count": 1,
+    "associated_candidate_ids": [
+      "vlmaps:export:sofa:spatial_nms:1",
+      "vlmaps:export:sofa:spatial_nms:2"
+    ],
+    "action_evidence_forbidden_keys_found": [],
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "gate": {
+    "source_detector_substrate_gate_passed": true,
+    "candidate_role_rows_match": true,
+    "role_rows_match": true,
+    "pair_rows_match": true,
+    "required_role_count_pass": true,
+    "minimum_dual_candidate_association_role_count_pass": true,
+    "minimum_candidate_with_association_count_pass": true,
+    "action_evidence_forbidden_key_count_pass": true,
+    "terminal_commit_rows_pass": true,
+    "candidate_commit_rows_pass": true,
+    "candidate_rejection_rows_pass": true,
+    "uses_gt_for_action_pass": true,
+    "paper_claim_blocked": true,
+    "detector_evidence_materializer_gate_passed": true
+  },
+  "verification_commands": [
+    "jq empty configs/h001/manifests/h001_rival_contradiction_region_contamination_detector_evidence_v1.json",
+    "jq empty configs/h001/manifests/h001_rival_contradiction_region_contamination_detector_evidence_v1.verify.json",
+    "jq '{gate, candidate_role_rows, role_rows, pair_rows, pair_evidence_state_counts}' local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_evidence_summary.json",
+    "wc -l local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_candidate_role_rows.jsonl local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_role_rows.jsonl local_dataset/runs/h001_rival_contradiction_region_contamination_detector_evidence_v1/rival_contradiction_region_contamination_detector_pair_rows.jsonl"
+  ],
+  "next_task": "freeze_rival_contradiction_region_contamination_detector_evaluation_join_contract",
+  "interpretation": {
+    "fact": "The Docker materializer wrote label-free post-detector evidence rows and passed all frozen gates.",
+    "agent_inference": "The evidence rows now flag a same-category supported-vs-rival overlap/contamination pattern, but this is not yet a utility claim. The next valid step is an evaluation-only join against frozen labels and baseline/task-proxy outcomes.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM utility, wrong-goal reduction, wasted-path reduction, map/pose consistency improvement, terminal utility, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim is allowed from the label-free evidence materializer alone."
+  },
+  "paper_claim_allowed": false
+}

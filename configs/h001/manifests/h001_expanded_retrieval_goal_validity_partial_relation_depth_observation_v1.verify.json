@@ -1,0 +1,41 @@
+{
+  "ok": true,
+  "checked_at": "2026-06-01",
+  "contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_observation_v1.json",
+  "source_branch_closure_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_branch_closure_v1/unique_support_branch_closure_summary.json",
+  "selected_next_branch": "partial_relation_depth_true_goal",
+  "selected_next_action": "request_additional_relation_depth_evidence",
+  "request_rows": 6,
+  "target_candidate_rows": 12,
+  "failed_relation_depth_evidence_rows": 22,
+  "partial_relation_depth_rows": 19,
+  "unresolved_relation_depth_rows": 3,
+  "resolved_relation_depth_rows_for_same_targets": 14,
+  "context_anchor_rows": 48,
+  "context_target_candidate_rows": 12,
+  "context_anchor_rows_per_target_candidate_min": 3,
+  "context_anchor_rows_per_target_candidate_max": 5,
+  "existing_plan_rows_for_same_targets": 48,
+  "existing_plan_rows_per_target_candidate_min": 4,
+  "existing_plan_rows_per_target_candidate_max": 4,
+  "failed_direction_counts": {
+    "orthogonal_relation_axis": 8,
+    "relation_anchor_to_target": 11,
+    "target_to_relation_anchor": 3
+  },
+  "failed_request_counts": {
+    "rival_identity:3": 3,
+    "rival_identity:5": 2,
+    "rival_identity:22": 2,
+    "rival_identity:25": 5,
+    "rival_identity:27": 5,
+    "rival_identity:29": 5
+  },
+  "terminal_commit_rows": 0,
+  "action_evidence_forbidden_key_count": 0,
+  "uses_gt_for_action": false,
+  "uses_gt_for_analysis": false,
+  "terminal_utility_validation_allowed": false,
+  "paper_claim_allowed": false,
+  "next_task": "implement_partial_relation_depth_true_goal_observation_input_materializer_and_planner_smoke"
+}

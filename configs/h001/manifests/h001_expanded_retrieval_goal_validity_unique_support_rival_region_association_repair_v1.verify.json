@@ -1,0 +1,45 @@
+{
+  "date_checked": "2026-05-31T23:09:29+09:00",
+  "ok": true,
+  "status": "contract_frozen",
+  "contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_association_repair_v1.json",
+  "source_failed_detector_verify": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1.verify.json",
+  "follow_up_diagnostic_verify": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_association_repair_diagnostic_v1.verify.json",
+  "source_diagnostic": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1/rival_region_detector_substrate_diagnostic.json",
+  "source_detector_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1",
+  "source_facts": {
+    "detector_rows": 30,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.26666666666666666,
+    "rows_with_candidate_association": 8,
+    "associated_candidate_heading_count": 18,
+    "association_rows": 120,
+    "bed_association": "1/15",
+    "sofa_association": "7/15",
+    "passes_detector_substrate_gate": false,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "contract_gates": {
+    "terminal_commit_allowed": false,
+    "post_detector_evidence_analyzer_allowed": false,
+    "rerun_requires_fixed_non_gt_repair_variant": true,
+    "requires_global_candidate_association_rate_minimum": 0.4,
+    "requires_minimum_query_candidate_association_rate_minimum": 0.25,
+    "requires_minimum_second_pass_role_candidate_association_rate_minimum": 0.3,
+    "forbids_query_specific_thresholds": true,
+    "forbids_role_specific_thresholds": true,
+    "forbids_label_tuned_thresholds": true
+  },
+  "verification_commands": [
+    "jq empty configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_association_repair_v1.json",
+    "jq '{status, frozen:.frozen_failure_facts, repair:.repair_decision.selected_next_contract, gate:.minimum_repair_gate_for_rerun, paper:.paper_claim_allowed}' configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_rival_region_association_repair_v1.json",
+    "jq '{status, by_second_pass_view_role, by_query, association_depth_status_counts, gate}' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_rival_region_detector_substrate_v1/rival_region_detector_substrate_diagnostic.json"
+  ],
+  "next_task": "rerun second-pass rival-region detector/SAM2 substrate with fixed mask_depth_1_25_v1 association repair; see follow_up_diagnostic_verify",
+  "notes": [
+    "This freezes a diagnostic/repair contract only; it does not approve detector rerun, post-detector evidence aggregation, terminal utility, first_eval rerun, or paper claims.",
+    "The next implementation must use fixed non-GT variants and stratified reporting, not query-specific or role-specific threshold tuning."
+  ]
+}

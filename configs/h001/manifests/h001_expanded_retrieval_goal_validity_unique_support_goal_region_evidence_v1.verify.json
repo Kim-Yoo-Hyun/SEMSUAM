@@ -1,0 +1,80 @@
+{
+  "date_checked": "2026-05-31",
+  "ok": true,
+  "contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1.json",
+  "status": "implemented_and_docker_verified",
+  "script": "src/h001_runtime/analyze_expanded_retrieval_goal_validity_unique_support_goal_region_evidence.py",
+  "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1",
+  "source_detector_verify": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_detector_substrate_v1.verify.json",
+  "source_checks": {
+    "frame_summary_exists": true,
+    "detector_associations_exists": true,
+    "detector_summary_exists": true,
+    "detector_substrate_gate_passed": true,
+    "frame_rows": 51,
+    "detector_rows": 51,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.6470588235294118,
+    "rows_with_candidate_association": 33,
+    "associated_candidate_heading_count": 87,
+    "association_rows": 204,
+    "role_counts": {
+      "common_pair_view": 17,
+      "focus_own_view": 17,
+      "rival_own_view": 17
+    },
+    "associated_rows_by_role": {
+      "common_pair_view": 6,
+      "focus_own_view": 17,
+      "rival_own_view": 10
+    },
+    "associated_heading_count_by_role": {
+      "common_pair_view": 12,
+      "focus_own_view": 62,
+      "rival_own_view": 13
+    },
+    "pairs_by_request": {
+      "rival_identity:3": 3,
+      "rival_identity:5": 4,
+      "rival_identity:7": 5,
+      "rival_identity:22": 5
+    },
+    "unique_pair_rows": 17,
+    "unique_request_rows": 4,
+    "all_pairs_have_three_roles": true,
+    "uses_gt_for_action_rows": 0
+  },
+  "output_checks": {
+    "view_evidence_rows": 51,
+    "pair_evidence_rows": 17,
+    "request_evidence_rows": 4,
+    "goal_region_pair_status_counts": {
+      "ambiguous_goal_region_pair": 10,
+      "contrastive_goal_region_pair": 7
+    },
+    "request_nonterminal_action_counts": {
+      "request_additional_rival_region_evidence": 4
+    },
+    "all_pairs_have_three_roles": true,
+    "terminal_commit_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false,
+    "unique_support_goal_region_evidence_gate_passed": true
+  },
+  "docker_commands": [
+    "docker run --rm --user \"$(id -u):$(id -g)\" -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile src/h001_runtime/analyze_expanded_retrieval_goal_validity_unique_support_goal_region_evidence.py",
+    "docker run --rm --user \"$(id -u):$(id -g)\" -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.analyze_expanded_retrieval_goal_validity_unique_support_goal_region_evidence --contract configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1.json --out-root local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1"
+  ],
+  "verification_commands": [
+    "wc -l local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1/unique_support_goal_region_view_evidence_rows.jsonl local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1/unique_support_goal_region_pair_evidence_rows.jsonl local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1/unique_support_goal_region_request_evidence_rows.jsonl",
+    "jq '{gate:.gate.unique_support_goal_region_evidence_gate_passed, view:.view_evidence_rows, pair:.pair_evidence_rows, request:.request_evidence_rows, status:.goal_region_pair_status_counts, actions:.request_nonterminal_action_counts, forbidden:.action_evidence_forbidden_key_count, terminal:.terminal_commit_rows, gt:.uses_gt_for_action, paper:.paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1/unique_support_goal_region_evidence_summary.json",
+    "jq empty local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1/unique_support_goal_region_evidence_summary.json configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1.json configs/h001/manifests/h001_expanded_retrieval_goal_validity_unique_support_goal_region_evidence_v1.verify.json"
+  ],
+  "notes": [
+    "The analyzer is a nonterminal evidence gate. It does not allow direct commit, first_eval rerun, policy-scale comparison, or paper claims.",
+    "The output finds 7 contrastive pairs but 10 ambiguous pairs; all 4 requests therefore recommend additional rival-region evidence before any terminal arbitration contract.",
+    "The common pair view scores the focus candidate, not the rival candidate. The analyzer records common-focus support as context only."
+  ]
+}

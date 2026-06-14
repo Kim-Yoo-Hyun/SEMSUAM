@@ -1,0 +1,61 @@
+{
+  "schema_version": "h001.verify.repeated_object_relation_anchor_consistency_residual_diagnostic.v1",
+  "date_checked": "2026-06-02",
+  "ok": true,
+  "status": "implemented_and_docker_verified",
+  "implementation": {
+    "analyzer": "src/h001_runtime/diagnose_repeated_object_relation_anchor_consistency_residual.py",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "source": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_detector_evidence_v1",
+    "output": "local_dataset/runs/h001_repeated_object_relation_anchor_consistency_residual_diagnostic_v1",
+    "docker_py_compile_passed": true,
+    "docker_run_passed": true
+  },
+  "verified_metrics": {
+    "residual_diagnostic_gate_passed": true,
+    "candidate_rows": 9,
+    "request_rows": 3,
+    "source_candidate_status_counts": {
+      "ambiguous_repeated_object_candidate": 6,
+      "insufficient_candidate_evidence": 3
+    },
+    "residual_failure_class_counts": {
+      "missing_own_view_target_support": 3,
+      "own_view_context_leakage": 3,
+      "same_request_stable_rule_tie": 3
+    },
+    "request_residual_status_counts": {
+      "same_request_stable_tie_with_own_view_context_leakage": 3
+    },
+    "stable_rule_candidate_count_by_request": {
+      "rival_identity:25": 2,
+      "rival_identity:27": 2,
+      "rival_identity:29": 2
+    },
+    "promotable_branch_outcome_rows": 0,
+    "recommended_request_action_counts": {
+      "close_repeated_object_priority_branch_without_promotion": 3
+    },
+    "next_branch_after_closure_counts": {
+      "association_geometry_underlink": 3
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false,
+    "next_allowed_task": "design_association_geometry_underlink_repair_followup_evidence_contract"
+  },
+  "verification_commands": [
+    "docker run --rm -v /home/yoohyun/research3:/workspace:ro -w /workspace -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile src/h001_runtime/diagnose_repeated_object_relation_anchor_consistency_residual.py",
+    "docker run --rm --user $(id -u):$(id -g) -v /home/yoohyun/research3:/workspace -w /workspace -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src research3/openvocab-perception:20260513-v3c-gdino-sam2 python src/h001_runtime/diagnose_repeated_object_relation_anchor_consistency_residual.py",
+    "jq '{ok:.gate.residual_diagnostic_gate_passed, classes:.residual_failure_class_counts, request_status:.request_residual_status_counts, promotable:.promotable_branch_outcome_rows, next:.next_allowed_task}' local_dataset/runs/h001_repeated_object_relation_anchor_consistency_residual_diagnostic_v1/relation_anchor_consistency_residual_summary.json",
+    "wc -l local_dataset/runs/h001_repeated_object_relation_anchor_consistency_residual_diagnostic_v1/relation_anchor_consistency_residual_candidate_rows.jsonl local_dataset/runs/h001_repeated_object_relation_anchor_consistency_residual_diagnostic_v1/relation_anchor_consistency_residual_request_rows.jsonl"
+  ],
+  "interpretation": {
+    "fact": "The repeated-object residual diagnostic is Docker-verified and closes the repeated-object priority branch without a promotable outcome.",
+    "agent_inference": "Same-request stable-rule ties plus own-view context leakage mean relation-anchor consistency evidence cannot justify terminal utility here; the next residual family is association-geometry underlink.",
+    "paper_claim": "No paper claim is allowed from this diagnostic alone."
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "schema_version": "h001.verify.goal_region_object_relation_coverage_completion_promotion_gate.v1",
+  "date_checked": "2026-06-13",
+  "status": "docker_verified_coverage_completion_promotion_gate_diagnostic_ready_terminal_blocked",
+  "contract": "configs/h001/manifests/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1.json",
+  "source_verification": {
+    "evaluation_join_output": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_evaluation_join_v1",
+    "evaluation_join_gate_passed": true,
+    "pair_rows": 12,
+    "candidate_rows": 24,
+    "baseline_rows": 36,
+    "request_rows": 12,
+    "promotion_probe_rows": 12,
+    "terminal_selector_allowed_from_join": false,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "static_contract_checks": {
+    "source_paths_exist": true,
+    "contract_json_valid": true,
+    "evaluation_join_passed_before_promotion_gate": true,
+    "wrong_goal_surface_present": true,
+    "wasted_path_surface_present": true,
+    "map_pose_delta_surface_present": true,
+    "fully_covered_wrong_case_present": true,
+    "object_relation_gap_rows_present": true,
+    "terminal_selector_blocked": true,
+    "paper_claim_blocked": true
+  },
+  "source_diagnostic_summary": {
+    "fully_covered_rows": 2,
+    "fully_covered_a_wrong_b_correct_rows": 1,
+    "fully_covered_both_correct_rows": 1,
+    "object_relation_gap_rows": 10,
+    "object_relation_gap_both_wrong_rows": 4,
+    "total_wrong_goal_baseline_rows_for_evaluation_only": 12,
+    "max_wasted_path_exposure_m_for_evaluation_only": 1.7545644472996156,
+    "slam_map_pose_delta_rows_for_evaluation_only": 12,
+    "slam_map_pose_delta_max_for_evaluation_only": 1.0
+  },
+  "docker_materializer": {
+    "script": "src/h001_runtime/run_goal_region_object_relation_coverage_completion_promotion_gate.py",
+    "image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "compile_passed": true,
+    "command": "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.run_goal_region_object_relation_coverage_completion_promotion_gate --out-root /runs/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1",
+    "output": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1",
+    "summary": "local_dataset/runs/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1/goal_region_object_relation_coverage_completion_promotion_gate_summary.json"
+  },
+  "materializer_output": {
+    "promotion_gate_passed": true,
+    "promotion_gate_blockers": [],
+    "allowed_after_pass": [
+      "coverage_completion_evaluation_diagnostic_ready",
+      "terminal_utility_blocked_by_wrong_fully_covered_case",
+      "object_relation_gap_followup_required"
+    ],
+    "fully_covered_rows": 2,
+    "fully_covered_wrong_or_ambiguous_rows": 1,
+    "object_relation_gap_rows": 10,
+    "wrong_goal_baseline_rows_for_evaluation_only": 12,
+    "max_wasted_path_exposure_m_for_evaluation_only": 1.7545644472996156,
+    "slam_map_pose_delta_rows_for_evaluation_only": 12,
+    "slam_map_pose_delta_max_for_evaluation_only": 1.0,
+    "terminal_selector_allowed_after_pass": false,
+    "terminal_utility_validation_allowed_after_pass": false,
+    "policy_scale_claim_allowed_after_pass": false,
+    "paper_claim_allowed_after_pass": false,
+    "failure_taxonomy": [
+      "fully_covered_evidence_not_sufficient_for_goal_validity",
+      "object_relation_gap_remains_after_goal_region_completion",
+      "baseline_wrong_goal_surface_present",
+      "map_pose_delta_is_evaluation_only"
+    ],
+    "gate_passed": true
+  },
+  "verification_commands": [
+    "jq empty configs/h001/manifests/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1.json",
+    "jq empty configs/h001/manifests/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1.verify.json",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile src/h001_runtime/run_goal_region_object_relation_coverage_completion_promotion_gate.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.run_goal_region_object_relation_coverage_completion_promotion_gate --out-root /runs/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1",
+    "jq '{status, promotion_gate_passed, promotion_gate_blockers, allowed_after_pass, failure_taxonomy, terminal_selector_allowed_after_pass, terminal_utility_validation_allowed_after_pass, policy_scale_claim_allowed_after_pass, paper_claim_allowed_after_pass, next_task}' local_dataset/runs/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1/goal_region_object_relation_coverage_completion_promotion_gate_summary.json",
+    "jq '{status, source_verification, static_contract_checks, source_diagnostic_summary, next_task}' configs/h001/manifests/h001_goal_region_object_relation_coverage_completion_promotion_gate_v1.verify.json"
+  ],
+  "next_task": "close_goal_region_object_relation_coverage_completion_branch_as_diagnostic_only",
+  "ok": true,
+  "notes": {
+    "fact": "The Docker promotion gate passed with no diagnostic blockers and allowed only diagnostic readiness plus explicit terminal blocking outcomes.",
+    "agent_inference": "The branch should now be closed as diagnostic-only because fully covered evidence includes a wrong candidate-pair pattern and most rows retain object-relation gaps.",
+    "paper_claim": "No terminal utility, policy-scale claim, or paper claim is allowed from this promotion gate."
+  }
+}

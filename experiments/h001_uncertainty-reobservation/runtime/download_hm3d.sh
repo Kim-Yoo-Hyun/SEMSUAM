@@ -1,0 +1,1 @@
+../../../scripts/h001_tools/download_hm3d.sh

@@ -1,0 +1,81 @@
+{
+  "schema_version": "h001.verify.rival_contradiction_region_contamination_multi_case_promotion_gate.v1",
+  "date_checked": "2026-06-13",
+  "status": "docker_verified_multi_case_promotion_gate_bounded_diagnostic_ready_terminal_blocked",
+  "contract": "configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1.json",
+  "source_verification": {
+    "evaluation_join_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1",
+    "evaluation_join_gate_passed": true,
+    "pair_rows": 18,
+    "contamination_or_contradiction_pair_rows": 6,
+    "wrong_labeled_pair_rows": 14,
+    "wrong_labeled_pair_rows_with_contamination_or_contradiction_evidence": 5,
+    "total_wrong_goal_baseline_rows": 17,
+    "max_wasted_path_exposure_m": 1.7588606361711194,
+    "slam_map_pose_delta_rows": 18,
+    "slam_map_pose_delta_maximum": 1.0,
+    "promotion_ready_rows": 0,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "static_contract_checks": {
+    "source_paths_exist": true,
+    "contract_json_valid": true,
+    "evaluation_join_passed_before_promotion_gate": true,
+    "promotion_is_diagnostic_readiness_only": true,
+    "terminal_utility_blocked": true,
+    "first_eval_blocked": true,
+    "policy_scale_comparison_blocked": true,
+    "paper_claim_blocked": true
+  },
+  "docker_runner": {
+    "script": "src/h001_runtime/run_rival_contradiction_region_contamination_multi_case_promotion_gate.py",
+    "image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "compile_passed": true,
+    "command": "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.run_rival_contradiction_region_contamination_multi_case_promotion_gate --out-root /runs/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1",
+    "output": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1",
+    "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1/rival_contradiction_region_contamination_multi_case_promotion_gate_summary.json"
+  },
+  "promotion_output": {
+    "gate_rows": 1,
+    "promotion_gate_passed": true,
+    "promotion_gate_blockers": [],
+    "allowed_after_pass": "bounded_multi_case_diagnostic_readiness_ready",
+    "source_pair_rows": 18,
+    "contamination_or_contradiction_pair_rows": 6,
+    "wrong_labeled_pair_rows": 14,
+    "wrong_labeled_pair_rows_with_contamination_or_contradiction_evidence": 5,
+    "total_wrong_goal_baseline_rows": 17,
+    "max_wasted_path_exposure_m": 1.7588606361711194,
+    "slam_map_pose_delta_rows": 18,
+    "slam_map_pose_delta_maximum": 1.0,
+    "promotion_ready_rows": 0,
+    "terminal_selector_allowed_after_pass": false,
+    "policy_scale_claim_allowed_after_pass": false,
+    "paper_claim_allowed_after_pass": false,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "output_files": {
+    "gate_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1/rival_contradiction_region_contamination_multi_case_promotion_gate_rows.jsonl",
+    "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1/rival_contradiction_region_contamination_multi_case_promotion_gate_summary.json"
+  },
+  "verification_commands": [
+    "jq empty configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1.json",
+    "jq empty configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1.verify.json",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile src/h001_runtime/run_rival_contradiction_region_contamination_multi_case_promotion_gate.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.run_rival_contradiction_region_contamination_multi_case_promotion_gate --out-root /runs/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1",
+    "jq '{promotion_gate_passed, promotion_gate_blockers, allowed_after_pass, source_pair_rows, contamination_or_contradiction_pair_rows, wrong_labeled_pair_rows, wrong_labeled_pair_rows_with_contamination_or_contradiction_evidence, total_wrong_goal_baseline_rows, max_wasted_path_exposure_m, slam_map_pose_delta_rows, slam_map_pose_delta_maximum, promotion_ready_rows, terminal_selector_allowed_after_pass, policy_scale_claim_allowed_after_pass, paper_claim_allowed_after_pass, uses_gt_for_action, paper_claim_allowed, next_task}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_promotion_gate_v1/rival_contradiction_region_contamination_multi_case_promotion_gate_summary.json"
+  ],
+  "next_task": "freeze_nonterminal_diagnostic_report_or_separate_terminal_utility_contract",
+  "ok": true,
+  "notes": {
+    "fact": "The promotion gate passes only a bounded diagnostic-readiness status. It does not allow terminal utility, first_eval rerun, policy-scale comparison, or paper claims.",
+    "agent_inference": "The current ladder is complete through the requested wrong-goal, wasted-path, and map/pose diagnostic gate. The follow-up decision selected a nonterminal diagnostic report, which is now frozen in h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1. A terminal utility contract still requires a separate label-free action rule without evaluation-only labels."
+  }
+}

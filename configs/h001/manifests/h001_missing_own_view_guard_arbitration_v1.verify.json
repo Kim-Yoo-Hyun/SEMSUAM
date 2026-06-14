@@ -1,0 +1,100 @@
+{
+  "schema_version": "h001.verify.missing_own_view_guard_arbitration.v1",
+  "checked_at": "2026-06-02",
+  "ok": true,
+  "status": "implemented_and_docker_verified",
+  "contract": "configs/h001/manifests/h001_missing_own_view_guard_arbitration_v1.json",
+  "implementation": {
+    "analyzer": "src/h001_runtime/analyze_missing_own_view_guard_arbitration.py",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_image_id": "sha256:fcd8df3370546d92added1e60c35abb1be31f175414efbe311e0246431fd9a95",
+    "output": "local_dataset/runs/h001_missing_own_view_guard_arbitration_v1",
+    "docker_py_compile_passed": true,
+    "docker_run_passed": true
+  },
+  "checked_sources": {
+    "missing_own_view_recheck_summary": "local_dataset/runs/h001_missing_own_view_recheck_evidence_v1/missing_own_view_recheck_evidence_summary.json",
+    "candidate_evidence_rows": "local_dataset/runs/h001_missing_own_view_recheck_evidence_v1/missing_own_view_recheck_candidate_rows.jsonl",
+    "request_summary_rows": "local_dataset/runs/h001_missing_own_view_recheck_evidence_v1/missing_own_view_recheck_request_rows.jsonl",
+    "unassociated_frame_audit_rows": "local_dataset/runs/h001_missing_own_view_recheck_evidence_v1/missing_own_view_recheck_unassociated_frame_rows.jsonl",
+    "object_relation_branch_candidate_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_candidate_rows.jsonl"
+  },
+  "verified_metrics": {
+    "missing_own_view_guard_arbitration_gate_passed": true,
+    "source_missing_own_view_recheck_evidence_gate_passed": true,
+    "source_candidate_evidence_rows": 20,
+    "source_request_summary_rows": 7,
+    "source_unassociated_frame_audit_rows": 3,
+    "candidate_guard_decision_rows": 20,
+    "request_guard_summary_rows": 7,
+    "unassociated_frame_audit_rows_preserved": 3,
+    "guard_deactivated_candidate_rows": 20,
+    "guard_deactivated_request_rows": 7,
+    "guard_deferred_candidate_rows": 0,
+    "guard_arbitration_decision_counts": {
+      "deactivate_negative_missing_support_guard_after_recheck": 20
+    },
+    "request_guard_status_counts": {
+      "missing_own_view_guard_closed_as_nonterminal_evidence": 7
+    },
+    "candidate_nonterminal_action_counts": {
+      "deactivate_negative_missing_support_guard_after_recheck": 17,
+      "keep_guard_deactivated_but_report_unassociated_view_audit": 3
+    },
+    "request_nonterminal_action_counts": {
+      "close_missing_own_view_guard_as_nonterminal_evidence": 7
+    },
+    "negative_missing_support_guard_ready_candidate_rows": 20,
+    "object_relation_negative_guard_present_candidate_rows": 20,
+    "target_candidates_with_full_4_of_4_association": 17,
+    "target_candidates_with_partial_3_of_4_association": 3,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "promotable_terminal_outcome_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "checked_gate": {
+    "source_missing_own_view_recheck_evidence_gate_passed": true,
+    "expected_candidate_guard_decision_rows_passed": true,
+    "expected_request_guard_summary_rows_passed": true,
+    "expected_unassociated_frame_audit_rows_preserved_passed": true,
+    "expected_guard_deactivated_candidate_rows_passed": true,
+    "expected_guard_deactivated_request_rows_passed": true,
+    "expected_guard_deferred_candidate_rows_passed": true,
+    "expected_candidate_rejection_rows_passed": true,
+    "expected_candidate_commit_rows_passed": true,
+    "expected_terminal_commit_rows_passed": true,
+    "expected_promotable_terminal_outcome_rows_passed": true,
+    "action_evidence_forbidden_key_gate_passed": true,
+    "uses_gt_for_action_passed": true,
+    "missing_own_view_guard_arbitration_gate_passed": true
+  },
+  "output_files": {
+    "candidate_guard_decision_rows": "local_dataset/runs/h001_missing_own_view_guard_arbitration_v1/missing_own_view_guard_candidate_rows.jsonl",
+    "request_guard_summary_rows": "local_dataset/runs/h001_missing_own_view_guard_arbitration_v1/missing_own_view_guard_request_rows.jsonl",
+    "summary": "local_dataset/runs/h001_missing_own_view_guard_arbitration_v1/missing_own_view_guard_arbitration_summary.json"
+  },
+  "verification_commands": [
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile src/h001_runtime/analyze_missing_own_view_guard_arbitration.py",
+    "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.analyze_missing_own_view_guard_arbitration",
+    "jq '{gate:.gate.missing_own_view_guard_arbitration_gate_passed,candidate_guard_decision_rows,request_guard_summary_rows,unassociated_frame_audit_rows_preserved,guard_deactivated_candidate_rows,guard_deactivated_request_rows,guard_deferred_candidate_rows,guard_arbitration_decision_counts,request_guard_status_counts,terminal_commit_rows,candidate_commit_rows,candidate_rejection_rows,promotable_terminal_outcome_rows,action_evidence_forbidden_key_count,uses_gt_for_action,paper_claim_allowed,next:.diagnostic_conclusion.recommended_next_task}' local_dataset/runs/h001_missing_own_view_guard_arbitration_v1/missing_own_view_guard_arbitration_summary.json",
+    "wc -l local_dataset/runs/h001_missing_own_view_guard_arbitration_v1/missing_own_view_guard_candidate_rows.jsonl local_dataset/runs/h001_missing_own_view_guard_arbitration_v1/missing_own_view_guard_request_rows.jsonl"
+  ],
+  "next_task": "freeze_missing_own_view_guard_branch_closure_or_select_next_label_free_family",
+  "terminal_utility_validation_allowed": false,
+  "candidate_commit_allowed": false,
+  "candidate_rejection_allowed": false,
+  "first_eval_rerun_allowed": false,
+  "policy_scale_comparison_allowed": false,
+  "paper_claim_allowed": false,
+  "interpretation": {
+    "fact": "The Docker-verified analyzer closes all 20 deferred negative_missing_support_guard candidate rows as deactivated after recheck support acquisition.",
+    "agent_inference": "This supports the design rule that missing own-view evidence should trigger active observation before rejection; it still does not authorize ObjectNav goal commitment or paper claims.",
+    "paper_claim": "No paper claim is allowed from this analyzer alone."
+  }
+}

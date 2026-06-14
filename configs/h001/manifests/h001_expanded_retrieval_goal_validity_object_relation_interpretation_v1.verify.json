@@ -1,0 +1,50 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_object_relation_interpretation_verify.v1",
+  "date_checked": "2026-05-30",
+  "ok": true,
+  "contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_interpretation_v1.json",
+  "source_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1/goal_validity_object_relation_evidence_summary.json",
+  "verified_source_metrics": {
+    "object_relation_evidence_gate_passed": true,
+    "evidence_rows": 8,
+    "request_rows": 2,
+    "evaluation_only_rows": 2,
+    "association_rows": 72,
+    "detector_rows": 8,
+    "associated_candidate_heading_count": 48,
+    "depth_status_counts": {
+      "consistent": 44,
+      "depth_mismatch": 14,
+      "out_of_fov": 14
+    },
+    "request_evidence_status_counts": {
+      "relation_depth_recheck_resolved": 2
+    },
+    "evaluation_only_candidate_correct_counts": {
+      "false": 2
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "frozen_decision": {
+    "interpretation_gate_passed": true,
+    "terminal_utility_status": "blocked",
+    "paper_claim_status": "not_allowed",
+    "next_contract_required": "non_gt_goal_validity_arbitration_before_any_terminal_utility"
+  },
+  "verification_commands": [
+    "jq '{evidence_rows, request_rows, post_label_analysis, evidence_status_counts, action_evidence_forbidden_key_count, terminal_commit_rows, gate, diagnostic_conclusion, paper_claim_allowed}' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1/goal_validity_object_relation_evidence_summary.json",
+    "jq -s '{rows:length, evidence_status:(map(.evidence_status) | group_by(.) | map({(.[0]):length}) | add), next_actions:(map(.next_evidence_action) | group_by(.) | map({(.[0]):length}) | add)}' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1/goal_validity_object_relation_request_rows.jsonl",
+    "jq -s '{rows:length, candidate_correct:(map(.evaluation_only_candidate_correct|tostring) | group_by(.) | map({(.[0]):length}) | add), interpretation:(map(.evaluation_only_interpretation) | group_by(.) | map({(.[0]):length}) | add)}' local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_evidence_v1/goal_validity_object_relation_evaluated_rows.jsonl",
+    "jq empty configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_interpretation_v1.json",
+    "jq empty configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_interpretation_v1.verify.json"
+  ],
+  "interpretation": {
+    "fact": "Detector-depth object-relation evidence resolves the bounded observation gap and remains nonterminal.",
+    "agent_inference": "Because both resolved candidates are evaluation-negative, the next work should define a non-GT arbitration rule that rejects this failure mode before any terminal utility or paper claim is attempted."
+  }
+}

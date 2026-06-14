@@ -16,8 +16,8 @@
 | Document | Responsibility | Output / Local Entry |
 | --- | --- | --- |
 | [literature.md](literature.md) | 문헌 조사 workflow와 paper folder convention | [literature/README.md](../literature/README.md), [literature/PAPER.md](../literature/PAPER.md) |
-| [hypothesis.md](hypothesis.md) | hypothesis 검증 workflow와 promotion 기준 | [hypothesis/README.md](../hypothesis/README.md) |
-| [experiments.md](experiments.md) | hypothesis probe를 논문 본문용 experiment로 승격하는 workflow와 natural-proof rule | 대상 hypothesis workflow, `docs/reproducibility.md` |
+| [hypothesis.md](hypothesis.md) | hypothesis 검증 workflow와 promotion 기준 | [experiments/README.md](../experiments/README.md), [H001 README](../experiments/h001_uncertainty-reobservation/README.md) |
+| [experiments.md](experiments.md) | hypothesis probe를 논문 본문용 experiment로 승격하는 workflow와 natural-proof rule | 대상 experiment workflow, `docs/reproducibility.md` |
 | [paper.md](paper.md) | paper framing, novelty, reviewer-defense 기준 | `summary.md`, future `paper/README.md` |
 | [reproducibility.md](reproducibility.md) | dataset, checkpoint, Docker, artifact, 백업/복구 기준 | `local_dataset/{data,models,runs}` |
 
@@ -25,12 +25,12 @@
 
 | Workflow | Entry | Role |
 | --- | --- | --- |
-| H001 active hypothesis | [H001 README](../hypothesis/CAND-01/H001_uncertainty-reobservation/README.md) | active gate와 local 문서 안내 |
-| H001 evaluation contract | [07_evaluation_contract.md](../hypothesis/CAND-01/H001_uncertainty-reobservation/07_evaluation_contract.md) | evaluation gate, metric, split discipline |
-| H001 schedule | [15_schedule.md](../hypothesis/CAND-01/H001_uncertainty-reobservation/15_schedule.md) | 6-12개월 단계 계획 |
-| Dense conflict / expanded retrieval workflow | [workflow-20260521-dense-conflict.md](../hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260521-dense-conflict.md) | H001 runtime workflow와 세부 gate 기록 |
-| Stage 1 smoke | [workflow-20260507-smoke.md](../hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260507-smoke.md) | `VLMaps` / Habitat smoke |
-| HM3D-OVON | [workflow-20260507-ovon.md](../hypothesis/CAND-01/H001_uncertainty-reobservation/runtime/workflow-20260507-ovon.md) | HM3D-OVON 확보와 mount smoke |
+| H001 active hypothesis | [H001 README](../experiments/h001_uncertainty-reobservation/README.md) | active gate와 local 문서 안내 |
+| H001 evaluation contract | [07_evaluation_contract.md](../experiments/h001_uncertainty-reobservation/07_evaluation_contract.md) | evaluation gate, metric, split discipline |
+| H001 schedule | [15_schedule.md](../experiments/h001_uncertainty-reobservation/15_schedule.md) | 6-12개월 단계 계획 |
+| Dense conflict / expanded retrieval workflow | [workflow-20260521-dense-conflict.md](../experiments/h001_uncertainty-reobservation/runtime/workflow-20260521-dense-conflict.md) | H001 runtime workflow와 세부 gate 기록 |
+| Stage 1 smoke | [workflow-20260507-smoke.md](../experiments/h001_uncertainty-reobservation/runtime/workflow-20260507-smoke.md) | `VLMaps` / Habitat smoke |
+| HM3D-OVON | [workflow-20260507-ovon.md](../experiments/h001_uncertainty-reobservation/runtime/workflow-20260507-ovon.md) | HM3D-OVON 확보와 mount smoke |
 
 ## Current State Pointer
 
@@ -40,7 +40,7 @@
 - Primary candidate: `CAND-01`
 - Active hypothesis: `H001_uncertainty-reobservation`
 - Current gate is tracked in [TODO.md](../TODO.md).
-- Detailed current H001 state is tracked in [H001 README](../hypothesis/CAND-01/H001_uncertainty-reobservation/README.md).
+- Detailed current H001 state is tracked in [H001 README](../experiments/h001_uncertainty-reobservation/README.md).
 - Reproduction and artifact paths are tracked in [reproducibility.md](reproducibility.md).
 
 ### 에이전트 추론
@@ -52,4 +52,4 @@
 - 새 workflow 문서가 생기면 `Active Workflows`에 link만 추가한다.
 - 새 top-level document가 생기면 `Document Map`에 책임을 짧게 추가한다.
 - 긴 실험 설명은 이 파일에 쓰지 않는다.
-- 아직 필요하지 않은 `experiments/`, `paper/`, `results/`, `decisions/` folder는 만들지 않는다.
+- `experiments/`, `src/`, `scripts/`, `configs/`, `results/`, `archive/`는 공유 가능한 현재 구조로 사용한다. 아직 필요하지 않은 `paper/`, `decisions/` folder는 만들지 않는다.

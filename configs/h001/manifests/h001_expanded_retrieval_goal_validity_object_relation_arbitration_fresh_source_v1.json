@@ -1,0 +1,75 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_contract.v1",
+  "contract_name": "expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_v1",
+  "date_checked": "2026-05-30",
+  "status": "frozen_source_precheck_before_fresh_object_relation_evidence_generation",
+  "source": {
+    "route_contract": "configs/h001/manifests/h001_expanded_retrieval_local_context_route_contract_v1.json",
+    "route_specific_summary": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_summary.json",
+    "route_specific_rows": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_rows.jsonl",
+    "route_specific_evaluated_rows": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_evaluated_rows.jsonl",
+    "bounded_arbitration_contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_object_relation_arbitration_v1.json",
+    "bounded_arbitration_decision_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_arbitration_v1/object_relation_arbitration_decision_rows.jsonl",
+    "bounded_arbitration_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_arbitration_v1/object_relation_arbitration_summary.json"
+  },
+  "source_filter": {
+    "route_action": "request_goal_validity_confirmation_evidence",
+    "interpretation": "Use predeclared route-specific goal-validity rows, not the bounded recovered rows used to design the relation-depth guarded rejection rule."
+  },
+  "minimum_source_gate": {
+    "minimum_source_rows": 5,
+    "expected_source_rows": 7,
+    "minimum_unique_scenes": 3,
+    "minimum_unique_queries": 2,
+    "bounded_request_overlap_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "action_time_fields_to_freeze": [
+    "expanded_retrieval_request_id",
+    "rival_identity_request_id",
+    "episode_key",
+    "scene_key",
+    "scene_id",
+    "query",
+    "route_action",
+    "route_branch",
+    "route_reason",
+    "candidate_ids",
+    "detector_strong_candidate_ids",
+    "source_top_candidate_ids",
+    "strong_own_view_candidate_ids",
+    "local_context_candidate_ids",
+    "source_pool_proxy"
+  ],
+  "missing_evidence_for_actual_arbitration_validation": [
+    "fresh object-relation observation plan for route-specific candidate ids",
+    "fresh frame/projection/detector/SAM2 substrate for route-specific object-relation candidates",
+    "candidate-local relation-depth evidence rows for route-specific candidates",
+    "same rule application before evaluation label join"
+  ],
+  "required_outputs": {
+    "action_rows": "object_relation_arbitration_fresh_source_action_rows.jsonl",
+    "evaluated_rows": "object_relation_arbitration_fresh_source_evaluated_rows.jsonl",
+    "summary": "object_relation_arbitration_fresh_source_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "src/h001_runtime/build_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source.py",
+    "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_arbitration_fresh_source_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_required": true
+  },
+  "promotion_rules": {
+    "source_precheck_only": "Passing this contract freezes a fresh/predeclared validation source. It does not validate terminal utility.",
+    "actual_validation_needed": "The relation-depth guarded arbitration rule can be validated only after object-relation evidence is generated for these predeclared rows and the rule is applied before label join.",
+    "paper_claim_allowed_before_actual_validation": false
+  },
+  "interpretation_rule": {
+    "fact": "The bounded arbitration rule was designed on recovered rows rival_identity:12 and rival_identity:14.",
+    "agent_inference": "The route-specific goal-validity rows are a better fresh/predeclared validation source if they do not overlap with the bounded rows and retain only action-time candidate evidence before label join.",
+    "user_decision_needed": "None for freezing the validation source. User judgment is needed only before promoting a future non-inert terminal policy."
+  },
+  "paper_claim_allowed": false
+}

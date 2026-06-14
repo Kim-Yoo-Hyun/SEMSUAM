@@ -1,0 +1,145 @@
+{
+  "schema_version": "h001.contract.rival_contradiction_region_contamination_multi_case_evaluation_join.v1",
+  "date_checked": "2026-06-13",
+  "status": "frozen_design_contract_before_evaluation_join_materializer",
+  "contract_name": "rival_contradiction_region_contamination_multi_case_evaluation_join_v1",
+  "purpose": "Join evaluation-only candidate labels, wrong-goal baseline proxies, wasted-path exposure, and map/pose consistency diagnostics after the multi-case label-free detector evidence rows are frozen.",
+  "stage": "P4-design",
+  "paper_framing": {
+    "semantic_slam_centered": true,
+    "objectnav_wrong_goal_role": "evaluation-only task failure surface",
+    "natural_proof_rule": "Detector evidence rows are already frozen and nonterminal. The next natural step is to attach outcomes only for diagnosis of whether evidence states correspond to wrong-goal, wasted-path, and map/pose behavior.",
+    "paper_claim_allowed": false
+  },
+  "source": {
+    "detector_evidence_contract": "configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1.json",
+    "detector_evidence_verify": "configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1.verify.json",
+    "detector_evidence_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_evidence_summary.json",
+    "detector_candidate_view_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_candidate_view_rows.jsonl",
+    "detector_role_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_role_rows.jsonl",
+    "detector_pair_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_pair_rows.jsonl",
+    "detector_request_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_request_rows.jsonl",
+    "source_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_source_v1/rival_contradiction_region_contamination_multi_case_source_rows.jsonl",
+    "evaluation_candidate_rows": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_evaluation_join_v1/post_action_goal_validity_arbitration_followup_evaluation_join_candidate_rows.jsonl",
+    "evaluation_pair_rows": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_evaluation_join_v1/post_action_goal_validity_arbitration_followup_evaluation_join_pair_rows.jsonl",
+    "evaluation_baseline_rows": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_evaluation_join_v1/post_action_goal_validity_arbitration_followup_evaluation_join_baseline_rows.jsonl",
+    "evaluation_request_rows": "local_dataset/runs/h001_post_action_goal_validity_arbitration_followup_evaluation_join_v1/post_action_goal_validity_arbitration_followup_evaluation_join_request_rows.jsonl"
+  },
+  "source_gate": {
+    "detector_evidence_status": "docker_verified_multi_case_post_detector_evidence_materializer_terminal_blocked",
+    "detector_candidate_view_rows": 144,
+    "detector_role_rows": 72,
+    "detector_pair_rows": 18,
+    "detector_request_rows": 18,
+    "detector_evidence_gate_passed": true,
+    "join_source_pair_rows": 18,
+    "join_candidate_rows": 36,
+    "join_pair_rows": 18,
+    "join_baseline_rows": 54,
+    "pair_label_counts": {
+      "a_wrong_b_correct": 8,
+      "both_correct": 4,
+      "both_wrong": 6
+    },
+    "candidate_label_counts": {
+      "correct": 16,
+      "wrong": 20
+    },
+    "baseline_policy_counts": {
+      "NoReobserveReference": 18,
+      "SemanticOnly": 18,
+      "SLAMOnlyRich_current": 18
+    },
+    "baseline_wrong_goal_counts": {
+      "NoReobserveReference": 9,
+      "SemanticOnly": 8,
+      "SLAMOnlyRich_current": 0
+    },
+    "total_wrong_goal_baseline_rows": 17,
+    "max_wasted_path_exposure_m": 1.7588606361711194,
+    "slam_map_pose_delta_rows": 18,
+    "slam_map_pose_delta_maximum": 1.0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "join_policy": {
+    "evidence_rows_must_be_frozen_before_join": true,
+    "labels_are_evaluation_only": true,
+    "baseline_outcomes_are_evaluation_only": true,
+    "wrong_goal_is_evaluation_only": true,
+    "wasted_path_is_evaluation_only": true,
+    "map_pose_consistency_delta_is_evaluation_only": true,
+    "joined_labels_may_not_reorder_candidates": true,
+    "joined_labels_may_not_select_thresholds": true,
+    "joined_labels_may_not_define_terminal_action": true,
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false
+  },
+  "required_outputs": {
+    "request_rows": "rival_contradiction_region_contamination_multi_case_evaluation_join_request_rows.jsonl",
+    "candidate_rows": "rival_contradiction_region_contamination_multi_case_evaluation_join_candidate_rows.jsonl",
+    "pair_rows": "rival_contradiction_region_contamination_multi_case_evaluation_join_pair_rows.jsonl",
+    "baseline_rows": "rival_contradiction_region_contamination_multi_case_evaluation_join_baseline_rows.jsonl",
+    "promotion_probe_rows": "rival_contradiction_region_contamination_multi_case_evaluation_join_promotion_probe_rows.jsonl",
+    "summary": "rival_contradiction_region_contamination_multi_case_evaluation_join_summary.json"
+  },
+  "minimum_join_gate": {
+    "source_detector_evidence_gate_passed": true,
+    "expected_request_rows": 18,
+    "expected_candidate_rows": 36,
+    "expected_pair_rows": 18,
+    "expected_baseline_rows": 54,
+    "expected_promotion_probe_rows": 18,
+    "expected_pair_label_counts": {
+      "a_wrong_b_correct": 8,
+      "both_correct": 4,
+      "both_wrong": 6
+    },
+    "expected_candidate_label_counts": {
+      "correct": 16,
+      "wrong": 20
+    },
+    "expected_baseline_policy_counts": {
+      "NoReobserveReference": 18,
+      "SemanticOnly": 18,
+      "SLAMOnlyRich_current": 18
+    },
+    "minimum_total_wrong_goal_baseline_rows": 17,
+    "minimum_max_wasted_path_exposure_m": 1.75,
+    "minimum_slam_map_pose_delta_rows": 18,
+    "minimum_slam_map_pose_delta_maximum": 1.0,
+    "terminal_commit_rows_maximum": 0,
+    "candidate_commit_rows_maximum": 0,
+    "candidate_rejection_rows_maximum": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "blocked_actions": [
+    "terminal_goal_commit",
+    "candidate_commit",
+    "candidate_rejection",
+    "terminal_score_tuning",
+    "formula_revision_from_labels",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "step_4_5_promotion",
+    "paper_claim"
+  ],
+  "expected_command_shape": [
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile src/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_evaluation_join.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_rival_contradiction_region_contamination_multi_case_evaluation_join --out-root /runs/h001_rival_contradiction_region_contamination_multi_case_evaluation_join_v1"
+  ],
+  "next_allowed_step_after_join": "Run a bounded multi-case promotion gate that checks wrong-goal, wasted-path, and map/pose consistency readiness without converting evaluation-only labels into an action rule or paper claim.",
+  "interpretation_rule": {
+    "fact": "The join contract attaches labels and baseline proxies only after detector evidence rows are frozen.",
+    "agent_inference": "The join can diagnose whether evidence states align with wrong-goal and map/pose behavior, but it cannot define a terminal selector or tune thresholds.",
+    "paper_claim": "This contract permits evaluation diagnostics only. ObjectNav improvement, Semantic-SLAM utility, first_eval rerun, policy-scale comparison, Step 4-5 promotion, and paper claims remain blocked."
+  },
+  "paper_claim_allowed": false
+}

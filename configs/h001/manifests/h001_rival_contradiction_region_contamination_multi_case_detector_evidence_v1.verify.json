@@ -1,0 +1,125 @@
+{
+  "schema_version": "h001.verify.rival_contradiction_region_contamination_multi_case_detector_evidence.v1",
+  "date_checked": "2026-06-13",
+  "status": "docker_verified_multi_case_post_detector_evidence_materializer_terminal_blocked",
+  "contract": "configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1.json",
+  "source_verification": {
+    "detector_substrate_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_substrate_v1",
+    "job_status": "completed",
+    "detector_rows": 72,
+    "frame_rows": 72,
+    "association_rows": 938,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 0.8888888888888888,
+    "rows_with_candidate_association": 64,
+    "associated_candidate_heading_count": 262,
+    "source_detector_substrate_gate_passed": true,
+    "multi_case_detector_substrate_gate_passed": true,
+    "failure_taxonomy": [],
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "static_contract_checks": {
+    "source_paths_exist": true,
+    "contract_json_valid": true,
+    "detector_substrate_passed_before_evidence_contract": true,
+    "expected_candidate_view_rows_fixed": 144,
+    "expected_role_rows_fixed": 72,
+    "expected_pair_rows_fixed": 18,
+    "expected_request_rows_fixed": 18,
+    "required_roles_fixed": [
+      "candidate_a_own_view",
+      "candidate_b_own_view",
+      "shared_region_or_relation_anchor_view",
+      "cross_candidate_challenge_view"
+    ],
+    "reserved_future_schema_fields_present": [
+      "goal_validity_risk",
+      "viewpoint_evidence_gap",
+      "map_pose_consistency_uncertainty",
+      "wrong_goal_visit",
+      "wasted_path_m",
+      "map_pose_consistency_delta"
+    ],
+    "terminal_commit_blocked": true,
+    "candidate_commit_blocked": true,
+    "candidate_rejection_blocked": true,
+    "gt_action_blocked": true,
+    "evaluation_only_join_blocked_until_materializer": true,
+    "paper_claim_blocked": true
+  },
+  "docker_materializer": {
+    "script": "src/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_detector_evidence.py",
+    "image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "command": "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_rival_contradiction_region_contamination_multi_case_detector_evidence --out-root /runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1",
+    "compile_passed": true,
+    "host_compile_note": "Host py_compile requires PYTHONPYCACHEPREFIX because the local __pycache__ directory is not writable by the current user.",
+    "output": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1",
+    "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_evidence_summary.json"
+  },
+  "materializer_output": {
+    "candidate_view_rows": 144,
+    "role_rows": 72,
+    "pair_rows": 18,
+    "request_rows": 18,
+    "audit_rows": 18,
+    "candidate_view_evidence_state_counts": {
+      "associated_depth_consistent": 73,
+      "associated_depth_mixed": 15,
+      "not_observed_in_role": 3,
+      "visible_without_candidate_association": 53
+    },
+    "role_evidence_state_counts": {
+      "both_candidates_associated": 15,
+      "candidate_a_only_associated": 27,
+      "candidate_b_only_associated": 13,
+      "cross_candidate_contamination_observed": 3,
+      "neither_candidate_associated": 8,
+      "shared_region_overlap_observed": 6
+    },
+    "pair_evidence_state_counts": {
+      "both_candidates_own_view_supported": 11,
+      "candidate_b_region_support_only": 1,
+      "cross_candidate_contamination_observed": 3,
+      "rival_region_contamination_or_same_category_overlap_observed": 3
+    },
+    "request_evidence_state_counts": {
+      "ambiguous_shared_or_cross_region_evidence": 12,
+      "contradiction_or_contamination_evidence_available": 6
+    },
+    "role_rows_with_any_candidate_association": 64,
+    "pair_rows_with_any_candidate_association": 18,
+    "associated_scene_count": 9,
+    "associated_query_count": 5,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "action_evidence_forbidden_keys_found": [],
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false,
+    "gate_passed": true
+  },
+  "output_files": {
+    "candidate_view_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_candidate_view_rows.jsonl",
+    "role_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_role_rows.jsonl",
+    "pair_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_pair_rows.jsonl",
+    "request_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_request_rows.jsonl",
+    "audit_rows": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_audit_rows.jsonl",
+    "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_evidence_summary.json"
+  },
+  "verification_commands": [
+    "jq empty configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1.json",
+    "jq empty configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1.verify.json",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m py_compile src/h001_runtime/materialize_rival_contradiction_region_contamination_multi_case_detector_evidence.py",
+    "docker run --rm --user $(id -u):$(id -g) -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace:ro -v /home/yoohyun/research3/local_dataset/runs:/runs -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -B -m h001_runtime.materialize_rival_contradiction_region_contamination_multi_case_detector_evidence --out-root /runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1",
+    "jq '{gate, candidate_view_rows, role_rows, pair_rows, request_rows, audit_rows, pair_evidence_state_counts, request_evidence_state_counts, terminal_commit_rows, candidate_commit_rows, candidate_rejection_rows, action_evidence_forbidden_keys_found, uses_gt_for_action, paper_claim_allowed, next_task}' local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_evidence_summary.json",
+    "wc -l local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_candidate_view_rows.jsonl local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_role_rows.jsonl local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_pair_rows.jsonl local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_request_rows.jsonl local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_detector_evidence_v1/rival_contradiction_region_contamination_multi_case_detector_audit_rows.jsonl"
+  ],
+  "next_task": "freeze_multi_case_evaluation_only_join_contract",
+  "ok": true,
+  "notes": {
+    "fact": "The Docker materializer writes only label-free nonterminal evidence rows and passes all frozen count, coverage, and no-action gates.",
+    "agent_inference": "The next natural step is an evaluation-only join contract that attaches wrong-goal, wasted-path, and map/pose consistency diagnostics after evidence rows are frozen."
+  }
+}

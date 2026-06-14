@@ -1,0 +1,220 @@
+{
+  "schema_version": "h001.contract.next_label_free_branch_after_rival_contradiction_closure.v1",
+  "date_checked": "2026-06-13",
+  "status": "frozen_selection_static_verified",
+  "contract_name": "next_label_free_branch_after_rival_contradiction_closure_v1",
+  "purpose": "Select the next label-free branch after closing the rival contradiction / region contamination multi-case path as diagnostic-only. This selection must preserve the natural-proof rule: the next method step must follow from the diagnosed failure mechanism, not from post-hoc tuning to recover the desired hypothesis.",
+  "stage": "P4-design",
+  "source": {
+    "path_closure_contract": "configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_path_closure_v1.json",
+    "path_closure_verify": "configs/h001/manifests/h001_rival_contradiction_region_contamination_multi_case_path_closure_v1.verify.json",
+    "pairwise_failure_diagnostic_summary": "local_dataset/runs/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1/pairwise_goal_region_map_pose_rule_failure_diagnostic_summary.json",
+    "pairwise_failure_next_family_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1/pairwise_goal_region_map_pose_rule_failure_diagnostic_next_family_rows.jsonl",
+    "pairwise_failure_pair_rows": "local_dataset/runs/h001_pairwise_goal_region_map_pose_rule_failure_diagnostic_v1/pairwise_goal_region_map_pose_rule_failure_diagnostic_pair_rows.jsonl",
+    "multi_case_diagnostic_report_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_multi_case_diagnostic_report_v1/rival_contradiction_region_contamination_multi_case_diagnostic_report_summary.json"
+  },
+  "source_gate": {
+    "path_closure_static_verified": true,
+    "current_rival_path_closed_as_diagnostic_only": true,
+    "pairwise_failure_diagnostic_gate_passed": true,
+    "pairwise_failure_pair_rows": 21,
+    "pairwise_failure_request_rows": 21,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "paper_claim_allowed": false,
+    "recommended_next_family_counts": {
+      "rival_contradiction_or_region_contamination_evidence_v1": 1,
+      "goal_region_object_relation_coverage_completion_v1": 12,
+      "missing_evidence_second_view_followup_v1": 3,
+      "goal_region_conditioned_relation_recheck_v1": 4,
+      "contrastive_goal_region_rival_support_audit_v1": 1
+    },
+    "failure_class_counts": {
+      "provisional_positive_evidence_selects_wrong_instance": 1,
+      "dual_evidence_coverage_gap": 12,
+      "missing_second_view_evidence": 3,
+      "relation_contradiction_without_goal_region_context": 4,
+      "noncontrastive_goal_region_support": 1
+    },
+    "failure_mechanism_counts": {
+      "goal_region_and_object_relation_agree_on_wrong_candidate": 1,
+      "goal_region_and_object_relation_both_missing": 12,
+      "candidate_specific_evidence_missing_before_arbitration": 3,
+      "object_relation_signal_has_no_goal_region_context": 4,
+      "goal_region_support_is_not_candidate_discriminative": 1
+    }
+  },
+  "selected_branch": {
+    "branch_name": "goal_region_object_relation_coverage_completion_v1",
+    "branch_type": "label_free_nonterminal_observation_branch",
+    "selected_family_rank_after_closure": 1,
+    "why_selected": [
+      "The higher-priority rival contradiction branch has been closed as diagnostic-only, so the next branch must address a different unresolved failure mechanism.",
+      "The largest remaining failure class is dual_evidence_coverage_gap with 12 pair rows.",
+      "The mechanism is goal_region_and_object_relation_both_missing, which naturally requires additional evidence acquisition rather than terminal commit or rejection.",
+      "This branch keeps the method derived from missing evidence coverage rather than tuning thresholds on evaluation labels.",
+      "It can preserve the Semantic-SLAM framing by treating ObjectNav wrong-goal as the task symptom of unresolved semantic/map/pose evidence."
+    ],
+    "primary_target_filter": {
+      "recommended_next_family": "goal_region_object_relation_coverage_completion_v1",
+      "failure_class": "dual_evidence_coverage_gap",
+      "failure_mechanism": "goal_region_and_object_relation_both_missing",
+      "terminal_commit": false,
+      "candidate_commit": false,
+      "candidate_rejection": false,
+      "uses_gt_for_action": false
+    },
+    "primary_target_counts": {
+      "pair_rows": 12,
+      "request_rows": 12,
+      "scene_count": 7,
+      "query_count": 3,
+      "queries": [
+        "bed",
+        "chair",
+        "tv_monitor"
+      ],
+      "label_pattern_counts_for_evaluation_only": {
+        "a_wrong_b_correct": 4,
+        "both_correct": 4,
+        "both_wrong": 4
+      }
+    },
+    "required_branch_outputs": [
+      "coverage_completion_request_rows",
+      "coverage_completion_candidate_rows",
+      "coverage_completion_pair_rows",
+      "goal_region_observation_plan_rows",
+      "object_relation_observation_plan_rows",
+      "audit_rows",
+      "summary"
+    ],
+    "allowed_action_outputs": [
+      "request_goal_region_evidence",
+      "request_object_relation_evidence",
+      "request_joint_goal_region_object_relation_evidence",
+      "defer_until_coverage_complete",
+      "audit_only"
+    ],
+    "forbidden_action_outputs": [
+      "terminal_goal_commit",
+      "candidate_commit",
+      "candidate_rejection",
+      "commit_from_coverage_availability",
+      "reject_from_missing_coverage",
+      "select_by_pair_label",
+      "select_by_wrong_goal_outcome",
+      "select_by_wasted_path",
+      "select_by_map_pose_delta_after_join",
+      "threshold_tuned_from_joined_labels"
+    ]
+  },
+  "rejected_or_deferred_branches": [
+    {
+      "branch_name": "current_rival_contradiction_region_contamination_as_terminal_utility",
+      "decision": "reject_as_closed_diagnostic_only",
+      "reason": "The path closure verified that label-free contamination evidence is diagnostic but not a validated terminal commit or rejection rule."
+    },
+    {
+      "branch_name": "missing_evidence_second_view_followup_v1",
+      "decision": "defer",
+      "reason": "This branch has 3 rows and is narrower than the 12-row dual coverage gap. It remains a valid later follow-up for missing candidate-specific evidence."
+    },
+    {
+      "branch_name": "goal_region_conditioned_relation_recheck_v1",
+      "decision": "defer",
+      "reason": "This branch has 4 rows where relation contradiction lacks goal-region context. It should follow after the broader coverage-completion branch defines how goal-region evidence is acquired."
+    },
+    {
+      "branch_name": "contrastive_goal_region_rival_support_audit_v1",
+      "decision": "defer_as_audit",
+      "reason": "This branch has 1 row and is better treated as an audit case after coverage-completion rules are available."
+    },
+    {
+      "branch_name": "terminal_utility_contract",
+      "decision": "reject_now",
+      "reason": "No label-free commit/reject rule is available after the diagnostic-only closure."
+    }
+  ],
+  "future_branch_contract_requirements": {
+    "next_contract_name": "goal_region_object_relation_coverage_completion_v1",
+    "allowed_next_step": "freeze_branch_contract_before_implementation",
+    "contract_must_define": [
+      "exact target pair rows from the pairwise failure diagnostic",
+      "how goal-region and object-relation evidence are requested without labels",
+      "how candidate ids, pair ids, scene/query/request ids, and observation roles are preserved",
+      "how missing evidence differs from contradictory evidence",
+      "how evidence rows will later be joined to wrong-goal, wasted-path, and map/pose diagnostics after action freeze",
+      "which simpler alternatives are audited"
+    ],
+    "minimum_static_gates": {
+      "target_pair_rows": 12,
+      "scene_count_min": 5,
+      "query_count_min": 3,
+      "action_evidence_forbidden_key_count": 0,
+      "uses_gt_for_action": false,
+      "terminal_commit_rows": 0,
+      "candidate_commit_rows": 0,
+      "candidate_rejection_rows": 0,
+      "paper_claim_allowed": false
+    },
+    "simpler_alternatives_to_audit": [
+      "defer_all",
+      "request_goal_region_only",
+      "request_object_relation_only",
+      "request_random_view",
+      "request_frontier_view",
+      "reuse_current_rival_contamination_state",
+      "semantic_rank_fallback",
+      "detector_score_fallback"
+    ]
+  },
+  "natural_proof_checks": {
+    "selected_from_diagnosed_failure_mechanism": true,
+    "largest_unclosed_failure_family_selected": true,
+    "post_hoc_threshold_or_metric_fitting_forbidden": true,
+    "uses_label_free_action_inputs_only": true,
+    "evaluation_labels_joined_only_after_action_freeze": true,
+    "terminal_shortcut_forbidden": true,
+    "oracle_references_remain_diagnostic": true
+  },
+  "contract_scope": {
+    "contract_type": "branch_selection_definition_only",
+    "branch_contract_allowed_next": true,
+    "implementation_allowed_now": false,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "contract_checks": {
+    "selected_branch_defined": true,
+    "primary_target_filter_defined": true,
+    "primary_target_has_nonzero_rows": true,
+    "primary_target_has_scene_diversity": true,
+    "primary_target_has_query_diversity": true,
+    "rival_path_closure_consumed": true,
+    "rejected_or_deferred_branches_documented": true,
+    "natural_proof_rule_preserved": true,
+    "terminal_utility_validation_allowed": false,
+    "formula_revision_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "step_4_5_promotion_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "next_research_task": {
+    "task": "freeze_goal_region_object_relation_coverage_completion_contract",
+    "reason": "The next label-free branch is selected. The follow-up should freeze exact target rows, observation roles, allowed nonterminal actions, required audit rows, and later evaluation-only join requirements before any implementation."
+  },
+  "interpretation_rule": {
+    "fact": "After the rival contradiction path closure, the largest remaining pairwise failure family is dual_evidence_coverage_gap with 12 rows across 7 scenes and 3 queries.",
+    "agent_inference": "The natural next step is an observation branch that completes missing goal-region and object-relation evidence. It is not a terminal utility contract.",
+    "paper_claim_allowed": false
+  }
+}

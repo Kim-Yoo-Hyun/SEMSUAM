@@ -1,0 +1,50 @@
+{
+  "schema_version": "h001.verify.expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair.v1",
+  "date_checked": "2026-06-01",
+  "status": "docker_verified",
+  "contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1.json",
+  "script": "src/h001_runtime/diagnose_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair.py",
+  "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+  "compile_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m py_compile src/h001_runtime/diagnose_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair.py",
+  "run_command": "docker run --rm --ipc=host --user $(id -u):$(id -g) -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPYCACHEPREFIX=/tmp/pycache -e PYTHONPATH=/workspace/src -v /home/yoohyun/research3:/workspace -w /workspace research3/openvocab-perception:20260513-v3c-gdino-sam2 python -m h001_runtime.diagnose_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair",
+  "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1",
+  "checked_summary": {
+    "association_geometry_repair_diagnostic_gate_passed": true,
+    "repair_rows": 2,
+    "repair_request_rows": 2,
+    "query_counts": {
+      "bed": 1,
+      "sofa": 1
+    },
+    "candidate_ids": [
+      "vlmaps:export:bed:spatial_nms:9",
+      "vlmaps:export:sofa:spatial_nms:2"
+    ],
+    "source_residual_failure_class_counts": {
+      "mask_projection_without_association_or_depth": 2
+    },
+    "exact_failed_completion_associated_heading_count": 0,
+    "exact_failed_completion_inside_mask_count": 5,
+    "exact_failed_completion_depth_consistent_count": 0,
+    "same_requested_direction_associated_heading_count": 2,
+    "other_requested_direction_associated_heading_count": 14,
+    "repair_diagnostic_action_counts": {
+      "request_anchor_selection_repair_for_association_geometry": 1,
+      "request_direction_specific_reobservation_repair": 1
+    },
+    "request_repair_next_action_counts": {
+      "design_direction_specific_reobservation_repair_contract": 1,
+      "design_relation_anchor_selection_repair_contract": 1
+    },
+    "action_evidence_forbidden_key_count": 0,
+    "terminal_commit_rows": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "terminal_utility_validation_allowed": false,
+  "first_eval_rerun_allowed": false,
+  "policy_scale_comparison_allowed": false,
+  "paper_claim_allowed": false,
+  "next_task": "design_association_geometry_followup_repair_contract"
+}

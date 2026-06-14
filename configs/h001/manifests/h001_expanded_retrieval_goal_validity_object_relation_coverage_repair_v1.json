@@ -1,0 +1,239 @@
+{
+  "schema_version": "h001.expanded_retrieval_goal_validity_object_relation_coverage_repair_contract.v1",
+  "contract_name": "expanded_retrieval_goal_validity_object_relation_coverage_repair_v1",
+  "date_checked": "2026-05-29",
+  "status": "frozen_design_contract_before_implementation",
+  "source": {
+    "scene_graph_object_relation_contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1.json",
+    "scene_graph_object_relation_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_object_relation_summary.json",
+    "candidate_relation_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_candidate_relation_rows.jsonl",
+    "pair_relation_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_pair_relation_rows.jsonl",
+    "request_relation_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_request_relation_rows.jsonl",
+    "context_object_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_context_object_rows.jsonl",
+    "evaluation_only_candidate_relation_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_evaluated_candidate_relation_rows.jsonl",
+    "evaluation_only_pair_relation_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_scene_graph_object_relation_v1/goal_validity_scene_graph_evaluated_pair_relation_rows.jsonl"
+  },
+  "problem": {
+    "fact": "The scene-graph/object-relation analyzer passes schema and action-safety gates, and the evaluation-only target-pair relation separability probe is positive.",
+    "coverage_blocker": "Detector association coverage is incomplete, so the relation proxy must not become a terminal goal-validity rule or a first_eval rerun trigger yet.",
+    "source_evidence": {
+      "scene_graph_object_relation_gate_passed": true,
+      "scene_graph_object_relation_signal_ready": false,
+      "recommended_next_action": "request_object_relation_observation",
+      "request_rows": 2,
+      "candidate_relation_rows": 158,
+      "pair_relation_rows": 420,
+      "context_object_rows": 7788,
+      "target_contrast_pair_rows_after_label_join": 18,
+      "same_component_target_pair_rows_after_label_join": 12,
+      "same_component_selector_visual_dominates_after_label_join": 10,
+      "target_pair_relation_delta_sign_counts_after_label_join": {
+        "contrast_relation_higher": 18
+      },
+      "relation_separability_probe_supports_signal": true,
+      "relation_coverage_complete": true,
+      "detector_coverage_complete": false,
+      "action_evidence_forbidden_key_count": 0,
+      "terminal_commit_rows": 0,
+      "paper_claim_allowed": false
+    }
+  },
+  "diagnostic_scope": {
+    "scene_key": "QaLdnwvtxbs",
+    "query": "bed",
+    "request_ids": [
+      "rival_identity:12",
+      "rival_identity:14"
+    ],
+    "expected_request_rows": 2,
+    "expected_candidate_relation_rows": 158,
+    "expected_pair_relation_rows": 420,
+    "expected_context_object_rows_minimum": 7788,
+    "rows_with_detector_association_by_request": {
+      "rival_identity:12": {
+        "rows_with_detector_association": 77,
+        "candidate_relation_rows": 79
+      },
+      "rival_identity:14": {
+        "rows_with_detector_association": 77,
+        "candidate_relation_rows": 79
+      }
+    },
+    "detector_missing_candidate_rows": 4,
+    "detector_missing_unique_candidate_ids": [
+      "vlmaps:export:bed:spatial_nms:5",
+      "vlmaps:export:bed:spatial_nms:90"
+    ],
+    "detector_missing_rows_action_time": [
+      {
+        "expanded_retrieval_request_id": "rival_identity:12",
+        "candidate_id": "vlmaps:export:bed:spatial_nms:5",
+        "target_generated_rank": 6,
+        "target_semantic_rank": 6,
+        "relation_density_bucket": "relation_dense",
+        "context_object_count": 61,
+        "relation_view_consistency_profile": "detector_visible_but_depth_weak"
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:12",
+        "candidate_id": "vlmaps:export:bed:spatial_nms:90",
+        "target_generated_rank": 91,
+        "target_semantic_rank": 91,
+        "relation_density_bucket": "relation_medium",
+        "context_object_count": 12,
+        "relation_view_consistency_profile": "detector_visible_but_depth_weak"
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:14",
+        "candidate_id": "vlmaps:export:bed:spatial_nms:5",
+        "target_generated_rank": 6,
+        "target_semantic_rank": 6,
+        "relation_density_bucket": "relation_dense",
+        "context_object_count": 61,
+        "relation_view_consistency_profile": "detector_visible_but_depth_weak"
+      },
+      {
+        "expanded_retrieval_request_id": "rival_identity:14",
+        "candidate_id": "vlmaps:export:bed:spatial_nms:90",
+        "target_generated_rank": 91,
+        "target_semantic_rank": 91,
+        "relation_density_bucket": "relation_medium",
+        "context_object_count": 12,
+        "relation_view_consistency_profile": "detector_visible_but_depth_weak"
+      }
+    ],
+    "terminal_commit_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "action_time_evidence_rules": {
+    "allowed_inputs": [
+      "candidate, pair, request, and context-object relation rows from the scene-graph/object-relation analyzer",
+      "detector association counts, depth status counts, view consistency profiles, and relation signatures computed before label join",
+      "candidate positions, standoff metadata, semantic rank, generated rank, relation density bucket, and non-GT planner roles",
+      "RGB-D frame metadata, detector/SAM2 output, and candidate geometry from the recovered-row full substrate",
+      "new observation targets selected only from action-time coverage gaps or action-time relation uncertainty"
+    ],
+    "forbidden_action_inputs": [
+      "evaluation_only_candidate_correct",
+      "evaluation_only_selector_candidate_correct",
+      "evaluation_only_contrast_candidate_correct",
+      "evaluation_only_target_contrast_pair",
+      "correct_candidate_ids",
+      "unsafe_selector_candidate_ids",
+      "GT object id",
+      "GT goal id",
+      "GT room id",
+      "GT scene graph relation",
+      "valid target label",
+      "success label",
+      "wrong-goal label",
+      "post-join evaluation rows before coverage-repair rows are written"
+    ],
+    "label_join_stage": "evaluation_only_after_coverage_repair_rows",
+    "blocked_actions": [
+      "direct_candidate_commit",
+      "threshold_tuning",
+      "first_eval_rerun",
+      "policy_scale_comparison",
+      "terminal_goal_validity_policy"
+    ]
+  },
+  "required_diagnostic_tasks": [
+    {
+      "name": "coverage_gap_materialization",
+      "purpose": "Materialize action-time rows for candidates whose object-relation evidence is strong enough to be considered but whose detector association coverage is incomplete.",
+      "required_outputs": [
+        "coverage_gap_rows",
+        "coverage_gap_by_request",
+        "candidate_relation_signature",
+        "detector_depth_status_profile",
+        "view_consistency_profile"
+      ]
+    },
+    {
+      "name": "repair_or_waiver_decision",
+      "purpose": "Decide whether each coverage gap requires another object-relation observation or can be excluded from terminal-policy promotion by an action-time rule.",
+      "allowed_actions": [
+        "request_object_relation_observation",
+        "waive_non_target_policy_promotion_only",
+        "defer_goal_validity_terminal_policy"
+      ],
+      "blocked_actions": [
+        "commit_candidate",
+        "switch_to_relation_best_candidate",
+        "first_eval_rerun",
+        "policy_scale_comparison"
+      ],
+      "required_outputs": [
+        "coverage_repair_action_rows",
+        "coverage_repair_reason_counts",
+        "waiver_rule_if_any",
+        "repair_target_candidate_ids"
+      ]
+    },
+    {
+      "name": "coverage_repair_plan_contract",
+      "purpose": "If additional observation is needed, define a bounded follow-up plan that changes view geometry or projection association without using labels.",
+      "required_outputs": [
+        "planned_observation_rows",
+        "expected_detector_association_recheck_rows",
+        "new_viewpoint_source",
+        "projection_or_depth_association_revision"
+      ]
+    },
+    {
+      "name": "evaluation_only_coverage_check",
+      "purpose": "Join labels only after action-time repair or waiver rows are written and report whether missing detector association affected target-pair or correct-candidate analysis.",
+      "required_outputs": [
+        "evaluated_coverage_gap_rows",
+        "evaluation_only_missing_detector_correct_rows",
+        "evaluation_only_missing_detector_target_pair_rows",
+        "coverage_gap_failure_taxonomy"
+      ]
+    }
+  ],
+  "evaluation_gates": {
+    "input_scene_graph_object_relation_gate_passed": true,
+    "expected_request_rows": 2,
+    "expected_candidate_relation_rows": 158,
+    "expected_pair_relation_rows": 420,
+    "expected_context_object_rows_minimum": 7788,
+    "detector_missing_candidate_rows_expected": 4,
+    "detector_missing_unique_candidate_ids_minimum": 2,
+    "relation_separability_probe_supports_signal": true,
+    "detector_coverage_complete": false,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": true,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "required_outputs": {
+    "coverage_gap_rows": "goal_validity_object_relation_coverage_gap_rows.jsonl",
+    "coverage_repair_action_rows": "goal_validity_object_relation_coverage_repair_action_rows.jsonl",
+    "request_coverage_rows": "goal_validity_object_relation_request_coverage_rows.jsonl",
+    "evaluated_coverage_gap_rows": "goal_validity_object_relation_evaluated_coverage_gap_rows.jsonl",
+    "summary": "goal_validity_object_relation_coverage_repair_summary.json"
+  },
+  "simpler_alternatives_to_report": [
+    "ignore_detector_coverage_gap",
+    "accept_target_pair_probe_without_repair",
+    "commit_relation_signature_best",
+    "use_evaluation_only_missing_rows_to_waive",
+    "rerun_first_eval_immediately",
+    "defer_all"
+  ],
+  "next_implementation_target": {
+    "script": "src/h001_runtime/analyze_expanded_retrieval_goal_validity_object_relation_coverage_repair.py",
+    "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_coverage_repair_v1",
+    "stage": "diagnostic_only_before_terminal_policy",
+    "docker_required": true
+  },
+  "interpretation_rule": {
+    "fact": "The object-relation target-pair probe is positive, but detector association coverage is incomplete on four action-time candidate rows.",
+    "agent_inference": "The next analyzer should either request bounded object-relation observations for uncovered rows or define an action-time waiver that is not based on correctness labels. The current branch must not promote relation score into a terminal selector until this coverage issue is handled.",
+    "user_decision_needed": "None for this contract. User judgment is needed only if the coverage repair requires a new perception Docker image or an external scene-graph model."
+  }
+}

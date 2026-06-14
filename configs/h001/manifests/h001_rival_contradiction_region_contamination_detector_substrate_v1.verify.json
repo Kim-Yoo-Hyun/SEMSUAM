@@ -1,0 +1,105 @@
+{
+  "schema_version": "h001.verify.rival_contradiction_region_contamination_detector_substrate.v1",
+  "checked_at": "2026-06-12",
+  "ok": true,
+  "status": "docker_verified_detector_sam2_substrate",
+  "contract": "configs/h001/manifests/h001_rival_contradiction_region_contamination_detector_substrate_v1.json",
+  "frame_projection_contract": "configs/h001/manifests/h001_rival_contradiction_region_contamination_frame_projection_v1.json",
+  "frame_projection_verify": "configs/h001/manifests/h001_rival_contradiction_region_contamination_frame_projection_v1.verify.json",
+  "source_artifacts": {
+    "frame_plan_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_frame_plan_v1/rival_contradiction_region_contamination_frame_plan_summary.json",
+    "filtered_frame_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_frames_v1/nonblank_filter_v1/rival_identity_frame_summary_nonblank.jsonl",
+    "projection_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_projection_v1/projection_anchor_smoke_summary.json"
+  },
+  "docker_job": {
+    "job": "scripts/h001_jobs/rival_contradiction_region_contamination_detector_substrate.sh",
+    "log": "archive/logs/h001_runtime/rival-contradiction-region-contamination-detector-substrate-20260612-022030.log",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "device": "cuda",
+    "status_file": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1/job_status.json",
+    "status": "completed"
+  },
+  "docker_verified_outputs": {
+    "output": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1",
+    "detector_output": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1/detector_v3c",
+    "summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "detector_summary": "local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1/detector_v3c/summary.json",
+    "detector_rows": 4,
+    "frame_rows": 4,
+    "detector_box_rate": 1.0,
+    "sam2_mask_rate": 1.0,
+    "candidate_association_rate": 1.0,
+    "rows_with_candidate_association": 4,
+    "associated_candidate_heading_count": 23,
+    "association_rows": 52,
+    "detector_box_rows": 72,
+    "detector_mask_rows": 72,
+    "debug_images_written": 26,
+    "candidate_selection_counts": {
+      "explicit_candidate_ids": 4
+    },
+    "associated_candidate_heading_count_by_role": {
+      "supported_candidate_own_view": 10,
+      "rival_candidate_own_view": 2,
+      "shared_region_or_relation_anchor_view": 4,
+      "cross_candidate_challenge_view": 7
+    },
+    "associated_candidate_heading_count_by_candidate": {
+      "vlmaps:export:sofa:spatial_nms:1": 11,
+      "vlmaps:export:sofa:spatial_nms:2": 12
+    },
+    "associated_candidate_heading_count_by_role_candidate": {
+      "supported_candidate_own_view|vlmaps:export:sofa:spatial_nms:1": 5,
+      "supported_candidate_own_view|vlmaps:export:sofa:spatial_nms:2": 5,
+      "rival_candidate_own_view|vlmaps:export:sofa:spatial_nms:2": 2,
+      "shared_region_or_relation_anchor_view|vlmaps:export:sofa:spatial_nms:1": 3,
+      "shared_region_or_relation_anchor_view|vlmaps:export:sofa:spatial_nms:2": 1,
+      "cross_candidate_challenge_view|vlmaps:export:sofa:spatial_nms:1": 3,
+      "cross_candidate_challenge_view|vlmaps:export:sofa:spatial_nms:2": 4
+    },
+    "depth_check_status_counts": {
+      "consistent": 9,
+      "depth_mismatch": 26,
+      "out_of_fov": 12,
+      "unavailable": 5
+    },
+    "uses_gt_for_action": false,
+    "uses_gt_for_analysis": false,
+    "paper_claim_allowed": false
+  },
+  "gate": {
+    "detector_rows_match": true,
+    "detector_box_rate_pass": true,
+    "sam2_mask_rate_pass": true,
+    "candidate_association_rate_pass": true,
+    "rows_with_candidate_association_pass": true,
+    "associated_candidate_heading_count_pass": true,
+    "required_roles_present": true,
+    "supported_candidate_associated": true,
+    "rival_candidate_associated": true,
+    "no_gt_action_pass": true,
+    "paper_claim_blocked": true,
+    "passes_detector_substrate_gate": true
+  },
+  "verification_ladder_to_complete_target_claim": [
+    "1. Docker detector/SAM2 substrate on frozen 4-row frame/projection output: completed here.",
+    "2. Freeze post-detector evidence analyzer contract.",
+    "3. Materialize label-free post-detector evidence rows without terminal commit, candidate rejection, or label leakage.",
+    "4. Join evaluation-only labels/outcomes after evidence rows are frozen.",
+    "5. Apply the wrong-goal, wasted-path, and map/pose consistency delta promotion gate before any utility or paper claim."
+  ],
+  "verification_commands": [
+    "jq empty configs/h001/manifests/h001_rival_contradiction_region_contamination_detector_substrate_v1.json",
+    "jq empty configs/h001/manifests/h001_rival_contradiction_region_contamination_detector_substrate_v1.verify.json",
+    "jq '{status, gate, docker_verified_outputs}' configs/h001/manifests/h001_rival_contradiction_region_contamination_detector_substrate_v1.verify.json",
+    "jq '{gate:.gate.passes_detector_substrate_gate, rows:.detector_rows, box:.detector_box_rate, sam2:.sam2_mask_rate, assoc:.candidate_association_rate, associated:.rows_with_candidate_association, headings:.associated_candidate_heading_count, gt:.uses_gt_for_action, paper:.paper_claim_allowed}' local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1/expanded_retrieval_detector_substrate_summary.json",
+    "jq -s '{rows:length, role_candidate:(map(select(.associated_to_candidate==true)|(.role+\"|\"+.candidate_id))|group_by(.)|map({(.[0]):length})|add)}' local_dataset/runs/h001_rival_contradiction_region_contamination_detector_substrate_v1/expanded_retrieval_detector_associations.jsonl"
+  ],
+  "next_task": "freeze_rival_contradiction_region_contamination_detector_evidence_contract",
+  "interpretation": {
+    "fact": "The frozen four-row supported-vs-rival observation substrate produced detector boxes, SAM2 masks, and candidate associations for all rows in Docker.",
+    "agent_inference": "This unlocks a post-detector evidence analyzer contract that can summarize supported-vs-rival contradiction or region contamination evidence. It still does not justify terminal utility, candidate rejection, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or a paper claim.",
+    "paper_claim": "No ObjectNav improvement, Semantic-SLAM complementarity, detector evidence interpretation as utility, terminal utility, formula revision, first_eval rerun, policy-scale comparison, Step 4-5 promotion, or paper claim is allowed from the detector/SAM2 substrate alone."
+  },
+  "paper_claim_allowed": false
+}

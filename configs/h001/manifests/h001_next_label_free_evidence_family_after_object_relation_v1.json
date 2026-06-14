@@ -1,0 +1,89 @@
+{
+  "schema_version": "h001.contract.next_label_free_evidence_family_after_object_relation.v1",
+  "date_checked": "2026-06-02",
+  "status": "frozen_selection_contract_after_object_relation_branch_family_closure",
+  "contract_name": "next_label_free_evidence_family_after_object_relation_v1",
+  "purpose": "Select the next label-free evidence family after unique-support, partial relation-depth, missing-own-view, and negative-missing-support object-relation branches were closed without promotable terminal outcomes.",
+  "source": {
+    "route_specific_summary": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_summary.json",
+    "route_specific_rows": "local_dataset/runs/h001_expanded_retrieval_paper_scale_local_context_route_specific_v1/expanded_retrieval_local_context_route_specific_rows.jsonl",
+    "object_relation_branch_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_object_relation_branch_evidence_v1/goal_validity_object_relation_branch_evidence_summary.json",
+    "unique_support_branch_closure_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_unique_support_branch_closure_v1/unique_support_branch_closure_summary.json",
+    "residual_branch_closure_summary": "local_dataset/runs/h001_residual_branch_closure_v1/residual_branch_closure_summary.json",
+    "missing_own_view_guard_branch_closure_summary": "local_dataset/runs/h001_missing_own_view_guard_branch_closure_v1/missing_own_view_guard_branch_closure_summary.json",
+    "source_pool_second_fallback_summary": "local_dataset/runs/h001_expanded_retrieval_pool_validity_second_fallback_v1/second_fallback_summary.json"
+  },
+  "source_gate": {
+    "route_contract_gate_passed": true,
+    "object_relation_branch_router_gate_passed": true,
+    "unique_support_branch_closure_gate_passed": true,
+    "residual_branch_closure_gate_passed": true,
+    "missing_own_view_guard_branch_closure_gate_passed": true,
+    "source_pool_second_fallback_gate_passed": true,
+    "source_pool_blind_spot_recorded": true,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "max_action_evidence_forbidden_key_count": 0,
+    "requires_uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "selection_decision": {
+    "selected_family": "instance_arbitration_defer_v1",
+    "selected_branch": "instance_arbitration_defer_v1",
+    "selected_action": "freeze_instance_arbitration_label_free_evidence_contract",
+    "selected_output_status": "selected_next_label_free_evidence_family",
+    "minimum_selected_request_rows": 9,
+    "minimum_selected_unique_scenes": 5,
+    "minimum_selected_unique_queries": 3,
+    "minimum_selected_candidate_count_sum": 50,
+    "expected_route_branch_counts": {
+      "source_pool_repair_v1": 5,
+      "goal_validity_confirmation_v1": 7,
+      "instance_arbitration_defer_v1": 9
+    },
+    "closed_or_not_selected_families": {
+      "source_pool_repair_v1": "not_selected_backend_repair_branch_already_followed_to_blind_spot",
+      "goal_validity_confirmation_v1": "not_selected_object_relation_branch_family_closed_without_promotable_terminal_outcome",
+      "object_relation_branch_family": "closed_without_promotable_terminal_outcome"
+    },
+    "selected_reason": [
+      "source-pool repair was already followed through backend expansion, deeper generation, and two pool-validity fallbacks; the remaining row is a backend/source-map blind spot rather than a label-free observation family",
+      "goal-validity/object-relation evidence was followed through unique-support, partial relation-depth, missing-own-view, and negative-missing-support branches, all without a promotable terminal outcome",
+      "the remaining unprocessed paper-scale route branch with the largest action-time count is instance_arbitration_defer_v1 with 9 request rows",
+      "the selected branch contains multi-candidate instance ambiguity and therefore matches H001's semantic uncertainty as active observation utility direction better than terminal utility or threshold tuning"
+    ]
+  },
+  "blocked_shortcuts": [
+    "open_terminal_utility_after_object_relation_closure_only",
+    "rerun_first_eval_after_nonpromotable_branch_closure",
+    "promote_object_visibility_or_relation_depth_to_goal_validity",
+    "use_source_pool_blind_spot_as_success_or_failure_commit",
+    "tune_instance_arbitration_thresholds_from_evaluation_labels",
+    "run_policy_scale_comparison_before_instance_arbitration_evidence_contract"
+  ],
+  "required_future_outputs": {
+    "selection_rows": "next_label_free_evidence_family_after_object_relation_rows.jsonl",
+    "summary": "next_label_free_evidence_family_after_object_relation_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "src/h001_runtime/select_next_evidence_family_after_object_relation.py",
+    "output": "local_dataset/runs/h001_next_label_free_evidence_family_after_object_relation_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "verification_command": "python -m h001_runtime.select_next_evidence_family_after_object_relation"
+  },
+  "next_research_task_after_selection": "freeze_instance_arbitration_label_free_evidence_contract",
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "candidate_commit_rule",
+    "candidate_rejection_rule",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "The selector may use existing action-time route rows and closure summaries; evaluation labels are not action inputs.",
+    "agent_inference": "The next label-free family should handle multi-candidate instance arbitration rather than reopening object-relation or backend-recall branches.",
+    "paper_claim_allowed": false
+  }
+}

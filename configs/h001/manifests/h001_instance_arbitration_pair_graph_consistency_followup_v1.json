@@ -1,0 +1,362 @@
+{
+  "schema_version": "h001.contract.instance_arbitration_pair_graph_consistency_followup.v1",
+  "date_checked": "2026-06-02",
+  "status": "frozen_design_contract_before_implementation",
+  "contract_name": "instance_arbitration_pair_graph_consistency_followup_v1",
+  "purpose": "Freeze a nonterminal pair-graph consistency follow-up contract after the instance-arbitration residual diagnostic identified a label-free graph signal but zero promotable branch outcomes.",
+  "implementation_target": {
+    "analyzer": "src/h001_runtime/analyze_instance_arbitration_pair_graph_consistency_followup.py",
+    "output": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1",
+    "docker_image": "research3/openvocab-perception:20260513-v3c-gdino-sam2",
+    "docker_required": true
+  },
+  "source": {
+    "instance_arbitration_detector_evidence_contract": "configs/h001/manifests/h001_instance_arbitration_detector_evidence_v1.json",
+    "instance_arbitration_detector_evidence_verify": "configs/h001/manifests/h001_instance_arbitration_detector_evidence_v1.verify.json",
+    "instance_arbitration_detector_evidence_output": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1",
+    "instance_arbitration_detector_evidence_summary": "local_dataset/runs/h001_instance_arbitration_detector_evidence_v1/instance_arbitration_detector_evidence_summary.json",
+    "residual_diagnostic_verify": "configs/h001/manifests/h001_instance_arbitration_residual_diagnostic_v1.verify.json",
+    "residual_diagnostic_output": "local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1",
+    "residual_diagnostic_summary": "local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1/instance_arbitration_residual_summary.json",
+    "residual_candidate_rows": "local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1/instance_arbitration_residual_candidate_rows.jsonl",
+    "residual_pair_rows": "local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1/instance_arbitration_residual_pair_rows.jsonl",
+    "residual_request_rows": "local_dataset/runs/h001_instance_arbitration_residual_diagnostic_v1/instance_arbitration_residual_request_rows.jsonl"
+  },
+  "source_gate": {
+    "source_detector_evidence_gate_passed": true,
+    "source_residual_diagnostic_gate_passed": true,
+    "source_zero_promotable_outcomes_passed": true,
+    "source_pair_graph_followup_signal_passed": true,
+    "expected_candidate_rows": 51,
+    "expected_pair_rows": 121,
+    "expected_request_rows": 9,
+    "expected_pair_graph_followup_request_rows": 9,
+    "expected_lossless_pair_graph_candidate_rows": 17,
+    "expected_max_pair_winner_candidate_rows": 14,
+    "expected_unique_lossless_request_rows": 2,
+    "expected_multiple_lossless_request_rows": 7,
+    "expected_promotable_branch_outcome_rows": 0,
+    "max_terminal_commit_rows": 0,
+    "max_candidate_commit_rows": 0,
+    "max_candidate_rejection_rows": 0,
+    "max_action_evidence_forbidden_key_count": 0,
+    "requires_uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "source_metrics": {
+    "candidate_residual_class_counts": {
+      "own_view_support_with_rival_leakage": 20,
+      "pair_or_contrast_contradiction": 18,
+      "source_top_shortcut_rival_leakage": 8,
+      "contrast_support_with_rival_leakage": 4,
+      "partial_support_without_pair_resolution": 1
+    },
+    "pair_residual_class_counts": {
+      "one_sided_pair_support_nonterminal": 53,
+      "common_view_both_candidates_supported": 36,
+      "dual_standoff_no_candidate_support": 14,
+      "common_view_no_candidate_support": 11,
+      "one_sided_pair_support_with_leakage": 7
+    },
+    "request_residual_status_counts": {
+      "multiple_lossless_pair_graph_candidates": 7,
+      "unique_lossless_pair_graph_candidate_blocked_by_common_view_overlap": 2
+    },
+    "source_candidate_status_counts": {
+      "ambiguous_rival_leakage_candidate": 32,
+      "contradicted_by_pair_or_contrast_evidence": 18,
+      "partial_instance_support": 1
+    },
+    "source_pair_status_counts": {
+      "ambiguous_both_candidates_supported": 36,
+      "ambiguous_no_candidate_support": 25,
+      "resolved_in_favor_of_candidate_a_nonterminal": 49,
+      "resolved_in_favor_of_candidate_b_nonterminal": 11
+    },
+    "candidate_count_distribution": {
+      "4": 1,
+      "5": 1,
+      "6": 7
+    },
+    "pair_count_distribution": {
+      "6": 1,
+      "10": 1,
+      "15": 7
+    },
+    "lossless_pair_graph_candidate_count_by_request": {
+      "rival_identity:0": 2,
+      "rival_identity:1": 1,
+      "rival_identity:2": 2,
+      "rival_identity:20": 2,
+      "rival_identity:21": 3,
+      "rival_identity:23": 2,
+      "rival_identity:24": 2,
+      "rival_identity:26": 1,
+      "rival_identity:28": 2
+    },
+    "max_pair_win_candidate_count_by_request": {
+      "rival_identity:0": 2,
+      "rival_identity:1": 1,
+      "rival_identity:2": 2,
+      "rival_identity:20": 1,
+      "rival_identity:21": 3,
+      "rival_identity:23": 1,
+      "rival_identity:24": 2,
+      "rival_identity:26": 1,
+      "rival_identity:28": 1
+    },
+    "candidate_residual_action_counts": {
+      "route_to_pair_graph_consistency_audit": 32,
+      "route_to_pair_graph_contradiction_audit": 18,
+      "route_to_partial_support_audit": 1
+    },
+    "pair_probe_type_counts": {
+      "pair_common_view": 57,
+      "pair_dual_standoff_fallback": 64
+    },
+    "pair_graph_winner_pair_rows": 60,
+    "pair_graph_no_winner_pair_rows": 61,
+    "terminal_commit_rows": 0,
+    "candidate_commit_rows": 0,
+    "candidate_rejection_rows": 0,
+    "action_evidence_forbidden_key_count": 0,
+    "uses_gt_for_action": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "problem": {
+    "fact": "The residual diagnostic finds pair-graph signal in all nine unresolved instance-arbitration requests, with 17 lossless pair-graph candidate memberships and 14 max-pair-win candidate memberships.",
+    "failure_mechanism": "Pair graph evidence is not yet a commit authority: seven requests contain multiple lossless graph candidates, and two requests with a unique lossless candidate are still blocked by common-view overlap.",
+    "agent_inference": "The method should treat pair-graph structure as an active consistency signal that can explain unresolved instance ambiguity, not as a graph-winner shortcut for ObjectNav goal commitment."
+  },
+  "design_scope": {
+    "target_branch": "instance_arbitration_defer_v1",
+    "target_action": "freeze_pair_graph_consistency_followup_contract",
+    "followup_name": "pair_graph_consistency_followup_v1",
+    "input_scope": "All residual candidate, pair, and request rows from the frozen instance-arbitration residual diagnostic.",
+    "allowed_label_use": "Evaluation labels may be joined only after candidate graph, pair graph, request graph, shortcut-audit, and summary rows are written.",
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "threshold_tuning_allowed": false,
+    "terminal_utility_validation_allowed": false,
+    "first_eval_rerun_allowed": false,
+    "policy_scale_comparison_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "policy": {
+    "name": "pair_graph_consistency_followup_v1",
+    "purpose": "Audit whether residual pair evidence defines a consistent non-GT instance-arbitration branch outcome without using labels or shortcut graph-winner commits.",
+    "non_gt_action_features": [
+      "pair_graph loss counts",
+      "pair_graph win counts",
+      "lossless_pair_graph_candidate_count",
+      "max_pair_win_candidate_ids",
+      "unique_lossless_pair_graph_candidate_id",
+      "ambiguous_pair_incident_counts",
+      "pair residual failure classes",
+      "candidate residual failure classes",
+      "common-view overlap counts",
+      "one-sided support counts",
+      "rival leakage counts",
+      "pair contradiction counts",
+      "source-top and local-context support markers written before label join"
+    ],
+    "nonterminal_action_rule": [
+      {
+        "if": "lossless_pair_graph_candidate_count > 1",
+        "then": "keep_multiple_lossless_pair_graph_candidates_unresolved"
+      },
+      {
+        "if": "lossless_pair_graph_candidate_count == 1 and common_view_both_candidates_supported_count > 0",
+        "then": "request_common_view_overlap_audit"
+      },
+      {
+        "if": "pair_graph_winner exists but rival_leakage_count > 0 or pair_contradiction_count > 0",
+        "then": "keep_graph_winner_nonterminal_due_residual_conflict"
+      },
+      {
+        "if": "candidate has zero pair losses but also source_top_shortcut_rival_leakage or own_view_support_with_rival_leakage",
+        "then": "block_lossless_candidate_shortcut"
+      },
+      {
+        "if": "unique lossless candidate has no common-view overlap, no rival leakage, no pair contradiction, and at least one independent non-source-top support path",
+        "then": "mark_pair_graph_consistency_promotable_for_later_terminal_contract_only"
+      }
+    ],
+    "terminal_commit_allowed": false,
+    "candidate_commit_allowed": false,
+    "candidate_rejection_allowed": false,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "row_contract": {
+    "candidate_graph_rows": 51,
+    "pair_graph_rows": 121,
+    "request_graph_rows": 9,
+    "lossless_candidate_membership_rows": 17,
+    "max_pair_winner_candidate_membership_rows": 14,
+    "shortcut_audit_rows_minimum": 17,
+    "expected_promotable_branch_outcome_rows": 0,
+    "required_candidate_fields": [
+      "expanded_retrieval_request_id",
+      "episode_key",
+      "scene_key",
+      "query",
+      "candidate_id",
+      "residual_failure_class",
+      "source_candidate_evidence_status",
+      "pair_graph_loss_count",
+      "pair_graph_win_count",
+      "ambiguous_pair_incident_count",
+      "is_lossless_pair_graph_candidate",
+      "is_max_pair_win_candidate",
+      "has_common_view_overlap_incident",
+      "has_rival_leakage",
+      "has_pair_or_contrast_contradiction",
+      "pair_graph_consistency_status",
+      "recommended_nonterminal_action"
+    ],
+    "required_pair_fields": [
+      "expanded_retrieval_request_id",
+      "episode_key",
+      "scene_key",
+      "query",
+      "candidate_id_a",
+      "candidate_id_b",
+      "pair_probe_type",
+      "residual_failure_class",
+      "source_pair_evidence_status",
+      "pair_graph_winner_candidate_id",
+      "candidate_a_support_count",
+      "candidate_b_support_count",
+      "candidate_a_leakage_count",
+      "candidate_b_leakage_count",
+      "pair_graph_consistency_status",
+      "recommended_nonterminal_action"
+    ],
+    "required_request_fields": [
+      "expanded_retrieval_request_id",
+      "episode_key",
+      "scene_key",
+      "query",
+      "candidate_count",
+      "pair_count",
+      "lossless_pair_graph_candidate_count",
+      "max_pair_win_candidate_count",
+      "unique_lossless_pair_graph_candidate_id",
+      "multiple_lossless_pair_graph_candidate_count",
+      "common_view_overlap_pair_count",
+      "no_candidate_support_pair_count",
+      "one_sided_nonterminal_pair_count",
+      "pair_graph_followup_status",
+      "promotable_branch_outcome_count",
+      "recommended_nonterminal_action"
+    ],
+    "required_shortcut_audit_fields": [
+      "expanded_retrieval_request_id",
+      "candidate_id",
+      "shortcut_rule_name",
+      "shortcut_rule_would_select_candidate",
+      "shortcut_rule_blocked_reason",
+      "terminal_commit",
+      "candidate_commit",
+      "candidate_rejection"
+    ]
+  },
+  "minimum_rule_gate": {
+    "source_residual_diagnostic_gate_passed": true,
+    "expected_candidate_graph_rows": 51,
+    "expected_pair_graph_rows": 121,
+    "expected_request_graph_rows": 9,
+    "expected_lossless_candidate_membership_rows": 17,
+    "expected_max_pair_winner_candidate_membership_rows": 14,
+    "expected_unique_lossless_request_rows": 2,
+    "expected_multiple_lossless_request_rows": 7,
+    "expected_promotable_branch_outcome_rows": 0,
+    "expected_terminal_commit_rows": 0,
+    "expected_candidate_commit_rows": 0,
+    "expected_candidate_rejection_rows": 0,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "uses_gt_for_action": false,
+    "terminal_utility_validation_allowed": false,
+    "paper_claim_allowed": false
+  },
+  "allowed_action_inputs": [
+    "instance-arbitration residual candidate rows",
+    "instance-arbitration residual pair rows",
+    "instance-arbitration residual request rows",
+    "candidate and pair evidence statuses written before label join",
+    "pair graph win, loss, and ambiguity counts",
+    "lossless candidate membership",
+    "max-pair-win candidate membership",
+    "common-view overlap counts",
+    "dual-standoff no-support counts",
+    "one-sided nonterminal pair support counts",
+    "rival leakage and contradiction counts",
+    "source-top, own-view, detector-strong, and local-context support markers written before label join"
+  ],
+  "forbidden_action_inputs": [
+    "evaluation_correctness",
+    "evaluation_only_candidate_correct",
+    "evaluation_only_request_success",
+    "evaluation_only_failure_tag",
+    "correct_candidate_ids",
+    "valid_candidate_ids",
+    "GT object id",
+    "GT goal id",
+    "GT target position",
+    "GT shortest path",
+    "SPL",
+    "wrong-goal labels",
+    "oracle instance identity",
+    "oracle stop or commit decisions",
+    "posthoc positive or negative candidate labels",
+    "threshold tuning from joined labels",
+    "category-specific threshold from labels"
+  ],
+  "blocked_shortcuts": [
+    "commit_graph_winner",
+    "commit_lossless_candidate",
+    "commit_max_pair_win_candidate",
+    "commit_source_top_lossless_candidate",
+    "commit_detector_strong_lossless_candidate",
+    "commit_if_one_sided_pair_support",
+    "commit_if_any_pair_common_view_support",
+    "commit_if_no_pair_loss",
+    "reject_candidate_with_pair_loss",
+    "merge_category_region_after_lossless_tie",
+    "threshold_tune_pair_win_margin",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "terminal_utility_contract",
+    "paper_claim"
+  ],
+  "required_simpler_alternatives_to_report_later": [
+    "graph_winner_commit",
+    "lossless_candidate_commit",
+    "max_pair_win_count_commit",
+    "source_top_lossless_commit",
+    "detector_strong_lossless_commit",
+    "defer_all_pair_graph_rows"
+  ],
+  "expected_outputs": {
+    "out_root": "local_dataset/runs/h001_instance_arbitration_pair_graph_consistency_followup_v1",
+    "candidate_graph_rows": "instance_arbitration_pair_graph_candidate_rows.jsonl",
+    "pair_graph_rows": "instance_arbitration_pair_graph_pair_rows.jsonl",
+    "request_graph_rows": "instance_arbitration_pair_graph_request_rows.jsonl",
+    "shortcut_audit_rows": "instance_arbitration_pair_graph_shortcut_audit_rows.jsonl",
+    "summary": "instance_arbitration_pair_graph_consistency_summary.json"
+  },
+  "next_step_if_passed": "implement_instance_arbitration_pair_graph_consistency_followup",
+  "next_step_after_implementation_if_zero_promotable": "close_instance_arbitration_pair_graph_branch_or_select_next_label_free_evidence_family",
+  "next_step_after_implementation_if_promotable": "freeze_terminal_utility_contract_after_separate_review",
+  "next_step_if_failed": "diagnose pair-graph contract accounting before any terminal utility or policy-scale task.",
+  "interpretation_rule": {
+    "fact": "The source residual diagnostic has a pair-graph signal in all nine unresolved requests but zero promotable branch outcomes.",
+    "agent_inference": "Pair-graph consistency should be used as method-derivation and nonterminal uncertainty evidence. It can only unlock a later terminal contract if the follow-up writes a conflict-free promotable branch outcome under the frozen rule.",
+    "paper_claim": "No paper claim is allowed from this contract alone.",
+    "user_decision_needed": "None for this contract."
+  },
+  "paper_claim_allowed": false
+}

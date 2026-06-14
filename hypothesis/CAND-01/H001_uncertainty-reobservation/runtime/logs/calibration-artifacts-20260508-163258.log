@@ -1,121 +1,0 @@
-
-[2026-05-08T16:32:58+09:00] check/build habitat calibration image
-#0 building with "default" instance using docker driver
-
-#1 [internal] load build definition from Dockerfile.habitat-h001
-#1 transferring dockerfile: 1.42kB done
-#1 DONE 0.0s
-
-#2 [internal] load metadata for docker.io/mambaorg/micromamba:1.5.10-jammy
-#2 DONE 1.2s
-
-#3 [internal] load .dockerignore
-#3 transferring context: 2B done
-#3 DONE 0.0s
-
-#4 [1/8] FROM docker.io/mambaorg/micromamba:1.5.10-jammy@sha256:210b5453f73baf5dce1f72ec269564c11fa6bcc60fa7f4cc8b883e7e3272c6e4
-#4 resolve docker.io/mambaorg/micromamba:1.5.10-jammy@sha256:210b5453f73baf5dce1f72ec269564c11fa6bcc60fa7f4cc8b883e7e3272c6e4 0.0s done
-#4 DONE 0.0s
-
-#5 [internal] load build context
-#5 transferring context: 496B done
-#5 DONE 0.0s
-
-#6 [5/8] RUN git clone --depth 1 --branch v0.3.3       https://github.com/facebookresearch/habitat-lab.git       /home/mambauser/habitat-lab     && micromamba run -n base pip install --no-cache-dir       -e /home/mambauser/habitat-lab/habitat-lab     && micromamba run -n base pip install --no-cache-dir       pillow==10.4.0
-#6 CACHED
-
-#7 [6/8] COPY smoke_habitat_h001.py /opt/h001/smoke_habitat_h001.py
-#7 CACHED
-
-#8 [7/8] COPY h001_runtime /opt/h001/h001_runtime
-#8 CACHED
-
-#9 [2/8] RUN apt-get update && apt-get install -y --no-install-recommends       bash       ca-certificates       git       libegl1       libgl1       libglib2.0-0       libopengl0       libsm6       libxext6       libxrender1       tini       wget     && rm -rf /var/lib/apt/lists/*
-#9 CACHED
-
-#10 [3/8] RUN micromamba install -y -n base       -c conda-forge       -c aihabitat       python=3.9       cmake=3.14.0       habitat-sim=0.3.3       withbullet       headless       git       pip     && micromamba clean -a -y
-#10 CACHED
-
-#11 [4/8] WORKDIR /home/mambauser
-#11 CACHED
-
-#12 [8/8] WORKDIR /workspace
-#12 CACHED
-
-#13 exporting to image
-#13 exporting layers done
-#13 exporting manifest sha256:a4633b3a0899b9b33a23b6e5652cf0d5cd426202340633468bc4b5bd5c49c496 done
-#13 exporting config sha256:8c34aeab5cf9fb30a1128d01761e1c8c4efd7e349f2127b60697e44764c0bd6f done
-#13 exporting attestation manifest sha256:1a73f7d80dcb4b1109a4a9135fd224b96cb232449b7416802d6e1e1ba756d572 0.1s done
-#13 exporting manifest list sha256:351f0a16ba27a23c414be730fd322c80299637219c1c3c2d2666012aa2699429 0.0s done
-#13 naming to docker.io/research3/habitat-h001:20260508-calib-artifacts done
-#13 unpacking to docker.io/research3/habitat-h001:20260508-calib-artifacts 0.0s done
-#13 DONE 0.2s
-
-[2026-05-08T16:33:00+09:00] verify required images
-
-[2026-05-08T16:33:00+09:00] export CLIP text embeddings
-  0%|                                               | 0.00/338M [00:00<?, ?iB/s]  2%|▊                                     | 7.72M/338M [00:00<00:04, 80.7MiB/s]  6%|██▏                                    | 18.9M/338M [00:00<00:03, 102MiB/s]  9%|███▌                                   | 30.3M/338M [00:00<00:02, 110MiB/s] 12%|████▊                                  | 41.2M/338M [00:00<00:02, 111MiB/s] 16%|██████                                 | 52.5M/338M [00:00<00:02, 113MiB/s] 19%|███████▎                               | 63.3M/338M [00:00<00:02, 112MiB/s] 22%|████████▌                              | 74.6M/338M [00:00<00:02, 114MiB/s] 25%|█████████▉                             | 85.8M/338M [00:00<00:02, 115MiB/s] 29%|███████████▏                           | 96.8M/338M [00:00<00:02, 115MiB/s] 32%|████████████▊                           | 108M/338M [00:01<00:02, 115MiB/s] 35%|██████████████▏                         | 119M/338M [00:01<00:01, 116MiB/s] 39%|███████████████▌                        | 131M/338M [00:01<00:01, 116MiB/s] 42%|████████████████▊                       | 142M/338M [00:01<00:01, 116MiB/s] 46%|██████████████████▏                     | 154M/338M [00:01<00:01, 117MiB/s] 49%|███████████████████▌                    | 165M/338M [00:01<00:01, 117MiB/s] 52%|████████████████████▊                   | 176M/338M [00:01<00:01, 115MiB/s] 55%|██████████████████████▏                 | 187M/338M [00:01<00:01, 115MiB/s] 59%|███████████████████████▌                | 199M/338M [00:01<00:01, 117MiB/s] 62%|████████████████████████▊               | 210M/338M [00:01<00:01, 115MiB/s] 65%|██████████████████████████▏             | 221M/338M [00:02<00:01, 115MiB/s] 69%|███████████████████████████▌            | 232M/338M [00:02<00:00, 116MiB/s] 72%|████████████████████████████▊           | 243M/338M [00:02<00:00, 115MiB/s] 75%|██████████████████████████████▏         | 254M/338M [00:02<00:00, 115MiB/s] 79%|███████████████████████████████▍        | 265M/338M [00:02<00:00, 115MiB/s] 82%|████████████████████████████████▊       | 277M/338M [00:02<00:00, 116MiB/s] 85%|██████████████████████████████████      | 288M/338M [00:02<00:00, 116MiB/s] 89%|███████████████████████████████████▍    | 299M/338M [00:02<00:00, 116MiB/s] 92%|████████████████████████████████████▊   | 310M/338M [00:02<00:00, 114MiB/s] 95%|██████████████████████████████████████  | 322M/338M [00:02<00:00, 116MiB/s] 99%|███████████████████████████████████████▍| 333M/338M [00:03<00:00, 116MiB/s]100%|████████████████████████████████████████| 338M/338M [00:03<00:00, 115MiB/s]
-{
-  "backend": "openai_clip_text",
-  "clip_commit": "d05afc436d78f1c48dc0dbf8e5980a9d471f35f6",
-  "device": "cpu",
-  "model": "ViT-B/32",
-  "queries": [
-    {
-      "dim": 512,
-      "embedding_path": "/out/embeddings/bed.npy",
-      "l2_norm": 0.9999999403953552,
-      "query": "bed"
-    },
-    {
-      "dim": 512,
-      "embedding_path": "/out/embeddings/chair.npy",
-      "l2_norm": 1.0,
-      "query": "chair"
-    },
-    {
-      "dim": 512,
-      "embedding_path": "/out/embeddings/plant.npy",
-      "l2_norm": 0.9999999403953552,
-      "query": "plant"
-    },
-    {
-      "dim": 512,
-      "embedding_path": "/out/embeddings/sofa.npy",
-      "l2_norm": 1.0,
-      "query": "sofa"
-    },
-    {
-      "dim": 512,
-      "embedding_path": "/out/embeddings/toilet.npy",
-      "l2_norm": 1.0,
-      "query": "toilet"
-    },
-    {
-      "dim": 512,
-      "embedding_path": "/out/embeddings/tv-monitor.npy",
-      "l2_norm": 1.0,
-      "query": "tv_monitor"
-    }
-  ],
-  "uses_gt_for_action": false
-}
-
-[2026-05-08T16:33:22+09:00] export RGB-D/pose for HkseAnWCgqk
-Traceback (most recent call last):
-  File "/opt/conda/lib/python3.9/runpy.py", line 197, in _run_module_as_main
-    return _run_code(code, main_globals, None,
-  File "/opt/conda/lib/python3.9/runpy.py", line 87, in _run_code
-    exec(code, run_globals)
-  File "/opt/h001/h001_runtime/export_hm3d_vlmaps.py", line 396, in <module>
-    main()
-  File "/opt/h001/h001_runtime/export_hm3d_vlmaps.py", line 389, in main
-    summary = export_scene(args)
-  File "/opt/h001/h001_runtime/export_hm3d_vlmaps.py", line 238, in export_scene
-    ensure_dirs(out_dir)
-  File "/opt/h001/h001_runtime/export_hm3d_vlmaps.py", line 39, in ensure_dirs
-    (out_dir / name).mkdir(parents=True, exist_ok=True)
-  File "/opt/conda/lib/python3.9/pathlib.py", line 1323, in mkdir
-    self._accessor.mkdir(self, mode)
-PermissionError: [Errno 13] Permission denied: '/runs/scenes/HkseAnWCgqk/export/rgb'

@@ -1,0 +1,152 @@
+{
+  "schema_version": "h001.contract.expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair.v1",
+  "date_checked": "2026-06-01",
+  "status": "frozen_design_contract_before_implementation",
+  "contract_name": "expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1",
+  "purpose": "Freeze the nonterminal association-geometry repair branch for residual partial relation-depth rows that have mask projection evidence but zero candidate association.",
+  "source": {
+    "branch_handling_contract": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1.json",
+    "branch_handling_verify": "configs/h001/manifests/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1.verify.json",
+    "branch_handling_output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1",
+    "branch_handling_summary": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_handling_summary.json",
+    "branch_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_rows.jsonl",
+    "request_branch_rows": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_branch_handling_v1/partial_relation_depth_branch_request_rows.jsonl"
+  },
+  "source_gate": {
+    "partial_relation_depth_branch_handling_gate_passed": true,
+    "expected_source_branch_rows": 15,
+    "expected_source_request_branch_rows": 6,
+    "target_branch_action": "route_to_association_geometry_repair_branch",
+    "expected_target_request_rows": 2,
+    "expected_target_branch_rows": 2,
+    "expected_target_request_status": "association_geometry_underlink",
+    "expected_target_residual_failure_class_counts": {
+      "mask_projection_without_association_or_depth": 2
+    },
+    "expected_target_rows_with_inside_mask": 2,
+    "expected_target_rows_with_zero_completion_association": 2,
+    "expected_target_rows_with_completion_association": 0,
+    "expected_target_rows_with_completion_depth_consistent": 0,
+    "expected_target_queries": {
+      "bed": 1,
+      "sofa": 1
+    },
+    "expected_target_candidate_ids": [
+      "vlmaps:export:bed:spatial_nms:9",
+      "vlmaps:export:sofa:spatial_nms:2"
+    ],
+    "max_action_evidence_forbidden_key_count": 0,
+    "max_terminal_commit_rows": 0,
+    "requires_uses_gt_for_action": false
+  },
+  "design_scope": {
+    "branch_name": "association_geometry_repair_branch",
+    "branch_action": "route_to_association_geometry_repair_branch",
+    "input_level": "request-level and row-level partial relation-depth branch rows",
+    "output_level": "nonterminal association-geometry repair diagnostic rows",
+    "allowed_action_inputs": [
+      "candidate_id",
+      "target_candidate_id",
+      "scene_key",
+      "query",
+      "completion_inside_mask_count",
+      "completion_associated_heading_count",
+      "completion_depth_consistent_count",
+      "prior_standoff_direction_source",
+      "residual_failure_class",
+      "residual_failure_tags",
+      "branch_action"
+    ],
+    "forbidden_action_inputs": [
+      "evaluation_correctness",
+      "success_label",
+      "wrong_goal_label",
+      "gt_target_object_id",
+      "gt_goal_position",
+      "posthoc_correct_candidate_id",
+      "category_specific_threshold_from_labels"
+    ]
+  },
+  "repair_design": {
+    "repair_name": "association_geometry_repair_diagnostic_v1",
+    "allowed_repair_checks": [
+      {
+        "name": "projection_anchor_replay",
+        "purpose": "Test whether the candidate projection is inside the detector/SAM2 mask under fixed projection-anchor offsets.",
+        "allowed_variants": [
+          "existing_projection_anchor_height_sweep_v1",
+          "candidate_height_consistency_replay"
+        ],
+        "blocked_variants": [
+          "query_specific_anchor_offsets",
+          "label_tuned_yaw_sweep"
+        ]
+      },
+      {
+        "name": "mask_depth_agreement_recheck",
+        "purpose": "Test whether mask depth and candidate depth can be associated under predeclared tolerance variants without using correctness labels.",
+        "allowed_variants": [
+          "mask_depth_1_25_v1",
+          "mask_depth_1_50_v1",
+          "mask_depth_2_00_v1"
+        ],
+        "blocked_variants": [
+          "threshold_selected_by_success_label",
+          "per_category_depth_tolerance"
+        ]
+      },
+      {
+        "name": "candidate_geometry_sanity_check",
+        "purpose": "Detect whether candidate point height, navmesh standoff, or projected depth is geometrically inconsistent before new observation is requested.",
+        "allowed_variants": [
+          "candidate_point_height_delta",
+          "navmesh_standoff_distance_audit",
+          "inside_mask_without_depth_agreement_audit"
+        ],
+        "blocked_variants": [
+          "replace_candidate_from_evaluation_label",
+          "commit_if_visible_inside_mask"
+        ]
+      }
+    ],
+    "branch_outcomes": [
+      "repair_candidate_association_recovered",
+      "request_reobservation_with_repaired_projection_anchor",
+      "defer_association_geometry_unresolved"
+    ],
+    "terminal_outcomes_forbidden": [
+      "commit_partial_relation_depth_candidate",
+      "reject_partial_relation_depth_candidate_as_invalid",
+      "commit_by_inside_mask_presence"
+    ]
+  },
+  "minimum_repair_gate": {
+    "all_target_requests_accounted": true,
+    "all_target_branch_rows_accounted": true,
+    "action_evidence_forbidden_key_count_maximum": 0,
+    "terminal_commit_rows_maximum": 0,
+    "uses_gt_for_action": false,
+    "paper_claim_allowed": false
+  },
+  "required_future_outputs": {
+    "repair_rows": "partial_relation_depth_association_geometry_repair_rows.jsonl",
+    "repair_request_rows": "partial_relation_depth_association_geometry_repair_request_rows.jsonl",
+    "summary": "partial_relation_depth_association_geometry_repair_summary.json"
+  },
+  "next_implementation_target": {
+    "script": "src/h001_runtime/diagnose_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair.py",
+    "output": "local_dataset/runs/h001_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair_v1",
+    "verification_command": "python -m h001_runtime.diagnose_expanded_retrieval_goal_validity_partial_relation_depth_association_geometry_repair"
+  },
+  "blocked_downstream_tasks": [
+    "terminal_utility_contract",
+    "first_eval_rerun",
+    "policy_scale_comparison",
+    "paper_claim"
+  ],
+  "interpretation_rule": {
+    "fact": "The target rows have inside-mask projection evidence but zero candidate association and zero depth-consistent completion evidence.",
+    "agent_inference": "This branch should test geometry/association repairability before any candidate is committed or rejected.",
+    "paper_claim_allowed": false
+  }
+}
